@@ -1,11 +1,11 @@
-run = "cd trading-bot && pip install -q fastapi uvicorn aiohttp aiosqlite pyyaml python-dotenv httpx tenacity rich hyperliquid-python-sdk eth-account pandas numpy anthropic && python main.py --demo"
-entrypoint = "trading-bot/main.py"
+run = "bash start.sh"
+entrypoint = "main.py"
 
 [nix]
 channel = "stable-23_11"
 
 [deployment]
-run = ["sh", "-c", "cd trading-bot && python main.py --demo"]
+run = ["sh", "-c", "bash start.sh"]
 deploymentTarget = "cloudrun"
 
 [[ports]]
