@@ -1,19 +1,19 @@
 # Core async runtime
 aiohttp>=3.9.0
 websockets>=12.0
-asyncio-throttle>=1.0.2
+asyncio-throttle
 
 # Exchange SDKs
 ccxt>=4.3.0                     # Toobit + 100+ other exchanges (async support)
 hyperliquid-python-sdk>=0.9.0
-lighter-sdk>=1.0.8
+lighter-sdk
 # py-clob-client for Polymarket (install manually if Polymarket trading desired)
 
 # Technical analysis
 pandas>=2.1.0
 numpy>=1.26.0
 ta>=0.11.0
-pandas-ta>=0.3.14b
+pandas-ta
 
 # Crypto / blockchain
 eth-account>=0.10.0

@@ -2,7 +2,6 @@
 # ============================================================
 #  APEX Bot — Replit / Server Startup Script
 # ============================================================
-set -e
 
 echo ""
 echo "╔══════════════════════════════════════════════════════╗"
@@ -12,9 +11,21 @@ echo "╚═══════════════════════�
 # Create required directories
 mkdir -p logs data
 
-# Install / update dependencies
+# Detect Python 3 executable
+if command -v python3 &>/dev/null; then
+    PYTHON=python3
+elif command -v python &>/dev/null; then
+    PYTHON=python
+else
+    echo "ERROR: Python not found in PATH!"
+    exit 1
+fi
+
+echo "Python: $($PYTHON --version)"
+
+# Install / update dependencies via the detected Python
 echo "[1/2] Installing dependencies..."
-pip install -q \
+$PYTHON -m pip install -q \
     "fastapi>=0.110.0" \
     "uvicorn[standard]>=0.27.0" \
     "aiohttp>=3.9.0" \
@@ -29,16 +40,18 @@ pip install -q \
     "numpy>=1.26.0" \
     "anthropic>=0.25.0" \
     "orjson>=3.9.10" \
-    "websockets>=12.0" 2>&1 || true
+    "websockets>=12.0" 2>&1 || echo "Warning: some packages may have failed"
 
-# Try heavier optional deps — don't fail if unavailable
-pip install -q "hyperliquid-python-sdk>=0.9.0" 2>/dev/null || \
-    echo "      (hyperliquid SDK skipped — will use mock exchange)"
+# Optional heavy dep — don't fail if unavailable
+$PYTHON -m pip install -q "hyperliquid-python-sdk>=0.9.0" 2>/dev/null \
+    && echo "hyperliquid-python-sdk: installed" \
+    || echo "hyperliquid-python-sdk: skipped (will use demo prices)"
 
+echo ""
 echo "[2/2] Starting bot in DEMO mode..."
 echo ""
-echo "  Dashboard will be available at the Webview tab (port 8080)"
-echo "  Running with synthetic prices — no API keys needed"
+echo "  Dashboard → open the Webview tab (port 8080)"
+echo "  Synthetic prices — no API keys needed"
 echo ""
 
-exec python main.py --demo
+exec $PYTHON main.py --demo
