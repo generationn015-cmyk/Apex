@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+.venv/
+env/
+*.egg-info/
+
+# Runtime data — never commit
+data/apex.db
+data/apex.db-shm
+data/apex.db-wal
+logs/
+*.log
+
+# Secrets — NEVER commit these
+.env
+config.local.yaml
+
+# OS
+.DS_Store
+Thumbs.db

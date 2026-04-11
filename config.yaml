@@ -1,0 +1,216 @@
+# ============================================================
+#  APEX TRADING BOT — CONFIG
+#  Copy this to config.local.yaml and fill in API keys.
+#  Never commit config.local.yaml to git.
+# ============================================================
+
+# ── Bot Identity ──────────────────────────────────────────
+bot:
+  name: "APEX"
+  version: "1.0.0"
+  mode: "paper"          # paper | live
+  log_level: "INFO"      # DEBUG | INFO | WARNING | ERROR
+
+# ── Capital & Risk ────────────────────────────────────────
+capital:
+  starting_balance_usd: 250.0
+  max_account_risk_pct: 2.0      # Max % of account at risk per trade
+  max_daily_loss_pct: 15.0       # Kill switch: halt if daily drawdown hits this
+  max_open_positions: 3          # Max concurrent positions across all venues
+  max_position_pct: 30.0         # Max % of account in a single position
+  kelly_fraction: 0.25           # Use 25% of Kelly (fractional Kelly for safety)
+
+# ── Leverage ──────────────────────────────────────────────
+leverage:
+  conservative: 5
+  aggressive: 15
+  moonshot: 30
+  default: 10                    # Active mode
+
+# ── Active Venues ─────────────────────────────────────────
+venues:
+  toobit:
+    # ⚠️  BLOCKED FOR US RESIDENTS — Cayman Islands registered, no FinCEN license
+    # Non-US users: set enabled: true and add API keys to .env
+    enabled: false
+    mode: "futures"              # spot | futures
+    api_key: ""                  # Set TOOBIT_API_KEY in .env
+    api_secret: ""               # Set TOOBIT_API_SECRET in .env
+    rest_url: "https://api.toobit.com"
+    ws_url: "wss://stream.toobit.com"
+    default_pairs:
+      - "BTCUSDT"
+      - "ETHUSDT"
+      - "SOLUSDT"
+      - "XRPUSDT"
+    max_leverage: 50             # BTC: up to 150x, ETH: 125x
+
+  hyperliquid:
+    # ✅ NO GEO-RESTRICTIONS — US accessible. Primary recommended venue.
+    # Best perpetuals DEX 2026: no gas fees, deep liquidity, clean API.
+    enabled: true
+    wallet_address: ""           # Set HYPERLIQUID_WALLET in .env
+    private_key: ""              # Set HYPERLIQUID_PRIVATE_KEY in .env (use dedicated wallet!)
+    mainnet: true
+    default_pairs:
+      - "BTC"
+      - "ETH"
+      - "SOL"
+    max_leverage: 40
+
+  lighter:
+    # ⚠️  BLOCKED FOR US RESIDENTS — custom ZK rollup, 159+ USDC perps, zero fees
+    # Non-US users: excellent venue (0% maker/taker for standard accounts)
+    # Auth: create API keys at lighter.xyz UI first, then add private key here
+    enabled: false
+    wallet_address: ""
+    private_key: ""              # This is your LIGHTER API KEY private key, not main wallet
+    account_index: 0
+    api_key_index: 2             # Lighter API key index (0,1 reserved for UI)
+    mainnet: true
+    default_pairs:
+      - "BTC-PERP"
+      - "ETH-PERP"
+      - "SOL-PERP"
+
+  polymarket:
+    enabled: false               # Enable if you have CFTC-compliant US account
+    api_key: ""
+    api_secret: ""
+    passphrase: ""
+    wallet_private_key: ""
+    min_edge_pct: 8.0            # Only bet when our model gives >8% edge
+    max_bet_pct: 10.0            # Max % of account per prediction market bet
+
+# ── Active Strategies ─────────────────────────────────────
+strategies:
+
+  delta_neutral:
+    # PRIMARY STRATEGY — Delta-neutral funding rate carry trade.
+    # Long spot + short perp = collect funding with near-zero directional risk.
+    # Research: BTC funding averaged 70% APR annualized in early 2026.
+    # XRP/SOL perps historically higher funding than BTC (more retail bias).
+    # Hyperliquid pays funding HOURLY (vs 8h on CEXs) with 0% protocol cut.
+    # Recommended: allocate 60% of $250 (~$150) here. Use 1x leverage = no liquidation risk.
+    enabled: true
+    priority: 0                  # Highest priority — always evaluated first
+    min_annual_rate_pct: 15.0    # Enter when funding > 15% annualized
+    exit_annual_rate_pct: 5.0    # Exit when funding drops below 5%
+    max_basis_pct: 0.1           # Max spot/perp spread before skipping
+    capital_pct: 60.0            # Use 60% of account capital
+    check_interval_min: 60       # Check funding every hour
+    pairs: ["BTC", "ETH", "SOL", "XRP"]
+    venues: ["hyperliquid"]
+
+  momentum:
+    # SECONDARY STRATEGY — Use remaining 40% of capital.
+    # Research: 1h-4h timeframes have best momentum Sharpe ratios.
+    # SOL and high-beta alts outperform BTC for momentum.
+    # Timing filter: US-Europe overlap (13-17 UTC) has peak edge.
+    # Monday anomaly: BTC shows highest returns on Mondays.
+    enabled: true
+    priority: 1                  # Lower = higher priority
+    timeframes:
+      entry: "5m"
+      trend_filter: "15m"
+      macro: "1h"
+    ema_fast: 9
+    ema_slow: 21
+    rsi_period: 14
+    rsi_long_threshold: 52       # RSI must be above this for longs
+    rsi_short_threshold: 48      # RSI must be below this for shorts
+    adx_period: 14
+    adx_min: 20                  # Min ADX to confirm trend strength (regime filter)
+    atr_period: 14
+    stop_atr_mult: 1.5           # Stop = ATR * this
+    use_timing_filter: true      # Only trade during high-edge UTC hours
+    allow_weekends: true         # Weekends have higher momentum Sharpe on volatile pairs
+    target_atr_mult: 3.0         # Target = ATR * this (2:1 R:R)
+    min_volume_mult: 1.2         # Volume must be 1.2x 20-bar avg
+    venues: ["toobit", "hyperliquid"]
+    pairs: ["BTCUSDT", "ETHUSDT", "SOLUSDT"]
+
+  funding_arb:
+    enabled: true
+    priority: 2
+    check_interval_min: 30       # Check funding every 30 min
+    min_annual_rate_pct: 15.0    # Minimum annualized funding to enter
+    max_hold_hours: 8            # Max time to hold before reassessing
+    pairs: ["BTCUSDT", "ETHUSDT"]
+    venues: ["toobit", "hyperliquid"]
+
+  breakout:
+    enabled: true
+    priority: 3
+    timeframes: ["15m", "1h"]
+    bb_period: 20
+    bb_std: 2.0
+    squeeze_threshold_pct: 1.5   # BB width < 1.5% of price = squeeze
+    volume_mult: 2.0             # Volume must be 2x average on breakout candle
+    atr_period: 14
+    stop_atr_mult: 1.0
+    target_bb_mult: 2.0          # Target = BB width * 2
+    pairs: ["BTCUSDT", "ETHUSDT", "SOLUSDT", "XRPUSDT"]
+    venues: ["toobit", "hyperliquid"]
+
+  liquidation_cascade:
+    enabled: true
+    priority: 4
+    min_cluster_size_usd: 5_000_000   # Only care about $5M+ liquidation clusters
+    proximity_pct: 0.5                # Enter when price is within 0.5% of cluster
+    stop_pct: 0.8                     # 0.8% stop loss
+    target_pct: 2.0                   # 2% target
+    pairs: ["BTCUSDT", "ETHUSDT"]
+    venues: ["hyperliquid"]
+
+  polymarket_arb:
+    # YES/NO complementary arbitrage on Polymarket prediction markets.
+    # Scans 200+ markets for risk-free profit when YES_ask + NO_ask < $1.00 - fees.
+    # Enable once you have Polymarket (US or global) access.
+    enabled: false
+    priority: 5
+    venues: ["polymarket"]
+    min_profit_pct: 0.5        # Min profit per pair after fees (in %)
+    max_bet_usd: 20.0          # Max USD per arb opportunity
+    scan_interval_sec: 15      # How often to scan for new opportunities
+    preferred_categories:      # Focus on low-fee markets for best arb
+      - "geopolitics"          # 0% fees — best
+      - "sports"               # ~0.75% max — good
+      - "economics"            # ~1.0% max — acceptable
+
+# ── Signal Weights (Opportunity Scorer) ──────────────────
+# Research-validated weights based on Sharpe ratios:
+# Delta-neutral: Sharpe 1.66-4.84 → highest weight
+# Momentum 1h-4h: Sharpe 1.12-1.42 → second
+# BB breakout: high confidence when squeeze confirmed → third
+# Polymarket arb: near-riskless → fourth
+# Funding contrarian + liq cascade: speculative → lowest
+scoring:
+  delta_neutral_weight: 0.35   # Primary: highest risk-adjusted return per research
+  momentum_weight: 0.25
+  breakout_weight: 0.20
+  polymarket_arb_weight: 0.10  # Near-riskless arb — good when available
+  funding_weight: 0.05         # Contrarian signal (different from delta_neutral)
+  liquidation_weight: 0.05
+  min_score_to_trade: 0.45     # Slightly lower to ensure delta_neutral fires
+
+# ── Monitoring & Alerts ───────────────────────────────────
+monitoring:
+  telegram:
+    enabled: false
+    bot_token: ""
+    chat_id: ""
+    alert_on_trade: true
+    alert_on_stop_hit: true
+    alert_on_daily_loss_limit: true
+    alert_on_daily_pnl_summary: true
+    summary_hour_utc: 23         # Send daily summary at 23:00 UTC
+
+  dashboard:
+    enabled: true
+    refresh_interval_sec: 5
+
+  log_file: "logs/apex.log"
+  db_file: "data/apex.db"
+  web_port: 8080             # Browser dashboard → http://localhost:8080
+  monthly_target: 2500.0     # Progress bar target in web dashboard

@@ -1,0 +1,186 @@
+# ============================================================
+#  APEX — AGGRESSIVE MODE CONFIG
+#  Starting capital: $500
+#  Target: Maximum compounding toward $2,500-$4,000 by month 3
+#
+#  RISK WARNING: This config uses higher leverage and tighter
+#  capital allocation. Drawdowns of 30-50% are possible on bad
+#  weeks. NEVER trade more than you can afford to lose entirely.
+#
+#  Strategy allocation:
+#    40% (~$200): Delta-neutral carry (base income, preserves core)
+#    40% (~$200): Momentum at 15-20x (growth engine)
+#    20% (~$100): Breakout plays (high R:R catches)
+#
+#  Realistic monthly targets in aggressive mode:
+#    Good month:    +50-80%  ($750-$900 from $500)
+#    Great month:   +80-120% ($900-$1,100)
+#    Exceptional:   +120%+   (rare, requires several big wins)
+# ============================================================
+
+bot:
+  name: "APEX-AGG"
+  version: "1.0.0"
+  mode: "paper"          # ← CHANGE TO "live" ONLY after paper validation
+  log_level: "INFO"
+
+# ── Capital ────────────────────────────────────────────────
+capital:
+  starting_balance_usd: 500.0
+  max_account_risk_pct: 3.0       # Slightly higher than conservative (2%)
+  max_daily_loss_pct: 20.0        # Kill switch at 20% daily loss
+  max_open_positions: 4           # Allow 4 concurrent (more opportunities)
+  max_position_pct: 40.0          # Up to 40% in single position
+  kelly_fraction: 0.35            # Slightly more aggressive Kelly fraction
+
+# ── Leverage ───────────────────────────────────────────────
+leverage:
+  conservative: 5
+  aggressive: 20                  # Max for momentum plays
+  moonshot: 30                    # Reserved for highest-conviction signals only
+  default: 15                     # Default leverage (up from 10)
+
+# ── Venues (US-accessible only) ───────────────────────────
+venues:
+  toobit:
+    enabled: false    # US restricted
+
+  hyperliquid:
+    enabled: true
+    wallet_address: ""
+    private_key: ""
+    mainnet: true
+    default_pairs:
+      - "BTC"
+      - "ETH"
+      - "SOL"
+      - "XRP"       # Higher funding rates than BTC historically
+      - "DOGE"      # Highest momentum Sharpe ratio per academic research
+    max_leverage: 40
+
+  lighter:
+    enabled: false    # US restricted
+
+  polymarket:
+    enabled: false    # Enable when Polymarket US waitlist clears
+    api_key: ""
+    api_secret: ""
+    passphrase: ""
+    wallet_private_key: ""
+    min_edge_pct: 6.0     # More aggressive edge threshold
+    max_bet_pct: 10.0
+
+# ── Strategies ─────────────────────────────────────────────
+strategies:
+
+  delta_neutral:
+    # 40% of capital (~$200) — base income layer
+    # Collects hourly funding while momentum plays compound gains
+    enabled: true
+    priority: 0
+    min_annual_rate_pct: 10.0    # Lower threshold = enter more often
+    exit_annual_rate_pct: 3.0
+    max_basis_pct: 0.15          # Slightly more tolerant
+    capital_pct: 40.0
+    check_interval_min: 60
+    pairs: ["BTC", "ETH", "SOL", "XRP"]
+    venues: ["hyperliquid"]
+
+  momentum:
+    # 40% of capital (~$200) at 15-20x = $3,000-$4,000 notional
+    # This is your growth engine. Every 10% move = $300-400 profit.
+    enabled: true
+    priority: 1
+    timeframes:
+      entry: "5m"
+      trend_filter: "15m"
+      macro: "1h"
+    ema_fast: 9
+    ema_slow: 21
+    rsi_period: 14
+    rsi_long_threshold: 50        # Slightly looser than default 52
+    rsi_short_threshold: 50       # Slightly looser than default 48
+    adx_period: 14
+    adx_min: 18                   # Slightly lower ADX threshold = more signals
+    atr_period: 14
+    stop_atr_mult: 1.2            # Tighter stops = better R:R
+    target_atr_mult: 3.5          # Bigger targets = higher R:R
+    min_volume_mult: 1.1          # Slightly lower volume bar
+    use_timing_filter: true       # Still use timing for quality
+    allow_weekends: true
+    pairs: ["BTC", "ETH", "SOL", "DOGE", "XRP"]
+    venues: ["hyperliquid"]
+
+  breakout:
+    # 20% of capital (~$100) — high R:R catches on confirmed squeezes
+    enabled: true
+    priority: 2
+    timeframes: ["15m", "1h"]
+    bb_period: 20
+    bb_std: 2.0
+    squeeze_threshold_pct: 2.0   # Slightly wider squeeze definition
+    volume_mult: 1.8             # Slightly lower volume bar for breakout
+    atr_period: 14
+    stop_atr_mult: 0.8           # Tight stop for breakout plays
+    target_bb_mult: 2.5          # Bigger target on breakouts
+    pairs: ["BTC", "ETH", "SOL", "DOGE"]
+    venues: ["hyperliquid"]
+
+  funding_arb:
+    enabled: true
+    priority: 3
+    check_interval_min: 30
+    min_annual_rate_pct: 40.0    # Only fire on EXTREME funding (crowd squeeze setup)
+    pairs: ["BTC", "ETH", "SOL"]
+    venues: ["hyperliquid"]
+
+  liquidation_cascade:
+    enabled: true
+    priority: 4
+    min_cluster_size_usd: 3_000_000   # Lower threshold = more signals
+    proximity_pct: 0.8                # Wider proximity
+    stop_pct: 0.6                     # Tighter stop
+    target_pct: 2.5                   # Bigger target
+    pairs: ["BTC", "ETH"]
+    venues: ["hyperliquid"]
+
+  polymarket_arb:
+    enabled: false    # Enable when Polymarket US access confirmed
+    priority: 5
+    venues: ["polymarket"]
+    min_profit_pct: 0.3          # More aggressive (lower threshold)
+    max_bet_usd: 30.0
+    scan_interval_sec: 10        # Faster scanning
+    preferred_categories:
+      - "geopolitics"
+      - "sports"
+      - "economics"
+
+# ── Signal Scoring ─────────────────────────────────────────
+scoring:
+  delta_neutral_weight: 0.30
+  momentum_weight: 0.30          # Equal weight with delta_neutral in aggressive mode
+  breakout_weight: 0.22
+  funding_weight: 0.08
+  liquidation_weight: 0.05
+  polymarket_arb_weight: 0.05
+  min_score_to_trade: 0.42       # Lower threshold = more trades = more compounding
+
+# ── Monitoring ─────────────────────────────────────────────
+monitoring:
+  telegram:
+    enabled: false    # Set TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID in .env to enable
+    bot_token: ""
+    chat_id: ""
+    alert_on_trade: true
+    alert_on_stop_hit: true
+    alert_on_daily_loss_limit: true
+    alert_on_daily_pnl_summary: true
+    summary_hour_utc: 23
+
+  dashboard:
+    enabled: true
+    refresh_interval_sec: 3      # Faster refresh in aggressive mode
+
+  log_file: "logs/apex-aggressive.log"
+  db_file: "data/apex-aggressive.db"
