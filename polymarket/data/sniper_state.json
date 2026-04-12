@@ -1,5 +1,5 @@
 {
-  "bankroll": 220.49,
+  "bankroll": 219.58,
   "positions": {
     "0xfc6260666d020a912a87d9000eff5116d2adfb8c30aba543427a4c1f1411f1a0": {
       "question": "MegaETH market cap (FDV) >$2B one day after launch?",
@@ -264,10 +264,17 @@
       "entry_price": 0.098,
       "edge": 0.012,
       "opened_at": "2026-04-12T22:05:53.395695+00:00"
+    },
+    "0x9fe87b4bec41ca0b2e5f09b79e59f9aba6a88feab636db30b70fa103c1b54e5a": {
+      "question": "Will Kon Knueppel win the 2025\u201326 NBA Rookie of the Year award?",
+      "direction": "YES",
+      "bet_size": 0.91,
+      "entry_price": 0.275,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T23:58:54.790605+00:00"
     }
   },
   "history": [],
-  "updated": "2026-04-12T22:05:53.395714+00:00",
   "trades": [
     {
       "question": "MegaETH market cap (FDV) >$2B one day after launch?",
@@ -598,6 +605,17 @@
       "opened_at": "2026-04-12T22:05:53.395695+00:00",
       "condition_id": "0x2053d8515f1b8cbeea4ccdb56e60e89c2617e43a8660d95166b8e71d27865277",
       "resolved": false
+    },
+    {
+      "question": "Will Kon Knueppel win the 2025\u201326 NBA Rookie of the Year award?",
+      "direction": "YES",
+      "bet_size": 0.91,
+      "entry_price": 0.275,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T23:58:54.790605+00:00",
+      "condition_id": "0x9fe87b4bec41ca0b2e5f09b79e59f9aba6a88feab636db30b70fa103c1b54e5a",
+      "resolved": false
     }
-  ]
+  ],
+  "updated": "2026-04-12T23:58:54.795094+00:00"
 }
