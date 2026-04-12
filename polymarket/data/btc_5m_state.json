@@ -1,5 +1,5 @@
 {
-  "bankroll": 400.95983026837155,
+  "bankroll": 404.96983026837154,
   "trades": [
     {
       "window_ts": 1775982300,
@@ -1470,8 +1470,8 @@
       "question": "Bitcoin Up or Down - April 12, 2:05PM-2:10PM ET",
       "direction": "DOWN",
       "bet_size": 16.04,
-      "edge": 0.0872,
-      "p_win": 0.8872,
+      "edge": 0.0857,
+      "p_win": 0.8857,
       "market_price": 0.8,
       "confidence": 0.5,
       "score": -5.0,
@@ -1493,14 +1493,16 @@
       },
       "btc_price": 71117.0,
       "start_price": 71166.97,
-      "secs_remaining": 11.2,
-      "order_id": "paper_1776017389475",
+      "secs_remaining": 11.3,
+      "order_id": "paper_1776017389386",
       "mode": "PAPER",
-      "timestamp": "2026-04-12T18:09:49.475506+00:00",
-      "resolved": false
+      "timestamp": "2026-04-12T18:09:49.386539+00:00",
+      "resolved": true,
+      "won": true,
+      "pnl": 4.01
     }
   ],
   "windows_scanned": 103,
   "windows_traded": 42,
-  "updated": "2026-04-12T18:09:49.475536+00:00"
+  "updated": "2026-04-12T18:10:09.039636+00:00"
 }
