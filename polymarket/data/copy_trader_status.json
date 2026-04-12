@@ -4284,6 +4284,48 @@
       "is_known_whale": false,
       "tx": "0xf42fab31a81fc8aa2d0613cab2ca9ceb7a5a71d6dc0f1dfd2c1b86ab176d57dc",
       "timestamp": "2026-04-12T21:51:03.355125+00:00"
+    },
+    "0xfffc3e57c56c036624850df5523af59af397cc7ff20677855e91c92ab69e3763": {
+      "condition_id": "0xfffc3e57c56c036624850df5523af59af397cc7ff20677855e91c92ab69e3763",
+      "title": "Valorant: Cloud9 vs Leviat\u00e1n Esports (BO3) - VCT Americas St",
+      "outcome": "Cloud9",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.24296734874054982,
+      "whale_address": "0x88bad395e658d248b88e55d40b0885ed9110b99a",
+      "whale_name": "0x88baD395E658d248B88e55D40b0885ED9110b99a-1773006612568",
+      "whale_size": 603.06434,
+      "is_known_whale": false,
+      "tx": "0x05fd5a08d86080e8fec87ae250047186ac4013e6bff1e808a2ad0fa41deccd45",
+      "timestamp": "2026-04-12T22:01:06.041659+00:00"
+    },
+    "0x14d57e73d4e1c050d2b7e59ffc34e9cc795966b9404459963a3a2ed43917ccf2": {
+      "condition_id": "0x14d57e73d4e1c050d2b7e59ffc34e9cc795966b9404459963a3a2ed43917ccf2",
+      "title": "Bucks vs. 76ers: O/U 225.5",
+      "outcome": "Under",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.5294292336096162,
+      "whale_address": "0xd106952ebf30a3125affd8a23b6c1f30c35fc79c",
+      "whale_name": "Herdonia",
+      "whale_size": 250.97620999999998,
+      "is_known_whale": true,
+      "tx": "0x84abfff4d96aff668b3132d2f3fe4efd9bb2da770b26d8353da19707da29cf04",
+      "timestamp": "2026-04-12T22:01:06.042008+00:00"
+    },
+    "0xad55062eaeb807a8ef3f8120fdd74d7da8af0285f207dbf10cf7e43732879654": {
+      "condition_id": "0xad55062eaeb807a8ef3f8120fdd74d7da8af0285f207dbf10cf7e43732879654",
+      "title": "Dogecoin Up or Down - April 12, 5:45PM-6:00PM ET",
+      "outcome": "Down",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.9595852793550512,
+      "whale_address": "0xdf0d2ccfe3d7c2ef120395534e43afe283509f79",
+      "whale_name": "0xdf0D2CcfE3d7C2EF120395534e43Afe283509F79-1774320078733",
+      "whale_size": 514.5084899999999,
+      "is_known_whale": true,
+      "tx": "0x7087118539db1ea0713835ad19b819cb584329d12f09bc9ff2d81d30c1c8dc64",
+      "timestamp": "2026-04-12T22:01:06.042070+00:00"
     }
   },
   "history": [],
@@ -4347,6 +4389,14 @@
       "active_markets": 3
     },
     {
+      "address": "0xd106952ebf30a3125affd8a23b6c1f30c35fc79c",
+      "name": "Herdonia",
+      "trades": 3,
+      "volume": 4868.56,
+      "last_seen": "2026-04-12T22:01:06.028245+00:00",
+      "active_markets": 2
+    },
+    {
       "address": "0xe8dd7741ccb12350957ec71e9ee332e0d1e6ec86",
       "name": "influenz.eth",
       "trades": 6,
@@ -4395,25 +4445,17 @@
       "active_markets": 3
     },
     {
-      "address": "0x5d1d9cfd66ee3068c2a8a57dedf1e1b006dcafd2",
-      "name": "",
-      "trades": 4,
-      "volume": 3030.65,
-      "last_seen": "2026-04-12T11:41:54.244455+00:00",
+      "address": "0xdf0d2ccfe3d7c2ef120395534e43afe283509f79",
+      "name": "0xdf0D2CcfE3d7C2EF120395534e43Afe283509F79-1774320078733",
+      "trades": 3,
+      "volume": 3147.18,
+      "last_seen": "2026-04-12T22:01:06.014116+00:00",
       "active_markets": 3
-    },
-    {
-      "address": "0x230287e270f04ba48df3162c5f7de6bdb8a0d6d2",
-      "name": "pilotguy",
-      "trades": 5,
-      "volume": 2898.8,
-      "last_seen": "2026-04-12T17:12:32.296270+00:00",
-      "active_markets": 4
     }
   ],
-  "total_wallets_tracked": 693,
+  "total_wallets_tracked": 695,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T21:51:03.368218+00:00"
+  "updated": "2026-04-12T22:01:06.053905+00:00"
 }
