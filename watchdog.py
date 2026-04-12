@@ -148,11 +148,12 @@ class ProcessManager:
             return
         rc = proc.returncode
         self.crash_count[name] += 1
-        msg = (f"⚠️ <b>{name}</b> crashed (rc={rc}, "
-               f"crash #{self.crash_count[name]}). Restarting...")
-        print(f"[Watchdog] {msg}")
-        _tg(msg)
-        wait = min(5 * (2 ** min(self.crash_count[name] - 1, 3)), 60)
+        n = self.crash_count[name]
+        print(f"[Watchdog] {name} crashed (rc={rc}, #{n}). Restarting...")
+        # Only alert on crash #1 and every 5th after that — no spam
+        if n == 1 or n % 5 == 0:
+            _tg(f"⚠️ <b>{name}</b> crashed (#{n}) — restarting")
+        wait = min(5 * (2 ** min(n - 1, 3)), 60)
         time.sleep(wait)
         self.start(name)
 

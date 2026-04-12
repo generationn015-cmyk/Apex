@@ -34,6 +34,7 @@ from strategies.atlas    import analyze_ATLAS
 from strategies.oracle   import analyze_ORACLE
 from strategies.sniper   import analyze_SNIPER
 from strategies.sentinel import analyze_SENTINEL
+from telegram.bot import _send as _tg
 
 ANALYZERS = {
     "ATLAS":    analyze_ATLAS,
@@ -250,6 +251,20 @@ class ApexBot:
                     "indicators": result.get("indicators", {}),
                 })
 
+                # ── Telegram push ─────────────────────────────────────────────
+                arrow = "▲" if signal == "BUY" else "▼"
+                pct   = stop_pct * 100
+                try:
+                    _tg(
+                        f"{'🟢' if signal == 'BUY' else '🔴'} <b>{arrow} {signal}  {asset}</b>\n"
+                        f"Agent: {agent_name}  ·  Strength: {strength*100:.0f}%\n"
+                        f"Entry:  <code>${entry_price:,.4f}</code>\n"
+                        f"Stop:   <code>${stop_price:,.4f}</code>  (-{pct:.1f}%)\n"
+                        f"Target: <code>${take_profit:,.4f}</code>  (+{pct*rr_ratio:.1f}%)"
+                    )
+                except Exception:
+                    pass
+
                 ind = result.get("indicators", {})
                 ind_str = ", ".join(
                     f"{k}={v}" for k, v in ind.items()
@@ -271,15 +286,26 @@ class ApexBot:
         }
         stopped = self.paper_engine.check_stop_losses(current_prices) or []
         for stop in stopped:
-            pnl_sign = "+" if stop.get("pnl", 0) >= 0 else ""
+            pnl      = stop.get("pnl", 0.0) or 0.0
+            is_win   = stop.get("status") != "LOSS"
+            pnl_sign = "+" if pnl >= 0 else ""
             print(f"  ⛔ STOP: {stop['agent']} {stop['asset']} "
                   f"@ {stop['exit_price']:.4f}  "
-                  f"pnl={pnl_sign}{stop.get('pnl', 0):.2f}")
-            pnl = stop.get("pnl", 0.0) or 0.0
-            if stop.get("status") == "LOSS":
-                self.risk_manager.record_loss(stop["agent"], pnl_usd=pnl)
-            else:
+                  f"pnl={pnl_sign}{pnl:.2f}")
+            if is_win:
                 self.risk_manager.record_win(stop["agent"],  pnl_usd=pnl)
+            else:
+                self.risk_manager.record_loss(stop["agent"], pnl_usd=pnl)
+            try:
+                emoji = "✅" if is_win else "❌"
+                _tg(
+                    f"{emoji} <b>TRADE CLOSED  {stop['asset']}</b>\n"
+                    f"Agent: {stop['agent']}  ·  {'WIN' if is_win else 'LOSS'}\n"
+                    f"Exit: <code>${stop['exit_price']:,.4f}</code>  "
+                    f"PnL: <b>{pnl_sign}${abs(pnl):.2f}</b>"
+                )
+            except Exception:
+                pass
 
         # ── Summary ───────────────────────────────────────────────────────────
         stats = self.paper_engine.get_agent_stats()

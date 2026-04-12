@@ -230,26 +230,57 @@ def _build_context() -> str:
     return "\n".join(lines)
 
 
+def _try_execute_action(intent: str) -> str | None:
+    """
+    If Claude signals an action (pause/resume/status), execute it and return result.
+    Claude embeds action tags like [ACTION:pause], [ACTION:resume], [ACTION:status].
+    Returns the action result string, or None if no action tag found.
+    """
+    import re
+    m = re.search(r'\[ACTION:(\w+)\]', intent)
+    if not m:
+        return None
+    action = m.group(1).lower()
+    handlers = {
+        "pause":   cmd_pause,
+        "resume":  cmd_resume,
+        "status":  cmd_status,
+        "report":  cmd_report,
+        "balance": cmd_balance,
+        "ping":    cmd_ping,
+    }
+    fn = handlers.get(action)
+    if fn:
+        try:
+            return fn()
+        except Exception as e:
+            return f"Action {action} failed: {e}"
+    return None
+
+
 def claude_reply(user_text: str) -> str:
-    """Send free-text to Claude with full system context. Returns reply."""
+    """Send free-text to Claude with full system context. Executes actions if detected."""
     if not ANTHROPIC_API_KEY:
         return (
-            "⚠️ ANTHROPIC_API_KEY not set — free-text AI disabled.\n"
-            "Add it to .env to enable natural language commands.\n"
-            "Available: /status /report /balance /pause /resume /ping"
+            "ANTHROPIC_API_KEY not set — using command mode only.\n"
+            "/status /report /balance /pause /resume /ping"
         )
     try:
         import anthropic
         client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
         context = _build_context()
         system = (
-            "You are the APEX trading bot's AI assistant, responding via Telegram. "
-            "You have full visibility into the bot's state shown below. "
-            "Answer concisely (under 300 chars when possible). "
-            "If the user asks you to DO something (pause, resume, change settings), "
-            "tell them you've noted it and describe what they should do via /command, "
-            "or tell them it's been done if it's a read-only action. "
-            "Be direct, smart, and talk like a trading partner not a chatbot.\n\n"
+            "You are the APEX trading bot AI, replying via Telegram to the bot operator.\n"
+            "You have full real-time visibility into the system state below.\n\n"
+            "Rules:\n"
+            "- Be concise. Max 3 sentences unless asked for detail.\n"
+            "- Speak like a sharp trading partner, not an assistant.\n"
+            "- If the user asks you to pause/resume/status/report/balance/ping, "
+            "embed exactly [ACTION:pause] or [ACTION:resume] etc. at the END of your reply — "
+            "the system will execute it automatically.\n"
+            "- If asked about performance, reference actual numbers from the snapshot.\n"
+            "- If asked to go live, warn them it requires API keys and /flip_live confirmation.\n"
+            "- Never make up data. If something isn't in the snapshot, say so.\n\n"
             f"SYSTEM SNAPSHOT:\n{context}"
         )
         resp = client.messages.create(
@@ -258,7 +289,16 @@ def claude_reply(user_text: str) -> str:
             messages=[{"role": "user", "content": user_text}],
             system=system,
         )
-        return resp.content[0].text.strip()
+        raw = resp.content[0].text.strip()
+
+        # Execute any embedded action and append its output
+        action_result = _try_execute_action(raw)
+        # Strip the tag from display
+        import re
+        display = re.sub(r'\[ACTION:\w+\]', '', raw).strip()
+        if action_result:
+            return f"{display}\n\n{action_result}"
+        return display
     except Exception as e:
         return f"⚠️ AI error: {e}"
 
