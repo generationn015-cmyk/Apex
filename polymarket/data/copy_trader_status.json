@@ -1834,6 +1834,118 @@
       "is_known_whale": true,
       "tx": "0xa7c605adbc2e47cd7bbeb5d6931ddb2769123aceba10eb7453862a1031fb0a3c",
       "timestamp": "2026-04-12T13:12:03.413206+00:00"
+    },
+    "0x7eceae72d7d7b3e175fa872c728526e6fec4714288a4bda91fe818e298e69a6f": {
+      "condition_id": "0x7eceae72d7d7b3e175fa872c728526e6fec4714288a4bda91fe818e298e69a6f",
+      "title": "Will WTI Crude Oil (WTI) hit (HIGH) $120 in April?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.36305267455452905,
+      "whale_address": "0x68688ec522468e7f8c4ce4c286017c8c3820a90a",
+      "whale_name": "0x68688EC522468e7F8C4Ce4c286017C8C3820a90A-1761046724354",
+      "whale_size": 7327.9872,
+      "is_known_whale": false,
+      "tx": "0xaf772be0c4b621b57f55fc3c1b9dfd7ba3fa56fd6a043a3882ed1e220070497e",
+      "timestamp": "2026-04-12T13:22:04.457577+00:00"
+    },
+    "0x8489e85bebdc36889f6062879df8f7d2e2c1a2a013603203a59c1ef8546b6073": {
+      "condition_id": "0x8489e85bebdc36889f6062879df8f7d2e2c1a2a013603203a59c1ef8546b6073",
+      "title": "Military action against Iran ends on April 25, 2026?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.001,
+      "whale_address": "0x272faa3b88df79f345b87ec4cb67432f0935164f",
+      "whale_name": "0x272faA3b88Df79f345B87EC4Cb67432F0935164F-1744105368237",
+      "whale_size": 1000.0,
+      "is_known_whale": false,
+      "tx": "0xdb43ac3143e4c0f21ab72822cacb259d81bf5d826ae6b8d0e0ccba298b853836",
+      "timestamp": "2026-04-12T13:22:04.458367+00:00"
+    },
+    "0xf8d9cd66b6243209edf9312b14701622f64578e17e1f2eb678f24819433d7619": {
+      "condition_id": "0xf8d9cd66b6243209edf9312b14701622f64578e17e1f2eb678f24819433d7619",
+      "title": "Trump announces US x Iran ceasefire end by April 12, 2026?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.1594990877981337,
+      "whale_address": "0x5968c0f9ebcf4983ef0816e707dfee8ae586bfa2",
+      "whale_name": "Andesax612",
+      "whale_size": 1880.8885,
+      "is_known_whale": false,
+      "tx": "0x379e2afd3f4f6f3add66e73f32eaef9bc528b7f61fc5a394c39e00cb43fc5469",
+      "timestamp": "2026-04-12T13:22:04.458444+00:00"
+    },
+    "0x397564f4eb4742f07ca296b9fd169a0d132e3d341613d22a2fe88962177e3c4f": {
+      "condition_id": "0x397564f4eb4742f07ca296b9fd169a0d132e3d341613d22a2fe88962177e3c4f",
+      "title": "Will Newcastle United FC win on 2026-04-12?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.36997039,
+      "whale_address": "0xab828a2bcb4a5a93a94cdeedf3cb70b6211babe5",
+      "whale_name": "Danielbkck",
+      "whale_size": 19621.98224,
+      "is_known_whale": false,
+      "tx": "0x6da01b19aa8c60ffaddf61ff41c5f62c629d03cf8eb77df8eef4c8feee14931d",
+      "timestamp": "2026-04-12T13:22:04.458487+00:00"
+    },
+    "0x36e8ca24d2a13435f519f15580d42b45cdbe3bc425fb39a7c2733260357af0fa": {
+      "condition_id": "0x36e8ca24d2a13435f519f15580d42b45cdbe3bc425fb39a7c2733260357af0fa",
+      "title": "Will there be no change in Fed interest rates after the Apri",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.982,
+      "whale_address": "0x4c2e1f12c5b49f7aa21eb1a5d36845ef46b529fd",
+      "whale_name": "josephjone",
+      "whale_size": 1455.48,
+      "is_known_whale": false,
+      "tx": "0x22f69de469772aff564d4da37e9cab5a61f02d51916e06b1f8e70a0392d513e7",
+      "timestamp": "2026-04-12T13:22:04.458525+00:00"
+    },
+    "0x409305168b0a406cda15e7e5b5e974d1de44d5b1e42ccfbfb3c7c2b756ff9c8b": {
+      "condition_id": "0x409305168b0a406cda15e7e5b5e974d1de44d5b1e42ccfbfb3c7c2b756ff9c8b",
+      "title": "Will Strava\u2019s market cap be between $2B and $3B at market cl",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.57,
+      "whale_address": "0xc336ac01aca5637b940c97cc8628a7e3ed239f48",
+      "whale_name": "LouisWilson9910",
+      "whale_size": 499.0,
+      "is_known_whale": false,
+      "tx": "0x52829a894cc97f178701617bd67bf5156f76ef7a50d7466c8a9c67b367ff155e",
+      "timestamp": "2026-04-12T13:22:04.458561+00:00"
+    },
+    "0x66a07d808f8c2fc99536b277c509c6b415ffb2e17454f95bbd811f1ee65da389": {
+      "condition_id": "0x66a07d808f8c2fc99536b277c509c6b415ffb2e17454f95bbd811f1ee65da389",
+      "title": "Military action against Iran ends on April 24, 2026?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.001,
+      "whale_address": "0x272faa3b88df79f345b87ec4cb67432f0935164f",
+      "whale_name": "0x272faA3b88Df79f345B87EC4Cb67432F0935164F-1744105368237",
+      "whale_size": 1000.0,
+      "is_known_whale": false,
+      "tx": "0xbfac51d3be87f5275ccf97519004ade36b7a9710412486bd916c7f1f376900c9",
+      "timestamp": "2026-04-12T13:22:04.458604+00:00"
+    },
+    "0xdd1fee939f82da1422b4e9b6c4ee726afae26f0026068f3c809ac3bf817ab0db": {
+      "condition_id": "0xdd1fee939f82da1422b4e9b6c4ee726afae26f0026068f3c809ac3bf817ab0db",
+      "title": "Bitcoin Up or Down - April 12, 9:15AM-9:20AM ET",
+      "outcome": "Down",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.09858348814743256,
+      "whale_address": "0x21fba7a743155a9cbe0e04b2c815bc954459842c",
+      "whale_name": "Youwouldnotexpectit",
+      "whale_size": 1345.7,
+      "is_known_whale": false,
+      "tx": "0x41fc7aa690051217b01adf15932ebb536499570750b3827b7a934a6be25b37b6",
+      "timestamp": "2026-04-12T13:22:04.458636+00:00"
     }
   },
   "history": [],
@@ -1867,10 +1979,18 @@
     {
       "address": "0x230287e270f04ba48df3162c5f7de6bdb8a0d6d2",
       "name": "pilotguy",
-      "trades": 3,
-      "volume": 1949.37,
-      "last_seen": "2026-04-12T13:12:03.397353+00:00",
-      "active_markets": 2
+      "trades": 4,
+      "volume": 2688.46,
+      "last_seen": "2026-04-12T13:22:04.404242+00:00",
+      "active_markets": 3
+    },
+    {
+      "address": "0xfb512d428db90455c9507d2578cc306b2701082d",
+      "name": "",
+      "trades": 4,
+      "volume": 2652.5,
+      "last_seen": "2026-04-12T13:22:04.396721+00:00",
+      "active_markets": 3
     },
     {
       "address": "0xd27d1e863b5b29af53495f7c072d492bdfdaa84f",
@@ -1878,14 +1998,6 @@
       "trades": 3,
       "volume": 1937.96,
       "last_seen": "2026-04-12T13:12:03.404884+00:00",
-      "active_markets": 2
-    },
-    {
-      "address": "0xfb512d428db90455c9507d2578cc306b2701082d",
-      "name": "",
-      "trades": 3,
-      "volume": 1913.42,
-      "last_seen": "2026-04-12T13:12:03.327053+00:00",
       "active_markets": 2
     },
     {
@@ -1913,9 +2025,9 @@
       "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 316,
+  "total_wallets_tracked": 330,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T13:12:03.416701+00:00"
+  "updated": "2026-04-12T13:22:04.464782+00:00"
 }
