@@ -4060,6 +4060,62 @@
       "is_known_whale": false,
       "tx": "0xa8fbc8afeeb93ab0ee51fe3a624f462963c6ccd73a72ef5b9505a17b73316c21",
       "timestamp": "2026-04-12T18:17:29.248442+00:00"
+    },
+    "0xff60a13256954881a0b2d6fd6645fc7e738da2eb63c11240bc1906f60c8ae4a8": {
+      "condition_id": "0xff60a13256954881a0b2d6fd6645fc7e738da2eb63c11240bc1906f60c8ae4a8",
+      "title": "Los Angeles Angels vs. Cincinnati Reds",
+      "outcome": "Cincinnati Reds",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.08,
+      "whale_address": "0x255ab4ffc544bccbcdc2e5891fa239c5a3813435",
+      "whale_name": "BaronOnThrone",
+      "whale_size": 486.2,
+      "is_known_whale": false,
+      "tx": "0x223a79b3a97fc54ed70b82d9c8ecd19327e7942dd6d7d6ff2a1f83fc43e11671",
+      "timestamp": "2026-04-12T18:26:04.644151+00:00"
+    },
+    "0xf318b4bd47ec0f0f853e75af11b3ff4902d4c5ba042b664bac4bda1169ba3cc1": {
+      "condition_id": "0xf318b4bd47ec0f0f853e75af11b3ff4902d4c5ba042b664bac4bda1169ba3cc1",
+      "title": "Spread: Hornets (-12.5)",
+      "outcome": "Hornets",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.54,
+      "whale_address": "0xbd38f8143f87f484d7f039626b5064b10f0e99d4",
+      "whale_name": "liberateme",
+      "whale_size": 1255.54,
+      "is_known_whale": false,
+      "tx": "0x463f32d89af9ac0d053b2544e1359fc8c150d65914fa8c696045b7a5380848be",
+      "timestamp": "2026-04-12T18:26:04.644200+00:00"
+    },
+    "0xa8ead08042fd3b159b252ed8accfd548809fa260f2f40eddf2ae75e37f9df105": {
+      "condition_id": "0xa8ead08042fd3b159b252ed8accfd548809fa260f2f40eddf2ae75e37f9df105",
+      "title": "Will voter turnout be 71\u201374% in the 2026 Hungarian parliamen",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.001,
+      "whale_address": "0xf6d2a8cdbb8778a6149153da3c24d8e462e47048",
+      "whale_name": "Nordboyy",
+      "whale_size": 1346.35,
+      "is_known_whale": false,
+      "tx": "0xbf908e8cad9e64701d7aed1b1efeef24acc6622362657334dcb3d8032ff532aa",
+      "timestamp": "2026-04-12T18:26:04.644218+00:00"
+    },
+    "0x46fe7c441e749e024f69e9eafa2bfba2c439552c0a03fb6831f4064106562de5": {
+      "condition_id": "0x46fe7c441e749e024f69e9eafa2bfba2c439552c0a03fb6831f4064106562de5",
+      "title": "Will Manchester City FC win on 2026-04-19?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.54,
+      "whale_address": "0xead152b855effa6b5b5837f53b24c0756830c76a",
+      "whale_name": "elkmonkey",
+      "whale_size": 335.83068999999995,
+      "is_known_whale": true,
+      "tx": "0x34900b493e96c8f8c8437636c449406c66bac151fb97827fffe1decb121c6c30",
+      "timestamp": "2026-04-12T18:26:04.644235+00:00"
     }
   },
   "history": [],
@@ -4125,10 +4181,10 @@
     {
       "address": "0xe8dd7741ccb12350957ec71e9ee332e0d1e6ec86",
       "name": "influenz.eth",
-      "trades": 5,
-      "volume": 4519.25,
-      "last_seen": "2026-04-12T14:12:10.006787+00:00",
-      "active_markets": 3
+      "trades": 6,
+      "volume": 4727.81,
+      "last_seen": "2026-04-12T18:26:04.502999+00:00",
+      "active_markets": 4
     },
     {
       "address": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
@@ -4149,10 +4205,10 @@
     {
       "address": "0xead152b855effa6b5b5837f53b24c0756830c76a",
       "name": "elkmonkey",
-      "trades": 5,
-      "volume": 3353.42,
-      "last_seen": "2026-04-12T18:05:59.381738+00:00",
-      "active_markets": 2
+      "trades": 6,
+      "volume": 3689.25,
+      "last_seen": "2026-04-12T18:26:04.633553+00:00",
+      "active_markets": 3
     },
     {
       "address": "0x5d1d9cfd66ee3068c2a8a57dedf1e1b006dcafd2",
@@ -4187,9 +4243,9 @@
       "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 649,
+  "total_wallets_tracked": 660,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T18:26:02.334735+00:00"
+  "updated": "2026-04-12T18:26:04.648234+00:00"
 }
