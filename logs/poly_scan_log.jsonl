@@ -423,3 +423,4 @@
 {"time": "2026-04-12T15:49:56.309621+00:00", "value_signals": 5, "sports_signals": 6, "copy_signals": 1, "arb_signals": 0, "new_opens": 1, "new_closes": 0, "open_positions": 8}
 {"time": "2026-04-12T16:21:19.182891+00:00", "value_signals": 5, "sports_signals": 6, "copy_signals": 4, "arb_signals": 0, "new_opens": 0, "new_closes": 0, "open_positions": 8}
 {"time": "2026-04-12T16:52:38.693531+00:00", "value_signals": 3, "sports_signals": 6, "copy_signals": 3, "arb_signals": 0, "new_opens": 0, "new_closes": 0, "open_positions": 8}
+{"time": "2026-04-12T17:24:08.056159+00:00", "value_signals": 3, "sports_signals": 5, "copy_signals": 2, "arb_signals": 0, "new_opens": 1, "new_closes": 1, "open_positions": 8}
