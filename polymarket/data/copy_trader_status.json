@@ -2506,6 +2506,34 @@
       "is_known_whale": false,
       "tx": "0x1264201314f6ec4f63d5d32bee1859b012e9b9876f24bd8d39844c9217bfd8d9",
       "timestamp": "2026-04-12T14:22:11.222388+00:00"
+    },
+    "0x74ea4d21539515af47adbce0c220725950790c4e0352c2cce65b9cd4d781ff5b": {
+      "condition_id": "0x74ea4d21539515af47adbce0c220725950790c4e0352c2cce65b9cd4d781ff5b",
+      "title": "Parma Calcio 1913 vs. SSC Napoli: Both Teams to Score",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.999,
+      "whale_address": "0xedf72bd3364959353e9e23562cc26429f48b5ac3",
+      "whale_name": "therealgreenastro",
+      "whale_size": 999.99,
+      "is_known_whale": false,
+      "tx": "0x4d59e335b4106c6c1978b804893aeb558106dec7c05b896133c2b84373cd4802",
+      "timestamp": "2026-04-12T14:32:12.121429+00:00"
+    },
+    "0xfb1835b887c33862f5749c619e612d1244ab6e66115f0ef43d373485dc3a1573": {
+      "condition_id": "0xfb1835b887c33862f5749c619e612d1244ab6e66115f0ef43d373485dc3a1573",
+      "title": "Will Manchester City win the 2025\u201326 English Premier League?",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.3031708940652058,
+      "whale_address": "0x15b3d91969b2210ca138c252372e6307b5f6b15e",
+      "whale_name": "burgesa",
+      "whale_size": 2028.04,
+      "is_known_whale": false,
+      "tx": "0x2fc4dc6d2dbebd4234b7896a6887757a1921fefeb8bcab1e41081827e6738d99",
+      "timestamp": "2026-04-12T14:32:12.122434+00:00"
     }
   },
   "history": [],
@@ -2617,9 +2645,9 @@
       "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 402,
+  "total_wallets_tracked": 410,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T14:22:11.226822+00:00"
+  "updated": "2026-04-12T14:32:12.128511+00:00"
 }
