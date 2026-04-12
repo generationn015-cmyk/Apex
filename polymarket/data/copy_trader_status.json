@@ -378,15 +378,71 @@
       "is_known_whale": false,
       "tx": "0x06d760797c9b8ae8bcc29b30f094e457994b266a0f9ba1f721164144737eb468",
       "timestamp": "2026-04-12T10:11:31.039232+00:00"
+    },
+    "0x5353a00835cbdba979f76f9b57f9141d79e8e4f4acce8149c70235ba2ece67b5": {
+      "condition_id": "0x5353a00835cbdba979f76f9b57f9141d79e8e4f4acce8149c70235ba2ece67b5",
+      "title": "Will Moritz Seider win the 2025\u20132026 NHL James Norris Memori",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.997,
+      "whale_address": "0x9179e6945f338ad7785577709ddd9494760cbe4b",
+      "whale_name": "quaeratDelectus",
+      "whale_size": 809.74,
+      "is_known_whale": false,
+      "tx": "0xb87e32c1d00a1c0e4806be370413f34dfa87d7879c680389ddfbd5806afa2855",
+      "timestamp": "2026-04-12T10:21:40.847888+00:00"
+    },
+    "0x409348962a7f540c9b624f49e1f9eb42f718a8531a3275fbbc07ee5e0ec780e1": {
+      "condition_id": "0x409348962a7f540c9b624f49e1f9eb42f718a8531a3275fbbc07ee5e0ec780e1",
+      "title": "LoL: HANJIN BRION vs KT Rolster - Game 1 Winner",
+      "outcome": "KT Rolster",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.81,
+      "whale_address": "0x3471a897e56a8d3621ca79af87dae4325977f17e",
+      "whale_name": "xytest",
+      "whale_size": 994.3,
+      "is_known_whale": false,
+      "tx": "0xb080e312fd3b4abd65cf8b9053e23ba43290f614006c342a0d7dc815012d20da",
+      "timestamp": "2026-04-12T10:21:40.848283+00:00"
+    },
+    "0xdb4b2f370c3d0e996fbb32213c87aa5402936e3d4882432b6738e2f5661b79a6": {
+      "condition_id": "0xdb4b2f370c3d0e996fbb32213c87aa5402936e3d4882432b6738e2f5661b79a6",
+      "title": "Will Cura\u00e7ao win the 2026 FIFA World Cup?",
+      "outcome": "No",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.997,
+      "whale_address": "0x95531006711db7e918b7b028996c8f59e376af91",
+      "whale_name": "bfghty",
+      "whale_size": 1347.51,
+      "is_known_whale": false,
+      "tx": "0x89f8d05651c86c52bc7920b373f31a018833c1b57801edfb93e3995b99250464",
+      "timestamp": "2026-04-12T10:21:40.848305+00:00"
+    },
+    "0xb2518c533f4208f66414852b875d2031ed483ff7708cec97e029bf6ef3f603db": {
+      "condition_id": "0xb2518c533f4208f66414852b875d2031ed483ff7708cec97e029bf6ef3f603db",
+      "title": "Porsche Tennis Grand Prix, Qualification: Alycia Parks vs Vi",
+      "outcome": "Viktoriya Tomova",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.22,
+      "whale_address": "0x7a5d94f83ff0195387eaf9f4463433d03eda54db",
+      "whale_name": "mishipolis",
+      "whale_size": 585.96,
+      "is_known_whale": false,
+      "tx": "0x901b4aa889f6c12d7e61909718b4962d6b29fdf5ead68c6fe1f7e3fe82a6049f",
+      "timestamp": "2026-04-12T10:21:40.848320+00:00"
     }
   },
   "history": [],
   "consecutive_losses": 0,
   "cooldown_until": null,
   "top_traders": [],
-  "total_wallets_tracked": 72,
+  "total_wallets_tracked": 89,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T10:11:31.039800+00:00"
+  "updated": "2026-04-12T10:21:40.848860+00:00"
 }
