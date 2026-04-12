@@ -1,63 +1,23 @@
 {
-  "updated_at": "2026-04-12T12:44:16.753922+00:00",
+  "updated_at": "2026-04-12T18:23:31.708309+00:00",
   "mode": "paper",
-  "cycle": 33,
+  "cycle": 1,
   "stats": {
-    "total_trades": 94,
+    "total_trades": 0,
     "closed": 0,
-    "open": 94,
+    "open": 0,
     "wins": 0,
     "losses": 0,
     "win_rate": 0,
     "total_pnl": 0,
+    "unrealized_pnl": 0.0,
+    "net_pnl": 0.0,
     "by_asset": {}
   },
   "last_signals": {
-    "ATLAS": [
-      {
-        "agent": "ATLAS",
-        "asset": "BTC/USDT",
-        "signal": "SELL",
-        "strength": 0.75,
-        "entry_price": 71521.34,
-        "stop_loss": 72008.400325,
-        "take_profit": 70790.749512,
-        "trade_id": "ATLAS_1775997856272",
-        "indicators": {
-          "sma10": 71599.107,
-          "sma50": 72650.0916,
-          "adx": 36.3,
-          "atr": 324.4796,
-          "vol_ratio": 1.0,
-          "gap_pct": 1.447,
-          "fresh_cross": false,
-          "htf_aligned": true
-        }
-      }
-    ],
+    "ATLAS": [],
     "ORACLE": [],
     "SNIPER": [],
-    "SENTINEL": [
-      {
-        "agent": "SENTINEL",
-        "asset": "BTC/USDT",
-        "signal": "SELL",
-        "strength": 0.8,
-        "entry_price": 71521.34,
-        "stop_loss": 72008.400325,
-        "take_profit": 70790.749512,
-        "trade_id": "SENTINEL_1775997856751",
-        "indicators": {
-          "ema8": 71649.994,
-          "ema21": 72077.4725,
-          "ema50": 72279.9852,
-          "adx": 36.3,
-          "squeeze_release": false,
-          "in_squeeze": false,
-          "slope8": -0.2287,
-          "dist_pct": 0.772
-        }
-      }
-    ]
+    "SENTINEL": []
   }
 }
