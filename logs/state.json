@@ -1,11 +1,11 @@
 {
-  "updated_at": "2026-04-12T09:46:58.125189+00:00",
+  "updated_at": "2026-04-12T09:50:18.563037+00:00",
   "mode": "paper",
   "cycle": 1,
   "stats": {
-    "total_trades": 25,
+    "total_trades": 34,
     "closed": 0,
-    "open": 25,
+    "open": 34,
     "wins": 0,
     "losses": 0,
     "win_rate": 0,
@@ -13,7 +13,48 @@
     "by_asset": {}
   },
   "last_signals": {
-    "ATLAS": [],
+    "ATLAS": [
+      {
+        "agent": "ATLAS",
+        "asset": "BTC/USDT",
+        "signal": "SELL",
+        "strength": 0.65,
+        "entry_price": 71554.31,
+        "stop_loss": 72084.527437,
+        "take_profit": 70758.983844,
+        "trade_id": "ATLAS_1775987414422",
+        "indicators": {
+          "sma10": 71805.12,
+          "sma50": 72666.0122,
+          "adx": 33.2,
+          "atr": 353.7055,
+          "vol_ratio": 1.0,
+          "gap_pct": 1.185,
+          "fresh_cross": false,
+          "htf_aligned": true
+        }
+      },
+      {
+        "agent": "ATLAS",
+        "asset": "ETH/USDT",
+        "signal": "SELL",
+        "strength": 0.65,
+        "entry_price": 2212.76,
+        "stop_loss": 2236.989722,
+        "take_profit": 2176.415417,
+        "trade_id": "ATLAS_1775987415552",
+        "indicators": {
+          "sma10": 2223.547,
+          "sma50": 2241.9718,
+          "adx": 30.3,
+          "atr": 16.1526,
+          "vol_ratio": 1.0,
+          "gap_pct": 0.822,
+          "fresh_cross": false,
+          "htf_aligned": true
+        }
+      }
+    ],
     "ORACLE": [],
     "SNIPER": [],
     "SENTINEL": [
@@ -22,19 +63,19 @@
         "asset": "BTC/USDT",
         "signal": "SELL",
         "strength": 0.75,
-        "entry_price": 71606.78,
-        "stop_loss": 72133.089833,
-        "take_profit": 70817.315251,
-        "trade_id": "SENTINEL_1775987216942",
+        "entry_price": 71554.31,
+        "stop_loss": 72084.527437,
+        "take_profit": 70758.983844,
+        "trade_id": "SENTINEL_1775987417451",
         "indicators": {
-          "ema8": 71822.0092,
-          "ema21": 72271.061,
-          "ema50": 72380.7911,
-          "adx": 33.1,
+          "ema8": 71810.3492,
+          "ema21": 72266.291,
+          "ema50": 72378.7335,
+          "adx": 33.2,
           "squeeze_release": false,
           "in_squeeze": false,
-          "slope8": -0.2671,
-          "dist_pct": 0.919
+          "slope8": -0.2833,
+          "dist_pct": 0.985
         }
       }
     ]
