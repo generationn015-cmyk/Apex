@@ -3164,6 +3164,76 @@
       "is_known_whale": false,
       "tx": "0xd4ea0fbacc3e9c3fc3eb89bdd1de5ad226de6a521177bdbd306d1962c41b3d95",
       "timestamp": "2026-04-12T15:42:20.347660+00:00"
+    },
+    "0x3535fb2f4aef6619dde8b367cb5e5d209526bb496d5d9778428c58a0252435e3": {
+      "condition_id": "0x3535fb2f4aef6619dde8b367cb5e5d209526bb496d5d9778428c58a0252435e3",
+      "title": "Will Zohran Mamdani win the 2028 Democratic presidential nom",
+      "outcome": "No",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.992,
+      "whale_address": "0xebf979838437fe99e4b2ef3fb92427ae5fe6343c",
+      "whale_name": "rtohrtsgbsrtgdf",
+      "whale_size": 516.0,
+      "is_known_whale": false,
+      "tx": "0xa8e80a33de64fcac7e952348090e5e3979b33ab7a18ff576c478bf9ed9ecb91e",
+      "timestamp": "2026-04-12T15:52:21.619696+00:00"
+    },
+    "0xe05bfd5efc54b5e3cd2ea7cd3e83298839620bfe9fa5986ff4c531cc008e55e2": {
+      "condition_id": "0xe05bfd5efc54b5e3cd2ea7cd3e83298839620bfe9fa5986ff4c531cc008e55e2",
+      "title": "Military action against Iran continues through April 30, 202",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.013647119381420537,
+      "whale_address": "0x02953a0d785f85f388165d3380629c7bbc7fed9d",
+      "whale_name": "gertrudeee",
+      "whale_size": 1465.510665,
+      "is_known_whale": false,
+      "tx": "0x2ab729426372f9024bc89b71f5d9ace781e98047bd3d71f5925c202ed804d7e0",
+      "timestamp": "2026-04-12T15:52:21.620617+00:00"
+    },
+    "0x3265b10daeb30dbcc3214bd02e488551d0a5d3028392f4152e4750b943fbfc91": {
+      "condition_id": "0x3265b10daeb30dbcc3214bd02e488551d0a5d3028392f4152e4750b943fbfc91",
+      "title": "Will Tim Walz win the 2028 Democratic presidential nominatio",
+      "outcome": "No",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.992,
+      "whale_address": "0x472a731288ef43d10ec0a64cf1e75332d0af6263",
+      "whale_name": "fhfxthf",
+      "whale_size": 653.0,
+      "is_known_whale": false,
+      "tx": "0x9fca2c78419970558423b75e4037ad510ecd1caa718708d81ee4ac856ee58acb",
+      "timestamp": "2026-04-12T15:52:21.620675+00:00"
+    },
+    "0x24f38479176af2d71f64161d53bde777aef49ef1c03066510174d43a8d2a43fe": {
+      "condition_id": "0x24f38479176af2d71f64161d53bde777aef49ef1c03066510174d43a8d2a43fe",
+      "title": "Trump out as President by April 30?",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.011,
+      "whale_address": "0x9a775d2c511e38cb7d2bf58b0fd013af72c38dd9",
+      "whale_name": "FrischerArtem",
+      "whale_size": 1250.0,
+      "is_known_whale": false,
+      "tx": "0x590b105eef10ddafb8dfc51296617b79d0c2823098080681f7844eb405983e7e",
+      "timestamp": "2026-04-12T15:52:21.620699+00:00"
+    },
+    "0x1311e76aec6b52a976d3c98ebe6e6c41c7303f978adc07f68857430cea643c2a": {
+      "condition_id": "0x1311e76aec6b52a976d3c98ebe6e6c41c7303f978adc07f68857430cea643c2a",
+      "title": "Games Total: O/U 2.5",
+      "outcome": "Under",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.5370569280343717,
+      "whale_address": "0x690248548fe49af19a6e1120d0595f3fdaebb4ca",
+      "whale_name": "Partyarty91",
+      "whale_size": 6059.262000000001,
+      "is_known_whale": false,
+      "tx": "0x53d04749bbde8cafbcd6ebc07e4c26bf978f199592d9f77edfadc7fd7d9e35af",
+      "timestamp": "2026-04-12T15:52:21.620717+00:00"
     }
   },
   "history": [],
@@ -3291,9 +3361,9 @@
       "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 493,
+  "total_wallets_tracked": 503,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T15:42:20.355017+00:00"
+  "updated": "2026-04-12T15:52:21.627400+00:00"
 }
