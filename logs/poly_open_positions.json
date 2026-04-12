@@ -173,7 +173,7 @@
     "condition_id": "0x7a00c50eb4e76f5bc25b38a83c029dfde5faa9268e4ade490c931a384f8d157a",
     "direction": "YES",
     "entry_price": 0.2845,
-    "current_price": 0.282,
+    "current_price": 0.2865,
     "bet_size": 13.74,
     "edge": 0.015,
     "confidence": 0.2995,
@@ -184,7 +184,7 @@
     "expires_at": "2026-04-12T16:56:44.340776+00:00",
     "max_hold_hours": 12,
     "status": "OPEN",
-    "pnl_pct": -0.9
+    "pnl_pct": 0.7
   },
   {
     "id": "d639694c7569",
@@ -211,7 +211,7 @@
     "condition_id": "0x6509c26f04acbe80e73144486933fff507901867925f165421d66155193fce55",
     "direction": "YES",
     "entry_price": 0.345,
-    "current_price": 0.345,
+    "current_price": 0.35,
     "bet_size": 10.68,
     "edge": 0.015,
     "confidence": 0.36,
@@ -222,7 +222,7 @@
     "expires_at": "2026-04-12T19:37:20.645562+00:00",
     "max_hold_hours": 12,
     "status": "OPEN",
-    "pnl_pct": 0.0
+    "pnl_pct": 1.4
   },
   {
     "id": "ad55adf607a3",
@@ -230,7 +230,7 @@
     "condition_id": "0x14dbdb6274de6bcc65ce2b628c6636ff210fd452d095b0f14fdb1d376b31cecf",
     "direction": "YES",
     "entry_price": 0.23,
-    "current_price": 0.215,
+    "current_price": 0.21,
     "bet_size": 10.53,
     "edge": 0.015,
     "confidence": 0.245,
@@ -241,7 +241,7 @@
     "expires_at": "2026-04-12T22:36:43.734814+00:00",
     "max_hold_hours": 12,
     "status": "OPEN",
-    "pnl_pct": -6.5
+    "pnl_pct": -8.7
   },
   {
     "id": "b5c844db1afd",
@@ -268,7 +268,7 @@
     "condition_id": "0x9b6fef249040fd17e9c107955b37ac2c3e923509b6b0ff01cc463a331ddeb894",
     "direction": "YES",
     "entry_price": 0.1595,
-    "current_price": 0.165,
+    "current_price": 0.16,
     "bet_size": 12.14,
     "edge": 0.013,
     "confidence": 0.1725,
@@ -279,6 +279,25 @@
     "expires_at": "2026-04-14T01:43:34.840462+00:00",
     "max_hold_hours": 36,
     "status": "OPEN",
-    "pnl_pct": 3.4
+    "pnl_pct": 0.3
+  },
+  {
+    "id": "a0713b0f0a01",
+    "market": "Will Spain win the 2026 FIFA World Cup?",
+    "condition_id": "0x7976b8dbacf9077eb1453a62bcefd6ab2df199acd28aad276ff0d920d6992892",
+    "direction": "YES",
+    "entry_price": 0.1705,
+    "current_price": 0.1705,
+    "bet_size": 11.17,
+    "edge": 0.013,
+    "confidence": 0.1835,
+    "source": "value_scan",
+    "trader": "",
+    "score": 6.4,
+    "opened_at": "2026-04-12T14:45:59.069015+00:00",
+    "expires_at": "2026-04-14T02:45:59.069029+00:00",
+    "max_hold_hours": 36,
+    "status": "OPEN",
+    "pnl_pct": 0.0
   }
 ]
