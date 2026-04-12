@@ -1,19 +1,23 @@
 """
-APEX -- Unified Telegram Command Bot
-One clean consolidated notification instead of spam.
-Two-way: slash commands + free-text routed through Claude AI.
+APEX — Telegram Bot
+════════════════════
+ONE hourly digest. Clean commands. No spam.
 
 Commands:
-  /status   -- all systems status + PnL
-  /report   -- full performance breakdown
-  /balance  -- account balance (paper or live)
-  /pause    -- stop trading
-  /resume   -- resume trading
-  /flip_live -- switch to live mode (requires confirmation)
-  /ping     -- health check
+  /status    — full system overview
+  /btc       — BTC 5-min sniper performance
+  /agents    — crypto agent breakdown
+  /poly      — polymarket scanner positions
+  /copy      — copy trader status
+  /balance   — all bankrolls
+  /report    — detailed performance report
+  /pause     — pause all trading
+  /resume    — resume trading
+  /live      — switch to live mode
+  /ping      — health check
+  /help      — list all commands
 """
 import json
-import os
 import time
 import urllib.parse
 import urllib.request
@@ -25,43 +29,30 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from configs.config import TELEGRAM_TOKEN, TELEGRAM_CHAT_ID, STATE_FILE, ANTHROPIC_API_KEY
 
-
-# -- Pause flag (file-based so watchdog can read it) ---------------------------
-PAUSE_FILE = Path(__file__).parent.parent / "logs" / ".paused"
-POLY_DATA = Path(__file__).parent.parent / "polymarket" / "data"
-NOTIFICATION_QUEUE = POLY_DATA / "notification_queue.jsonl"
-LAST_DIGEST_FILE = Path(__file__).parent.parent / "logs" / ".last_digest"
-DIGEST_INTERVAL = 3600  # 1 hour between consolidated digests
-
-
-def is_paused() -> bool:
-    return PAUSE_FILE.exists()
-
-def set_paused(paused: bool):
-    if paused:
-        PAUSE_FILE.touch()
-    elif PAUSE_FILE.exists():
-        PAUSE_FILE.unlink()
+_ROOT = Path(__file__).parent.parent
+_LOGS = _ROOT / "logs"
+_POLY = _ROOT / "polymarket" / "data"
+_PAUSE_FILE = _LOGS / ".paused"
+_DIGEST_FILE = _LOGS / ".last_digest"
+_DIGEST_INTERVAL = 3600  # 1 hour
 
 
-# -- Telegram helpers ----------------------------------------------------------
+# ── Telegram I/O ─────────────────────────────────────────────────────────────
 
 def _send(text: str, chat_id: str = TELEGRAM_CHAT_ID):
     data = urllib.parse.urlencode({
-        "chat_id": chat_id,
-        "text": text,
-        "parse_mode": "HTML",
+        "chat_id": chat_id, "text": text, "parse_mode": "HTML",
     }).encode()
     try:
         urllib.request.urlopen(
             f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
-            data=data, timeout=10
+            data=data, timeout=10,
         )
     except Exception as e:
-        print(f"[Telegram] send failed: {e}")
+        print(f"[TG] send failed: {e}")
 
 
-def _get_updates(offset=None) -> list:
+def _poll(offset=None) -> list:
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/getUpdates?timeout=20"
     if offset:
         url += f"&offset={offset}"
@@ -72,378 +63,329 @@ def _get_updates(offset=None) -> list:
         return []
 
 
-# -- State readers -------------------------------------------------------------
+# ── Data Loaders ─────────────────────────────────────────────────────────────
 
-def _load_state() -> dict:
+def _json(p: Path) -> dict | None:
     try:
-        if STATE_FILE.exists():
-            with open(STATE_FILE) as f:
-                return json.load(f)
+        return json.loads(p.read_text()) if p.exists() else None
     except Exception:
-        pass
-    return {}
+        return None
 
 
-def _load_json(p: Path) -> dict | None:
-    try:
-        if p.exists():
-            return json.loads(p.read_text())
-    except Exception:
-        pass
-    return None
+def _is_paused() -> bool:
+    return _PAUSE_FILE.exists()
 
 
-def _drain_notification_queue() -> list[dict]:
-    """Read and clear the notification queue from subsystems."""
-    entries = []
-    try:
-        if NOTIFICATION_QUEUE.exists():
-            for line in NOTIFICATION_QUEUE.read_text().splitlines():
-                line = line.strip()
-                if line:
-                    try:
-                        entries.append(json.loads(line))
-                    except Exception:
-                        pass
-            # Clear the queue after reading
-            NOTIFICATION_QUEUE.write_text("")
-    except Exception:
-        pass
-    return entries
+# ── Commands ─────────────────────────────────────────────────────────────────
 
+def cmd_status() -> str:
+    lines = ["<b>APEX System Status</b>"]
+    paused = " [PAUSED]" if _is_paused() else ""
+    lines[0] += paused
 
-# -- Consolidated Digest -------------------------------------------------------
+    # Processes
+    wdog = _json(_LOGS / "watchdog_status.json")
+    if wdog:
+        procs = wdog.get("processes", {})
+        for name, info in procs.items():
+            st = info.get("status", "?")
+            dot = "●" if st == "running" else "○"
+            lines.append(f"  {dot} {name}: {st}")
 
-def _build_digest() -> str | None:
-    """
-    Build ONE clean consolidated status message from all subsystems.
-    Returns None if nothing meaningful to report.
-    """
-    lines = ["<b>APEX Status Update</b>"]
-    has_content = False
+    # Bankrolls
+    btc = _json(_POLY / "btc_5m_state.json")
+    copy = _json(_POLY / "copy_trader_status.json")
+    state = _json(STATE_FILE)
 
-    # -- Crypto Agents ---------------------------------------------------------
-    state = _load_state()
+    if btc:
+        trades = btc.get("trades", [])
+        resolved = [t for t in trades if t.get("resolved")]
+        wins = sum(1 for t in resolved if t.get("won"))
+        pnl = sum(t.get("pnl", 0) for t in resolved)
+        lines.append(f"\n<b>BTC Sniper</b>: ${btc['bankroll']:.2f}")
+        lines.append(f"  {wins}W/{len(resolved)-wins}L | PnL: ${pnl:+.2f}")
+
     if state:
         s = state.get("stats", {})
-        mode = state.get("mode", "paper").upper()
-        cycle = state.get("cycle", 0)
-        pnl = s.get("total_pnl", 0)
-        wr = s.get("win_rate", 0)
-        trades = s.get("total_trades", 0)
-        pnl_sign = "+" if pnl >= 0 else ""
-        lines.append(
-            f"\n<b>Crypto Agents</b> ({mode} C{cycle})"
-            f"\n  PnL: {pnl_sign}${pnl:.2f} | WR: {wr}% | Trades: {trades}"
-        )
-        has_content = True
+        lines.append(f"\n<b>Crypto Agents</b>: C{state.get('cycle',0)}")
+        lines.append(f"  {s.get('wins',0)}W/{s.get('losses',0)}L | PnL: ${s.get('total_pnl',0):+.2f}")
 
-    # -- BTC 5-Min Sniper ------------------------------------------------------
-    btc_state = _load_json(POLY_DATA / "btc_5m_state.json")
-    if btc_state:
-        bankroll = btc_state.get("bankroll", 0)
-        btc_trades = btc_state.get("trades", [])
-        resolved = [t for t in btc_trades if t.get("resolved")]
-        wins = sum(1 for t in resolved if t.get("won"))
-        total = len(resolved)
-        btc_pnl = sum(t.get("pnl", 0) for t in resolved)
-        wr = round(wins / total * 100) if total else 0
-        scanned = btc_state.get("windows_scanned", 0)
-        pnl_sign = "+" if btc_pnl >= 0 else ""
-        lines.append(
-            f"\n<b>BTC 5-Min Sniper</b>"
-            f"\n  Bank: ${bankroll:.2f} | PnL: {pnl_sign}${btc_pnl:.2f}"
-            f"\n  {wins}W/{total-wins}L ({wr}%) | Scanned: {scanned}"
-        )
+    if copy:
+        cp = copy.get("positions", {})
+        lines.append(f"\n<b>Copy Trader</b>: ${copy.get('bankroll',0):.2f}")
+        lines.append(f"  {len(cp)} open | {copy.get('total_wallets_tracked',0)} wallets")
 
-        # Last trade result
-        if resolved:
-            last = resolved[-1]
-            emoji = "W" if last.get("won") else "L"
-            last_pnl = last.get("pnl", 0)
-            lines.append(
-                f"  Last: {last.get('direction', '?')} {emoji} "
-                f"${last_pnl:+.2f} @ {last.get('confidence', 0):.0%} conf"
-            )
-        has_content = True
-
-    # -- Polymarket Scanner ----------------------------------------------------
-    sniper = _load_json(POLY_DATA / "sniper_state.json")
-    if sniper:
-        open_count = len(sniper.get("positions", {}))
-        hist = sniper.get("history", [])
-        s_pnl = sum(h.get("pnl", 0) for h in hist if h.get("result"))
-        if open_count or hist:
-            pnl_sign = "+" if s_pnl >= 0 else ""
-            lines.append(
-                f"\n<b>Poly Scanner</b>"
-                f"\n  Open: {open_count} | PnL: {pnl_sign}${s_pnl:.2f}"
-            )
-            has_content = True
-
-    # -- Copy Trader -----------------------------------------------------------
-    copy_status = _load_json(POLY_DATA / "copy_trader_status.json")
-    if copy_status:
-        c_bank = copy_status.get("bankroll", 0)
-        c_hist = copy_status.get("history", [])
-        c_open = len(copy_status.get("positions", {}))
-        c_pnl = sum(h.get("pnl", 0) for h in c_hist if h.get("resolved"))
-        wallets = copy_status.get("total_wallets_tracked", 0)
-        if c_open or c_hist or wallets:
-            pnl_sign = "+" if c_pnl >= 0 else ""
-            lines.append(
-                f"\n<b>Copy Trader</b>"
-                f"\n  Bank: ${c_bank:.2f} | Open: {c_open} | PnL: {pnl_sign}${c_pnl:.2f}"
-                f"\n  Wallets: {wallets}"
-            )
-            has_content = True
-
-    # -- Queued notifications (summarize, don't replay each one) ---------------
-    queued = _drain_notification_queue()
-    if queued:
-        btc_events = [q for q in queued if q.get("source") == "btc_5m_sniper"]
-        poly_events = [q for q in queued if q.get("source") == "polymarket_sniper"]
-        copy_events = [q for q in queued if q.get("source") == "copy_trader"]
-
-        event_parts = []
-        if btc_events:
-            event_parts.append(f"{len(btc_events)} BTC sniper")
-        if poly_events:
-            event_parts.append(f"{len(poly_events)} scanner")
-        if copy_events:
-            event_parts.append(f"{len(copy_events)} copy")
-
-        if event_parts:
-            lines.append(f"\nEvents: {', '.join(event_parts)}")
-            has_content = True
-
-    # -- Footer ----------------------------------------------------------------
-    paused = " | PAUSED" if is_paused() else ""
-    now = datetime.now(timezone.utc).strftime("%H:%M UTC")
-    lines.append(f"\n<i>{now}{paused}</i>")
-
-    if not has_content:
-        return None
+    lines.append(f"\n{datetime.now(timezone.utc).strftime('%H:%M UTC')}")
     return "\n".join(lines)
 
 
-def _should_send_digest() -> bool:
-    """Check if enough time has passed since last digest."""
-    try:
-        if LAST_DIGEST_FILE.exists():
-            ts = float(LAST_DIGEST_FILE.read_text().strip())
-            return (time.time() - ts) >= DIGEST_INTERVAL
-    except Exception:
-        pass
-    return True
+def cmd_btc() -> str:
+    btc = _json(_POLY / "btc_5m_state.json")
+    if not btc:
+        return "No BTC sniper data."
+    trades = btc.get("trades", [])
+    resolved = [t for t in trades if t.get("resolved")]
+    wins = sum(1 for t in resolved if t.get("won"))
+    pnl = sum(t.get("pnl", 0) for t in resolved)
+    lines = [
+        f"<b>BTC 5-Min Sniper</b>",
+        f"Bankroll: ${btc['bankroll']:.2f}",
+        f"Record: {wins}W / {len(resolved)-wins}L",
+        f"PnL: ${pnl:+.2f}",
+        f"Scanned: {btc.get('windows_scanned',0)} windows",
+    ]
+    # Last 3 trades
+    for t in reversed(resolved[-3:]):
+        emoji = "W" if t.get("won") else "L"
+        lines.append(f"  {t['direction']} {emoji} ${t.get('pnl',0):+.2f} | {t.get('edge',0)*100:.1f}% edge")
+    return "\n".join(lines)
 
 
-def _mark_digest_sent():
-    try:
-        LAST_DIGEST_FILE.write_text(str(time.time()))
-    except Exception:
-        pass
+def cmd_agents() -> str:
+    state = _json(STATE_FILE)
+    if not state:
+        return "No agent data."
+    s = state.get("stats", {})
+    sigs = state.get("last_signals", {})
+    lines = [
+        f"<b>Crypto Agents</b> (C{state.get('cycle',0)} {state.get('mode','?').upper()})",
+        f"Trades: {s.get('total_trades',0)} ({s.get('open',0)} open)",
+        f"Record: {s.get('wins',0)}W / {s.get('losses',0)}L",
+        f"PnL: ${s.get('total_pnl',0):+.2f}",
+    ]
+    for agent, signals in sigs.items():
+        if signals:
+            for sig in signals[:1]:
+                d = "▲" if sig['signal'] == 'BUY' else "▼"
+                lines.append(f"\n{agent}: {d} {sig['signal']} {sig['asset']}")
+                lines.append(f"  str={sig['strength']:.2f} @ ${sig['entry_price']:,.2f}")
+        else:
+            lines.append(f"\n{agent}: watching")
+    return "\n".join(lines)
 
 
-# -- Command handlers ----------------------------------------------------------
+def cmd_poly() -> str:
+    sniper = _json(_POLY / "sniper_state.json")
+    scan = _json(_POLY / "scan_results.json")
+    lines = ["<b>Polymarket Scanner</b>"]
 
-def cmd_status() -> str:
-    digest = _build_digest()
-    return digest or "No system data available yet."
+    if sniper:
+        pos = sniper.get("positions", {})
+        lines.append(f"Open: {len(pos)} | Bankroll: ${sniper.get('bankroll',0):.2f}")
+        for cid, p in list(pos.items())[:3]:
+            lines.append(f"  {p['direction']} {p['question'][:40]}...")
+
+    if scan and isinstance(scan, list):
+        top = [s for s in scan if s.get('edge', 0) > 0.01][:5]
+        if top:
+            lines.append(f"\nTop edges ({len(scan)} scanned):")
+            for s in top:
+                lines.append(f"  {s['edge']*100:.1f}% | {s['question'][:40]}")
+
+    return "\n".join(lines) if len(lines) > 1 else "No scanner data."
+
+
+def cmd_copy() -> str:
+    copy = _json(_POLY / "copy_trader_status.json")
+    if not copy:
+        return "Copy trader not running."
+    pos = copy.get("positions", {})
+    lines = [
+        f"<b>Copy Trader</b>",
+        f"Bankroll: ${copy.get('bankroll',0):.2f}",
+        f"Open: {len(pos)} positions",
+        f"Wallets: {copy.get('total_wallets_tracked',0)} tracked",
+    ]
+    for cid, p in list(pos.items())[:5]:
+        name = p.get("whale_name", p.get("whale_address", "")[:10])
+        lines.append(f"  {p['side']} ${p['bet_size']:.2f} | {p.get('title','')[:30]} | {name}")
+    return "\n".join(lines)
+
+
+def cmd_balance() -> str:
+    btc = _json(_POLY / "btc_5m_state.json")
+    copy = _json(_POLY / "copy_trader_status.json")
+    sniper = _json(_POLY / "sniper_state.json")
+    state = _json(STATE_FILE)
+    lines = ["<b>Bankrolls</b>"]
+    if btc:
+        lines.append(f"BTC Sniper: ${btc['bankroll']:.2f}")
+    if copy:
+        lines.append(f"Copy Trader: ${copy.get('bankroll',0):.2f}")
+    if sniper:
+        lines.append(f"Poly Scanner: ${sniper.get('bankroll',0):.2f}")
+    if state:
+        pnl = state.get("stats", {}).get("total_pnl", 0)
+        lines.append(f"Crypto Agents PnL: ${pnl:+.2f}")
+    return "\n".join(lines)
 
 
 def cmd_report() -> str:
-    state = _load_state()
-    btc_state = _load_json(POLY_DATA / "btc_5m_state.json")
+    btc = _json(_POLY / "btc_5m_state.json")
+    state = _json(STATE_FILE)
+    copy = _json(_POLY / "copy_trader_status.json")
+    lines = [f"<b>APEX Performance Report</b>",
+             f"{datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}"]
 
-    lines = [f"<b>APEX Full Report</b>"]
-    lines.append(f"{datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}")
-
-    if state:
-        stats = state.get("stats", {})
-        lines.append(f"\n<b>Crypto Agents</b>")
-        lines.append(f"  Trades: {stats.get('total_trades', 0)}")
-        lines.append(f"  Open: {stats.get('open', 0)} | Closed: {stats.get('closed', 0)}")
-        lines.append(f"  Wins: {stats.get('wins', 0)} | Losses: {stats.get('losses', 0)}")
-        lines.append(f"  Win rate: {stats.get('win_rate', 0)}%")
-        lines.append(f"  Net PnL: ${stats.get('total_pnl', 0):.2f}")
-
-    if btc_state:
-        trades = btc_state.get("trades", [])
+    if btc:
+        trades = btc.get("trades", [])
         resolved = [t for t in trades if t.get("resolved")]
         wins = sum(1 for t in resolved if t.get("won"))
-        total = len(resolved)
         pnl = sum(t.get("pnl", 0) for t in resolved)
-        lines.append(f"\n<b>BTC 5-Min Sniper</b>")
-        lines.append(f"  Bankroll: ${btc_state.get('bankroll', 0):.2f}")
-        lines.append(f"  Trades: {total} ({wins}W / {total - wins}L)")
-        lines.append(f"  Win rate: {round(wins/total*100) if total else 0}%")
-        lines.append(f"  Net PnL: ${pnl:+.2f}")
-        lines.append(f"  Windows scanned: {btc_state.get('windows_scanned', 0)}")
+        lines.append(f"\nBTC Sniper: ${btc['bankroll']:.2f}")
+        lines.append(f"  {wins}W/{len(resolved)-wins}L | ${pnl:+.2f}")
+        for t in resolved:
+            w = "W" if t.get("won") else "L"
+            lines.append(f"  {t['direction']} {w} ${t.get('pnl',0):+.2f}")
+
+    if state:
+        s = state.get("stats", {})
+        lines.append(f"\nCrypto: {s.get('total_trades',0)} trades | ${s.get('total_pnl',0):+.2f}")
+
+    if copy:
+        h = copy.get("history", [])
+        resolved = [x for x in h if x.get("resolved")]
+        pnl = sum(x.get("pnl", 0) for x in resolved)
+        lines.append(f"\nCopy: {len(copy.get('positions',{}))} open | ${pnl:+.2f}")
 
     return "\n".join(lines)
 
 
 def cmd_pause() -> str:
-    set_paused(True)
+    _PAUSE_FILE.touch()
     return "Trading PAUSED. /resume to restart."
 
 
 def cmd_resume() -> str:
-    set_paused(False)
+    if _PAUSE_FILE.exists():
+        _PAUSE_FILE.unlink()
     return "Trading RESUMED."
 
 
-def cmd_balance() -> str:
-    state = _load_state()
-    btc = _load_json(POLY_DATA / "btc_5m_state.json")
-
-    lines = []
-    if state:
-        pnl = state.get("stats", {}).get("total_pnl", 0)
-        lines.append(f"Crypto PnL: ${pnl:+.2f}")
-    if btc:
-        lines.append(f"BTC Sniper: ${btc.get('bankroll', 0):.2f}")
-
-    return "\n".join(lines) if lines else "No balance data."
-
-
-def cmd_flip_live() -> str:
+def cmd_live() -> str:
     from configs.config import LIGHTER_API_KEY_ID
     if not LIGHTER_API_KEY_ID:
-        return (
-            "Cannot flip to live: LIGHTER_API_KEY_ID not set.\n"
-            "Get your API key at app.lighter.xyz, add to .env, restart with --live."
-        )
-    return (
-        "<b>LIVE MODE WARNING</b>\n"
-        "Real money on Lighter.xyz.\n"
-        "Confirm: restart with <code>python3 main.py --live</code>"
-    )
+        return "Cannot go live: LIGHTER_API_KEY_ID not set."
+    return "Restart with: python3 main.py --live"
 
 
 def cmd_ping() -> str:
-    state = _load_state()
-    updated = state.get("updated_at", "never")[:19].replace("T", " ") if state else "never"
-    paused = " (PAUSED)" if is_paused() else ""
-    return f"PONG -- last cycle: {updated} UTC{paused}"
+    state = _json(STATE_FILE)
+    updated = state.get("updated_at", "?")[:19] if state else "?"
+    p = " PAUSED" if _is_paused() else ""
+    return f"PONG — {updated} UTC{p}"
+
+
+def cmd_help() -> str:
+    return (
+        "<b>APEX Commands</b>\n"
+        "/status  — system overview\n"
+        "/btc     — BTC 5-min sniper\n"
+        "/agents  — crypto agent breakdown\n"
+        "/poly    — polymarket scanner\n"
+        "/copy    — copy trader\n"
+        "/balance — all bankrolls\n"
+        "/report  — full performance\n"
+        "/pause   — pause trading\n"
+        "/resume  — resume trading\n"
+        "/live    — switch to live\n"
+        "/ping    — health check"
+    )
 
 
 COMMANDS = {
-    "/status":    cmd_status,
-    "/report":    cmd_report,
-    "/pause":     cmd_pause,
-    "/resume":    cmd_resume,
-    "/balance":   cmd_balance,
-    "/flip_live": cmd_flip_live,
-    "/ping":      cmd_ping,
-    "ping":       cmd_ping,
+    "/status": cmd_status, "/btc": cmd_btc, "/agents": cmd_agents,
+    "/poly": cmd_poly, "/copy": cmd_copy, "/balance": cmd_balance,
+    "/report": cmd_report, "/pause": cmd_pause, "/resume": cmd_resume,
+    "/live": cmd_live, "/ping": cmd_ping, "/help": cmd_help,
+    "ping": cmd_ping,
 }
 
 
-# -- Claude AI free-text handler -----------------------------------------------
+# ── Hourly Digest ────────────────────────────────────────────────────────────
 
-_APEX_ROOT = Path(__file__).parent.parent
-_PAPER_LOG = _APEX_ROOT / "logs" / "paper_trades.jsonl"
+def _build_digest() -> str | None:
+    """One clean message: bankroll + wins/losses. Nothing else."""
+    btc = _json(_POLY / "btc_5m_state.json")
+    state = _json(STATE_FILE)
+    copy = _json(_POLY / "copy_trader_status.json")
+    has_data = False
+    lines = ["<b>APEX Hourly</b>"]
 
-def _build_context() -> str:
-    state = _load_state()
-    btc = _load_json(POLY_DATA / "btc_5m_state.json")
-    lines = []
+    if btc:
+        trades = btc.get("trades", [])
+        resolved = [t for t in trades if t.get("resolved")]
+        wins = sum(1 for t in resolved if t.get("won"))
+        pnl = sum(t.get("pnl", 0) for t in resolved)
+        lines.append(f"BTC: ${btc['bankroll']:.2f} ({wins}W/{len(resolved)-wins}L ${pnl:+.2f})")
+        has_data = True
 
     if state:
         s = state.get("stats", {})
-        lines.append(f"APEX (cycle {state.get('cycle',0)}, mode={state.get('mode','?')}):")
-        lines.append(f"  PnL=${s.get('total_pnl',0):.2f}  WR={s.get('win_rate',0)}%  trades={s.get('total_trades',0)}")
-        sigs = state.get("last_signals", {})
-        active = {a: v for a, v in sigs.items() if v}
-        if active:
-            lines.append(f"  Signals: {json.dumps(active, default=str)[:400]}")
+        if s.get("total_trades", 0):
+            lines.append(f"Agents: {s.get('wins',0)}W/{s.get('losses',0)}L ${s.get('total_pnl',0):+.2f}")
+            has_data = True
 
-    if btc:
-        resolved = [t for t in btc.get("trades", []) if t.get("resolved")]
-        wins = sum(1 for t in resolved if t.get("won"))
-        pnl = sum(t.get("pnl", 0) for t in resolved)
-        lines.append(f"BTC Sniper: bank=${btc.get('bankroll',0):.2f} pnl=${pnl:+.2f} {wins}W/{len(resolved)}T")
+    if copy and copy.get("positions"):
+        lines.append(f"Copy: {len(copy['positions'])} open | {copy.get('total_wallets_tracked',0)} wallets")
+        has_data = True
 
+    if _is_paused():
+        lines.append("⚠ PAUSED")
+
+    lines.append(datetime.now(timezone.utc).strftime("%H:%M UTC"))
+    return "\n".join(lines) if has_data else None
+
+
+def _should_digest() -> bool:
     try:
-        if _PAPER_LOG.exists():
-            rows = _PAPER_LOG.read_text().strip().split("\n")[-5:]
-            trades = [json.loads(r) for r in rows if r]
-            lines.append(f"Recent: {json.dumps(trades, default=str)[:400]}")
+        if _DIGEST_FILE.exists():
+            return (time.time() - float(_DIGEST_FILE.read_text().strip())) >= _DIGEST_INTERVAL
+    except Exception:
+        pass
+    return True
+
+
+def _mark_digest():
+    try:
+        _DIGEST_FILE.write_text(str(time.time()))
     except Exception:
         pass
 
-    lines.append(f"UTC: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M')}")
-    lines.append(f"Paused: {is_paused()}")
-    return "\n".join(lines)
 
+# ── Claude AI (optional) ────────────────────────────────────────────────────
 
-def _try_execute_action(intent: str) -> str | None:
-    import re
-    m = re.search(r'\[ACTION:(\w+)\]', intent)
-    if not m:
-        return None
-    action = m.group(1).lower()
-    handlers = {
-        "pause": cmd_pause, "resume": cmd_resume, "status": cmd_status,
-        "report": cmd_report, "balance": cmd_balance, "ping": cmd_ping,
-    }
-    fn = handlers.get(action)
-    if fn:
-        try:
-            return fn()
-        except Exception as e:
-            return f"Action {action} failed: {e}"
-    return None
-
-
-def claude_reply(user_text: str) -> str:
+def _ai_reply(text: str) -> str:
     if not ANTHROPIC_API_KEY:
-        return "AI offline. Commands: /status /report /balance /pause /resume /ping"
+        return "AI offline. /help for commands."
     try:
         import anthropic
         client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
-        context = _build_context()
-        system = (
-            "You are the APEX trading bot AI on Telegram.\n"
-            "Rules: concise (max 3 sentences), sharp, no made-up data.\n"
-            "Embed [ACTION:pause] etc. to trigger commands.\n\n"
-            f"SNAPSHOT:\n{context}"
-        )
+        ctx = cmd_status()
         resp = client.messages.create(
-            model="claude-haiku-4-5-20251001",
-            max_tokens=400,
-            messages=[{"role": "user", "content": user_text}],
-            system=system,
+            model="claude-haiku-4-5-20251001", max_tokens=300,
+            system=f"You are APEX trading bot AI. Be concise (2-3 sentences). Data:\n{ctx}",
+            messages=[{"role": "user", "content": text}],
         )
-        raw = resp.content[0].text.strip()
-        action_result = _try_execute_action(raw)
-        import re
-        display = re.sub(r'\[ACTION:\w+\]', '', raw).strip()
-        if action_result:
-            return f"{display}\n\n{action_result}"
-        return display
+        return resp.content[0].text.strip()
     except Exception as e:
         return f"AI error: {e}"
 
 
-# -- Heartbeat helper (called from main.py) ------------------------------------
+# ── Heartbeat (backwards compat with main.py) ───────────────────────────────
 
 async def send_heartbeat(report: dict):
-    """Heartbeat is now handled by the consolidated digest. No-op for backwards compat."""
-    pass
+    pass  # Handled by hourly digest
 
 
-# -- Main polling loop ---------------------------------------------------------
+# ── Main Loop ────────────────────────────────────────────────────────────────
 
 def run_bot():
-    _send("APEX Bot online. /status for overview.")
-
+    print("[TG] Bot started. No startup message sent.")
     last_id = None
+
     while True:
-        # -- Handle incoming commands ------------------------------------------
-        updates = _get_updates(last_id)
+        updates = _poll(last_id)
         for update in updates:
             last_id = update["update_id"] + 1
             msg = update.get("message", {})
@@ -454,28 +396,26 @@ def run_bot():
             if not text:
                 continue
 
-            first_word = text.split()[0]
-            if first_word.startswith("/"):
-                cmd = first_word.split("@")[0].lower()
+            first = text.split()[0]
+            if first.startswith("/"):
+                cmd = first.split("@")[0].lower()
                 handler = COMMANDS.get(cmd)
                 if handler:
                     try:
-                        reply = handler()
+                        _send(handler())
                     except Exception as e:
-                        reply = f"Error: {e}"
+                        _send(f"Error: {e}")
                 else:
-                    reply = f"Unknown: {cmd}\n/status /report /balance /pause /resume /ping"
+                    _send(f"Unknown: {cmd}\n/help for commands")
             else:
-                reply = claude_reply(text)
+                _send(_ai_reply(text))
 
-            _send(reply)
-
-        # -- Periodic consolidated digest --------------------------------------
-        if _should_send_digest():
+        # Hourly digest — only notification the user gets unprompted
+        if _should_digest():
             digest = _build_digest()
             if digest:
                 _send(digest)
-            _mark_digest_sent()
+            _mark_digest()
 
         time.sleep(1)
 

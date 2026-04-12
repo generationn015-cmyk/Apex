@@ -86,18 +86,8 @@ STATE_PATH = DATA_DIR / "btc_5m_state.json"
 # ── Telegram ──────────────────────────────────────────────────────────────────
 
 def _tg(text: str):
-    """Write notification to shared queue file instead of sending directly."""
-    try:
-        queue_path = DATA_DIR / "notification_queue.jsonl"
-        entry = json.dumps({
-            "source": "btc_5m_sniper",
-            "text": text,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
-        })
-        with open(queue_path, "a") as f:
-            f.write(entry + "\n")
-    except Exception:
-        pass
+    """Silenced — all notifications go through the bot's hourly digest."""
+    pass
 
 
 # ── BTC Price Feed ────────────────────────────────────────────────────────────

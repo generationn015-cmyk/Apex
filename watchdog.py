@@ -77,18 +77,8 @@ def _apex_cmd(live: bool) -> list:
 
 
 def _tg(text: str):
-    data = urllib.parse.urlencode({
-        "chat_id": TELEGRAM_CHAT_ID,
-        "text": text,
-        "parse_mode": "HTML",
-    }).encode()
-    try:
-        urllib.request.urlopen(
-            f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
-            data=data, timeout=10
-        )
-    except Exception:
-        pass
+    """Silenced — all Telegram goes through the bot's hourly digest."""
+    pass
 
 
 class ProcessManager:

@@ -34,7 +34,9 @@ from strategies.atlas    import analyze_ATLAS
 from strategies.oracle   import analyze_ORACLE
 from strategies.sniper   import analyze_SNIPER
 from strategies.sentinel import analyze_SENTINEL
-from telegram.bot import _send as _tg
+def _tg(text: str):
+    """Silenced — all notifications go through the hourly Telegram digest."""
+    pass
 
 ANALYZERS = {
     "ATLAS":    analyze_ATLAS,
@@ -236,8 +238,8 @@ class ApexBot:
                     direction=signal, entry_price=entry_price,
                     amount=amount, strategy=cfg["type"],
                     stop_loss=round(stop_price, 6),
-                    notes=(f"strength={strength}, "
-                           f"stop={stop_price:.4f}, tp={take_profit:.4f}"),
+                    take_profit=round(take_profit, 6),
+                    notes=f"strength={strength}",
                 )
 
                 signals_fired += 1
@@ -284,14 +286,15 @@ class ApexBot:
             for sym, df in data_1h.items()
             if not df.empty
         }
-        stopped = self.paper_engine.check_stop_losses(current_prices) or []
+        stopped = self.paper_engine.check_exits(current_prices) or []
         for stop in stopped:
             pnl      = stop.get("pnl", 0.0) or 0.0
-            is_win   = stop.get("status") != "LOSS"
+            is_win   = stop.get("status") == "WIN"
             pnl_sign = "+" if pnl >= 0 else ""
-            print(f"  ⛔ STOP: {stop['agent']} {stop['asset']} "
-                  f"@ {stop['exit_price']:.4f}  "
-                  f"pnl={pnl_sign}{pnl:.2f}")
+            reason   = stop.get("notes", "")
+            tag = "TP" if "TAKE_PROFIT" in reason else ("SL" if "STOP_LOSS" in reason else "TIMEOUT")
+            print(f"  {'✅' if is_win else '❌'} {tag}: {stop['agent']} {stop['asset']} "
+                  f"@ {stop['exit_price']:.4f}  pnl={pnl_sign}{pnl:.2f}")
             if is_win:
                 self.risk_manager.record_win(stop["agent"],  pnl_usd=pnl)
             else:
@@ -299,7 +302,7 @@ class ApexBot:
             try:
                 emoji = "✅" if is_win else "❌"
                 _tg(
-                    f"{emoji} <b>TRADE CLOSED  {stop['asset']}</b>\n"
+                    f"{emoji} <b>TRADE CLOSED [{tag}]  {stop['asset']}</b>\n"
                     f"Agent: {stop['agent']}  ·  {'WIN' if is_win else 'LOSS'}\n"
                     f"Exit: <code>${stop['exit_price']:,.4f}</code>  "
                     f"PnL: <b>{pnl_sign}${abs(pnl):.2f}</b>"
