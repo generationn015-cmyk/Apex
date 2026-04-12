@@ -238,15 +238,71 @@
       "is_known_whale": false,
       "tx": "0x1cc9ec4c1242f2d242a1e54603ac60f883f037615bef24bf57f5439e16e30cd6",
       "timestamp": "2026-04-12T09:55:41.441199+00:00"
+    },
+    "0x00b3aad127920666574f5cf65f242de17f76a9011c89d6fe9141615d458457aa": {
+      "condition_id": "0x00b3aad127920666574f5cf65f242de17f76a9011c89d6fe9141615d458457aa",
+      "title": "Will Han Jun-ho win the 2026 Gyeonggi Province Gubernatorial",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.002312568343715828,
+      "whale_address": "0xf940e58b04f9726c3858528d8f65d55abad47736",
+      "whale_name": "0xf940E58B04F9726c3858528d8f65d55abAD47736-1773233405316",
+      "whale_size": 6666.67,
+      "is_known_whale": false,
+      "tx": "0xb5c081d4d32dd41750a561f4f8f6fe914ccb8f637f14cd21298661646419f823",
+      "timestamp": "2026-04-12T10:00:58.503096+00:00"
+    },
+    "0x23dbb60ade08c2664ac29488325afbc0136735bc7beb9180d9c0cb72620b0b13": {
+      "condition_id": "0x23dbb60ade08c2664ac29488325afbc0136735bc7beb9180d9c0cb72620b0b13",
+      "title": "Will Kevin Warsh be confirmed as Fed Chair?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.051,
+      "whale_address": "0x89c9556b9fce20f3871b7fc0c9f99f07cb2b7656",
+      "whale_name": "Opal6ybu",
+      "whale_size": 568.0,
+      "is_known_whale": false,
+      "tx": "0x45a54f7bd2582c8803a7864d4d1fd943dedf3e8ff1b2666d93490bddad441b16",
+      "timestamp": "2026-04-12T10:00:58.503130+00:00"
+    },
+    "0x3502f4d9275ea8f0b02f7d54db44fb942da8809d3a9671ba3918c3938dd632d7": {
+      "condition_id": "0x3502f4d9275ea8f0b02f7d54db44fb942da8809d3a9671ba3918c3938dd632d7",
+      "title": "Will there be 5 or more confirmed VEI 4 or higher volcanic e",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.973,
+      "whale_address": "0xd24bf9b0f7d2e8179edec2159f991d13706eaf96",
+      "whale_name": "estquia",
+      "whale_size": 820.0,
+      "is_known_whale": false,
+      "tx": "0x9dd6b4d504f89151c29975ef34cd921ada8151dfebc978182ee4a4eafd1458e4",
+      "timestamp": "2026-04-12T10:00:58.503147+00:00"
+    },
+    "0xfe89e181043e09cf224878fe426660305a78c5bf3bc60d14083ac49f1a764926": {
+      "condition_id": "0xfe89e181043e09cf224878fe426660305a78c5bf3bc60d14083ac49f1a764926",
+      "title": "Will Rangers FC win on 2026-04-12?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.48,
+      "whale_address": "0xee19aef7451370bd7888046fd39467dd398f555e",
+      "whale_name": "",
+      "whale_size": 967.4978600000001,
+      "is_known_whale": false,
+      "tx": "0xa9408f631cd326b1e68744715ebec78b6ca2a52dfb84effb7754e7a70ca57ce7",
+      "timestamp": "2026-04-12T10:00:58.503162+00:00"
     }
   },
   "history": [],
   "consecutive_losses": 0,
   "cooldown_until": null,
   "top_traders": [],
-  "total_wallets_tracked": 45,
+  "total_wallets_tracked": 58,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T10:00:01.785120+00:00"
+  "updated": "2026-04-12T10:00:58.503787+00:00"
 }
