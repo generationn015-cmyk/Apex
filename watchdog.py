@@ -58,13 +58,8 @@ _PROCESS_DEFS = {
         "critical": False,
         "affects_live_toggle": False,
     },
-    "signal_engine": {
-        "cmd": [_SE_PY, str(_SE_ROOT / "main.py")],
-        "env_extra": {"PYTHONPATH": str(_SE_ROOT)},
-        "critical": False,
-        "cwd": str(_SE_ROOT),
-        "affects_live_toggle": False,  # NEVER restarted by Go Live toggle
-    },
+    # signal_engine self-manages via signal_engine_v2.py + its own PID file.
+    # Do NOT manage it here — the main.py stub causes infinite restart loops.
     "wolf_bot": {
         "cmd": [_WOLF_PY, str(_WOLF_ROOT / "wolf" / "main.py")],
         "env_extra": {"PYTHONPATH": str(_WOLF_ROOT)},
