@@ -1596,6 +1596,34 @@
       "is_known_whale": false,
       "tx": "0x44a33f6f3abdf6884b726435ff74e5c98f8b2f5580af60a134d2ef0d195c3f0f",
       "timestamp": "2026-04-12T12:31:59.551331+00:00"
+    },
+    "0xfc970c44792b8cc02ea565d85f6a27afc2f0d010f25df650212ec45a28ef13ac": {
+      "condition_id": "0xfc970c44792b8cc02ea565d85f6a27afc2f0d010f25df650212ec45a28ef13ac",
+      "title": "Will Qingdao Hainiu FC win on 2026-04-12?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.98,
+      "whale_address": "0x204f72f35326db932158cba6adff0b9a1da95e14",
+      "whale_name": "swisstony",
+      "whale_size": 799.0,
+      "is_known_whale": false,
+      "tx": "0xf6d1a4a305705ccf4705dccebb8877f3ba404b463f869dee81e0958acaf01f74",
+      "timestamp": "2026-04-12T12:42:00.488694+00:00"
+    },
+    "0x9e5f9d8c384f8fe368b195fa9a780be58643dff7360588a4e577012df8af00a7": {
+      "condition_id": "0x9e5f9d8c384f8fe368b195fa9a780be58643dff7360588a4e577012df8af00a7",
+      "title": "Will New Zealand win the 2026 FIFA World Cup?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.002,
+      "whale_address": "0x51fd8f0358cc9e8a1ee5f87a0c7e3b07ed634272",
+      "whale_name": "TimeTraveler",
+      "whale_size": 30000.0,
+      "is_known_whale": false,
+      "tx": "0xf11e4247253dd7c26646cb0fa4a23408c59d21fed12ac5cca4a775bf69e9527d",
+      "timestamp": "2026-04-12T12:42:00.489739+00:00"
     }
   },
   "history": [],
@@ -1635,9 +1663,9 @@
       "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 284,
+  "total_wallets_tracked": 290,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T12:31:59.555636+00:00"
+  "updated": "2026-04-12T12:42:00.495142+00:00"
 }
