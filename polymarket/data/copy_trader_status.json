@@ -1316,6 +1316,76 @@
       "is_known_whale": false,
       "tx": "0xfeb8bc4b40fdccf706fe719643e603e8879c6430335e6bd085a6c8883b03940b",
       "timestamp": "2026-04-12T12:01:56.568076+00:00"
+    },
+    "0x9be56371f6a29d12769b2f196847ee825b9585ebb8bfa042136be031b081eba1": {
+      "condition_id": "0x9be56371f6a29d12769b2f196847ee825b9585ebb8bfa042136be031b081eba1",
+      "title": "Will Netherlands win the 2026 FIFA World Cup?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.034,
+      "whale_address": "0x30ff923fd619b95d7e16a56a4173f2a795692272",
+      "whale_name": "geniuz",
+      "whale_size": 30000.0,
+      "is_known_whale": false,
+      "tx": "0x45797841dc6e4391fef7eab342b8c7e3386c1218d5ce50a826ddb072a3b68ee4",
+      "timestamp": "2026-04-12T12:11:57.545828+00:00"
+    },
+    "0x6595c21798bf93f39da859a469a01ef11bc0038488512dc5fbbe89245d62fc24": {
+      "condition_id": "0x6595c21798bf93f39da859a469a01ef11bc0038488512dc5fbbe89245d62fc24",
+      "title": "Fortuna Sittard vs. NAC Breda: O/U 1.5",
+      "outcome": "Over",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.8387527352297593,
+      "whale_address": "0x41558102a796ba971c7567cad41c307e59f8fa41",
+      "whale_name": "LSB1",
+      "whale_size": 457.0,
+      "is_known_whale": false,
+      "tx": "0x5c980bc4443c2f2925093fb67c165ebeb143646b05034b9c454304f3f955f351",
+      "timestamp": "2026-04-12T12:11:57.546657+00:00"
+    },
+    "0xc8f1cf5d4f26e0fd9c8fe89f2a7b3263b902cf14fde7bfccef525753bb492e47": {
+      "condition_id": "0xc8f1cf5d4f26e0fd9c8fe89f2a7b3263b902cf14fde7bfccef525753bb492e47",
+      "title": "Will Stephen A. Smith win the 2028 Democratic presidential n",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.989,
+      "whale_address": "0xf1c95188d4a22325ea052fa5cd28da7f94c9bea4",
+      "whale_name": "Kyron638",
+      "whale_size": 717.0,
+      "is_known_whale": false,
+      "tx": "0x4ef419d853b68204994c02327df97f3a151c35cac62b96b634e240e0a466a89c",
+      "timestamp": "2026-04-12T12:11:57.546696+00:00"
+    },
+    "0x8608a1a76fff43237000d980b0b5330e59573fdc04f89a2438a8e9e8407c5ac7": {
+      "condition_id": "0x8608a1a76fff43237000d980b0b5330e59573fdc04f89a2438a8e9e8407c5ac7",
+      "title": "Will NAC Breda win on 2026-04-12?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.0011515279901265496,
+      "whale_address": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
+      "whale_name": "RN1",
+      "whale_size": 5971.57,
+      "is_known_whale": false,
+      "tx": "0x1295d0df1df78c5279b06a02f97111af1ffa5c4d9385c658c7d4ce115d6b87f0",
+      "timestamp": "2026-04-12T12:11:57.546721+00:00"
+    },
+    "0x14267ebbbc0ac689c27c64836481edeeb8460fcb3cfee5c67903b8377e326916": {
+      "condition_id": "0x14267ebbbc0ac689c27c64836481edeeb8460fcb3cfee5c67903b8377e326916",
+      "title": "Warriors vs. Clippers",
+      "outcome": "Warriors",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.31,
+      "whale_address": "0xbd48a7e6d790177baf7130255a2c8e469405e421",
+      "whale_name": "0xBd48a7E6d790177BAF7130255A2c8E469405e421-1767842845912",
+      "whale_size": 1273.09,
+      "is_known_whale": false,
+      "tx": "0x94899156e410c70f12feaf13cee098c99f1e1ac44037ef0f9b4f82b066a46416",
+      "timestamp": "2026-04-12T12:11:57.546742+00:00"
     }
   },
   "history": [],
@@ -1355,9 +1425,9 @@
       "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 245,
+  "total_wallets_tracked": 258,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T12:01:56.571775+00:00"
+  "updated": "2026-04-12T12:11:57.549939+00:00"
 }
