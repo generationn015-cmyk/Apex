@@ -4326,6 +4326,20 @@
       "is_known_whale": true,
       "tx": "0x7087118539db1ea0713835ad19b819cb584329d12f09bc9ff2d81d30c1c8dc64",
       "timestamp": "2026-04-12T22:01:06.042070+00:00"
+    },
+    "0xeacb4303f8295393ae3ffa6da6c27cbe7cd55ec532bed0e5cdb8ef932780427f": {
+      "condition_id": "0xeacb4303f8295393ae3ffa6da6c27cbe7cd55ec532bed0e5cdb8ef932780427f",
+      "title": "Spread: FC Internazionale Milano (-1.5)",
+      "outcome": "Como 1907",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.998,
+      "whale_address": "0x0d44d2a1ebf0de197b28251b5b7740e7ab636b0a",
+      "whale_name": "fcdd",
+      "whale_size": 3455.8826400000003,
+      "is_known_whale": false,
+      "tx": "0x27184425ee2a84eda9c1be5458bb2253c3cd152b9b9e6c29a185f6393879860f",
+      "timestamp": "2026-04-12T22:11:07.223952+00:00"
     }
   },
   "history": [],
@@ -4453,9 +4467,9 @@
       "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 695,
+  "total_wallets_tracked": 700,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T22:01:06.053905+00:00"
+  "updated": "2026-04-12T22:11:07.233607+00:00"
 }
