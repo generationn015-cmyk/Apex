@@ -3500,6 +3500,104 @@
       "is_known_whale": true,
       "tx": "0x9e3ef0e8fe09e7fd8f69b113275bd39ff990051e383feca7bf82f1f83058e640",
       "timestamp": "2026-04-12T17:12:32.563359+00:00"
+    },
+    "0x1e36b001debc4e48e52a1b07f39b8efdd387f56c0dab806c9494ab3c9c959556": {
+      "condition_id": "0x1e36b001debc4e48e52a1b07f39b8efdd387f56c0dab806c9494ab3c9c959556",
+      "title": "Will Elon Musk post 220-239 tweets from April 7 to April 14,",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.012752076229401072,
+      "whale_address": "0x6be949e0f7f46dbb2ba04da0efadc23dfd2c3493",
+      "whale_name": "Brotherinchrist",
+      "whale_size": 841.67,
+      "is_known_whale": false,
+      "tx": "0x5f969089af8e0e9a9c6502cc0b069dd9e0227d3b36953bd22493cd9e74192329",
+      "timestamp": "2026-04-12T17:22:33.928634+00:00"
+    },
+    "0x6df47b06df29a3369c236fbbba7df027972dc12a17a9580bd5332b112485db73": {
+      "condition_id": "0x6df47b06df29a3369c236fbbba7df027972dc12a17a9580bd5332b112485db73",
+      "title": "Bologna FC 1909 vs. US Lecce: O/U 10.5 Total Corners",
+      "outcome": "Under",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.08,
+      "whale_address": "0xdbdd45150249e229eb4ca8aa48a30dca21faa5de",
+      "whale_name": "0xdbdd45150249e229eB4cA8aa48A30Dca21Faa5de-1757094771846",
+      "whale_size": 972.4,
+      "is_known_whale": false,
+      "tx": "0x0a8486b94c1834c9cc68b053870098d258c69d42feb464b57f93638afe503b72",
+      "timestamp": "2026-04-12T17:22:33.929492+00:00"
+    },
+    "0x5c1f36fd99056c89aa24665b88cc56bf1099a42beeb1a9de482b1941d1d28f96": {
+      "condition_id": "0x5c1f36fd99056c89aa24665b88cc56bf1099a42beeb1a9de482b1941d1d28f96",
+      "title": "Will 1. FSV Mainz 05 vs. SC Freiburg end in a draw?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.3,
+      "whale_address": "0x31b009860d843eba7378475cf749ea5269178c4c",
+      "whale_name": "BIGBOSSOK",
+      "whale_size": 464.63340000000005,
+      "is_known_whale": false,
+      "tx": "0x4a1fd29aa80e0e8e10dae24c892a9be6c710a38ae87583a6622c7334ba2aa962",
+      "timestamp": "2026-04-12T17:22:33.929539+00:00"
+    },
+    "0xbe87a21500f23b2c62ebfb6f8f1919969d0cb9882984dc5ace11bb9182172fb5": {
+      "condition_id": "0xbe87a21500f23b2c62ebfb6f8f1919969d0cb9882984dc5ace11bb9182172fb5",
+      "title": "Will the highest temperature in New York City be between 58-",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.01817856551724138,
+      "whale_address": "0xcbbc5e035504421b084ad9248b660f6e9618b5d0",
+      "whale_name": "VibeTrader",
+      "whale_size": 1378.81795,
+      "is_known_whale": false,
+      "tx": "0x7376ee74f1229994ff8c4a2b84ce5f2bf37e1b12f7f4c82805c630fa4c940de0",
+      "timestamp": "2026-04-12T17:22:33.929563+00:00"
+    },
+    "0x25cc1805dd9e284afdd5462d51c64f4e0d3e940895e25cb81afe4cc63be1dc16": {
+      "condition_id": "0x25cc1805dd9e284afdd5462d51c64f4e0d3e940895e25cb81afe4cc63be1dc16",
+      "title": "Bologna FC 1909 vs. US Lecce: O/U 2.5",
+      "outcome": "Under",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.71,
+      "whale_address": "0x204f72f35326db932158cba6adff0b9a1da95e14",
+      "whale_name": "swisstony",
+      "whale_size": 315.2334,
+      "is_known_whale": true,
+      "tx": "0xdf1ca1ee3051b8ed068a58532aa5327fe027f0a54c0dfbbc2ded38657be15a19",
+      "timestamp": "2026-04-12T17:22:33.929587+00:00"
+    },
+    "0xa2fde2c8b0fd810ead843f1d60d113dcff4f67b1bad6e4b35c51f06a12bb9f16": {
+      "condition_id": "0xa2fde2c8b0fd810ead843f1d60d113dcff4f67b1bad6e4b35c51f06a12bb9f16",
+      "title": "Will CA River Plate vs. CA Tucum\u00e1n end in a draw?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.79,
+      "whale_address": "0x0fe6d9865cab108be6cd641bd99cf54d20a4d8e3",
+      "whale_name": "DerrickMalone3011",
+      "whale_size": 859.0,
+      "is_known_whale": false,
+      "tx": "0xbd194427f82555ac3cb47cf6e4c2f1026c13acd19194dd2adac51f7719f8c895",
+      "timestamp": "2026-04-12T17:22:33.929607+00:00"
+    },
+    "0x83d434951c9b792f27b0e4861e773c286132ca0803dc7a211c564d2b1e16410d": {
+      "condition_id": "0x83d434951c9b792f27b0e4861e773c286132ca0803dc7a211c564d2b1e16410d",
+      "title": "Will Ludvig Aberg win the 2026 Masters tournament?",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.001,
+      "whale_address": "0xd1a63a243042d864520512fbdbd2fd20e0ab1507",
+      "whale_name": "DkOYL",
+      "whale_size": 1035.0,
+      "is_known_whale": true,
+      "tx": "0xd527bcc7d74983d3947e887ff530b8d9a98db826a9a39a29913c73af58f6134b",
+      "timestamp": "2026-04-12T17:22:33.929627+00:00"
     }
   },
   "history": [],
@@ -3525,10 +3623,10 @@
     {
       "address": "0xd1a63a243042d864520512fbdbd2fd20e0ab1507",
       "name": "DkOYL",
-      "trades": 4,
-      "volume": 20013.84,
-      "last_seen": "2026-04-12T15:22:17.996354+00:00",
-      "active_markets": 4
+      "trades": 5,
+      "volume": 21048.84,
+      "last_seen": "2026-04-12T17:22:33.914276+00:00",
+      "active_markets": 5
     },
     {
       "address": "0xf940e58b04f9726c3858528d8f65d55abad47736",
@@ -3541,10 +3639,10 @@
     {
       "address": "0x204f72f35326db932158cba6adff0b9a1da95e14",
       "name": "swisstony",
-      "trades": 6,
-      "volume": 5072.74,
-      "last_seen": "2026-04-12T16:42:28.660398+00:00",
-      "active_markets": 6
+      "trades": 7,
+      "volume": 5387.97,
+      "last_seen": "2026-04-12T17:22:33.886046+00:00",
+      "active_markets": 7
     },
     {
       "address": "0xe8dd7741ccb12350957ec71e9ee332e0d1e6ec86",
@@ -3627,9 +3725,9 @@
       "active_markets": 4
     }
   ],
-  "total_wallets_tracked": 575,
+  "total_wallets_tracked": 587,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T17:12:32.571990+00:00"
+  "updated": "2026-04-12T17:22:33.936397+00:00"
 }
