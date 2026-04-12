@@ -1512,6 +1512,90 @@
       "is_known_whale": false,
       "tx": "0xcac225b80422988596bba021ccde3313bd68417ff299cd460a71b502353ea66a",
       "timestamp": "2026-04-12T12:21:58.597630+00:00"
+    },
+    "0xfcde02af15efe40e336d67f0ef9aa49e9d40c37b92961fb890afc4afdbfe54d6": {
+      "condition_id": "0xfcde02af15efe40e336d67f0ef9aa49e9d40c37b92961fb890afc4afdbfe54d6",
+      "title": "Will TISZA \u2013 Respect and Freedom Party (TISZA) win the most ",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.12,
+      "whale_address": "0xe8dd7741ccb12350957ec71e9ee332e0d1e6ec86",
+      "whale_name": "influenz.eth",
+      "whale_size": 769.25,
+      "is_known_whale": false,
+      "tx": "0xc974f41aadbe1fa9c594d29773cafc72608f13dcf9dd7589ada1a200100c0f41",
+      "timestamp": "2026-04-12T12:31:59.550080+00:00"
+    },
+    "0x27f1a14513f0b5df499f12460f0e1bcb4eccba09233bbfb98b8ce1774f6cf061": {
+      "condition_id": "0x27f1a14513f0b5df499f12460f0e1bcb4eccba09233bbfb98b8ce1774f6cf061",
+      "title": "Will Justin Bieber play \"Cold Water\" first at Coachella?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.9988396946564886,
+      "whale_address": "0x12b8e7c160f3ced67a22b7eadf764cd1c2c4479c",
+      "whale_name": "bearbees2",
+      "whale_size": 655.0,
+      "is_known_whale": false,
+      "tx": "0x648a91a969b1e6267f1055da0f69c050306940421ba2f459f08bb4b203c14ece",
+      "timestamp": "2026-04-12T12:31:59.551004+00:00"
+    },
+    "0xada96a6be6135116d713f0c95db709994a0ea76f7460faba1b7b8fb3431b14b7": {
+      "condition_id": "0xada96a6be6135116d713f0c95db709994a0ea76f7460faba1b7b8fb3431b14b7",
+      "title": "Military action against Iran ends on April 15, 2026?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.001,
+      "whale_address": "0xf5e814660a5a5ac071390a36122e7bc7c1309fbd",
+      "whale_name": "fiter",
+      "whale_size": 1000.0,
+      "is_known_whale": false,
+      "tx": "0xf8806e656dfcccab85af2878f2004f33f6afb7edec77718ea4ef023bde26228c",
+      "timestamp": "2026-04-12T12:31:59.551054+00:00"
+    },
+    "0xd9f11e225dbd36b92dc0e499ff5da19ef8dd8c04adbb91da96cfd612d78d71c5": {
+      "condition_id": "0xd9f11e225dbd36b92dc0e499ff5da19ef8dd8c04adbb91da96cfd612d78d71c5",
+      "title": "Will Nottingham Forest FC win on 2026-04-12?",
+      "outcome": "No",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.62,
+      "whale_address": "0xc97485a44146b5db0b8b121358f57cf297cdb33b",
+      "whale_name": "lu1zzz",
+      "whale_size": 2896.06,
+      "is_known_whale": false,
+      "tx": "0xb5cae8e14d266a1e017e94b2beaa9205b266250125a294ae58fe9fd64e874ad9",
+      "timestamp": "2026-04-12T12:31:59.551122+00:00"
+    },
+    "0xd23806e2762df0437c76b49eb45f97d6a04ae3199ea798e414611f6d3d4811dc": {
+      "condition_id": "0xd23806e2762df0437c76b49eb45f97d6a04ae3199ea798e414611f6d3d4811dc",
+      "title": "Bitcoin Up or Down - April 12, 8:30AM-8:45AM ET",
+      "outcome": "Down",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.45,
+      "whale_address": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+      "whale_name": "",
+      "whale_size": 600.0,
+      "is_known_whale": false,
+      "tx": "0xd34ddb2d2c4782ae061926de788baa046f2808081f126dbe375368ca232013e3",
+      "timestamp": "2026-04-12T12:31:59.551299+00:00"
+    },
+    "0xc86d4d4f948d773f49de8d11b3caa43ccab7392341c10b025cfd28d09a727d10": {
+      "condition_id": "0xc86d4d4f948d773f49de8d11b3caa43ccab7392341c10b025cfd28d09a727d10",
+      "title": "Spread: US Catanzaro 1929 (-1.5)",
+      "outcome": "Modena FC 2018",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.87,
+      "whale_address": "0x12c2a80266dbd07def1733ee19dc5b443655aa71",
+      "whale_name": "JamesErickson6801",
+      "whale_size": 510.0,
+      "is_known_whale": false,
+      "tx": "0x44a33f6f3abdf6884b726435ff74e5c98f8b2f5580af60a134d2ef0d195c3f0f",
+      "timestamp": "2026-04-12T12:31:59.551331+00:00"
     }
   },
   "history": [],
@@ -1551,9 +1635,9 @@
       "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 272,
+  "total_wallets_tracked": 284,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T12:21:58.602088+00:00"
+  "updated": "2026-04-12T12:31:59.555636+00:00"
 }
