@@ -1624,6 +1624,90 @@
       "is_known_whale": false,
       "tx": "0xf11e4247253dd7c26646cb0fa4a23408c59d21fed12ac5cca4a775bf69e9527d",
       "timestamp": "2026-04-12T12:42:00.489739+00:00"
+    },
+    "0x7aea2611f3dcf28b5b75eb00cadf7140f3617849e7383d16c18793adf5817302": {
+      "condition_id": "0x7aea2611f3dcf28b5b75eb00cadf7140f3617849e7383d16c18793adf5817302",
+      "title": "Magic vs. Celtics",
+      "outcome": "Magic",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.849999999915,
+      "whale_address": "0x46ea71a22353949e5ac32ab29dff19cfc2e7225b",
+      "whale_name": "E5aC32Ab29DFF19CfC2E7225B",
+      "whale_size": 585.5882429999999,
+      "is_known_whale": false,
+      "tx": "0x4226dd77e3d35962ef4242a29de233a1ad78876c09491a89ba8be32ca685f1e8",
+      "timestamp": "2026-04-12T12:52:01.476771+00:00"
+    },
+    "0x068d4f079da544e312b1a7b86e2c5dd39d3fc6a0f5a21b0ec866d1ff34767839": {
+      "condition_id": "0x068d4f079da544e312b1a7b86e2c5dd39d3fc6a0f5a21b0ec866d1ff34767839",
+      "title": "Will the next Prime Minister of Hungary be Istv\u00e1n Kapit\u00e1ny?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.999,
+      "whale_address": "0xcd91a549956854fdc38efad7e80ff5da8f5432b8",
+      "whale_name": "Novus0rdoSeclorum",
+      "whale_size": 581.25,
+      "is_known_whale": false,
+      "tx": "0xfcd4363244c5f79f67e2fdee1dad63b5a83f58c285b7ad227c4b6ba951bff57a",
+      "timestamp": "2026-04-12T12:52:01.477667+00:00"
+    },
+    "0xe8650a47f1d2224f8df6359dfbe42ec6249eca886003af7fe0f94c90a99ecdbf": {
+      "condition_id": "0xe8650a47f1d2224f8df6359dfbe42ec6249eca886003af7fe0f94c90a99ecdbf",
+      "title": "Will the price of Bitcoin be above $70,000 on April 12?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.009000000073469388,
+      "whale_address": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+      "whale_name": "",
+      "whale_size": 202.238906,
+      "is_known_whale": true,
+      "tx": "0x83b87bf15f6f3f0c11050042d895091dc6d64c9f35d602c33447e4cd3c25b51c",
+      "timestamp": "2026-04-12T12:52:01.477749+00:00"
+    },
+    "0xf9297c040b88468b029ee19f1f7fc434fbdfbda169eeb741c0eb0366720b7ce9": {
+      "condition_id": "0xf9297c040b88468b029ee19f1f7fc434fbdfbda169eeb741c0eb0366720b7ce9",
+      "title": "Kings vs. Trail Blazers",
+      "outcome": "Kings",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.07,
+      "whale_address": "0xd106952ebf30a3125affd8a23b6c1f30c35fc79c",
+      "whale_name": "Herdonia",
+      "whale_size": 4413.4992600000005,
+      "is_known_whale": false,
+      "tx": "0x83f1d7a8c2d10a01308b513bd4ce8da2580811d324dca7992940dc0e47f81a9e",
+      "timestamp": "2026-04-12T12:52:01.477785+00:00"
+    },
+    "0x4f8bddad85712e2b46756f71c753380a1417bec8049e4a45742e5182c3a5c015": {
+      "condition_id": "0x4f8bddad85712e2b46756f71c753380a1417bec8049e4a45742e5182c3a5c015",
+      "title": "Will Israel conduct military action against Iran by April 14",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.17999999882504508,
+      "whale_address": "0xc5be307cbc5884c92beb33635223528fb61870c7",
+      "whale_name": "0xc5bE307cbc5884c92BEB33635223528fB61870c7-1774898339983",
+      "whale_size": 646.833332,
+      "is_known_whale": false,
+      "tx": "0x7e86eb68addc6acc8edc61997d57eccbcf875a07448aa4cd5ea9c55af87d984b",
+      "timestamp": "2026-04-12T12:52:01.477806+00:00"
+    },
+    "0xde38c515193b3b7f826f65e85fb50fc77d4fb134e56f3c36e9244ee812d75089": {
+      "condition_id": "0xde38c515193b3b7f826f65e85fb50fc77d4fb134e56f3c36e9244ee812d75089",
+      "title": "Will Tisza win the national list vote in the 2026 Hungarian ",
+      "outcome": "No",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.31,
+      "whale_address": "0x65126a59485f1457a945929bc353611e0a805291",
+      "whale_name": "zetbetter",
+      "whale_size": 400.0,
+      "is_known_whale": false,
+      "tx": "0x035f38c4cdd8e5e6fcc370c494670d55087d0581b9bcc23b037f557c3833a990",
+      "timestamp": "2026-04-12T12:52:01.477825+00:00"
     }
   },
   "history": [],
@@ -1655,6 +1739,14 @@
       "active_markets": 3
     },
     {
+      "address": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+      "name": "",
+      "trades": 3,
+      "volume": 1037.12,
+      "last_seen": "2026-04-12T12:52:01.387032+00:00",
+      "active_markets": 3
+    },
+    {
       "address": "0x849ccb5907938ce8be18ed5dbf583288e2da4009",
       "name": "Ondra",
       "trades": 3,
@@ -1663,9 +1755,9 @@
       "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 290,
+  "total_wallets_tracked": 301,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T12:42:00.495142+00:00"
+  "updated": "2026-04-12T12:52:01.481945+00:00"
 }
