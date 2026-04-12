@@ -3332,6 +3332,76 @@
       "is_known_whale": false,
       "tx": "0xe8d953e0ca1aa56fcc304f4d154b1657f15f0f366a54516cc126a6d64814a82f",
       "timestamp": "2026-04-12T16:12:25.210978+00:00"
+    },
+    "0xa988b5651e1172b3ccaaf8174f4c60e08b91973010810feedbab479f6d8df0c9": {
+      "condition_id": "0xa988b5651e1172b3ccaaf8174f4c60e08b91973010810feedbab479f6d8df0c9",
+      "title": "Will the highest temperature in London be 15\u00b0C on April 12?",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.9962682843143983,
+      "whale_address": "0xba63d3a0105a3c01bfa561015c36911c8d1536dc",
+      "whale_name": "0xBA63D3a0105A3C01bfa561015c36911C8D1536dC-1769606304708",
+      "whale_size": 728.63,
+      "is_known_whale": false,
+      "tx": "0x461291cb70c583480030ac44e811cd8e0c855d1e1412e227f86f9d0ea2679019",
+      "timestamp": "2026-04-12T16:42:28.875088+00:00"
+    },
+    "0xf0ee86881b7f60638f73f36fc6cd65a156cab72d75f269947cd7aba7ba38f9a5": {
+      "condition_id": "0xf0ee86881b7f60638f73f36fc6cd65a156cab72d75f269947cd7aba7ba38f9a5",
+      "title": "Bitcoin Up or Down - April 12, 12:30PM-12:45PM ET",
+      "outcome": "Up",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.2817697014395916,
+      "whale_address": "0x207eb419b9e119894a4a47e4216f6990e92dfe24",
+      "whale_name": "0x207eB419B9e119894A4A47E4216F6990e92DFe24-1772709546223",
+      "whale_size": 1009.169773,
+      "is_known_whale": false,
+      "tx": "0x8339c9956c707caa4ed154ccbc3050a73ee4182db9a0357a109a20ad1cc13e20",
+      "timestamp": "2026-04-12T16:42:28.876327+00:00"
+    },
+    "0x567c00a2dcae2d1de8c12bee218bbb44d08a3ce7c579321ea53a774b514a4ccd": {
+      "condition_id": "0x567c00a2dcae2d1de8c12bee218bbb44d08a3ce7c579321ea53a774b514a4ccd",
+      "title": "Counter-Strike: fnatic vs Sashi Esport (BO1) - Conquest of P",
+      "outcome": "fnatic",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.12,
+      "whale_address": "0xbbcede6a78def694254dd0db78b27642d6b66e3f",
+      "whale_name": "MostafaKhamenei",
+      "whale_size": 462.8105,
+      "is_known_whale": false,
+      "tx": "0x2330d0cbd53f6b289fa5e30dae81aea2ebe56df7bb2ecafc14893372cc49720a",
+      "timestamp": "2026-04-12T16:42:28.876411+00:00"
+    },
+    "0xcfd35c24c75f04a19497eddc4321ab9f1acff1e75b64ef071a06eac9ece121c0": {
+      "condition_id": "0xcfd35c24c75f04a19497eddc4321ab9f1acff1e75b64ef071a06eac9ece121c0",
+      "title": "VfB Stuttgart vs. Hamburger SV: O/U 3.5",
+      "outcome": "Over",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.57,
+      "whale_address": "0x87909a89ee551c8616e5bff9089c81545bfd010b",
+      "whale_name": "Castolo",
+      "whale_size": 2428.76,
+      "is_known_whale": false,
+      "tx": "0x71fc26e2081a17735276794f5c0b043d67f1909094616fe41c181b3c31859b93",
+      "timestamp": "2026-04-12T16:42:28.876454+00:00"
+    },
+    "0x213c725b138a4d34eca13afda711e4807aee301956353ac59051148d0acb9146": {
+      "condition_id": "0x213c725b138a4d34eca13afda711e4807aee301956353ac59051148d0acb9146",
+      "title": "Games Total: O/U 2.5",
+      "outcome": "Over",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.46,
+      "whale_address": "0x39d3c773be30fcc73161fc6768f46d563a779ef0",
+      "whale_name": "matanovik",
+      "whale_size": 4695.46097,
+      "is_known_whale": false,
+      "tx": "0xc6afd6b274bca4b5bf006e9dacd3078da88f72c0ef0804cff4ff332859ee50cc",
+      "timestamp": "2026-04-12T16:42:28.876489+00:00"
     }
   },
   "history": [],
@@ -3361,6 +3431,14 @@
       "volume": 10825.79,
       "last_seen": "2026-04-12T12:01:56.395905+00:00",
       "active_markets": 2
+    },
+    {
+      "address": "0x204f72f35326db932158cba6adff0b9a1da95e14",
+      "name": "swisstony",
+      "trades": 6,
+      "volume": 5072.74,
+      "last_seen": "2026-04-12T16:42:28.660398+00:00",
+      "active_markets": 6
     },
     {
       "address": "0xe8dd7741ccb12350957ec71e9ee332e0d1e6ec86",
@@ -3393,14 +3471,6 @@
       "volume": 2652.5,
       "last_seen": "2026-04-12T13:22:04.396721+00:00",
       "active_markets": 3
-    },
-    {
-      "address": "0x204f72f35326db932158cba6adff0b9a1da95e14",
-      "name": "swisstony",
-      "trades": 5,
-      "volume": 2321.04,
-      "last_seen": "2026-04-12T14:42:13.191429+00:00",
-      "active_markets": 5
     },
     {
       "address": "0xcd91a549956854fdc38efad7e80ff5da8f5432b8",
@@ -3459,9 +3529,9 @@
       "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 537,
+  "total_wallets_tracked": 550,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T16:32:27.464035+00:00"
+  "updated": "2026-04-12T16:42:28.887248+00:00"
 }
