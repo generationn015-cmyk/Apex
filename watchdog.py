@@ -231,9 +231,11 @@ def run_watchdog():
 
     print(f"[Watchdog] All processes started ({init_mode}). Monitoring...")
 
-    last_heartbeat = time.time()
-    CHECK_INTERVAL = 15
-    HEARTBEAT_SECS = 3600
+    last_heartbeat  = time.time()
+    last_data_sync  = 0.0   # force first sync immediately
+    CHECK_INTERVAL  = 15
+    HEARTBEAT_SECS  = 3600
+    DATA_SYNC_SECS  = 300   # push data to GitHub every 5 minutes
 
     try:
         while True:
@@ -247,7 +249,17 @@ def run_watchdog():
             # Write status for dashboard
             mgr.write_status()
 
-            # Hourly heartbeat + GitHub data sync
+            # Every 5 min: push live data to GitHub so dashboard stays current
+            if time.time() - last_data_sync > DATA_SYNC_SECS:
+                last_data_sync = time.time()
+                try:
+                    from core.data_sync import sync_to_github
+                    from configs.config import GITHUB_TOKEN
+                    sync_to_github(token=GITHUB_TOKEN)
+                except Exception as e:
+                    print(f"  [DataSync] Error: {e}")
+
+            # Hourly heartbeat to Telegram
             if time.time() - last_heartbeat > HEARTBEAT_SECS:
                 last_heartbeat = time.time()
                 state_summary  = ""
@@ -263,14 +275,6 @@ def run_watchdog():
                     pass
                 _tg(f"💓 <b>Watchdog heartbeat</b>{state_summary}\n"
                     f"{mgr.status_line()}")
-
-                # Push live data to GitHub so Streamlit Cloud stays updated
-                try:
-                    from core.data_sync import sync_to_github
-                    from configs.config import GITHUB_TOKEN
-                    sync_to_github(token=GITHUB_TOKEN)
-                except Exception as e:
-                    print(f"  [DataSync] Error: {e}")
 
             time.sleep(CHECK_INTERVAL)
 
