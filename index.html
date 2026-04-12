@@ -90,16 +90,15 @@ tr:hover td{background:var(--s1)}
     </div>
   </div>
 
-  <!-- Top Stats -->
+  <!-- Top Stats — BTC 5-Min focused -->
   <div class="stats" id="topStats"></div>
 
-  <!-- Tabs -->
+  <!-- Tabs — BTC 5-Min first -->
   <div class="tabs" id="tabNav"></div>
 
   <!-- Tab Panes -->
-  <div id="paneOverview" class="pane active"></div>
-  <div id="paneBtc5m" class="pane"></div>
-  <div id="paneCrypto" class="pane"></div>
+  <div id="paneBtc5m" class="pane active"></div>
+  <div id="paneOverview" class="pane"></div>
   <div id="paneScanner" class="pane"></div>
   <div id="paneCopy" class="pane"></div>
 
@@ -108,13 +107,12 @@ tr:hover td{background:var(--s1)}
 
 <script>
 const BASE = 'https://raw.githubusercontent.com/generationn015-cmyk/Apex/master';
-const REFRESH = 30; // seconds
+const REFRESH = 30;
 let timer = REFRESH;
 
 const TABS = [
-  {id:'Overview', pane:'paneOverview'},
-  {id:'BTC 5-Min', pane:'paneBtc5m'},
-  {id:'Crypto Agents', pane:'paneCrypto'},
+  {id:'BTC 5-Min Sniper', pane:'paneBtc5m'},
+  {id:'System Overview', pane:'paneOverview'},
   {id:'Poly Scanner', pane:'paneScanner'},
   {id:'Copy Trader', pane:'paneCopy'},
 ];
@@ -181,40 +179,77 @@ async function refresh() {
   const modeTag = document.getElementById('modeTag');
   modeTag.textContent = mode.toUpperCase();
   modeTag.className = 'mode-badge mode-' + mode;
-  document.getElementById('lastUpdate').textContent = ago(wdog?.updated_at || state?.updated_at);
+  document.getElementById('lastUpdate').textContent = ago(wdog?.updated_at || btc5m?.updated || state?.updated_at);
 
   // BTC 5m stats
   const btcTrades = btc5m?.trades || [];
   const btcResolved = btcTrades.filter(t=>t.resolved);
   const btcWins = btcResolved.filter(t=>t.won).length;
+  const btcLosses = btcResolved.length - btcWins;
   const btcPnl = btcResolved.reduce((s,t)=>s+(t.pnl||0),0);
   const btcBank = btc5m?.bankroll || 0;
   const btcWR = btcResolved.length ? btcWins/btcResolved.length*100 : 0;
+  const btcPending = btcTrades.filter(t=>!t.resolved).length;
 
-  // Crypto stats
-  const cStats = state?.stats || {};
-  const cPnl = cStats.total_pnl || 0;
-
-  // Copy stats
-  const copyHist = copyS?.history || [];
-  const copyResolved = copyHist.filter(h=>h.resolved);
-  const copyPnl = copyResolved.reduce((s,h)=>s+(h.pnl||0),0);
-
-  const totalPnl = btcPnl + cPnl + copyPnl;
-
-  // Top stats bar
+  // Top stats — BTC 5-Min focused
   document.getElementById('topStats').innerHTML = [
-    {v:fmt(totalPnl), l:'Total PnL', c:cls(totalPnl)},
-    {v:`$${btcBank.toFixed(2)}`, l:'BTC Bankroll', c:'g'},
-    {v:fmt(btcPnl), l:'BTC Sniper PnL', c:cls(btcPnl)},
-    {v:`${btcWins}W/${btcResolved.length-btcWins}L`, l:'BTC Record', c:''},
-    {v:pct(btcWR), l:'BTC Win Rate', c:btcWR>=50?'g':'r'},
+    {v:`$${btcBank.toFixed(2)}`, l:'Bankroll', c:btcBank>=250?'g':'r'},
+    {v:fmt(btcPnl), l:'Total PnL', c:cls(btcPnl)},
+    {v:`${btcWins}W / ${btcLosses}L`, l:'Record', c:''},
+    {v:pct(btcWR), l:'Win Rate', c:btcWR>=50?'g':'r'},
+    {v:btcTrades.length, l:'Trades Taken', c:'b'},
     {v:btc5m?.windows_scanned||0, l:'Windows Scanned', c:''},
-    {v:fmt(cPnl), l:'Crypto PnL', c:cls(cPnl)},
-    {v:cStats.total_trades||0, l:'Crypto Trades', c:''},
+    {v:btcPending, l:'Pending', c:btcPending?'amb':''},
   ].map(s=>`<div class="stat"><div class="stat-val ${s.c}">${s.v}</div><div class="stat-lbl">${s.l}</div></div>`).join('');
 
-  // ── TAB: Overview ──
+  // ── TAB: BTC 5-Min (DEFAULT) ──
+  let btcHTML = '';
+  if(!btcTrades.length) {
+    btcHTML = '<div class="card" style="text-align:center;padding:40px;color:var(--t3)">No BTC 5-min data yet. Waiting for first trade...</div>';
+  } else {
+    // Summary cards
+    const avgEdge = btcTrades.reduce((s,t)=>s+(t.edge||0),0)/btcTrades.length;
+    const avgBet = btcTrades.reduce((s,t)=>s+(t.bet_size||0),0)/btcTrades.length;
+    const biggestWin = Math.max(...btcResolved.map(t=>t.pnl||0), 0);
+    const biggestLoss = Math.min(...btcResolved.map(t=>t.pnl||0), 0);
+
+    btcHTML += '<div class="grid">';
+    btcHTML += `<div class="card"><div class="card-title">Average Edge</div><div class="stat-val g" style="font-size:20px;margin-top:6px">${pct(avgEdge*100)}</div></div>`;
+    btcHTML += `<div class="card"><div class="card-title">Avg Bet Size</div><div class="stat-val b" style="font-size:20px;margin-top:6px">$${avgBet.toFixed(2)}</div></div>`;
+    btcHTML += `<div class="card"><div class="card-title">Best Trade</div><div class="stat-val g" style="font-size:20px;margin-top:6px">${fmt(biggestWin)}</div></div>`;
+    btcHTML += `<div class="card"><div class="card-title">Worst Trade</div><div class="stat-val r" style="font-size:20px;margin-top:6px">${fmt(biggestLoss)}</div></div>`;
+    btcHTML += '</div>';
+
+    // Trade history table
+    btcHTML += '<div class="sec">Trade History</div><div class="tbl-wrap"><table><tr><th>Time</th><th>Market</th><th>Direction</th><th>Bet</th><th>Edge</th><th>BTC Price</th><th>Score</th><th>Result</th><th>PnL</th></tr>';
+    [...btcTrades].reverse().forEach(t => {
+      const res = t.resolved ? (t.won?'<span class="g">WIN</span>':'<span class="r">LOSS</span>') : '<span class="n">PENDING</span>';
+      const pnl = t.resolved ? `<span class="${cls(t.pnl)}">${fmt(t.pnl)}</span>` : '--';
+      const dir = t.direction==='UP'?'<span class="g">UP</span>':'<span class="r">DOWN</span>';
+      const score = t.score != null ? (t.score>0?'+':'')+t.score.toFixed(1) : '--';
+      const question = (t.question||'').replace(/Bitcoin Up or Down - /i,'').slice(0,35);
+      btcHTML += `<tr><td>${(t.timestamp||'').slice(11,19)}</td><td style="font-size:11px">${question}</td><td>${dir}</td><td>$${(t.bet_size||0).toFixed(2)}</td><td>${pct((t.edge||0)*100)}</td><td>$${(t.btc_price||0).toLocaleString()}</td><td>${score}</td><td>${res}</td><td>${pnl}</td></tr>`;
+    });
+    btcHTML += '</table></div>';
+
+    // Indicator breakdown for latest trade
+    const withInd = btcTrades.filter(t=>t.indicators?.scores);
+    if(withInd.length) {
+      const last = withInd[withInd.length-1];
+      const scores = last.indicators.scores;
+      btcHTML += `<div class="sec">Latest Signal Breakdown (${(last.question||'').replace(/Bitcoin Up or Down - /i,'').slice(0,40)})</div><div class="grid">`;
+      const indNames = {window_delta:'Window Delta',macd_histogram:'MACD Hist',macd_acceleration:'MACD Accel',macd_cross:'MACD Cross',macd_zero_regime:'MACD Zero',fast_macd_confirm:'Fast MACD',macd_volume_flow:'Vol Flow',tick_trend:'Tick Trend',micro_momentum:'Micro Mom',acceleration:'Accel',ema_cross:'EMA Cross',rsi:'RSI',volume_surge:'Vol Surge',macd:'MACD'};
+      for(const [k,v] of Object.entries(scores)) {
+        const name = indNames[k] || k;
+        const c = v>0?'g':v<0?'r':'n';
+        btcHTML += `<div class="card" style="text-align:center;padding:12px"><div class="card-sub">${name}</div><div class="stat-val ${c}" style="font-size:18px">${v>0?'+':''}${v.toFixed(1)}</div></div>`;
+      }
+      btcHTML += '</div>';
+    }
+  }
+  document.getElementById('paneBtc5m').innerHTML = btcHTML;
+
+  // ── TAB: System Overview ──
   const procs = wdog?.processes || {};
   let ovHTML = '<div class="sec">System Processes</div><div class="grid">';
   const procMeta = {
@@ -234,96 +269,32 @@ async function refresh() {
   }
   ovHTML += '</div>';
 
-  // Last signals
-  const sigs = state?.last_signals || {};
-  const allSigs = Object.entries(sigs).flatMap(([a,s])=>s.map(x=>({...x,agent:a})));
-  if(allSigs.length) {
-    ovHTML += '<div class="sec">Active Signals</div><div class="tbl-wrap"><table><tr><th>Agent</th><th>Asset</th><th>Signal</th><th>Strength</th><th>Entry</th></tr>';
-    allSigs.forEach(s => {
-      const sc = s.signal==='BUY'?'g':'r';
-      ovHTML += `<tr><td>${s.agent}</td><td>${s.asset}</td><td class="${sc}">${s.signal}</td><td>${(s.strength||0).toFixed(2)}</td><td>$${(s.entry_price||0).toFixed(2)}</td></tr>`;
-    });
-    ovHTML += '</table></div>';
-  }
+  // Bankroll summary for all bots
+  const sniperBank = sniper?.bankroll || 0;
+  const copyBank = copyS?.bankroll || 0;
+  const cStats = state?.stats || {};
+  const cPnl = cStats.total_pnl || 0;
+  ovHTML += '<div class="sec">All Bankrolls</div><div class="stats">';
+  ovHTML += `<div class="stat"><div class="stat-val g">$${btcBank.toFixed(2)}</div><div class="stat-lbl">BTC Sniper</div></div>`;
+  ovHTML += `<div class="stat"><div class="stat-val">$${sniperBank.toFixed(2)}</div><div class="stat-lbl">Poly Scanner</div></div>`;
+  ovHTML += `<div class="stat"><div class="stat-val">$${copyBank.toFixed(2)}</div><div class="stat-lbl">Copy Trader</div></div>`;
+  ovHTML += `<div class="stat"><div class="stat-val ${cls(cPnl)}">${fmt(cPnl)}</div><div class="stat-lbl">Crypto Agents PnL</div></div>`;
+  ovHTML += '</div>';
+
   document.getElementById('paneOverview').innerHTML = ovHTML;
-
-  // ── TAB: BTC 5-Min ──
-  let btcHTML = '';
-  if(!btcTrades.length) {
-    btcHTML = '<div class="card" style="text-align:center;padding:40px;color:var(--t3)">No BTC 5-min data yet. Waiting for first trade...</div>';
-  } else {
-    // PnL curve (simple text-based for now, then table)
-    btcHTML += '<div class="sec">Trade History</div><div class="tbl-wrap"><table><tr><th>Time</th><th>Direction</th><th>Bet</th><th>Edge</th><th>BTC Price</th><th>Confidence</th><th>Score</th><th>Result</th><th>PnL</th></tr>';
-    [...btcTrades].reverse().forEach(t => {
-      const res = t.resolved ? (t.won?'<span class="g">WIN</span>':'<span class="r">LOSS</span>') : '<span class="n">PENDING</span>';
-      const pnl = t.resolved ? `<span class="${cls(t.pnl)}">${fmt(t.pnl)}</span>` : '--';
-      const dir = t.direction==='UP'?'<span class="g">UP</span>':'<span class="r">DOWN</span>';
-      const conf = t.confidence != null ? pct(t.confidence*100) : '--';
-      const score = t.score != null ? (t.score>0?'+':'')+t.score.toFixed(1) : '--';
-      btcHTML += `<tr><td>${(t.timestamp||'').slice(11,19)} UTC</td><td>${dir}</td><td>$${(t.bet_size||0).toFixed(2)}</td><td>${pct((t.edge||0)*100)}</td><td>$${(t.btc_price||0).toLocaleString()}</td><td>${conf}</td><td>${score}</td><td>${res}</td><td>${pnl}</td></tr>`;
-    });
-    btcHTML += '</table></div>';
-
-    // Indicator breakdown for latest trade with indicators
-    const withInd = btcTrades.filter(t=>t.indicators?.scores);
-    if(withInd.length) {
-      const last = withInd[withInd.length-1];
-      const scores = last.indicators.scores;
-      btcHTML += '<div class="sec">Latest Signal Breakdown</div><div class="grid">';
-      const indNames = {window_delta:'Window Delta',macd_histogram:'MACD Hist',macd_acceleration:'MACD Accel',macd_cross:'MACD Cross',macd_zero_regime:'MACD Zero',fast_macd_confirm:'Fast MACD',macd_volume_flow:'Vol Flow',tick_trend:'Tick Trend',micro_momentum:'Micro Mom',acceleration:'Accel',ema_cross:'EMA Cross',rsi:'RSI',volume_surge:'Vol Surge',macd:'MACD'};
-      for(const [k,v] of Object.entries(scores)) {
-        const name = indNames[k] || k;
-        const c = v>0?'g':v<0?'r':'n';
-        btcHTML += `<div class="card" style="text-align:center;padding:12px"><div class="card-sub">${name}</div><div class="stat-val ${c}" style="font-size:18px">${v>0?'+':''}${v.toFixed(1)}</div></div>`;
-      }
-      btcHTML += '</div>';
-    }
-  }
-  document.getElementById('paneBtc5m').innerHTML = btcHTML;
-
-  // ── TAB: Crypto Agents ──
-  const agentMeta = {ATLAS:{c:'var(--blu)',d:'SMA+ADX'},ORACLE:{c:'var(--grn)',d:'MACD+RSI'},SNIPER:{c:'var(--amb)',d:'Regime Switch'},SENTINEL:{c:'var(--pur)',d:'EMA+Squeeze'}};
-  let cryptoHTML = '<div class="grid">';
-  for(const [name,meta] of Object.entries(agentMeta)) {
-    const agSigs = sigs[name] || [];
-    const hasSig = agSigs.length > 0;
-    const badge = hasSig ? '<span class="badge badge-run">SIGNAL</span>' : '<span class="badge badge-off">WATCHING</span>';
-
-    // Per-agent stats from trades
-    const agTrades = trades.filter(t=>t.agent===name);
-    const agClosed = agTrades.filter(t=>t.status==='WIN'||t.status==='LOSS');
-    const agWins = agClosed.filter(t=>t.status==='WIN').length;
-    const agPnl = agClosed.reduce((s,t)=>s+(t.pnl||0),0);
-    const agWR = agClosed.length ? agWins/agClosed.length*100 : 0;
-    const agOpen = agTrades.filter(t=>t.status==='OPEN').length;
-
-    cryptoHTML += `<div class="card" style="border-top:3px solid ${meta.c}"><div class="card-hdr"><div><div class="card-title">${name}</div><div class="card-sub">${meta.d}</div></div>${badge}</div>`;
-    cryptoHTML += `<div class="card-stats"><div class="cs"><div class="cs-v ${cls(agPnl)}">${fmt(agPnl)}</div><div class="cs-l">PnL</div></div><div class="cs"><div class="cs-v">${pct(agWR)}</div><div class="cs-l">Win Rate</div></div><div class="cs"><div class="cs-v">${agTrades.length}</div><div class="cs-l">Trades</div></div><div class="cs"><div class="cs-v">${agOpen}</div><div class="cs-l">Open</div></div></div>`;
-    if(agSigs.length) {
-      agSigs.slice(0,2).forEach(s => {
-        const sc = s.signal==='BUY'?'g':'r';
-        cryptoHTML += `<div style="margin-top:8px;font-size:11px;color:var(--t2)">${s.asset} <span class="${sc}">${s.signal}</span> @ $${(s.entry_price||0).toFixed(2)} str=${(s.strength||0).toFixed(2)}</div>`;
-      });
-    }
-    cryptoHTML += '</div>';
-  }
-  cryptoHTML += '</div>';
-
-  // Open positions
-  const openTrades = trades.filter(t=>t.status==='OPEN');
-  if(openTrades.length) {
-    cryptoHTML += '<div class="sec">Open Positions</div><div class="tbl-wrap"><table><tr><th>Agent</th><th>Asset</th><th>Dir</th><th>Entry</th><th>SL</th><th>TP</th></tr>';
-    openTrades.forEach(t => {
-      cryptoHTML += `<tr><td>${t.agent}</td><td>${t.asset}</td><td class="${t.direction==='BUY'?'g':'r'}">${t.direction}</td><td>$${(t.entry_price||0).toFixed(2)}</td><td>$${(t.stop_loss||0).toFixed(2)}</td><td>$${(t.take_profit||0).toFixed(2)}</td></tr>`;
-    });
-    cryptoHTML += '</table></div>';
-  }
-  document.getElementById('paneCrypto').innerHTML = cryptoHTML;
 
   // ── TAB: Poly Scanner ──
   const sniperPositions = sniper?.positions || {};
   const sniperHistory = sniper?.history || [];
   let scanHTML = '';
+
+  // Sniper stats
+  const sniperResolved = sniperHistory.filter(h=>h.result);
+  const sniperWins = sniperResolved.filter(h=>h.result==='WIN').length;
+  const sniperPnl = sniperHistory.reduce((s,h)=>s+(h.pnl||0),0);
+  if(sniper) {
+    scanHTML += `<div class="stats"><div class="stat"><div class="stat-val">$${sniperBank.toFixed(2)}</div><div class="stat-lbl">Bankroll</div></div><div class="stat"><div class="stat-val ${cls(sniperPnl)}">${fmt(sniperPnl)}</div><div class="stat-lbl">PnL</div></div><div class="stat"><div class="stat-val">${Object.keys(sniperPositions).length}</div><div class="stat-lbl">Open</div></div><div class="stat"><div class="stat-val">${sniperWins}W/${sniperResolved.length-sniperWins}L</div><div class="stat-lbl">Record</div></div></div>`;
+  }
 
   if(Object.keys(sniperPositions).length) {
     scanHTML += '<div class="sec">Open Positions</div><div class="tbl-wrap"><table><tr><th>Market</th><th>Side</th><th>Bet</th><th>Edge</th></tr>';
@@ -346,6 +317,9 @@ async function refresh() {
   document.getElementById('paneScanner').innerHTML = scanHTML;
 
   // ── TAB: Copy Trader ──
+  const copyHist = copyS?.history || [];
+  const copyResolved = copyHist.filter(h=>h.resolved);
+  const copyPnl = copyResolved.reduce((s,h)=>s+(h.pnl||0),0);
   let copyHTML = '';
   if(!copyS) {
     copyHTML = '<div class="card" style="text-align:center;padding:40px;color:var(--t3)">Copy Trader not started yet.</div>';
@@ -353,28 +327,38 @@ async function refresh() {
     const cBank = copyS.bankroll || 0;
     const cPos = Object.keys(copyS.positions||{}).length;
     const cWallets = copyS.total_wallets_tracked || 0;
-    const cResolved = copyResolved;
-    const cWins = cResolved.filter(h=>h.won).length;
-    const cWR = cResolved.length ? cWins/cResolved.length*100 : 0;
+    const cWins = copyResolved.filter(h=>h.won).length;
+    const cWR = copyResolved.length ? cWins/copyResolved.length*100 : 0;
 
     copyHTML += `<div class="stats"><div class="stat"><div class="stat-val">$${cBank.toFixed(2)}</div><div class="stat-lbl">Bankroll</div></div><div class="stat"><div class="stat-val ${cls(copyPnl)}">${fmt(copyPnl)}</div><div class="stat-lbl">PnL</div></div><div class="stat"><div class="stat-val">${pct(cWR)}</div><div class="stat-lbl">Win Rate</div></div><div class="stat"><div class="stat-val">${cPos}</div><div class="stat-lbl">Open</div></div><div class="stat"><div class="stat-val">${cWallets}</div><div class="stat-lbl">Wallets</div></div></div>`;
+
+    // Open positions
+    const openPos = copyS.positions || {};
+    if(Object.keys(openPos).length) {
+      copyHTML += '<div class="sec">Open Copy Positions</div><div class="tbl-wrap"><table><tr><th>Market</th><th>Side</th><th>Bet</th><th>Whale</th></tr>';
+      for(const [cid,p] of Object.entries(openPos)) {
+        const name = p.whale_name || (p.whale_address||'').slice(0,10);
+        copyHTML += `<tr><td>${(p.title||'').slice(0,50)}</td><td>${p.side||p.direction||''}</td><td>$${(p.bet_size||0).toFixed(2)}</td><td>${name}</td></tr>`;
+      }
+      copyHTML += '</table></div>';
+    }
 
     // Top traders
     const topT = copyS.top_traders || [];
     if(topT.length) {
-      copyHTML += '<div class="sec">Top Whale Leaderboard</div><div class="tbl-wrap"><table><tr><th>#</th><th>Wallet</th><th>Win Rate</th><th>Trades</th><th>PnL</th><th>Volume</th></tr>';
+      copyHTML += '<div class="sec">Top Whale Leaderboard</div><div class="tbl-wrap"><table><tr><th>#</th><th>Wallet</th><th>Trades</th><th>Volume</th><th>Markets</th></tr>';
       topT.slice(0,10).forEach((t,i) => {
-        copyHTML += `<tr><td>${i+1}</td><td>${shortAddr(t.address)}</td><td class="${t.win_rate>=50?'g':'r'}">${pct(t.win_rate)}</td><td>${t.resolved}</td><td class="${cls(t.net_pnl)}">${fmt(t.net_pnl)}</td><td>$${(t.volume||0).toLocaleString()}</td></tr>`;
+        copyHTML += `<tr><td>${i+1}</td><td>${shortAddr(t.address)}</td><td>${t.trades}</td><td>$${(t.volume||0).toLocaleString()}</td><td>${t.active_markets||0}</td></tr>`;
       });
       copyHTML += '</table></div>';
     }
 
     // History
-    if(cResolved.length) {
-      copyHTML += '<div class="sec">Recent Copy Trades</div><div class="tbl-wrap"><table><tr><th>Direction</th><th>Bet</th><th>Whale</th><th>Result</th><th>PnL</th></tr>';
-      [...cResolved].reverse().slice(0,20).forEach(h => {
+    if(copyResolved.length) {
+      copyHTML += '<div class="sec">Resolved Copy Trades</div><div class="tbl-wrap"><table><tr><th>Market</th><th>Side</th><th>Bet</th><th>Result</th><th>PnL</th></tr>';
+      [...copyResolved].reverse().slice(0,20).forEach(h => {
         const res = h.won?'<span class="g">WIN</span>':'<span class="r">LOSS</span>';
-        copyHTML += `<tr><td>${h.direction}</td><td>$${(h.bet_size||0).toFixed(2)}</td><td>${shortAddr(h.whale_address)}</td><td>${res}</td><td class="${cls(h.pnl)}">${fmt(h.pnl)}</td></tr>`;
+        copyHTML += `<tr><td>${(h.title||'').slice(0,45)}</td><td>${h.side||''}</td><td>$${(h.bet_size||0).toFixed(2)}</td><td>${res}</td><td class="${cls(h.pnl)}">${fmt(h.pnl)}</td></tr>`;
       });
       copyHTML += '</table></div>';
     }
