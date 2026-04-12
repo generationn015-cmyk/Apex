@@ -3976,6 +3976,48 @@
       "is_known_whale": false,
       "tx": "0x6691c7dd4fb3456f4ca77704209097232277758366864602bba347d59250b9d3",
       "timestamp": "2026-04-12T18:04:12.461919+00:00"
+    },
+    "0x2fd22f8a8893d1a9e205471a0aa702e8527dcdef3932bb7a5307f3783b08be1f": {
+      "condition_id": "0x2fd22f8a8893d1a9e205471a0aa702e8527dcdef3932bb7a5307f3783b08be1f",
+      "title": "LoL: Team Heretics vs Karmine Corp (BO3) - LEC Regular Seaso",
+      "outcome": "Karmine Corp",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.9239233193654741,
+      "whale_address": "0x1d25e8610da75a216a332614a08f1c11a498835e",
+      "whale_name": "tuktukenjoyerr",
+      "whale_size": 2699.676697,
+      "is_known_whale": false,
+      "tx": "0x67687fff1de5b9aee5fa046b7b135b436cfaab281f773744513ad2540bdcd420",
+      "timestamp": "2026-04-12T18:05:59.901684+00:00"
+    },
+    "0xdd44f5ba4d3b9c507e0f56a53d424936e49934185192576aa177447cdfabdfe9": {
+      "condition_id": "0xdd44f5ba4d3b9c507e0f56a53d424936e49934185192576aa177447cdfabdfe9",
+      "title": "Will Columbus Crew win on 2026-04-12?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.69,
+      "whale_address": "0xead152b855effa6b5b5837f53b24c0756830c76a",
+      "whale_name": "elkmonkey",
+      "whale_size": 410.58,
+      "is_known_whale": true,
+      "tx": "0xa11793fc23ffbd848e85d16d8347ee6f17f1eecc09af9639847bb776f5668cab",
+      "timestamp": "2026-04-12T18:05:59.901822+00:00"
+    },
+    "0x0e47ad377273a39833506ca16c597c7eccdee686375b30f1910f3ef3ff734f4e": {
+      "condition_id": "0x0e47ad377273a39833506ca16c597c7eccdee686375b30f1910f3ef3ff734f4e",
+      "title": "Will Tisza win at least 130 seats?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.4637613276747907,
+      "whale_address": "0xeb7acdfb1d4b0eaefa7a336a6b4ee6b47242c291",
+      "whale_name": "staflos",
+      "whale_size": 1293.768935,
+      "is_known_whale": true,
+      "tx": "0x16ea3a3230d32c9cca0ad51e7aa38cfebdc00e27bc714f64a1c956937644ac3d",
+      "timestamp": "2026-04-12T18:05:59.901869+00:00"
     }
   },
   "history": [],
@@ -4031,6 +4073,14 @@
       "active_markets": 10
     },
     {
+      "address": "0xb6fa57039ea79185895500dbd0067c288594abcf",
+      "name": "anciente",
+      "trades": 25,
+      "volume": 5259.0,
+      "last_seen": "2026-04-12T18:05:59.865748+00:00",
+      "active_markets": 3
+    },
+    {
       "address": "0xe8dd7741ccb12350957ec71e9ee332e0d1e6ec86",
       "name": "influenz.eth",
       "trades": 5,
@@ -4045,6 +4095,22 @@
       "volume": 4244.75,
       "last_seen": "2026-04-12T17:52:38.140128+00:00",
       "active_markets": 3
+    },
+    {
+      "address": "0x507e52ef684ca2dd91f90a9d26d149dd3288beae",
+      "name": "GamblingIsAllYouNeed",
+      "trades": 3,
+      "volume": 4021.93,
+      "last_seen": "2026-04-12T18:05:58.655522+00:00",
+      "active_markets": 2
+    },
+    {
+      "address": "0xead152b855effa6b5b5837f53b24c0756830c76a",
+      "name": "elkmonkey",
+      "trades": 5,
+      "volume": 3353.42,
+      "last_seen": "2026-04-12T18:05:59.381738+00:00",
+      "active_markets": 2
     },
     {
       "address": "0x5d1d9cfd66ee3068c2a8a57dedf1e1b006dcafd2",
@@ -4071,41 +4137,17 @@
       "active_markets": 3
     },
     {
-      "address": "0xcd91a549956854fdc38efad7e80ff5da8f5432b8",
-      "name": "Novus0rdoSeclorum",
-      "trades": 4,
-      "volume": 2001.44,
-      "last_seen": "2026-04-12T16:22:26.301066+00:00",
-      "active_markets": 2
-    },
-    {
-      "address": "0xdeca32428d5cf4b1c4d7266a950e20791676ddd5",
-      "name": "durrrrrrrr",
+      "address": "0xeb7acdfb1d4b0eaefa7a336a6b4ee6b47242c291",
+      "name": "staflos",
       "trades": 3,
-      "volume": 1993.84,
-      "last_seen": "2026-04-12T17:32:35.130772+00:00",
+      "volume": 2355.98,
+      "last_seen": "2026-04-12T18:05:59.320630+00:00",
       "active_markets": 3
-    },
-    {
-      "address": "0xd27d1e863b5b29af53495f7c072d492bdfdaa84f",
-      "name": "",
-      "trades": 3,
-      "volume": 1937.96,
-      "last_seen": "2026-04-12T13:12:03.404884+00:00",
-      "active_markets": 2
-    },
-    {
-      "address": "0x9b9ff79cdc3c6dc3abbc494b06ea577567bea26a",
-      "name": "BigFishSushiChief",
-      "trades": 4,
-      "volume": 1912.0,
-      "last_seen": "2026-04-12T14:12:09.827479+00:00",
-      "active_markets": 4
     }
   ],
-  "total_wallets_tracked": 633,
+  "total_wallets_tracked": 645,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T18:05:01.818878+00:00"
+  "updated": "2026-04-12T18:05:59.914186+00:00"
 }
