@@ -3836,6 +3836,76 @@
       "is_known_whale": false,
       "tx": "0x791bfa88f0ab909389e60b7ac506711a748634f231faa6e2e98109bad2131fea",
       "timestamp": "2026-04-12T17:52:38.403660+00:00"
+    },
+    "0xa8f7be32ab3248b0532f34727d9f9e83b83bf2803d8a823e476ed1257558556a": {
+      "condition_id": "0xa8f7be32ab3248b0532f34727d9f9e83b83bf2803d8a823e476ed1257558556a",
+      "title": "Spread: RC Celta de Vigo (-1.5)",
+      "outcome": "Real Oviedo",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.9987470927993839,
+      "whale_address": "0xdf434cabf51bf8c2390fc038a28cdd8496e5ae9a",
+      "whale_name": "richerZ",
+      "whale_size": 519.4,
+      "is_known_whale": false,
+      "tx": "0xe71b9a7bc438da789e2682bdb899d24edba0ab676d69c31822b7990993b058cf",
+      "timestamp": "2026-04-12T17:59:36.370425+00:00"
+    },
+    "0xbd5d4cabb9eb982125407a491871fb7ddb4cc9522c12b576ab59c79ca19f067d": {
+      "condition_id": "0xbd5d4cabb9eb982125407a491871fb7ddb4cc9522c12b576ab59c79ca19f067d",
+      "title": "Bitcoin Up or Down - April 12, 1:50PM-1:55PM ET",
+      "outcome": "Down",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.01,
+      "whale_address": "0xc574046fe322f98140bb0cdca9774f2512e6b9da",
+      "whale_name": "Numb77",
+      "whale_size": 2000.0,
+      "is_known_whale": false,
+      "tx": "0x531f7560572cabf7f1ee972826c70b49c5568c27a0a72deb06c9e3299bc46d98",
+      "timestamp": "2026-04-12T17:59:36.370547+00:00"
+    },
+    "0x8f3c1cc62e19af9b6492d0290880bab1e0a02c971e233fb890af7cce7a17a2e9": {
+      "condition_id": "0x8f3c1cc62e19af9b6492d0290880bab1e0a02c971e233fb890af7cce7a17a2e9",
+      "title": "Arizona Diamondbacks vs. Philadelphia Phillies",
+      "outcome": "Philadelphia Phillies",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.51,
+      "whale_address": "0x204f72f35326db932158cba6adff0b9a1da95e14",
+      "whale_name": "swisstony",
+      "whale_size": 468.0,
+      "is_known_whale": true,
+      "tx": "0xd923dfc1056b196cbf6a2c0a71d781e6cffd58cc083a8852281ffb382bb627f6",
+      "timestamp": "2026-04-12T17:59:36.370621+00:00"
+    },
+    "0x6a905134df9aa6f96768729be616d04243cdbc180f12cdcb305c1eb86d771501": {
+      "condition_id": "0x6a905134df9aa6f96768729be616d04243cdbc180f12cdcb305c1eb86d771501",
+      "title": "Counter-Strike: KOLESIE vs Young Ninjas (BO1) - Conquest of ",
+      "outcome": "KOLESIE",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.999,
+      "whale_address": "0x33ab58e55895f39619815d31dfc92d90d65f9523",
+      "whale_name": "matchamission",
+      "whale_size": 407.25779,
+      "is_known_whale": false,
+      "tx": "0xa8c1b09b059dbe17310082feaf1916395c45fe1d2244595882a2a6e4827f2068",
+      "timestamp": "2026-04-12T17:59:36.370678+00:00"
+    },
+    "0x487219d5393af901e3f9178440b35dad77a2d290d45466e8fab5afba70030c71": {
+      "condition_id": "0x487219d5393af901e3f9178440b35dad77a2d290d45466e8fab5afba70030c71",
+      "title": "Game Handicap: KC (-1.5) vs Team Heretics (+1.5)",
+      "outcome": "Karmine Corp",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.6699999999732,
+      "whale_address": "0xcf609d3256f0f37f0595e5dc64012fa3a8fea6f5",
+      "whale_name": "0xcF609D3256f0f37f0595E5Dc64012Fa3a8fEa6f5-1771809916847",
+      "whale_size": 1477.761202,
+      "is_known_whale": true,
+      "tx": "0x654341351df32a57e61dded363224e8e51f5a76f05360ebb3e3884018ac73179",
+      "timestamp": "2026-04-12T17:59:36.370720+00:00"
     }
   },
   "history": [],
@@ -3875,12 +3945,20 @@
       "active_markets": 2
     },
     {
+      "address": "0xcf609d3256f0f37f0595e5dc64012fa3a8fea6f5",
+      "name": "0xcF609D3256f0f37f0595E5Dc64012Fa3a8fEa6f5-1771809916847",
+      "trades": 3,
+      "volume": 9154.8,
+      "last_seen": "2026-04-12T17:59:36.221634+00:00",
+      "active_markets": 3
+    },
+    {
       "address": "0x204f72f35326db932158cba6adff0b9a1da95e14",
       "name": "swisstony",
-      "trades": 8,
-      "volume": 5695.67,
-      "last_seen": "2026-04-12T17:52:38.302238+00:00",
-      "active_markets": 8
+      "trades": 10,
+      "volume": 6721.11,
+      "last_seen": "2026-04-12T17:59:36.109111+00:00",
+      "active_markets": 10
     },
     {
       "address": "0xe8dd7741ccb12350957ec71e9ee332e0d1e6ec86",
@@ -3953,19 +4031,11 @@
       "volume": 1912.0,
       "last_seen": "2026-04-12T14:12:09.827479+00:00",
       "active_markets": 4
-    },
-    {
-      "address": "0x116c6d1117c8690203bad2e6c5bee0d9f27fe162",
-      "name": "oorangutan",
-      "trades": 4,
-      "volume": 1654.92,
-      "last_seen": "2026-04-12T13:32:05.536066+00:00",
-      "active_markets": 2
     }
   ],
-  "total_wallets_tracked": 613,
+  "total_wallets_tracked": 625,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T17:52:38.419087+00:00"
+  "updated": "2026-04-12T17:59:36.382314+00:00"
 }
