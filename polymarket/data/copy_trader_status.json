@@ -2198,6 +2198,104 @@
       "is_known_whale": false,
       "tx": "0xc432bae45930ea3a89a86cb88a9e68406012ddb3e672c99d9ec94fae9c82d458",
       "timestamp": "2026-04-12T13:52:07.552781+00:00"
+    },
+    "0x7a00c50eb4e76f5bc25b38a83c029dfde5faa9268e4ade490c931a384f8d157a": {
+      "condition_id": "0x7a00c50eb4e76f5bc25b38a83c029dfde5faa9268e4ade490c931a384f8d157a",
+      "title": "Will Cameron Young win the 2026 Masters tournament?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.2959999999196994,
+      "whale_address": "0xdd92232bcdfbbac04132b3cbacbf32c2e5b16b2a",
+      "whale_name": "Jdhdhduu",
+      "whale_size": 8567.804053,
+      "is_known_whale": false,
+      "tx": "0x47fc76c52c2313a8c669b96e8f539bcc7431726231900c24111217cf68dec6f7",
+      "timestamp": "2026-04-12T14:02:08.745064+00:00"
+    },
+    "0x47b604fd3ea2a6def0390a94707cc78fcea8c564c118376da785f7bab1feef0a": {
+      "condition_id": "0x47b604fd3ea2a6def0390a94707cc78fcea8c564c118376da785f7bab1feef0a",
+      "title": "SC Paderborn 07 vs. 1. FC Magdeburg: O/U 2.5",
+      "outcome": "Over",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.999,
+      "whale_address": "0xd092ec91cec1e2e2ee39755d2e883cd7bedb342a",
+      "whale_name": "edswpang",
+      "whale_size": 680.25,
+      "is_known_whale": false,
+      "tx": "0x42fce4297b356dc8b95b4c58449f3491aa0bf6ce25217187d453dc3ec4b80f6c",
+      "timestamp": "2026-04-12T14:02:08.746450+00:00"
+    },
+    "0xac9a9da1ff5f324ddda62e09150caf03a2d6a3068a45ec53c2fe3237a3c44a56": {
+      "condition_id": "0xac9a9da1ff5f324ddda62e09150caf03a2d6a3068a45ec53c2fe3237a3c44a56",
+      "title": "XRP Up or Down - April 12, 9AM ET",
+      "outcome": "Up",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.001,
+      "whale_address": "0x63f052d5aedadeba654f6544e84d5ed51e6d71ae",
+      "whale_name": "0x63F052d5AedADEba654F6544e84d5eD51e6D71ae-1775659040371",
+      "whale_size": 928.072,
+      "is_known_whale": false,
+      "tx": "0x30e52c9725ad754a06306cb026a4739b071ca583090a7e6548cd8793e64accce",
+      "timestamp": "2026-04-12T14:02:08.746507+00:00"
+    },
+    "0x05ccbc3b7861349dc2fc0ce2c2bca9fd9671675171d7070abdf087ba1d7f085b": {
+      "condition_id": "0x05ccbc3b7861349dc2fc0ce2c2bca9fd9671675171d7070abdf087ba1d7f085b",
+      "title": "Will WTI Crude Oil (WTI) hit (LOW) $80 in April?",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.14365175,
+      "whale_address": "0x3337f3141b8944bc0fddd1aeb2dbe444c758c044",
+      "whale_name": "cammaster",
+      "whale_size": 400.0,
+      "is_known_whale": false,
+      "tx": "0x3e5550a46afb806dd084fe4fac2cccac68b5130e34eaa5ac5e71ae4bc7a337e3",
+      "timestamp": "2026-04-12T14:02:08.746537+00:00"
+    },
+    "0x1565cdb190b852cfbb0ba1ab7274d64d9de005577f678fbff47d72543df51b7b": {
+      "condition_id": "0x1565cdb190b852cfbb0ba1ab7274d64d9de005577f678fbff47d72543df51b7b",
+      "title": "Will Yunnan Yukun FC win on 2026-04-12?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.017494583137070183,
+      "whale_address": "0x44c58184f89a5c2f699dc8943009cb3d75a08d45",
+      "whale_name": "JhonAlexanderHinestroza",
+      "whale_size": 2123.0,
+      "is_known_whale": false,
+      "tx": "0x7c0723eb3bcb736ef669e26e3603ab88416db20152825710e17f0d55f7b354ae",
+      "timestamp": "2026-04-12T14:02:08.746580+00:00"
+    },
+    "0xbd65ca40e157deaecf533e63daa631761c9089f18c82f7e7675fb5f7151cf1d7": {
+      "condition_id": "0xbd65ca40e157deaecf533e63daa631761c9089f18c82f7e7675fb5f7151cf1d7",
+      "title": "Will Gold (XAUUSD) hit (LOW) $3,900 in April?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.017721850175524436,
+      "whale_address": "0xdbde0de0af4cd840def360d0cb17c596bf000656",
+      "whale_name": "Gol12",
+      "whale_size": 5421.041572,
+      "is_known_whale": false,
+      "tx": "0x5893c9fc40b6c8b5f0daf1dd2e31673d626ae60771b4180c482312c677bcd184",
+      "timestamp": "2026-04-12T14:02:08.746606+00:00"
+    },
+    "0x64adb4934664a14d1c97357654ad459d7b42a646fc24b2799617dfa9f07f311f": {
+      "condition_id": "0x64adb4934664a14d1c97357654ad459d7b42a646fc24b2799617dfa9f07f311f",
+      "title": "Dota 2: OG vs Ivory - Game 2 Winner",
+      "outcome": "Ivory",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.7026895703030841,
+      "whale_address": "0x7d116c0d108b3ce548ab7a022f08441f147899ca",
+      "whale_name": "Bubano",
+      "whale_size": 788.23,
+      "is_known_whale": false,
+      "tx": "0x914cde3dcd5b8899e3e8c2fa306b64a60d5f39f27feb1482c184322fc3b6c677",
+      "timestamp": "2026-04-12T14:02:08.746625+00:00"
     }
   },
   "history": [],
@@ -2293,9 +2391,9 @@
       "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 364,
+  "total_wallets_tracked": 377,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T13:52:07.557928+00:00"
+  "updated": "2026-04-12T14:02:08.753894+00:00"
 }
