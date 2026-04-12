@@ -35,6 +35,7 @@ from configs.config import TELEGRAM_TOKEN, TELEGRAM_CHAT_ID, STATE_FILE, TRADING
 LOGS_DIR    = ROOT / "logs"
 LIVE_FILE   = LOGS_DIR / ".go_live"      # created by dashboard Go Live button
 STATUS_FILE = LOGS_DIR / "watchdog_status.json"
+PID_FILE    = LOGS_DIR / "watchdog.pid"
 
 # Always use the APEX venv Python so dependencies (pandas etc.) are available
 _APEX_UV = ROOT / ".venv" / "bin" / "python3"
@@ -200,7 +201,36 @@ class ProcessManager:
             self.kill(name)
 
 
+def _acquire_pid_lock() -> bool:
+    """Ensure only one watchdog runs. Returns True if lock acquired."""
+    LOGS_DIR.mkdir(exist_ok=True)
+    if PID_FILE.exists():
+        try:
+            old_pid = int(PID_FILE.read_text().strip())
+            # Check if that PID is still alive
+            os.kill(old_pid, 0)
+            print(f"[Watchdog] Another instance running (pid={old_pid}). Exiting.")
+            return False
+        except (ProcessLookupError, ValueError):
+            pass  # stale PID file — process is dead, take over
+        except PermissionError:
+            print(f"[Watchdog] PID {old_pid} exists but not owned by us. Exiting.")
+            return False
+    PID_FILE.write_text(str(os.getpid()))
+    return True
+
+
+def _release_pid_lock():
+    try:
+        PID_FILE.unlink(missing_ok=True)
+    except Exception:
+        pass
+
+
 def run_watchdog():
+    if not _acquire_pid_lock():
+        sys.exit(1)
+
     mgr = ProcessManager()
 
     # Start all processes
@@ -264,6 +294,7 @@ def run_watchdog():
     except KeyboardInterrupt:
         print("\n[Watchdog] Shutting down...")
         mgr.stop_all()
+        _release_pid_lock()
         _tg("🛑 APEX Watchdog stopped (KeyboardInterrupt)")
 
 
