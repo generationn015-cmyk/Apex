@@ -3696,6 +3696,146 @@
       "is_known_whale": true,
       "tx": "0x189472b3a2bf55231f279cf043e54b8574d6908a85c0b05088d227468e1c36ac",
       "timestamp": "2026-04-12T17:32:35.148632+00:00"
+    },
+    "0x49f23884174a862482e27592981a1ae33836427465b2df0b895f0a8291064591": {
+      "condition_id": "0x49f23884174a862482e27592981a1ae33836427465b2df0b895f0a8291064591",
+      "title": "Penguins vs. Capitals",
+      "outcome": "Penguins",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.4299999999127986,
+      "whale_address": "0xd3b697c398136430aa46b5c2c62ec4166319fa47",
+      "whale_name": "0xd3B697c398136430AA46b5C2C62ec4166319Fa47-1770489446062",
+      "whale_size": 5160.465115,
+      "is_known_whale": false,
+      "tx": "0x15d8466095e0bd376b8d36d4e7b85573773dc1003b969110bb14f33049e1caaa",
+      "timestamp": "2026-04-12T17:52:38.401523+00:00"
+    },
+    "0xb72be6f8ecf499758bd5ac6e18abb923a78cf3dc0c9b7921a4f99e8f4d16959b": {
+      "condition_id": "0xb72be6f8ecf499758bd5ac6e18abb923a78cf3dc0c9b7921a4f99e8f4d16959b",
+      "title": "Bitcoin Up or Down - April 12, 1PM ET",
+      "outcome": "Down",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.2711584463345857,
+      "whale_address": "0x733312692008a99dc4c025a672cc8652edae57a0",
+      "whale_name": "0x733312692008a99DC4c025a672cc8652edae57A0-1771787835735",
+      "whale_size": 797.411425,
+      "is_known_whale": false,
+      "tx": "0x13258c8eb3be675d93b0b8681c62514d87d50e3b866cabdb511a0ffc1a63de7a",
+      "timestamp": "2026-04-12T17:52:38.403400+00:00"
+    },
+    "0x1a01bf78f56a507fcb666d564d8c8b91b0750679163ed6e96746102c9b7d285d": {
+      "condition_id": "0x1a01bf78f56a507fcb666d564d8c8b91b0750679163ed6e96746102c9b7d285d",
+      "title": "Will Fl\u00e1vio Bolsonaro win the 2026 Brazilian presidential el",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.40347569046454856,
+      "whale_address": "0x7d11f3bf1a72256fdfdd81ab5f4d1c6c69f2e56e",
+      "whale_name": "0x7d11F3BF1A72256FdFdd81Ab5F4d1C6c69F2e56E-1772908470927",
+      "whale_size": 424.139553,
+      "is_known_whale": false,
+      "tx": "0x579e5b108d5e36168a6e191417767e0bcba56e66fb2f2cc9ca02f1d0b3d1cf50",
+      "timestamp": "2026-04-12T17:52:38.403462+00:00"
+    },
+    "0x6958b9c00775ab9a6a53214d999baaf3d997a9b3f65804b8dcf622610b8c3d42": {
+      "condition_id": "0x6958b9c00775ab9a6a53214d999baaf3d997a9b3f65804b8dcf622610b8c3d42",
+      "title": "Valorant: eSports Cologne vs ALTERNATE aTTaX (BO3) - VCL DAC",
+      "outcome": "eSports Cologne",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.09858467411134134,
+      "whale_address": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+      "whale_name": "neutralwave23",
+      "whale_size": 767.137388,
+      "is_known_whale": true,
+      "tx": "0xd22a05d94d7e1614dbf3ff79f1cc90c9a4a6e55a5b2500e424a73dc8863387fe",
+      "timestamp": "2026-04-12T17:52:38.403497+00:00"
+    },
+    "0x519460772e09d2aa18326b3a35d088d47440180e11ff9763cf4dbe1627ef4512": {
+      "condition_id": "0x519460772e09d2aa18326b3a35d088d47440180e11ff9763cf4dbe1627ef4512",
+      "title": "LoL: Vivo Keyd Stars vs Fluxo W7M (BO3) - CBLOL Regular Seas",
+      "outcome": "Vivo Keyd Stars",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.999,
+      "whale_address": "0x8e8ccd010d924673af70bc0191c4f49329da65dd",
+      "whale_name": "DogecoinMillionaire",
+      "whale_size": 5205.84,
+      "is_known_whale": false,
+      "tx": "0x31b80f31f62fbe62d294561a1e33aae2efa1ff5eab3603bdb75eb382247e269b",
+      "timestamp": "2026-04-12T17:52:38.403527+00:00"
+    },
+    "0x7ca8869cd49a46f6469b8e6e9f3c3329b08465842be906f7cc88babb90b657be": {
+      "condition_id": "0x7ca8869cd49a46f6469b8e6e9f3c3329b08465842be906f7cc88babb90b657be",
+      "title": "Como 1907 vs. FC Internazionale Milano: O/U 4.5",
+      "outcome": "Under",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.88,
+      "whale_address": "0x25348af4091d631db1515e99ff3fdb3fef490705",
+      "whale_name": "HraSir",
+      "whale_size": 440.45409,
+      "is_known_whale": false,
+      "tx": "0xfcaa98b4ea8d7a4596964095108a9801d68ffde76b02c3a14a6ec196643d6619",
+      "timestamp": "2026-04-12T17:52:38.403555+00:00"
+    },
+    "0xbcacd5a055f5a9ced6f69f122216c073dd6987d08253fc07bbcc168fa5b81d55": {
+      "condition_id": "0xbcacd5a055f5a9ced6f69f122216c073dd6987d08253fc07bbcc168fa5b81d55",
+      "title": "US obtains Iranian enriched uranium by May 31?",
+      "outcome": "No",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.81,
+      "whale_address": "0x71abe97b83eaba3f06cb04fd4d9a03ee37d2f015",
+      "whale_name": "groth",
+      "whale_size": 500.0,
+      "is_known_whale": false,
+      "tx": "0x975db9603a69622d3fbfe16ed28fd8b263babba679edb2e99dd84a81d83f88ae",
+      "timestamp": "2026-04-12T17:52:38.403581+00:00"
+    },
+    "0xde671cc0c747ca6406485d1e306af5198e5c87240cd1b1349c70be1092db60b9": {
+      "condition_id": "0xde671cc0c747ca6406485d1e306af5198e5c87240cd1b1349c70be1092db60b9",
+      "title": "Pittsburgh Pirates vs. Chicago Cubs: O/U 12.5",
+      "outcome": "Over",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.47,
+      "whale_address": "0x602785cdf56a03221130d3d42a577ac6cf444320",
+      "whale_name": "lpcapital1",
+      "whale_size": 516.16045,
+      "is_known_whale": false,
+      "tx": "0xb3e283f4646465f2349dea98259ecad09f61c7366c1ad6972fe5aeff3802426b",
+      "timestamp": "2026-04-12T17:52:38.403608+00:00"
+    },
+    "0x4dbeeb8ba6883fbf6fe877e25add675213c8cd06912b340d8cf9674bdd858503": {
+      "condition_id": "0x4dbeeb8ba6883fbf6fe877e25add675213c8cd06912b340d8cf9674bdd858503",
+      "title": "Will FC Arouca win on 2026-04-12?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.86,
+      "whale_address": "0x204f72f35326db932158cba6adff0b9a1da95e14",
+      "whale_name": "swisstony",
+      "whale_size": 307.7022,
+      "is_known_whale": true,
+      "tx": "0x9a7244ca35323208e28bf5bc5ed5243911a5eb4c98d313892a0ab8eb782d0db9",
+      "timestamp": "2026-04-12T17:52:38.403634+00:00"
+    },
+    "0xe6bcc2f1dd025ce5e1833190f7c60a71171c94f805df55b9ab0ded695ec93565": {
+      "condition_id": "0xe6bcc2f1dd025ce5e1833190f7c60a71171c94f805df55b9ab0ded695ec93565",
+      "title": "Will Alexandria Ocasio-Cortez win the 2028 Democratic presid",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.916,
+      "whale_address": "0x59f3de50452990d4b60c9a5018eb449e3e526e92",
+      "whale_name": "lizbethyazmin1492",
+      "whale_size": 902.0,
+      "is_known_whale": false,
+      "tx": "0x791bfa88f0ab909389e60b7ac506711a748634f231faa6e2e98109bad2131fea",
+      "timestamp": "2026-04-12T17:52:38.403660+00:00"
     }
   },
   "history": [],
@@ -3737,10 +3877,10 @@
     {
       "address": "0x204f72f35326db932158cba6adff0b9a1da95e14",
       "name": "swisstony",
-      "trades": 7,
-      "volume": 5387.97,
-      "last_seen": "2026-04-12T17:22:33.886046+00:00",
-      "active_markets": 7
+      "trades": 8,
+      "volume": 5695.67,
+      "last_seen": "2026-04-12T17:52:38.302238+00:00",
+      "active_markets": 8
     },
     {
       "address": "0xe8dd7741ccb12350957ec71e9ee332e0d1e6ec86",
@@ -3748,6 +3888,14 @@
       "trades": 5,
       "volume": 4519.25,
       "last_seen": "2026-04-12T14:12:10.006787+00:00",
+      "active_markets": 3
+    },
+    {
+      "address": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+      "name": "neutralwave23",
+      "trades": 3,
+      "volume": 4244.75,
+      "last_seen": "2026-04-12T17:52:38.140128+00:00",
       "active_markets": 3
     },
     {
@@ -3813,19 +3961,11 @@
       "volume": 1654.92,
       "last_seen": "2026-04-12T13:32:05.536066+00:00",
       "active_markets": 2
-    },
-    {
-      "address": "0x32ccd9015a900fde62040162a04bedf093c668b3",
-      "name": "pilotlady",
-      "trades": 5,
-      "volume": 1588.64,
-      "last_seen": "2026-04-12T17:12:32.354976+00:00",
-      "active_markets": 5
     }
   ],
-  "total_wallets_tracked": 599,
+  "total_wallets_tracked": 613,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T17:42:36.454042+00:00"
+  "updated": "2026-04-12T17:52:38.419087+00:00"
 }
