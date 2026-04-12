@@ -4340,6 +4340,118 @@
       "is_known_whale": false,
       "tx": "0x27184425ee2a84eda9c1be5458bb2253c3cd152b9b9e6c29a185f6393879860f",
       "timestamp": "2026-04-12T22:11:07.223952+00:00"
+    },
+    "0x2b32acbe5196b1dbf7f184604ea6af7777f2ef8118ec4b2ca19f7f5fec033d42": {
+      "condition_id": "0x2b32acbe5196b1dbf7f184604ea6af7777f2ef8118ec4b2ca19f7f5fec033d42",
+      "title": "Bitcoin Up or Down - April 12, 6:15PM-6:20PM ET",
+      "outcome": "Up",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.01,
+      "whale_address": "0xdb4ba2509ea4b84c384f086d68aaad82a3a73034",
+      "whale_name": "Polygon561",
+      "whale_size": 464.36,
+      "is_known_whale": false,
+      "tx": "0xc8909f3d4dfab6079f5197dc2ec3d3507a5e65a070d9897b305cd007e5b1349e",
+      "timestamp": "2026-04-12T22:21:08.521159+00:00"
+    },
+    "0xb1a0c0e3c5ebe6fcd3fb541efabc01bdc977d6938a2e6112b3a7514538383a5a": {
+      "condition_id": "0xb1a0c0e3c5ebe6fcd3fb541efabc01bdc977d6938a2e6112b3a7514538383a5a",
+      "title": "Nuggets vs. Spurs",
+      "outcome": "Spurs",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.789999999725623,
+      "whale_address": "0x230287e270f04ba48df3162c5f7de6bdb8a0d6d2",
+      "whale_name": "pilotguy",
+      "whale_size": 434.59909799999997,
+      "is_known_whale": true,
+      "tx": "0x984ec610b1e40b0c5f1751dc16d6b1fd23ea159e04e3cf56fc1d4b30545dbd63",
+      "timestamp": "2026-04-12T22:21:08.521427+00:00"
+    },
+    "0x8a42ea29d952fa5be018cee5c7e305a28f3c48a1a9a2eae3be560ed3f2b84924": {
+      "condition_id": "0x8a42ea29d952fa5be018cee5c7e305a28f3c48a1a9a2eae3be560ed3f2b84924",
+      "title": "LoL: Sentinels vs Cloud9 - Game 1 Winner",
+      "outcome": "Cloud9",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.998,
+      "whale_address": "0x67eb9655b69a2ef3a7fb8a4f239c6150d0393aa2",
+      "whale_name": "GnaeusS",
+      "whale_size": 920.49577,
+      "is_known_whale": false,
+      "tx": "0xe40927747f201a60fcac1a5b88027b70f4af7b1e46852b8a7f3458205464916e",
+      "timestamp": "2026-04-12T22:21:08.521580+00:00"
+    },
+    "0x796e791e7058571e460278814fc7a3183752285338f1400087b98bef3c447908": {
+      "condition_id": "0x796e791e7058571e460278814fc7a3183752285338f1400087b98bef3c447908",
+      "title": "Will the Los Angeles Lakers win the 2026 NBA Finals?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.013,
+      "whale_address": "0xead152b855effa6b5b5837f53b24c0756830c76a",
+      "whale_name": "elkmonkey",
+      "whale_size": 951.36,
+      "is_known_whale": true,
+      "tx": "0x8851e91012a44abfe87879792f93a6305301699cae72245a4078a48ae49d5bb5",
+      "timestamp": "2026-04-12T22:21:08.521599+00:00"
+    },
+    "0x4c7db7768547a220d3e26359952d8b2eb9094f5ad02fcc32e70d9361d8491ab5": {
+      "condition_id": "0x4c7db7768547a220d3e26359952d8b2eb9094f5ad02fcc32e70d9361d8491ab5",
+      "title": "Will Liverpool win the 2025\u201326 Champions League?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.981623223541501,
+      "whale_address": "0xc733e487ab3b3dfea8403b0cac740e238211f399",
+      "whale_name": "Mithras",
+      "whale_size": 1327.046833,
+      "is_known_whale": false,
+      "tx": "0xe6e11653312fd5356a27b3a3de450c295e9388de1c983f78f28278c065504937",
+      "timestamp": "2026-04-12T22:21:08.521611+00:00"
+    },
+    "0x03b3b53c8a35a589e2cb1a55af4d913b20dd68b373838ff1ce5b23b294be3730": {
+      "condition_id": "0x03b3b53c8a35a589e2cb1a55af4d913b20dd68b373838ff1ce5b23b294be3730",
+      "title": "Texas Rangers vs. Los Angeles Dodgers",
+      "outcome": "Texas Rangers",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.6232281783959377,
+      "whale_address": "0xa4f5650a655502b2e2bc66636d347a2fd8281079",
+      "whale_name": "",
+      "whale_size": 1686.14338,
+      "is_known_whale": false,
+      "tx": "0x174ca0c22f908c3da63d441452edb594f59fc18df3f453ab50375cdd678b5b4a",
+      "timestamp": "2026-04-12T22:21:08.521643+00:00"
+    },
+    "0xb08a3d66d2bc223a222f4d14549a35050b6fb5630d5b51059b8e843d05ebdf97": {
+      "condition_id": "0xb08a3d66d2bc223a222f4d14549a35050b6fb5630d5b51059b8e843d05ebdf97",
+      "title": "Will Israel conduct military action in Greater Beirut on Apr",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.945154975688189,
+      "whale_address": "0x616543aa787fafc198daf62a34fefd41df22a01a",
+      "whale_name": "jcb01",
+      "whale_size": 516.21,
+      "is_known_whale": false,
+      "tx": "0x7fb7e593515640de5dfe3a7317b5e29bc6d6d0ec200c4f02fba91efec3bf2acf",
+      "timestamp": "2026-04-12T22:21:08.521697+00:00"
+    },
+    "0x3dd381b1e3e205b267a5ce14486e7104c50d447a7937ea512cbe80ee78b1524d": {
+      "condition_id": "0x3dd381b1e3e205b267a5ce14486e7104c50d447a7937ea512cbe80ee78b1524d",
+      "title": "Bucks vs. 76ers",
+      "outcome": "76ers",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.92,
+      "whale_address": "0x7fea691e28d169a33c500607279f2acb49058f74",
+      "whale_name": "CavaSoTasty",
+      "whale_size": 995.6048,
+      "is_known_whale": false,
+      "tx": "0x1bbc92781e50784286a608a05bce8d96559cf0494d75fb10dce938c39dc46045",
+      "timestamp": "2026-04-12T22:21:08.521714+00:00"
     }
   },
   "history": [],
@@ -4395,12 +4507,28 @@
       "active_markets": 10
     },
     {
+      "address": "0x5d1d9cfd66ee3068c2a8a57dedf1e1b006dcafd2",
+      "name": "",
+      "trades": 7,
+      "volume": 6088.72,
+      "last_seen": "2026-04-12T22:21:08.458574+00:00",
+      "active_markets": 4
+    },
+    {
       "address": "0xb6fa57039ea79185895500dbd0067c288594abcf",
       "name": "anciente",
       "trades": 25,
       "volume": 5259.0,
       "last_seen": "2026-04-12T18:05:59.865748+00:00",
       "active_markets": 3
+    },
+    {
+      "address": "0xead152b855effa6b5b5837f53b24c0756830c76a",
+      "name": "elkmonkey",
+      "trades": 8,
+      "volume": 5096.0,
+      "last_seen": "2026-04-12T22:21:08.260551+00:00",
+      "active_markets": 5
     },
     {
       "address": "0xd106952ebf30a3125affd8a23b6c1f30c35fc79c",
@@ -4421,17 +4549,9 @@
     {
       "address": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
       "name": "neutralwave23",
-      "trades": 3,
-      "volume": 4244.75,
-      "last_seen": "2026-04-12T17:52:38.140128+00:00",
-      "active_markets": 3
-    },
-    {
-      "address": "0xead152b855effa6b5b5837f53b24c0756830c76a",
-      "name": "elkmonkey",
-      "trades": 7,
-      "volume": 4144.64,
-      "last_seen": "2026-04-12T21:41:02.005368+00:00",
+      "trades": 4,
+      "volume": 4575.74,
+      "last_seen": "2026-04-12T22:21:08.447237+00:00",
       "active_markets": 4
     },
     {
@@ -4451,25 +4571,17 @@
       "active_markets": 3
     },
     {
-      "address": "0xf3ef6ac0510c9eabc42fbb146b5c3c64edc1ca6b",
-      "name": "239393828",
-      "trades": 3,
-      "volume": 3262.05,
-      "last_seen": "2026-04-12T18:38:34.221847+00:00",
-      "active_markets": 3
-    },
-    {
-      "address": "0xdf0d2ccfe3d7c2ef120395534e43afe283509f79",
-      "name": "0xdf0D2CcfE3d7C2EF120395534e43Afe283509F79-1774320078733",
-      "trades": 3,
-      "volume": 3147.18,
-      "last_seen": "2026-04-12T22:01:06.014116+00:00",
-      "active_markets": 3
+      "address": "0x230287e270f04ba48df3162c5f7de6bdb8a0d6d2",
+      "name": "pilotguy",
+      "trades": 7,
+      "volume": 3754.78,
+      "last_seen": "2026-04-12T22:21:08.315198+00:00",
+      "active_markets": 5
     }
   ],
-  "total_wallets_tracked": 700,
+  "total_wallets_tracked": 718,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T22:11:07.233607+00:00"
+  "updated": "2026-04-12T22:21:08.530412+00:00"
 }
