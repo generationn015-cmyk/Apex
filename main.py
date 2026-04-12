@@ -152,9 +152,10 @@ class ApexBot:
         print(f"  Mode: {'🔴 LIVE' if self.live_mode else '📋 PAPER'}")
         print(f"{'='*58}")
 
-        if not in_session():
-            print("  ⏸  Outside trading hours — skipping")
-            return {}
+        # Session filter applies only to crypto agents — Polymarket runs 24/7 in its own process
+        crypto_active = in_session()
+        if not crypto_active:
+            print("  ⏸  Crypto agents outside trading hours (7am–9pm UTC) — Polymarket running 24/7")
 
         data = await self._get_all_data()
         data_1h = data["1h"]
@@ -168,6 +169,9 @@ class ApexBot:
         cycle_results  = {}
 
         for agent_name, cfg in AGENTS.items():
+            if not crypto_active:
+                cycle_results[agent_name] = []
+                continue
             analyzer = ANALYZERS[agent_name]
             capital  = cfg["capital"]
             agent_signals = []

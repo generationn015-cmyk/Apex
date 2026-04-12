@@ -17,13 +17,23 @@ from datetime import datetime, timezone
 
 ROOT    = Path(__file__).parent.parent
 SE_ROOT = Path.home() / "signal_engine"
+TD_ROOT = Path.home() / "trading-dashboard"   # copy trading + polymarket
 
-# Files we track in git
-TRACKED = [
-    ROOT / "logs" / "state.json",
-    ROOT / "logs" / "paper_trades.jsonl",
-]
-SE_SIGNALS = SE_ROOT / "signals_log.jsonl"
+LOGS = ROOT / "logs"
+
+# Source → destination mappings (all land in apex/logs/ for git tracking)
+SYNC_MAP = {
+    # APEX crypto bot
+    ROOT  / "logs" / "state.json":           LOGS / "state.json",
+    ROOT  / "logs" / "paper_trades.jsonl":   LOGS / "paper_trades.jsonl",
+    # Signal engine (Pocket Option forex)
+    SE_ROOT / "signals_log.jsonl":           LOGS / "signals_log.jsonl",
+    # Polymarket copy trading (trading-dashboard)
+    TD_ROOT / "polymarket/data/open_positions.json": LOGS / "poly_open_positions.json",
+    TD_ROOT / "polymarket/data/paper_results.json":  LOGS / "poly_paper_results.json",
+    TD_ROOT / "polymarket/data/scan_log.jsonl":      LOGS / "poly_scan_log.jsonl",
+    TD_ROOT / "polymarket/data/all_trades.jsonl":    LOGS / "poly_all_trades.jsonl",
+}
 
 
 def _run(cmd: list, cwd=None) -> bool:
@@ -40,50 +50,45 @@ def _run(cmd: list, cwd=None) -> bool:
 
 def sync_to_github(token: str = "", remote: str = "origin") -> bool:
     """
-    Commit and push live data files to GitHub.
-    Call every hour from watchdog.
-
-    token: GitHub PAT — only needed if remote URL doesn't include it.
-            If empty, uses whatever credential is stored.
+    Commit and push live data files to GitHub every hour.
+    Pulls from: APEX logs, signal_engine, trading-dashboard polymarket.
+    All files land in apex/logs/ so one repo covers everything.
     """
-    # Ensure logs dir exists
-    (ROOT / "logs").mkdir(exist_ok=True)
+    LOGS.mkdir(exist_ok=True)
 
-    # Copy signal engine signals into apex/logs/ so they're in one repo
-    if SE_SIGNALS.exists():
-        dest = ROOT / "logs" / "signals_log.jsonl"
-        try:
-            shutil.copy2(str(SE_SIGNALS), str(dest))
-            TRACKED.append(dest)
-        except Exception:
-            pass
+    # Copy all source files into apex/logs/
+    staged = []
+    for src, dst in SYNC_MAP.items():
+        if src.exists():
+            try:
+                shutil.copy2(str(src), str(dst))
+                staged.append(str(dst))
+            except Exception as e:
+                print(f"  [DataSync] copy {src.name} failed: {e}")
+        elif dst.exists():
+            staged.append(str(dst))   # keep existing file in git
 
-    # Only stage files that actually exist
-    to_add = [str(f) for f in TRACKED if f.exists()]
-    if not to_add:
+    if not staged:
         print("  [DataSync] No data files to push yet")
         return False
 
-    # Set token in remote URL if provided
     if token:
         _run(["git", "remote", "set-url", remote,
               f"https://{token}@github.com/generationn015-cmyk/Apex.git"])
 
     stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-
     ok = (
-        _run(["git", "add"] + to_add)
-        and _run(["git", "commit", "--allow-empty", "-m", f"data: live paper trading sync {stamp}"])
+        _run(["git", "add"] + staged)
+        and _run(["git", "commit", "--allow-empty", "-m", f"data: live sync {stamp}"])
         and _run(["git", "push", remote, "HEAD"])
     )
 
-    # Strip token from remote URL immediately
     if token:
         _run(["git", "remote", "set-url", remote,
               "https://github.com/generationn015-cmyk/Apex.git"])
 
     if ok:
-        print(f"  [DataSync] Pushed live data to GitHub ({stamp})")
+        print(f"  [DataSync] Pushed {len(staged)} files to GitHub ({stamp})")
     else:
         print("  [DataSync] Push failed — will retry next hour")
 

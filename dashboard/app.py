@@ -147,6 +147,20 @@ PAPER_LOG    = LOGS_DIR / "paper_trades.jsonl"
 LIVE_FILE    = LOGS_DIR / ".go_live"
 PAUSE_FILE   = LOGS_DIR / ".paused"
 
+# Polymarket copy trading (from trading-dashboard, synced into logs/)
+POLY_POSITIONS = LOGS_DIR / "poly_open_positions.json"
+POLY_RESULTS   = LOGS_DIR / "poly_paper_results.json"
+POLY_SCAN_LOG  = LOGS_DIR / "poly_scan_log.jsonl"
+POLY_TRADES    = LOGS_DIR / "poly_all_trades.jsonl"
+
+# Fallback: read directly from trading-dashboard if running locally
+_TD_ROOT = Path.home() / "trading-dashboard"
+if not POLY_POSITIONS.exists() and (_TD_ROOT / "polymarket/data/open_positions.json").exists():
+    POLY_POSITIONS = _TD_ROOT / "polymarket/data/open_positions.json"
+    POLY_RESULTS   = _TD_ROOT / "polymarket/data/paper_results.json"
+    POLY_SCAN_LOG  = _TD_ROOT / "polymarket/data/scan_log.jsonl"
+    POLY_TRADES    = _TD_ROOT / "polymarket/data/all_trades.jsonl"
+
 # GitHub raw base — used as fallback when running on Streamlit Cloud
 _GH_RAW = "https://raw.githubusercontent.com/generationn015-cmyk/Apex/master/logs"
 
@@ -214,7 +228,11 @@ def load_jsonl(p) -> list:
 
 
 # ── Tabs ─────────────────────────────────────────────────────────────────────
-tab_apex, tab_po = st.tabs(["⚡  APEX — Crypto Perps", "🎯  Pocket Option — Signal Engine"])
+tab_apex, tab_poly, tab_po = st.tabs([
+    "⚡  APEX — Crypto Perps",
+    "🎯  Polymarket — Copy Trading",
+    "📡  Pocket Option — Signal Engine",
+])
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -526,7 +544,167 @@ with tab_apex:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  TAB 2 — POCKET OPTION / SIGNAL ENGINE
+#  TAB 2 — POLYMARKET / COPY TRADING
+# ══════════════════════════════════════════════════════════════════════════════
+with tab_poly:
+
+    poly_positions = load_json(POLY_POSITIONS) or []
+    poly_results   = load_json(POLY_RESULTS)   or {"stats": {}, "trades": []}
+    poly_stats     = poly_results.get("stats", {})
+
+    # Scan log
+    scan_rows = load_jsonl(POLY_SCAN_LOG)
+    scan_df   = pd.DataFrame(scan_rows) if scan_rows else pd.DataFrame()
+    if not scan_df.empty and "time" in scan_df.columns:
+        scan_df["time"] = pd.to_datetime(scan_df["time"], utc=True, errors="coerce")
+        scan_df = scan_df.sort_values("time", ascending=False)
+
+    # All trades
+    trade_rows = load_jsonl(POLY_TRADES)
+    trade_df   = pd.DataFrame(trade_rows) if trade_rows else pd.DataFrame()
+
+    # Header
+    now_utc = datetime.now(timezone.utc)
+    last_scan = scan_df["time"].iloc[0].strftime("%H:%M UTC") if not scan_df.empty else "—"
+    st.markdown(
+        f'<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:8px;">'
+        f'<span style="font-size:20px;font-weight:700;color:#e6edf3;">🎯 Polymarket — Copy Trading</span>'
+        f'<span class="proc-badge running">🟢 24/7 ACTIVE</span>'
+        f'<span style="font-size:11px;color:#484f58;">Last scan: {last_scan}</span>'
+        f'</div>',
+        unsafe_allow_html=True,
+    )
+
+    # ── Stats bar ─────────────────────────────────────────────────────────
+    bankroll   = poly_stats.get("bankroll", 250.0)
+    poly_wins  = poly_stats.get("wins",  0)
+    poly_loss  = poly_stats.get("losses", 0)
+    poly_pend  = poly_stats.get("pending", 0)
+    poly_pnl   = poly_stats.get("pnl", 0.0)
+    poly_total = poly_wins + poly_loss
+    poly_wr    = round(poly_wins / poly_total * 100, 1) if poly_total > 0 else 0
+    open_count = len(poly_positions)
+
+    # Latest scan signal counts
+    latest_scan = scan_df.iloc[0].to_dict() if not scan_df.empty else {}
+
+    m1,m2,m3,m4,m5,m6,m7 = st.columns(7)
+    m1.metric("BANKROLL",    f"${bankroll:.2f}")
+    m2.metric("NET PnL",     f"${poly_pnl:+.2f}", delta_color="normal")
+    m3.metric("OPEN",        open_count)
+    m4.metric("WINS",        poly_wins)
+    m5.metric("LOSSES",      poly_loss)
+    m6.metric("WIN RATE",    f"{poly_wr}%",
+              delta=f"{poly_wr-50:.1f}% vs 50%", delta_color="normal")
+    m7.metric("PENDING",     poly_pend)
+
+    st.markdown("<hr style='border-color:#21262d;margin:14px 0;'>", unsafe_allow_html=True)
+
+    # ── Open Positions ────────────────────────────────────────────────────
+    st.markdown('<div class="section-hdr">📂 Open Positions</div>', unsafe_allow_html=True)
+    if poly_positions:
+        for pos in sorted(poly_positions, key=lambda x: x.get("pnl_pct", 0)):
+            pnl_pct = pos.get("pnl_pct", 0) or 0
+            pnl_col = "#3fb950" if pnl_pct >= 0 else "#f85149"
+            src_col = {"value_scan": "#58a6ff", "copy": "#bc8cff",
+                       "sports": "#d29922", "arb": "#3fb950"}.get(pos.get("source",""), "#8b949e")
+            dir_col = "#3fb950" if pos.get("direction") == "YES" else "#f85149"
+            opened  = pos.get("opened_at","")[:16].replace("T"," ")
+            expires = pos.get("expires_at","")[:16].replace("T"," ")
+            st.markdown(
+                f'<div style="background:#0d1117;border:1px solid #21262d;border-left:3px solid {src_col};'
+                f'border-radius:8px;padding:12px 16px;margin:6px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">'
+                f'<div style="flex:1;min-width:200px;">'
+                f'<div style="font-size:13px;font-weight:600;color:#e6edf3;">{pos.get("market","")[:75]}</div>'
+                f'<div style="font-size:10px;color:#8b949e;margin-top:3px;">Opened {opened}  ·  Expires {expires}</div>'
+                f'</div>'
+                f'<div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;">'
+                f'<span style="color:{src_col};font-size:11px;font-weight:600;">{pos.get("source","").upper()}</span>'
+                f'<span style="color:{dir_col};font-size:13px;font-weight:700;">{pos.get("direction","")}</span>'
+                f'<span style="font-size:12px;color:#8b949e;">entry {pos.get("entry_price",0):.3f} → {pos.get("current_price",0):.3f}</span>'
+                f'<span style="font-size:12px;color:#8b949e;">${pos.get("bet_size",0):.2f}</span>'
+                f'<span style="font-size:14px;font-weight:700;color:{pnl_col};">{pnl_pct:+.1f}%</span>'
+                f'</div></div>',
+                unsafe_allow_html=True,
+            )
+    else:
+        st.info("No open positions right now.")
+
+    st.markdown("<hr style='border-color:#21262d;margin:14px 0;'>", unsafe_allow_html=True)
+
+    # ── Scan Activity ─────────────────────────────────────────────────────
+    col_l, col_r = st.columns(2)
+
+    with col_l:
+        st.markdown('<div class="section-hdr">📊 Scan Activity (last 24h)</div>', unsafe_allow_html=True)
+        if not scan_df.empty:
+            recent = scan_df.head(48).copy()
+            fig = go.Figure()
+            for col_name, color, label in [
+                ("value_signals", "#58a6ff", "Value"),
+                ("copy_signals",  "#bc8cff", "Copy"),
+                ("sports_signals","#d29922", "Sports"),
+                ("arb_signals",   "#3fb950", "Arb"),
+            ]:
+                if col_name in recent.columns:
+                    fig.add_trace(go.Bar(
+                        x=recent["time"], y=recent[col_name],
+                        name=label, marker_color=color,
+                    ))
+            fig.update_layout(
+                barmode="stack", height=260, template="plotly_dark",
+                paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+                margin=dict(l=0,r=0,t=0,b=0),
+                xaxis=dict(gridcolor="#21262d"),
+                yaxis=dict(gridcolor="#21262d", title="Signals Found"),
+                legend=dict(orientation="h", y=1.1),
+            )
+            st.plotly_chart(fig, use_container_width=True)
+
+            # Recent scan log table
+            show = [c for c in ["time","value_signals","copy_signals","sports_signals","arb_signals","new_opens","new_closes","open_positions"]
+                    if c in scan_df.columns]
+            disp = scan_df.head(20)[show].copy()
+            if "time" in disp.columns:
+                disp["time"] = disp["time"].dt.strftime("%m-%d %H:%M")
+            st.dataframe(disp, use_container_width=True, hide_index=True)
+
+    with col_r:
+        st.markdown('<div class="section-hdr">📈 PnL by Source</div>', unsafe_allow_html=True)
+        if not trade_df.empty and "source" in trade_df.columns and "pnl_pct" in trade_df.columns:
+            closed_t = trade_df[trade_df.get("status","") != "OPEN"] if "status" in trade_df.columns else trade_df
+            if not closed_t.empty:
+                by_src = (
+                    closed_t.groupby("source")
+                    .apply(lambda x: pd.Series({
+                        "Trades": len(x),
+                        "WR %":   round((x.get("outcome","") == "WIN").sum() / len(x) * 100, 1)
+                                  if "outcome" in x.columns else 0,
+                        "Avg PnL %": round(x["pnl_pct"].mean(), 1) if "pnl_pct" in x.columns else 0,
+                    }), include_groups=False)
+                    .reset_index()
+                )
+                fig2 = go.Figure(go.Bar(
+                    x=by_src["source"], y=by_src["Avg PnL %"],
+                    marker_color=["#3fb950" if v >= 0 else "#f85149" for v in by_src["Avg PnL %"]],
+                    text=by_src["Avg PnL %"].apply(lambda v: f"{v:+.1f}%"),
+                    textposition="outside",
+                ))
+                fig2.add_hline(y=0, line_dash="dash", line_color="#484f58")
+                fig2.update_layout(
+                    height=220, template="plotly_dark",
+                    paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+                    margin=dict(l=0,r=0,t=0,b=0),
+                    yaxis=dict(gridcolor="#21262d"),
+                )
+                st.plotly_chart(fig2, use_container_width=True)
+                st.dataframe(by_src.set_index("source"), use_container_width=True)
+        else:
+            st.info("Trade history will appear as positions close.")
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  TAB 3 — POCKET OPTION / SIGNAL ENGINE
 # ══════════════════════════════════════════════════════════════════════════════
 with tab_po:
 
