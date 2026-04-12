@@ -1232,12 +1232,104 @@
       "is_known_whale": true,
       "tx": "0x119193caf83dd0072812137164587008cf479fb875d3cb857c03b8bb223e3852",
       "timestamp": "2026-04-12T11:51:55.492929+00:00"
+    },
+    "0x0dabf5b2d560d6a7d4868d862cfcf26c9ba7d37906ccb1ccf63eb114a573647e": {
+      "condition_id": "0x0dabf5b2d560d6a7d4868d862cfcf26c9ba7d37906ccb1ccf63eb114a573647e",
+      "title": "Rolex Monte Carlo Masters: Carlos Alcaraz vs Jannik Sinner",
+      "outcome": "Carlos Alcaraz",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.4899999996276,
+      "whale_address": "0x300b4292912c123066a380a344b505b0f353f636",
+      "whale_name": "digitalnomad85",
+      "whale_size": 1004.7959219999999,
+      "is_known_whale": false,
+      "tx": "0x7eef1fd5dff1ad260acb8078d2f7349663bef82dfb2409c4766b44faa33fbfc8",
+      "timestamp": "2026-04-12T12:01:56.567075+00:00"
+    },
+    "0x238b6885a73bfdb3a748243b411be94a562535fe260c551f0ff841baed020619": {
+      "condition_id": "0x238b6885a73bfdb3a748243b411be94a562535fe260c551f0ff841baed020619",
+      "title": "Crystal Palace FC vs. Newcastle United FC: O/U 2.5",
+      "outcome": "Under",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.47,
+      "whale_address": "0xec8d7bf83a1db5f06b9535985e58ffd17708dd71",
+      "whale_name": "gardiner",
+      "whale_size": 2628.03905,
+      "is_known_whale": false,
+      "tx": "0x4529f31b5fd22eb446a72ee459d6a281c4128ca19ee015cd6e2a6b2d8866dfe3",
+      "timestamp": "2026-04-12T12:01:56.567950+00:00"
+    },
+    "0xc0d2953d9aaba239786fdb4bc6ceaf9e0e6e9c843a6cbfbfb478fa83bcab74b5": {
+      "condition_id": "0xc0d2953d9aaba239786fdb4bc6ceaf9e0e6e9c843a6cbfbfb478fa83bcab74b5",
+      "title": "Military action against Iran ends by April 25, 2026?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.016,
+      "whale_address": "0xd650ace3fb40e8d21a89aabdd46a9971dac1c3a4",
+      "whale_name": "",
+      "whale_size": 625.0,
+      "is_known_whale": false,
+      "tx": "0x1a55ae16944dbd19b7402bb3084a243b1357be9a0b197b54540202d87cbe55f9",
+      "timestamp": "2026-04-12T12:01:56.567998+00:00"
+    },
+    "0x0d1317f568983f1f056b7685ac6e9124e7b9aa47072c6a8c54b7d924dc07c855": {
+      "condition_id": "0x0d1317f568983f1f056b7685ac6e9124e7b9aa47072c6a8c54b7d924dc07c855",
+      "title": "Will Elon Musk post 160-179 tweets from April 10 to April 17",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.002,
+      "whale_address": "0x614f8cd8a6b87875d46ac15c0390c40b3d788d07",
+      "whale_name": "shoeii",
+      "whale_size": 475.05,
+      "is_known_whale": false,
+      "tx": "0x115a33939c9b75658f338a9a0df2fbb7fc20e163c0d8931bc0d1d6640f8b9757",
+      "timestamp": "2026-04-12T12:01:56.568025+00:00"
+    },
+    "0x9710e4083d8ce6c344a2cd16c58ee5d0f46fbf90f940b422046ac2d8baea1223": {
+      "condition_id": "0x9710e4083d8ce6c344a2cd16c58ee5d0f46fbf90f940b422046ac2d8baea1223",
+      "title": "Will the price of Bitcoin be above $62,000 on April 13?",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.999,
+      "whale_address": "0x2809a637d8e3ee2eb1f05670398523aec76610dc",
+      "whale_name": "decacepa",
+      "whale_size": 6000.0,
+      "is_known_whale": false,
+      "tx": "0xe456048ce4ba697b9c73a2795aab14874cb443e1e56bc7b53246a21441fb00c6",
+      "timestamp": "2026-04-12T12:01:56.568054+00:00"
+    },
+    "0xced5bb889f1eeaecc1705604f82b2be7500e0cd8cf346fb0a791f2136a39b515": {
+      "condition_id": "0xced5bb889f1eeaecc1705604f82b2be7500e0cd8cf346fb0a791f2136a39b515",
+      "title": "Ethereum Up or Down - April 12, 7AM ET",
+      "outcome": "Up",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.9904890995798796,
+      "whale_address": "0xb814578b248c28a95ca3bf56c5f367efd5ce158f",
+      "whale_name": "",
+      "whale_size": 528.42,
+      "is_known_whale": false,
+      "tx": "0xfeb8bc4b40fdccf706fe719643e603e8879c6430335e6bd085a6c8883b03940b",
+      "timestamp": "2026-04-12T12:01:56.568076+00:00"
     }
   },
   "history": [],
   "consecutive_losses": 0,
   "cooldown_until": null,
   "top_traders": [
+    {
+      "address": "0xf940e58b04f9726c3858528d8f65d55abad47736",
+      "name": "0xf940E58B04F9726c3858528d8f65d55abAD47736-1773233405316",
+      "trades": 3,
+      "volume": 10825.79,
+      "last_seen": "2026-04-12T12:01:56.395905+00:00",
+      "active_markets": 2
+    },
     {
       "address": "0x5d1d9cfd66ee3068c2a8a57dedf1e1b006dcafd2",
       "name": "",
@@ -1263,9 +1355,9 @@
       "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 227,
+  "total_wallets_tracked": 245,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T11:51:55.497766+00:00"
+  "updated": "2026-04-12T12:01:56.571775+00:00"
 }
