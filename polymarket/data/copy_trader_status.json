@@ -4116,6 +4116,76 @@
       "is_known_whale": true,
       "tx": "0x34900b493e96c8f8c8437636c449406c66bac151fb97827fffe1decb121c6c30",
       "timestamp": "2026-04-12T18:26:04.644235+00:00"
+    },
+    "0x82fd617ef38bee76c7765a12a4f485a1ffb312186c2fac58dfe33c2b4c88a43a": {
+      "condition_id": "0x82fd617ef38bee76c7765a12a4f485a1ffb312186c2fac58dfe33c2b4c88a43a",
+      "title": "Dota 2: L1ga Team vs Cheeki_Breeki - Game 1 Winner",
+      "outcome": "L1ga Team",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.999,
+      "whale_address": "0xa27cd996a0ee6d34945aa34ed993c26fb8e1ab67",
+      "whale_name": "0xa27CD996A0EE6d34945aA34eD993c26Fb8E1AB67-1771078510015",
+      "whale_size": 896.2,
+      "is_known_whale": false,
+      "tx": "0x37bed191aa977d69b162145e77f649a446c80db35dedabca76b5e113c337339f",
+      "timestamp": "2026-04-12T18:36:10.055792+00:00"
+    },
+    "0xeb26a040fbe8c0f1a44338ef79417b20ccb80ea18a5096d901b5fc3bff53e690": {
+      "condition_id": "0xeb26a040fbe8c0f1a44338ef79417b20ccb80ea18a5096d901b5fc3bff53e690",
+      "title": "Will Galatasaray SK win on 2026-04-12?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.8899999993058,
+      "whale_address": "0x1013773c5ac3855fe97f7a660d9058119e3655fa",
+      "whale_name": "JackThobs",
+      "whale_size": 561.797751,
+      "is_known_whale": false,
+      "tx": "0x7f9618fe5ace0fc60f74dea00022794838d13e04054bb870ee858d9ad0010940",
+      "timestamp": "2026-04-12T18:36:10.055903+00:00"
+    },
+    "0xd2e28481d67a091898f2e3febde6be9b5291c9d40e342b75bfac28dc5d58a5ea": {
+      "condition_id": "0xd2e28481d67a091898f2e3febde6be9b5291c9d40e342b75bfac28dc5d58a5ea",
+      "title": "Suns vs. Thunder: O/U 213.5",
+      "outcome": "Under",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.52,
+      "whale_address": "0x63230f2257313b3cb0175e812b3e601135049fee",
+      "whale_name": "aotuo123",
+      "whale_size": 742.6,
+      "is_known_whale": false,
+      "tx": "0xae54d01807b1de8a6170c8c88ab07c739cc9d78ad155b50b9581664855654667",
+      "timestamp": "2026-04-12T18:36:10.055915+00:00"
+    },
+    "0xd78a4caeb2797d5f513dc02227cf9411a89de10ed440b1f4fb5a9460dec0086e": {
+      "condition_id": "0xd78a4caeb2797d5f513dc02227cf9411a89de10ed440b1f4fb5a9460dec0086e",
+      "title": "Dota 2: Team Liquid vs Natus Vincere - Game 1 Winner",
+      "outcome": "Natus Vincere",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.65,
+      "whale_address": "0xff80bb23621f03fc6300808730316c78abe09b4d",
+      "whale_name": "Zenhack",
+      "whale_size": 496.61,
+      "is_known_whale": false,
+      "tx": "0x29f90046b310873ce60f5f0dda02b7bc03bea8848b3176f6068108c439d0bc2d",
+      "timestamp": "2026-04-12T18:36:10.055925+00:00"
+    },
+    "0xc5675bc58c8117391cc243780c1b709ce1ef744aa27779c78ee82f3dc974ca1b": {
+      "condition_id": "0xc5675bc58c8117391cc243780c1b709ce1ef744aa27779c78ee82f3dc974ca1b",
+      "title": "Will the Kharg Island oil terminal be hit by April 30?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.81,
+      "whale_address": "0xfc2f4f50ce2f6045d35558a5e2d8d4b2ac6610c7",
+      "whale_name": "0xFc2F4f50ce2F6045d35558A5E2D8d4b2aC6610c7-1769097007451",
+      "whale_size": 3000.0,
+      "is_known_whale": false,
+      "tx": "0x94758d3337762401ef3cddd238b899a1fae5d5380064e112f3e7cca4c429125c",
+      "timestamp": "2026-04-12T18:36:10.055933+00:00"
     }
   },
   "history": [],
@@ -4203,11 +4273,27 @@
       "active_markets": 2
     },
     {
+      "address": "0xfdc0bd67fbd71aa8edd00121eb2a7fcbddc34b85",
+      "name": "oneheadedtiger",
+      "trades": 4,
+      "volume": 3958.05,
+      "last_seen": "2026-04-12T18:36:10.034117+00:00",
+      "active_markets": 3
+    },
+    {
       "address": "0xead152b855effa6b5b5837f53b24c0756830c76a",
       "name": "elkmonkey",
       "trades": 6,
       "volume": 3689.25,
       "last_seen": "2026-04-12T18:26:04.633553+00:00",
+      "active_markets": 3
+    },
+    {
+      "address": "0xf3ef6ac0510c9eabc42fbb146b5c3c64edc1ca6b",
+      "name": "239393828",
+      "trades": 3,
+      "volume": 3262.05,
+      "last_seen": "2026-04-12T18:36:10.023089+00:00",
       "active_markets": 3
     },
     {
@@ -4225,27 +4311,11 @@
       "volume": 2898.8,
       "last_seen": "2026-04-12T17:12:32.296270+00:00",
       "active_markets": 4
-    },
-    {
-      "address": "0xfb512d428db90455c9507d2578cc306b2701082d",
-      "name": "",
-      "trades": 4,
-      "volume": 2652.5,
-      "last_seen": "2026-04-12T13:22:04.396721+00:00",
-      "active_markets": 3
-    },
-    {
-      "address": "0xeb7acdfb1d4b0eaefa7a336a6b4ee6b47242c291",
-      "name": "staflos",
-      "trades": 3,
-      "volume": 2355.98,
-      "last_seen": "2026-04-12T18:05:59.320630+00:00",
-      "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 660,
+  "total_wallets_tracked": 674,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T18:28:33.140538+00:00"
+  "updated": "2026-04-12T18:36:10.061975+00:00"
 }
