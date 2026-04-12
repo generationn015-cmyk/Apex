@@ -299,6 +299,29 @@ def _cycle(state: SniperState, kelly: KellyEngine):
     if fired == 0:
         print("[Sniper] No edges found this cycle")
 
+    # Write scan results for dashboard
+    scan_out = []
+    for market in eligible[:50]:
+        prob = _estimate_true_prob(market)
+        edge = prob - market["yes_price"]
+        scan_out.append({
+            "question": market["question"][:80],
+            "condition_id": market["condition_id"],
+            "edge": round(abs(edge), 4),
+            "confidence": round(prob, 4),
+            "price": market["yes_price"],
+            "liquidity": market["liquidity"],
+            "volume": market["volume"],
+            "is_btc": market.get("is_btc", False),
+            "minutes_to_resolve": market.get("minutes_to_resolve"),
+        })
+    scan_out.sort(key=lambda x: x["edge"], reverse=True)
+    try:
+        scan_path = DATA_DIR / "scan_results.json"
+        scan_path.write_text(json.dumps(scan_out, indent=2))
+    except Exception:
+        pass
+
 
 def _estimate_true_prob(market: dict) -> float:
     """

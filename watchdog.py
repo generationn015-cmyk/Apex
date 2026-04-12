@@ -181,12 +181,10 @@ class ProcessManager:
                 status[name] = {"status": "running",     "pid": proc.pid}
             else:
                 status[name] = {"status": "dead",        "pid": None, "rc": proc.returncode}
-        # Annotate apex_bot with current mode
-        if "apex_bot" in status:
-            status["apex_bot"]["mode"] = "live" if self._apex_live else "paper"
-        # Signal engine is always independent / always live
-        if "signal_engine" in status:
-            status["signal_engine"]["always_live"] = True
+        # Annotate all processes with mode
+        mode = "live" if self._apex_live else "paper"
+        for name in status:
+            status[name]["mode"] = mode
 
         try:
             STATUS_FILE.write_text(json.dumps({

@@ -173,7 +173,7 @@
     "condition_id": "0x7a00c50eb4e76f5bc25b38a83c029dfde5faa9268e4ade490c931a384f8d157a",
     "direction": "YES",
     "entry_price": 0.2845,
-    "current_price": 0.2765,
+    "current_price": 0.276,
     "bet_size": 13.74,
     "edge": 0.015,
     "confidence": 0.2995,
@@ -184,7 +184,7 @@
     "expires_at": "2026-04-12T16:56:44.340776+00:00",
     "max_hold_hours": 12,
     "status": "OPEN",
-    "pnl_pct": -2.8
+    "pnl_pct": -3.0
   },
   {
     "id": "d639694c7569",

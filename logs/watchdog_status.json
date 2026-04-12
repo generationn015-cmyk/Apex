@@ -1,22 +1,30 @@
 {
-  "updated_at": "2026-04-12T09:32:27.544972+00:00",
+  "updated_at": "2026-04-12T09:47:04.291246+00:00",
   "processes": {
     "apex_bot": {
       "status": "running",
-      "pid": 317,
+      "pid": 12593,
       "mode": "paper"
     },
     "telegram_bot": {
       "status": "running",
-      "pid": 318
+      "pid": 12594,
+      "mode": "paper"
     },
     "polymarket_sniper": {
       "status": "running",
-      "pid": 319
+      "pid": 12595,
+      "mode": "paper"
     },
     "btc_5m_sniper": {
       "status": "running",
-      "pid": 320
+      "pid": 12596,
+      "mode": "paper"
+    },
+    "copy_trader": {
+      "status": "running",
+      "pid": 12597,
+      "mode": "paper"
     }
   }
 }
