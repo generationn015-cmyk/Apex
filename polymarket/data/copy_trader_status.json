@@ -3486,6 +3486,20 @@
       "is_known_whale": true,
       "tx": "0x04c9400ed2d9f53385cdca39c13ac7d6c98c28953729467b5d3da8eefca2c577",
       "timestamp": "2026-04-12T16:52:29.980783+00:00"
+    },
+    "0x7f3519a6f4b12697361765196d8da8cdf1542d0ade529adf497812f16dcc7b9b": {
+      "condition_id": "0x7f3519a6f4b12697361765196d8da8cdf1542d0ade529adf497812f16dcc7b9b",
+      "title": "Will RC Celta de Vigo win on 2026-04-12?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.7599999990560179,
+      "whale_address": "0x230287e270f04ba48df3162c5f7de6bdb8a0d6d2",
+      "whale_name": "pilotguy",
+      "whale_size": 210.34296999999998,
+      "is_known_whale": true,
+      "tx": "0x9e3ef0e8fe09e7fd8f69b113275bd39ff990051e383feca7bf82f1f83058e640",
+      "timestamp": "2026-04-12T17:12:32.563359+00:00"
     }
   },
   "history": [],
@@ -3551,10 +3565,10 @@
     {
       "address": "0x230287e270f04ba48df3162c5f7de6bdb8a0d6d2",
       "name": "pilotguy",
-      "trades": 4,
-      "volume": 2688.46,
-      "last_seen": "2026-04-12T13:22:04.404242+00:00",
-      "active_markets": 3
+      "trades": 5,
+      "volume": 2898.8,
+      "last_seen": "2026-04-12T17:12:32.296270+00:00",
+      "active_markets": 4
     },
     {
       "address": "0xfb512d428db90455c9507d2578cc306b2701082d",
@@ -3599,10 +3613,10 @@
     {
       "address": "0x32ccd9015a900fde62040162a04bedf093c668b3",
       "name": "pilotlady",
-      "trades": 4,
-      "volume": 1378.3,
-      "last_seen": "2026-04-12T14:42:13.151180+00:00",
-      "active_markets": 4
+      "trades": 5,
+      "volume": 1588.64,
+      "last_seen": "2026-04-12T17:12:32.354976+00:00",
+      "active_markets": 5
     },
     {
       "address": "0xe8e1b119302ae410e77b2af7d7456809007549dd",
@@ -3613,9 +3627,9 @@
       "active_markets": 4
     }
   ],
-  "total_wallets_tracked": 567,
+  "total_wallets_tracked": 575,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T17:02:31.219480+00:00"
+  "updated": "2026-04-12T17:12:32.571990+00:00"
 }
