@@ -102,7 +102,7 @@ class ProcessManager:
 
     def start(self, name: str):
         cfg      = self._cfg(name)
-        env      = {**os.environ, **cfg.get("env_extra", {})}
+        env      = {**os.environ, **cfg.get("env_extra", {}), "PYTHONUNBUFFERED": "1"}
         log_path = LOGS_DIR / f"{name}.log"
         LOGS_DIR.mkdir(exist_ok=True)
         cwd = cfg.get("cwd", str(ROOT))
