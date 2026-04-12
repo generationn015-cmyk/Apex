@@ -1464,9 +1464,43 @@
       "resolved": true,
       "won": true,
       "pnl": 3.97
+    },
+    {
+      "window_ts": 1776017100,
+      "question": "Bitcoin Up or Down - April 12, 2:05PM-2:10PM ET",
+      "direction": "DOWN",
+      "bet_size": 16.04,
+      "edge": 0.0872,
+      "p_win": 0.8872,
+      "market_price": 0.8,
+      "confidence": 0.5,
+      "score": -5.0,
+      "indicators": {
+        "delta_pct": -0.07022,
+        "delta_weight": 5.0,
+        "tick_up_pct": 50.0,
+        "scores": {
+          "window_delta": -5.0,
+          "macd_histogram": 0.0,
+          "macd_acceleration": 0.0,
+          "macd_cross": 0.0,
+          "macd_zero_regime": 0.0,
+          "fast_macd_confirm": 0.0,
+          "macd_volume_flow": 0.0,
+          "tick_trend": 0.0
+        },
+        "total_score": -5.0
+      },
+      "btc_price": 71117.0,
+      "start_price": 71166.97,
+      "secs_remaining": 11.2,
+      "order_id": "paper_1776017389475",
+      "mode": "PAPER",
+      "timestamp": "2026-04-12T18:09:49.475506+00:00",
+      "resolved": false
     }
   ],
-  "windows_scanned": 102,
-  "windows_traded": 41,
-  "updated": "2026-04-12T18:05:10.877066+00:00"
+  "windows_scanned": 103,
+  "windows_traded": 42,
+  "updated": "2026-04-12T18:09:49.475536+00:00"
 }
