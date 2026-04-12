@@ -1,5 +1,5 @@
 {
-  "bankroll": 250.0,
+  "bankroll": 220.49,
   "positions": {
     "0xfc6260666d020a912a87d9000eff5116d2adfb8c30aba543427a4c1f1411f1a0": {
       "question": "MegaETH market cap (FDV) >$2B one day after launch?",
@@ -267,5 +267,337 @@
     }
   },
   "history": [],
-  "updated": "2026-04-12T22:05:53.395714+00:00"
+  "updated": "2026-04-12T22:05:53.395714+00:00",
+  "trades": [
+    {
+      "question": "MegaETH market cap (FDV) >$2B one day after launch?",
+      "direction": "YES",
+      "bet_size": 0.84,
+      "entry_price": 0.105,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:08.987077+00:00",
+      "condition_id": "0xfc6260666d020a912a87d9000eff5116d2adfb8c30aba543427a4c1f1411f1a0",
+      "resolved": false
+    },
+    {
+      "question": "Will Harvey Weinstein be sentenced to between 5 and 10 years in prison?",
+      "direction": "YES",
+      "bet_size": 1.49,
+      "entry_price": 0.0535,
+      "edge": 0.0225,
+      "opened_at": "2026-04-12T22:05:10.262305+00:00",
+      "condition_id": "0x3209617364a0d598435806b59d0d056b606022dc9028c466ad7912df94fc170c",
+      "resolved": false
+    },
+    {
+      "question": "Will Harvey Weinstein be sentenced to between 10 and 20 years in prison?",
+      "direction": "YES",
+      "bet_size": 0.95,
+      "entry_price": 0.2075,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:11.390587+00:00",
+      "condition_id": "0x3d495a3e05eaffe438bb1c2ab97ed57a79b0a6ab18a2ca6fa5b448e20ce70082",
+      "resolved": false
+    },
+    {
+      "question": "Will Harvey Weinstein be sentenced to between 20 and 30 years in prison?",
+      "direction": "YES",
+      "bet_size": 0.97,
+      "entry_price": 0.226,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:12.568302+00:00",
+      "condition_id": "0xdee5db5410b362783a1405b66b9aa08a7d050ae1f99e8da85b9d1ae7962dad3b",
+      "resolved": false
+    },
+    {
+      "question": "Will Harvey Weinstein be sentenced to more than 30 years in prison?",
+      "direction": "YES",
+      "bet_size": 1.51,
+      "entry_price": 0.066,
+      "edge": 0.0225,
+      "opened_at": "2026-04-12T22:05:13.824225+00:00",
+      "condition_id": "0x2499928ffbe6022444543dcd940075259cecb5e41e346284b578cb64e1404d32",
+      "resolved": false
+    },
+    {
+      "question": "Will the Carolina Hurricanes win the 2026 NHL Stanley Cup?",
+      "direction": "YES",
+      "bet_size": 0.87,
+      "entry_price": 0.135,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:15.026508+00:00",
+      "condition_id": "0xf7b5491e70b477d451afe7d9c1fde4bf1a927e69ff289d294b96df164f6c10f0",
+      "resolved": false
+    },
+    {
+      "question": "Will the Edmonton Oilers win the 2026 NHL Stanley Cup?",
+      "direction": "YES",
+      "bet_size": 0.82,
+      "entry_price": 0.09,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:16.256218+00:00",
+      "condition_id": "0x4a67e1270a2ed86be8fc524b6114640e41b0c56303ecaa9584deacd62402650a",
+      "resolved": false
+    },
+    {
+      "question": "Will the Dallas Stars win the 2026 NHL Stanley Cup?",
+      "direction": "YES",
+      "bet_size": 0.82,
+      "entry_price": 0.0825,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:17.345051+00:00",
+      "condition_id": "0x44887f53abbfe7531b1384420b185a5f10ee42a4e6c9441d5883abd4f3c1e5ef",
+      "resolved": false
+    },
+    {
+      "question": "Will the Colorado Avalanche win the 2026 NHL Stanley Cup?",
+      "direction": "YES",
+      "bet_size": 0.95,
+      "entry_price": 0.207,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:18.713063+00:00",
+      "condition_id": "0xf8f63bb47b2a7c2e0c1be3cedf4075079b11c07476d76a9469065b0c4791961a",
+      "resolved": false
+    },
+    {
+      "question": "Will the Vegas Golden Knights win the 2026 NHL Stanley Cup?",
+      "direction": "YES",
+      "bet_size": 0.8,
+      "entry_price": 0.067,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:19.922631+00:00",
+      "condition_id": "0x89389a6b1439856a8d366234c795d72865c927a1aa3cf9d4cc04a3a400defde1",
+      "resolved": false
+    },
+    {
+      "question": "Will the Tampa Bay Lightning win the 2026 NHL Stanley Cup?",
+      "direction": "YES",
+      "bet_size": 0.88,
+      "entry_price": 0.1465,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:20.973577+00:00",
+      "condition_id": "0xbdd688664b4f3cf7ec4ec011607934fe8ae720c08353fc14a6e9dfbf6bbcf11a",
+      "resolved": false
+    },
+    {
+      "question": "Will the Buffalo Sabres win the 2026 NHL Stanley Cup?",
+      "direction": "YES",
+      "bet_size": 0.79,
+      "entry_price": 0.054,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:22.098177+00:00",
+      "condition_id": "0xbefea6668e49e328db4d5c792bc15cea309bbc06101dfd6ced1e0556ad3ea301",
+      "resolved": false
+    },
+    {
+      "question": "Will the Boston Celtics win the 2026 NBA Finals?",
+      "direction": "YES",
+      "bet_size": 0.84,
+      "entry_price": 0.1115,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:23.330081+00:00",
+      "condition_id": "0x13e1cc703a120883a709d3bb29707097952845d61ca6793ea2b4328bae2a7451",
+      "resolved": false
+    },
+    {
+      "question": "Will the Denver Nuggets win the 2026 NBA Finals?",
+      "direction": "YES",
+      "bet_size": 0.84,
+      "entry_price": 0.105,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:25.159587+00:00",
+      "condition_id": "0x4e65282819c98c6aed529f357fbf5983b1ae9407a3c25bd50fe97b2906df68f9",
+      "resolved": false
+    },
+    {
+      "question": "Will the San Antonio Spurs win the 2026 NBA Finals?",
+      "direction": "YES",
+      "bet_size": 0.91,
+      "entry_price": 0.1715,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:26.543618+00:00",
+      "condition_id": "0xb6b3d7a2037b3faa7e1306d741840d453432902d73cc9a146a035e40271eae73",
+      "resolved": false
+    },
+    {
+      "question": "Will the Detroit Pistons win the 2026 NBA Finals?",
+      "direction": "YES",
+      "bet_size": 0.8,
+      "entry_price": 0.0595,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:27.801517+00:00",
+      "condition_id": "0xe202539dfbeced92dc4112f134a205c80ca6cf4db32bd82f05b291c297219fd8",
+      "resolved": false
+    },
+    {
+      "question": "Will Spain win the 2026 FIFA World Cup?",
+      "direction": "YES",
+      "bet_size": 0.91,
+      "entry_price": 0.1785,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:29.007538+00:00",
+      "condition_id": "0x7976b8dbacf9077eb1453a62bcefd6ab2df199acd28aad276ff0d920d6992892",
+      "resolved": false
+    },
+    {
+      "question": "Will England win the 2026 FIFA World Cup?",
+      "direction": "YES",
+      "bet_size": 0.84,
+      "entry_price": 0.1115,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:30.197520+00:00",
+      "condition_id": "0x375409bc5eeeff961e82b479caeccc20f33d15738e5bce1186d628aa3d9dfb1f",
+      "resolved": false
+    },
+    {
+      "question": "Will France win the 2026 FIFA World Cup?",
+      "direction": "YES",
+      "bet_size": 0.89,
+      "entry_price": 0.1575,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:31.303038+00:00",
+      "condition_id": "0x9b6fef249040fd17e9c107955b37ac2c3e923509b6b0ff01cc463a331ddeb894",
+      "resolved": false
+    },
+    {
+      "question": "Will Brazil win the 2026 FIFA World Cup?",
+      "direction": "YES",
+      "bet_size": 0.82,
+      "entry_price": 0.0855,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:32.876960+00:00",
+      "condition_id": "0x30d55d8124ee1e12dabe89201badc45669b81dff69e4ce44d961f32878ec178a",
+      "resolved": false
+    },
+    {
+      "question": "Will Argentina win the 2026 FIFA World Cup?",
+      "direction": "YES",
+      "bet_size": 0.82,
+      "entry_price": 0.0885,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:34.045380+00:00",
+      "condition_id": "0x0c4cd2055d6ea89354ffddc55d6dbcef9355748112ea952fc925f3db6a5c457f",
+      "resolved": false
+    },
+    {
+      "question": "Will Germany win the 2026 FIFA World Cup?",
+      "direction": "YES",
+      "bet_size": 0.79,
+      "entry_price": 0.052,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:35.172855+00:00",
+      "condition_id": "0x1595b4818eeb1ea1e0bec5de6f057218e557feee9b405a0e930d290384fa1d16",
+      "resolved": false
+    },
+    {
+      "question": "Will Portugal win the 2026 FIFA World Cup?",
+      "direction": "YES",
+      "bet_size": 0.8,
+      "entry_price": 0.068,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:36.375712+00:00",
+      "condition_id": "0x4f3421fb2daf5cca7430ed8d8132463963081572d75434393a1808fdb8829fe8",
+      "resolved": false
+    },
+    {
+      "question": "Xi Jinping out before 2027?",
+      "direction": "YES",
+      "bet_size": 0.81,
+      "entry_price": 0.0745,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:38.055640+00:00",
+      "condition_id": "0xa467b14d51f01b957109d9cbb1d6c124fab2a089d52ed8f471d23c2812e743b7",
+      "resolved": false
+    },
+    {
+      "question": "Putin out as President of Russia by December 31, 2026?",
+      "direction": "YES",
+      "bet_size": 0.86,
+      "entry_price": 0.125,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:39.405943+00:00",
+      "condition_id": "0x6bd56627aa21311850825edb27e53434a0e17a4f782be0086bc07f71eee00d0d",
+      "resolved": false
+    },
+    {
+      "question": "Will Gavin Newsom win the 2028 Democratic presidential nomination?",
+      "direction": "YES",
+      "bet_size": 1.03,
+      "entry_price": 0.273,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:41.383044+00:00",
+      "condition_id": "0x0f49db97f71c68b1e42a6d16e3de93d85dbf7d4148e3f018eb79e88554be9f75",
+      "resolved": false
+    },
+    {
+      "question": "Will Alexandria Ocasio-Cortez win the 2028 Democratic presidential nomination?",
+      "direction": "YES",
+      "bet_size": 0.82,
+      "entry_price": 0.084,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:43.934842+00:00",
+      "condition_id": "0xe6bcc2f1dd025ce5e1833190f7c60a71171c94f805df55b9ab0ded695ec93565",
+      "resolved": false
+    },
+    {
+      "question": "Will Kamala Harris win the 2028 Democratic presidential nomination?",
+      "direction": "YES",
+      "bet_size": 0.8,
+      "entry_price": 0.062,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:45.204132+00:00",
+      "condition_id": "0x909659c9436228e2be56d5582ba6188166f2f8bf3c596335512c8f2e380d01ec",
+      "resolved": false
+    },
+    {
+      "question": "Will Jon Ossoff win the 2028 Democratic presidential nomination?",
+      "direction": "YES",
+      "bet_size": 0.8,
+      "entry_price": 0.061,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:46.521709+00:00",
+      "condition_id": "0x74dba1ce1ae9dd535414e85f2d9ab5ea32c0fb1acc9b7130b67e6d91217e24e1",
+      "resolved": false
+    },
+    {
+      "question": "Will JD Vance win the 2028 US Presidential Election?",
+      "direction": "YES",
+      "bet_size": 0.92,
+      "entry_price": 0.1875,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:47.894012+00:00",
+      "condition_id": "0x7ad403c3508f8e3912940fd1a913f227591145ca0614074208e0b962d5fcc422",
+      "resolved": false
+    },
+    {
+      "question": "Will Gavin Newsom win the 2028 US Presidential Election?",
+      "direction": "YES",
+      "bet_size": 0.9,
+      "entry_price": 0.165,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:50.728905+00:00",
+      "condition_id": "0x4567b275e6b667a6217f5cb4f06a797d3a1eaf1d0281fb5bc8c75e2046ae7e57",
+      "resolved": false
+    },
+    {
+      "question": "Will Alexandria Ocasio-Cortez win the 2028 US Presidential Election?",
+      "direction": "YES",
+      "bet_size": 0.79,
+      "entry_price": 0.0545,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:52.103458+00:00",
+      "condition_id": "0xf232b565995e4b3a3e7fa6cef775eeff1cecd20ad7c013cb9fc8dadabfe279a9",
+      "resolved": false
+    },
+    {
+      "question": "Will Marco Rubio win the 2028 US Presidential Election?",
+      "direction": "YES",
+      "bet_size": 0.83,
+      "entry_price": 0.098,
+      "edge": 0.012,
+      "opened_at": "2026-04-12T22:05:53.395695+00:00",
+      "condition_id": "0x2053d8515f1b8cbeea4ccdb56e60e89c2617e43a8660d95166b8e71d27865277",
+      "resolved": false
+    }
+  ]
 }

@@ -4452,6 +4452,76 @@
       "is_known_whale": false,
       "tx": "0x1bbc92781e50784286a608a05bce8d96559cf0494d75fb10dce938c39dc46045",
       "timestamp": "2026-04-12T22:21:08.521714+00:00"
+    },
+    "0xd40cfcf04546089b04da6c8b5b22873bef3fffeb7311e0d88d41626445976b34": {
+      "condition_id": "0xd40cfcf04546089b04da6c8b5b22873bef3fffeb7311e0d88d41626445976b34",
+      "title": "Bitcoin Up or Down - April 12, 6:15PM-6:30PM ET",
+      "outcome": "Up",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.001,
+      "whale_address": "0x16526e104f5ce09388a6a8cffd8b81c6f93b96dc",
+      "whale_name": "Tabuds",
+      "whale_size": 1000.0,
+      "is_known_whale": false,
+      "tx": "0xf8305d58cb7d2953642c1dbd7dce4381f8223c2b1ed9eba8f3b98ab8e6bca0c7",
+      "timestamp": "2026-04-12T22:31:10.170384+00:00"
+    },
+    "0x0214efd795ce4e8a54884faa52bacd4eeea7b4958fcf6f6649843bdc70c8fd0c": {
+      "condition_id": "0x0214efd795ce4e8a54884faa52bacd4eeea7b4958fcf6f6649843bdc70c8fd0c",
+      "title": "Will Justin Rose win the 2026 Masters tournament?",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.0013008740785185229,
+      "whale_address": "0xbe8b5f8e7ddefbf7f141eedb900af9a85e67517c",
+      "whale_name": "ITZIKSON",
+      "whale_size": 3433.33,
+      "is_known_whale": false,
+      "tx": "0xc15d48cf34b1d8f75f24f13745688dc3941f7c8253db492f6027ff6b22b7047f",
+      "timestamp": "2026-04-12T22:31:10.170650+00:00"
+    },
+    "0x9a5ab1499e56b7f6f4552782e9000db74ca748e7faee148d82cc03aca23dd0ea": {
+      "condition_id": "0x9a5ab1499e56b7f6f4552782e9000db74ca748e7faee148d82cc03aca23dd0ea",
+      "title": "Will AD Cali vs. Llaneros FC end in a draw?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.14999999838593975,
+      "whale_address": "0x0f15bca68d73e79fda8ad13794861c6644ce0ce5",
+      "whale_name": "h4ckm1n.dev",
+      "whale_size": 464.666665,
+      "is_known_whale": false,
+      "tx": "0xf35d81b2fe88a52a1a7f05d0fdd5415919ae0a5679020b6d2e00b02cca1ecef1",
+      "timestamp": "2026-04-12T22:31:10.170699+00:00"
+    },
+    "0xbdf6b039349b45e5e93b085c8334c166ad519aa305a8d10f4d34fa377a5b7d37": {
+      "condition_id": "0xbdf6b039349b45e5e93b085c8334c166ad519aa305a8d10f4d34fa377a5b7d37",
+      "title": "Oeiras 3: Timofey Skatov vs Luca Van Assche",
+      "outcome": "Timofey Skatov",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.37991405428883046,
+      "whale_address": "0x4a80d415c1a994b9de7ac3d83a92dd787d6bb808",
+      "whale_name": "degeninsidertrading",
+      "whale_size": 581.222039,
+      "is_known_whale": false,
+      "tx": "0xbcdb9cdc12a1f3b642c1babc124214a7490d09842b8b9cf9c6a0eeb01b17b569",
+      "timestamp": "2026-04-12T22:31:10.170812+00:00"
+    },
+    "0xa890ce4253fe24774cafc1f79b9e219a4bcc1b2999dcc840ca2c1e7cadff6d07": {
+      "condition_id": "0xa890ce4253fe24774cafc1f79b9e219a4bcc1b2999dcc840ca2c1e7cadff6d07",
+      "title": "Magic vs. Celtics: O/U 216.5",
+      "outcome": "Over",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.56,
+      "whale_address": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
+      "whale_name": "RN1",
+      "whale_size": 256.568,
+      "is_known_whale": true,
+      "tx": "0xfdc0e3737baa80eb3de645179d9b2f313d5bff89761df8a54f631b1382b53667",
+      "timestamp": "2026-04-12T22:31:10.170840+00:00"
     }
   },
   "history": [],
@@ -4469,10 +4539,10 @@
     {
       "address": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
       "name": "RN1",
-      "trades": 5,
-      "volume": 28838.08,
-      "last_seen": "2026-04-12T16:52:29.945326+00:00",
-      "active_markets": 4
+      "trades": 6,
+      "volume": 29094.65,
+      "last_seen": "2026-04-12T22:31:10.153414+00:00",
+      "active_markets": 5
     },
     {
       "address": "0xd1a63a243042d864520512fbdbd2fd20e0ab1507",
@@ -4579,9 +4649,9 @@
       "active_markets": 5
     }
   ],
-  "total_wallets_tracked": 718,
+  "total_wallets_tracked": 729,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T22:21:08.530412+00:00"
+  "updated": "2026-04-12T22:31:10.183525+00:00"
 }
