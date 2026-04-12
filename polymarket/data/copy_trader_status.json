@@ -4018,6 +4018,48 @@
       "is_known_whale": true,
       "tx": "0x16ea3a3230d32c9cca0ad51e7aa38cfebdc00e27bc714f64a1c956937644ac3d",
       "timestamp": "2026-04-12T18:05:59.901869+00:00"
+    },
+    "0x4bab42b0d94075979419d9a75fcfd62a5408ef0e1943b527323ee947c8bcd96f": {
+      "condition_id": "0x4bab42b0d94075979419d9a75fcfd62a5408ef0e1943b527323ee947c8bcd96f",
+      "title": "Will Elon Musk post 260-279 tweets from April 7 to April 14,",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.17190839694656487,
+      "whale_address": "0x77c812f7735ad07e3ce58fd466a0e1b4346bbc8c",
+      "whale_name": "dudukos",
+      "whale_size": 1048.0,
+      "is_known_whale": false,
+      "tx": "0x0755b81e69b9f82d66e4ed9a19362628a33ee848558f00f1312d2e7422b47e72",
+      "timestamp": "2026-04-12T18:17:29.248294+00:00"
+    },
+    "0x852fcfca1dfa1372b768aa6df2269d20564378bb6fe9c64bba3bc040370c1efd": {
+      "condition_id": "0x852fcfca1dfa1372b768aa6df2269d20564378bb6fe9c64bba3bc040370c1efd",
+      "title": "Will Bayern Munich win the 2025\u201326 Champions League?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.67,
+      "whale_address": "0xe83cc0c82d009a1c349c1a89feaadfcee9655e8f",
+      "whale_name": "asdasdasdaddddddd",
+      "whale_size": 2059.0,
+      "is_known_whale": false,
+      "tx": "0x0e0a6c19fc57e36a0e4d0f7d01a79c4ac41ae615b063d460d94f350ec14d1637",
+      "timestamp": "2026-04-12T18:17:29.248402+00:00"
+    },
+    "0x36d6585674e480c5bc0b43e6064d574a94114e5995338961e8ddce6717ddcb2b": {
+      "condition_id": "0x36d6585674e480c5bc0b43e6064d574a94114e5995338961e8ddce6717ddcb2b",
+      "title": "Bitcoin Up or Down - April 12, 2:10PM-2:15PM ET",
+      "outcome": "Up",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.5150428888888889,
+      "whale_address": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+      "whale_name": "",
+      "whale_size": 900.0,
+      "is_known_whale": false,
+      "tx": "0xa8fbc8afeeb93ab0ee51fe3a624f462963c6ccd73a72ef5b9505a17b73316c21",
+      "timestamp": "2026-04-12T18:17:29.248442+00:00"
     }
   },
   "history": [],
@@ -4145,9 +4187,9 @@
       "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 645,
+  "total_wallets_tracked": 649,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T18:09:18.431165+00:00"
+  "updated": "2026-04-12T18:17:29.257052+00:00"
 }
