@@ -210,15 +210,43 @@
       "is_known_whale": false,
       "tx": "0xa4c6423fd3d53f0796d9d5cc493f2fa1111e8a5eebff7d3ba54ae4713d7de9a0",
       "timestamp": "2026-04-12T09:50:34.700984+00:00"
+    },
+    "0x556b0f9998158a1ea53bb35cc756872f6427be03ea36a7ab60c1cadff8305e20": {
+      "condition_id": "0x556b0f9998158a1ea53bb35cc756872f6427be03ea36a7ab60c1cadff8305e20",
+      "title": "Bank of England decreases interest rates by 50+ bps after Ap",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.999,
+      "whale_address": "0xa3ad70cf48a2f2b44163e798223c01a2c2536866",
+      "whale_name": "rated",
+      "whale_size": 667.0,
+      "is_known_whale": false,
+      "tx": "0xc88048f305967ef9b97b0eff7439e8107dd5cf4fd9100604d2f4b0169f05bc8a",
+      "timestamp": "2026-04-12T09:55:41.441162+00:00"
+    },
+    "0x024b68f77bfc019341ee3db8f57c103334e4b9430bba4746d8c94aafd8b36fee": {
+      "condition_id": "0x024b68f77bfc019341ee3db8f57c103334e4b9430bba4746d8c94aafd8b36fee",
+      "title": "Will Bitcoin dip to $45,000 by December 31, 2026?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.42,
+      "whale_address": "0xf27de6607cbd15be1133619b9807ff63fb86e6d3",
+      "whale_name": "0xf27de6607Cbd11011",
+      "whale_size": 700.0,
+      "is_known_whale": false,
+      "tx": "0x1cc9ec4c1242f2d242a1e54603ac60f883f037615bef24bf57f5439e16e30cd6",
+      "timestamp": "2026-04-12T09:55:41.441199+00:00"
     }
   },
   "history": [],
   "consecutive_losses": 0,
   "cooldown_until": null,
   "top_traders": [],
-  "total_wallets_tracked": 31,
+  "total_wallets_tracked": 45,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T09:54:51.417807+00:00"
+  "updated": "2026-04-12T09:55:41.441615+00:00"
 }
