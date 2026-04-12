@@ -3906,6 +3906,76 @@
       "is_known_whale": true,
       "tx": "0x654341351df32a57e61dded363224e8e51f5a76f05360ebb3e3884018ac73179",
       "timestamp": "2026-04-12T17:59:36.370720+00:00"
+    },
+    "0x58fa7ec9e21eba88b41941833bd87819a96cdb992ae14c9f5cfb4e47c694bb05": {
+      "condition_id": "0x58fa7ec9e21eba88b41941833bd87819a96cdb992ae14c9f5cfb4e47c694bb05",
+      "title": "LoL: Team Heretics vs Karmine Corp - Game 1 Winner",
+      "outcome": "Team Heretics",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.14,
+      "whale_address": "0x04b1e3aff4fed7a6868757761db7486ddb6cd224",
+      "whale_name": "JasonChenPapadopoulos",
+      "whale_size": 1948.4,
+      "is_known_whale": false,
+      "tx": "0xa2abba3633d1303215dbf22aed1d620a56af90bc55fa1c5bb98dd12d3be421d2",
+      "timestamp": "2026-04-12T18:04:12.461584+00:00"
+    },
+    "0x62ea214484b48c26499f9d3fa0933a4654423fcd1b557a5c7fb65bac00c7fd7d": {
+      "condition_id": "0x62ea214484b48c26499f9d3fa0933a4654423fcd1b557a5c7fb65bac00c7fd7d",
+      "title": "Will Real Oviedo win on 2026-04-12?",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.9751389486438788,
+      "whale_address": "0x196e01b2958e58ab0d0b53b1107a069f523de9d6",
+      "whale_name": "Comy",
+      "whale_size": 1138.91,
+      "is_known_whale": false,
+      "tx": "0x118a6f68608c59dc125e475563819ce7995cb12781f0f7015ad513ac594988b6",
+      "timestamp": "2026-04-12T18:04:12.461754+00:00"
+    },
+    "0xd2841d2767989141f33ca98fd6ee18b84595c94932a9d727d08ff5fe87e6fc05": {
+      "condition_id": "0xd2841d2767989141f33ca98fd6ee18b84595c94932a9d727d08ff5fe87e6fc05",
+      "title": "Pumas de la UNAM vs. Mazatl\u00e1n FC: O/U 3.5",
+      "outcome": "Under",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.5,
+      "whale_address": "0x842ac934cfff1467f27c167c42c318001e407422",
+      "whale_name": "ChompChomp888",
+      "whale_size": 1000.0,
+      "is_known_whale": false,
+      "tx": "0xe2cc72f20d710c81bd865f6c1269ea3b8435c1693dbe24c624c1f67bb747b718",
+      "timestamp": "2026-04-12T18:04:12.461815+00:00"
+    },
+    "0x489e91e293d3a0362637a2eef254258aefa04cd6023eccf4629f581ef9cdd88b": {
+      "condition_id": "0x489e91e293d3a0362637a2eef254258aefa04cd6023eccf4629f581ef9cdd88b",
+      "title": "Solana Up or Down - April 12, 1PM ET",
+      "outcome": "Down",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.001,
+      "whale_address": "0x6d3691f159c316de7cdf275a5e9d11319ad54b15",
+      "whale_name": "ParimIssi",
+      "whale_size": 928.072,
+      "is_known_whale": false,
+      "tx": "0xc14e1dd48954975c2a104235d9639c79313b55a971bc4be735b4029f3b8fedbb",
+      "timestamp": "2026-04-12T18:04:12.461873+00:00"
+    },
+    "0x22de7abc1a3274f6760bae72af0f7280438755cf67e0a491702bb6d42b130340": {
+      "condition_id": "0x22de7abc1a3274f6760bae72af0f7280438755cf67e0a491702bb6d42b130340",
+      "title": "Valorant: Bar\u00e7a eSports vs DNSTY - Map 1 Winner",
+      "outcome": "DNSTY",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.5,
+      "whale_address": "0x2837ca984aa974ed8b817809296dbaf5da8639d8",
+      "whale_name": "ex3rcice",
+      "whale_size": 1418.76445,
+      "is_known_whale": false,
+      "tx": "0x6691c7dd4fb3456f4ca77704209097232277758366864602bba347d59250b9d3",
+      "timestamp": "2026-04-12T18:04:12.461919+00:00"
     }
   },
   "history": [],
@@ -4033,9 +4103,9 @@
       "active_markets": 4
     }
   ],
-  "total_wallets_tracked": 625,
+  "total_wallets_tracked": 633,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T17:59:36.382314+00:00"
+  "updated": "2026-04-12T18:04:12.470841+00:00"
 }
