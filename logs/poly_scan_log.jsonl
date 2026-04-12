@@ -429,3 +429,4 @@
 {"time": "2026-04-12T21:50:52.127218+00:00", "value_signals": 3, "sports_signals": 5, "copy_signals": 1, "arb_signals": 0, "new_opens": 1, "new_closes": 1, "open_positions": 7}
 {"time": "2026-04-12T22:02:13.314761+00:00", "value_signals": 3, "sports_signals": 5, "copy_signals": 0, "arb_signals": 0, "new_opens": 0, "new_closes": 0, "open_positions": 7}
 {"time": "2026-04-12T22:36:53.574426+00:00", "value_signals": 2, "sports_signals": 4, "copy_signals": 0, "arb_signals": 0, "new_opens": 0, "new_closes": 0, "open_positions": 7}
+{"time": "2026-04-12T22:46:37.482369+00:00", "value_signals": 2, "sports_signals": 4, "copy_signals": 0, "arb_signals": 0, "new_opens": 0, "new_closes": 1, "open_positions": 6}
