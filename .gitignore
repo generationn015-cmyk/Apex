@@ -3,11 +3,15 @@ __pycache__/
 *.pyc
 *.pyo
 .env
-logs/
-paper/
-polymarket/data/
-*.log
-*.pid
-*.jsonl
-state.json
 uv.lock
+*.pid
+
+# Keep logs/ tracked — bot pushes live data here for Streamlit Cloud
+# Only ignore large/sensitive files inside logs/
+logs/*.log
+logs/.paused
+logs/.go_live
+logs/watchdog_status.json
+
+# Polymarket runtime data
+polymarket/data/

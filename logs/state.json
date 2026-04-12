@@ -1,0 +1,41 @@
+{
+  "updated_at": "2026-04-12T03:27:45.816867+00:00",
+  "mode": "paper",
+  "cycle": 1,
+  "stats": {
+    "total_trades": 3,
+    "closed": 0,
+    "open": 3,
+    "wins": 0,
+    "losses": 0,
+    "win_rate": 0,
+    "total_pnl": 0,
+    "by_asset": {}
+  },
+  "last_signals": {
+    "ATLAS": [],
+    "ORACLE": [
+      {
+        "agent": "ORACLE",
+        "asset": "ETH/USDT",
+        "signal": "BUY",
+        "strength": 0.65,
+        "entry_price": 2219.54,
+        "stop_loss": 2188.222291,
+        "take_profit": 2266.516564,
+        "trade_id": "ORACLE_1775964465755",
+        "indicators": {
+          "macd_line": 2.113713,
+          "macd_hist": 10.224876,
+          "rsi": 37.8,
+          "adx": 37.7,
+          "cross": "NONE",
+          "zero_line": "ABOVE",
+          "htf_aligned": true
+        }
+      }
+    ],
+    "SNIPER": [],
+    "SENTINEL": []
+  }
+}

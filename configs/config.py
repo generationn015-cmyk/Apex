@@ -24,6 +24,9 @@ LIGHTER_API_KEY_SECRET = os.getenv("LIGHTER_API_KEY_SECRET", "")
 # ── Anthropic (Claude AI signal review) ──────────────────────────────────────
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 
+# ── GitHub (hourly data sync to Streamlit Cloud) ──────────────────────────────
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN", "")
+
 # ── Polymarket ────────────────────────────────────────────────────────────────
 POLY_PRIVATE_KEY  = os.getenv("POLY_PRIVATE_KEY", "")
 

@@ -247,7 +247,7 @@ def run_watchdog():
             # Write status for dashboard
             mgr.write_status()
 
-            # Hourly heartbeat
+            # Hourly heartbeat + GitHub data sync
             if time.time() - last_heartbeat > HEARTBEAT_SECS:
                 last_heartbeat = time.time()
                 state_summary  = ""
@@ -263,6 +263,14 @@ def run_watchdog():
                     pass
                 _tg(f"💓 <b>Watchdog heartbeat</b>{state_summary}\n"
                     f"{mgr.status_line()}")
+
+                # Push live data to GitHub so Streamlit Cloud stays updated
+                try:
+                    from core.data_sync import sync_to_github
+                    from configs.config import GITHUB_TOKEN
+                    sync_to_github(token=GITHUB_TOKEN)
+                except Exception as e:
+                    print(f"  [DataSync] Error: {e}")
 
             time.sleep(CHECK_INTERVAL)
 

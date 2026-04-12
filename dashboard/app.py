@@ -141,24 +141,76 @@ _SE_ROOT     = Path.home() / "signal_engine"
 LOGS_DIR     = _APEX_ROOT / "logs"
 STATE_FILE   = Path(os.getenv("STATE_FILE",  str(LOGS_DIR / "state.json")))
 STATUS_FILE  = Path(os.getenv("STATUS_FILE", str(LOGS_DIR / "watchdog_status.json")))
-SIGNALS_LOG  = Path(os.getenv("SIGNALS_LOG", str(_SE_ROOT / "signals_log.jsonl")))
+SIGNALS_LOG  = Path(os.getenv("SIGNALS_LOG", str(LOGS_DIR / "signals_log.jsonl")))
 SE_CFG_FILE  = Path(os.getenv("SE_CONFIG",   str(_SE_ROOT / "engine_config.json")))
 PAPER_LOG    = LOGS_DIR / "paper_trades.jsonl"
-LIVE_FILE    = LOGS_DIR / ".go_live"      # controls apex_bot live mode
+LIVE_FILE    = LOGS_DIR / ".go_live"
 PAUSE_FILE   = LOGS_DIR / ".paused"
+
+# GitHub raw base — used as fallback when running on Streamlit Cloud
+_GH_RAW = "https://raw.githubusercontent.com/generationn015-cmyk/Apex/master/logs"
 
 LOGS_DIR.mkdir(exist_ok=True)
 REFRESH_S = 30
 
+# Detect cloud vs local: if logs/state.json doesn't exist we're probably on cloud
+_IS_CLOUD = not STATE_FILE.exists() and not PAPER_LOG.exists()
+
+
+@st.cache_data(ttl=REFRESH_S)
+def _fetch_url(url: str):
+    """Fetch JSON or JSONL from a URL (GitHub raw). Cached per refresh interval."""
+    try:
+        import urllib.request
+        with urllib.request.urlopen(url, timeout=10) as r:
+            return r.read().decode()
+    except Exception:
+        return None
+
 
 def load_json(p):
+    """Load JSON — local file first, GitHub raw fallback on cloud."""
     try:
         if Path(p).exists():
             with open(p) as f:
                 return json.load(f)
     except Exception:
         pass
+    if _IS_CLOUD:
+        fname = Path(p).name
+        raw = _fetch_url(f"{_GH_RAW}/{fname}")
+        if raw:
+            try:
+                return json.loads(raw)
+            except Exception:
+                pass
     return None
+
+
+def load_jsonl(p) -> list:
+    """Load JSONL — local file first, GitHub raw fallback on cloud."""
+    rows = []
+    if Path(p).exists():
+        for line in Path(p).read_text().splitlines():
+            line = line.strip()
+            if line:
+                try:
+                    rows.append(json.loads(line))
+                except Exception:
+                    pass
+        return rows
+    if _IS_CLOUD:
+        fname = Path(p).name
+        raw = _fetch_url(f"{_GH_RAW}/{fname}")
+        if raw:
+            for line in raw.splitlines():
+                line = line.strip()
+                if line:
+                    try:
+                        rows.append(json.loads(line))
+                    except Exception:
+                        pass
+    return rows
 
 
 # ── Tabs ─────────────────────────────────────────────────────────────────────
@@ -329,18 +381,8 @@ with tab_apex:
         return max(v, 0)
 
     # Load paper trades
-    trades_df = pd.DataFrame()
-    if PAPER_LOG.exists():
-        rows = []
-        for line in PAPER_LOG.read_text().splitlines():
-            line = line.strip()
-            if line:
-                try:
-                    rows.append(json.loads(line))
-                except Exception:
-                    pass
-        if rows:
-            trades_df = pd.DataFrame(rows)
+    trades_rows = load_jsonl(PAPER_LOG)
+    trades_df   = pd.DataFrame(trades_rows) if trades_rows else pd.DataFrame()
 
     last_signals = (apex_state or {}).get("last_signals", {})
 
@@ -490,17 +532,7 @@ with tab_po:
 
     @st.cache_data(ttl=REFRESH_S)
     def load_signals() -> pd.DataFrame:
-        rows = []
-        if not SIGNALS_LOG.exists():
-            return pd.DataFrame()
-        for line in SIGNALS_LOG.read_text().splitlines():
-            line = line.strip()
-            if not line:
-                continue
-            try:
-                rows.append(json.loads(line))
-            except Exception:
-                pass
+        rows = load_jsonl(SIGNALS_LOG)
         if not rows:
             return pd.DataFrame()
         df = pd.DataFrame(rows)
