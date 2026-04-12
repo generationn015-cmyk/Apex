@@ -3080,6 +3080,90 @@
       "is_known_whale": false,
       "tx": "0xae29222841ec0e6a71778b0cc840aa9261c4784eaebd6a952e43fe751e7c8132",
       "timestamp": "2026-04-12T15:32:19.159023+00:00"
+    },
+    "0xdc6f95f94d2db24a1904537cb8cf83e0b25fa47bac926112891eef0df8fd06f2": {
+      "condition_id": "0xdc6f95f94d2db24a1904537cb8cf83e0b25fa47bac926112891eef0df8fd06f2",
+      "title": "US x Iran meeting by April 10, 2026?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.11771420113494972,
+      "whale_address": "0x8df92602ec9c454e8099d9dc4a3f0d21daa0468c",
+      "whale_name": "0x8Df92602EC9c454E8099D9dc4A3F0d21DaA0468C-1766855317883",
+      "whale_size": 849.515165,
+      "is_known_whale": false,
+      "tx": "0x93eaf5c2be11a7dcc82e8e4b1aef744d3f226a90e7fc47513fbfba49ec2fcdfc",
+      "timestamp": "2026-04-12T15:42:20.346571+00:00"
+    },
+    "0xe1034cf5685fc079e6383ad104b9de83ef3626ac23a97af70c821ad5a0a6a352": {
+      "condition_id": "0xe1034cf5685fc079e6383ad104b9de83ef3626ac23a97af70c821ad5a0a6a352",
+      "title": "LoL: Team Vitality vs Shifters (BO3) - LEC Regular Season",
+      "outcome": "Shifters",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.4699467393256459,
+      "whale_address": "0xcf609d3256f0f37f0595e5dc64012fa3a8fea6f5",
+      "whale_name": "0xcF609D3256f0f37f0595E5Dc64012Fa3a8fEa6f5-1771809916847",
+      "whale_size": 3141.0955320000003,
+      "is_known_whale": false,
+      "tx": "0xa132a48f480a2fccdb23d3f9418cb58458c6406cdf8b0c96cb9a2cdabaae1556",
+      "timestamp": "2026-04-12T15:42:20.347506+00:00"
+    },
+    "0x6dc7d1d722d7b945205b96e07cbc6d8f24dc5a2e5873e9e38d1081b56a7fadba": {
+      "condition_id": "0x6dc7d1d722d7b945205b96e07cbc6d8f24dc5a2e5873e9e38d1081b56a7fadba",
+      "title": "Will Donald Trump post 80-99 Truth Social posts from April 7",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.004634932152964226,
+      "whale_address": "0x6a1b1ad80fcf64d2d3c1fab082c558b120befbbd",
+      "whale_name": "Kalkay11",
+      "whale_size": 1102.48,
+      "is_known_whale": false,
+      "tx": "0xb88bd2a4a32ce4024e29c72ffb9fee94febf44796485cc8eb0760d5ceac1d476",
+      "timestamp": "2026-04-12T15:42:20.347563+00:00"
+    },
+    "0x10d7277cded198ac8f180f127906a477ac1b696bcaa796a01d2df8d9fddceef8": {
+      "condition_id": "0x10d7277cded198ac8f180f127906a477ac1b696bcaa796a01d2df8d9fddceef8",
+      "title": "Will the highest temperature in Singapore be 30\u00b0C on April 1",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.001,
+      "whale_address": "0xcce671c78e1533cf00f9daedb1d1480c0450dd55",
+      "whale_name": "EmilioTucci",
+      "whale_size": 4657.1071,
+      "is_known_whale": false,
+      "tx": "0x11bdf3bbbb190da422843b46c40bbf9247d210cef2102fb77f78c38e8ae9e178",
+      "timestamp": "2026-04-12T15:42:20.347595+00:00"
+    },
+    "0xbb0f2af43ca529ad42f9c1d0a6338cf0e4af7a15533ccc67336490a63d489145": {
+      "condition_id": "0xbb0f2af43ca529ad42f9c1d0a6338cf0e4af7a15533ccc67336490a63d489145",
+      "title": "Will \"Project Hail Mary\" 4th Weekend Box Office be between 2",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.999,
+      "whale_address": "0xab21252b603aea73ed9c89adede6d523cf6cc521",
+      "whale_name": "enderone",
+      "whale_size": 1225.78,
+      "is_known_whale": false,
+      "tx": "0xa4fe37b6a3dd90eb0d03a9726d27df39c746f00fe1fd08d279a85007c9c75771",
+      "timestamp": "2026-04-12T15:42:20.347625+00:00"
+    },
+    "0x250716ecd25235530ba4dbd1fa0acf6ab92ab05cf5347e25fc86c4384ef1cecb": {
+      "condition_id": "0x250716ecd25235530ba4dbd1fa0acf6ab92ab05cf5347e25fc86c4384ef1cecb",
+      "title": "Israel strike on Yemen by May 31, 2026?",
+      "outcome": "No",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.66,
+      "whale_address": "0x848da3164e3c7bbff8150f0070a1fa6a22e476c1",
+      "whale_name": "WilliamAnderson1799",
+      "whale_size": 682.0,
+      "is_known_whale": false,
+      "tx": "0xd4ea0fbacc3e9c3fc3eb89bdd1de5ad226de6a521177bdbd306d1962c41b3d95",
+      "timestamp": "2026-04-12T15:42:20.347660+00:00"
     }
   },
   "history": [],
@@ -3207,9 +3291,9 @@
       "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 480,
+  "total_wallets_tracked": 493,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T15:32:19.166623+00:00"
+  "updated": "2026-04-12T15:42:20.355017+00:00"
 }
