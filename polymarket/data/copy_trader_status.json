@@ -1946,6 +1946,62 @@
       "is_known_whale": false,
       "tx": "0x41fc7aa690051217b01adf15932ebb536499570750b3827b7a934a6be25b37b6",
       "timestamp": "2026-04-12T13:22:04.458636+00:00"
+    },
+    "0x3866855471a5b34bff8325941599c5b144c028efcc81b6d6b1d6bb73149f11d1": {
+      "condition_id": "0x3866855471a5b34bff8325941599c5b144c028efcc81b6d6b1d6bb73149f11d1",
+      "title": "Military action against Iran ends on April 28, 2026?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.001,
+      "whale_address": "0xfb129bebeda3b049b984ef1965cf69d9806cd1b3",
+      "whale_name": "Predict90",
+      "whale_size": 1000.0,
+      "is_known_whale": false,
+      "tx": "0x8a06e1c301216b5cafd59b109888a99c7cf019e5f122f5e3087900e574ce3a2a",
+      "timestamp": "2026-04-12T13:32:05.570535+00:00"
+    },
+    "0x69815a5d726418748d098a0ed05303aad4a77708c7fbfa342e1a37fdac1f5d11": {
+      "condition_id": "0x69815a5d726418748d098a0ed05303aad4a77708c7fbfa342e1a37fdac1f5d11",
+      "title": "Spread: Tottenham Hotspur FC (-2.5)",
+      "outcome": "Sunderland AFC",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.9689673719657467,
+      "whale_address": "0xfa95c9511f3ad893040cfd82d7113b3d00e46ac7",
+      "whale_name": "vmint",
+      "whale_size": 1624.37,
+      "is_known_whale": false,
+      "tx": "0xa2ae29ba11b634093faa07b31fd6c23503b5352f54f435784b4d5463e9b9be19",
+      "timestamp": "2026-04-12T13:32:05.571747+00:00"
+    },
+    "0xc81f37f35e07f7cfe5886aaa2191f150006b0f93636a83ff07fc6df44fecfb05": {
+      "condition_id": "0xc81f37f35e07f7cfe5886aaa2191f150006b0f93636a83ff07fc6df44fecfb05",
+      "title": "Will Rayo Vallecano de Madrid win on 2026-04-12?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.3,
+      "whale_address": "0x116c6d1117c8690203bad2e6c5bee0d9f27fe162",
+      "whale_name": "oorangutan",
+      "whale_size": 327.74,
+      "is_known_whale": true,
+      "tx": "0x296335c1468c5c7f557d98abab52438069ef396260e36ae5937dad1fcbde4f01",
+      "timestamp": "2026-04-12T13:32:05.571815+00:00"
+    },
+    "0x321b43c12959e8e6e9bc3345c1029f3b0ec4ff5e45efe1f7bd61ed47817eb2f4": {
+      "condition_id": "0x321b43c12959e8e6e9bc3345c1029f3b0ec4ff5e45efe1f7bd61ed47817eb2f4",
+      "title": "Barcelona Open, Qualification: Hamad Medjedovic vs Quentin H",
+      "outcome": "Quentin Halys",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.28,
+      "whale_address": "0x3b5c629f114098b0dee345fb78b7a3a013c7126e",
+      "whale_name": "SMCAOMCRL",
+      "whale_size": 3144.5776,
+      "is_known_whale": false,
+      "tx": "0xc57b7fad6d6eafe44f5e11abc782cebbfedd942a172ac11f774732bb3063d1f5",
+      "timestamp": "2026-04-12T13:32:05.571859+00:00"
     }
   },
   "history": [],
@@ -2001,6 +2057,14 @@
       "active_markets": 2
     },
     {
+      "address": "0x116c6d1117c8690203bad2e6c5bee0d9f27fe162",
+      "name": "oorangutan",
+      "trades": 4,
+      "volume": 1654.92,
+      "last_seen": "2026-04-12T13:32:05.536066+00:00",
+      "active_markets": 2
+    },
+    {
       "address": "0x32ccd9015a900fde62040162a04bedf093c668b3",
       "name": "pilotlady",
       "trades": 3,
@@ -2025,9 +2089,9 @@
       "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 330,
+  "total_wallets_tracked": 335,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T13:22:04.464782+00:00"
+  "updated": "2026-04-12T13:32:05.578500+00:00"
 }
