@@ -728,15 +728,57 @@
       "is_known_whale": false,
       "tx": "0xccbd8144a567b91ca873208ed44907fd10ebe08a8fd65ea869bce23d36c7e78a",
       "timestamp": "2026-04-12T11:01:50.312431+00:00"
+    },
+    "0x9677070ccf8af658a6e33ad4784b230851dbd444aa3276214daa647f81322f12": {
+      "condition_id": "0x9677070ccf8af658a6e33ad4784b230851dbd444aa3276214daa647f81322f12",
+      "title": "Will the price of Ethereum be greater than $2,600 on April 1",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.999,
+      "whale_address": "0xca496472e5649b4e984314f93b8d198232da73a7",
+      "whale_name": "suifeng668",
+      "whale_size": 539.22018,
+      "is_known_whale": false,
+      "tx": "0xfb90680a9bf1a26737f413984676f9bed1c32d09cc48d051b937140e29417997",
+      "timestamp": "2026-04-12T11:11:51.269285+00:00"
+    },
+    "0xf89f391570ccf540c1d368a86d8c09899f2b2cbf7be10a0ce79fa3f6bd0910ed": {
+      "condition_id": "0xf89f391570ccf540c1d368a86d8c09899f2b2cbf7be10a0ce79fa3f6bd0910ed",
+      "title": "Will Tianjin Jinmen Hu FC win on 2026-04-12?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.56,
+      "whale_address": "0x5d1d9cfd66ee3068c2a8a57dedf1e1b006dcafd2",
+      "whale_name": "",
+      "whale_size": 1300.5,
+      "is_known_whale": false,
+      "tx": "0x81265c581c37e4a65edceae5b9429723f6abd9aa81add02b3acf98ef96b10f22",
+      "timestamp": "2026-04-12T11:11:51.270451+00:00"
+    },
+    "0xa5c5a9b07d9db76a61645efa463a8a786167b1d62888c28a817f5eefbf7bd2b0": {
+      "condition_id": "0xa5c5a9b07d9db76a61645efa463a8a786167b1d62888c28a817f5eefbf7bd2b0",
+      "title": "Will CD Nacional win on 2026-04-12?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.96,
+      "whale_address": "0xe1dfa8f185ba89ff85f9e3bdb6dfda61f0ce677f",
+      "whale_name": "wealthybanker",
+      "whale_size": 1040.4166599999999,
+      "is_known_whale": false,
+      "tx": "0x04fdf8406de38ba95171efe9931d854c157a6bd8081f6e5d9fad4edc13d6b573",
+      "timestamp": "2026-04-12T11:11:51.270534+00:00"
     }
   },
   "history": [],
   "consecutive_losses": 0,
   "cooldown_until": null,
   "top_traders": [],
-  "total_wallets_tracked": 150,
+  "total_wallets_tracked": 159,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T11:01:50.315372+00:00"
+  "updated": "2026-04-12T11:11:51.273413+00:00"
 }
