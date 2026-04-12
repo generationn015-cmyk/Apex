@@ -1750,12 +1750,104 @@
       "is_known_whale": false,
       "tx": "0x68c7f09d4d124c363bd52d5b6469438e16507215c2020fc47350ddfcabe61215",
       "timestamp": "2026-04-12T13:02:02.453861+00:00"
+    },
+    "0x7af617c47a07480c0a4fce51e2aa649ae943c2cc9217d59b45b2be884cf1f074": {
+      "condition_id": "0x7af617c47a07480c0a4fce51e2aa649ae943c2cc9217d59b45b2be884cf1f074",
+      "title": "Nottingham Forest FC vs. Aston Villa FC: O/U 3.5",
+      "outcome": "Over",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.27999999927319924,
+      "whale_address": "0x1c0ad0fcf5356497560f585dc6b3d33f2b3dcbc9",
+      "whale_name": "Emil12312",
+      "whale_size": 700.010264,
+      "is_known_whale": false,
+      "tx": "0xdcd960925dd8799dbfede0a8a5c22481d01e2143c553081edaee1a4e1113dec8",
+      "timestamp": "2026-04-12T13:12:03.412217+00:00"
+    },
+    "0xfd6176f8c9a59105f80e060a77c4099881c5f2d9e0ceab88e55cf978462fab7f": {
+      "condition_id": "0xfd6176f8c9a59105f80e060a77c4099881c5f2d9e0ceab88e55cf978462fab7f",
+      "title": "Will Gretchen Whitmer win the 2028 US Presidential Election?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.99,
+      "whale_address": "0x907f293c574db891f8aafe9ab3eb587d35fe41c0",
+      "whale_name": "serhgrsthfdghfg",
+      "whale_size": 726.0,
+      "is_known_whale": false,
+      "tx": "0xc5e3e925270e66303ce36afca6949fa347ab41449ebe60f88806128c1a2542e4",
+      "timestamp": "2026-04-12T13:12:03.413111+00:00"
+    },
+    "0x924a2942747dd75703321a7c8d809c68f6a514c3b0f2a2e64274e02310634669": {
+      "condition_id": "0x924a2942747dd75703321a7c8d809c68f6a514c3b0f2a2e64274e02310634669",
+      "title": "Strait of Hormuz traffic returns to normal by end of April?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.86,
+      "whale_address": "0x60f7293958a1b49f25a00a6af0199cbc7a1c050b",
+      "whale_name": "0x60f7293958a1b49f25a00a6af0199cbc7a1c050",
+      "whale_size": 1050.84,
+      "is_known_whale": false,
+      "tx": "0x3e9c19516b75df21e054bb096f1b49afeb371ed94f636d958193d5da7282a56a",
+      "timestamp": "2026-04-12T13:12:03.413144+00:00"
+    },
+    "0x0c3cb473d0cd341c04c256c4d99938f0b646ad7317743dbc2fbba244caa33846": {
+      "condition_id": "0x0c3cb473d0cd341c04c256c4d99938f0b646ad7317743dbc2fbba244caa33846",
+      "title": "Will Parma Calcio 1913 vs. SSC Napoli end in a draw?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.30999999962228025,
+      "whale_address": "0xfb512d428db90455c9507d2578cc306b2701082d",
+      "whale_name": "",
+      "whale_size": 1088.9184220000002,
+      "is_known_whale": true,
+      "tx": "0xed98a472f57aeee4d279251a3d948ed71af2114da8660aa3fc482ed982778f86",
+      "timestamp": "2026-04-12T13:12:03.413174+00:00"
+    },
+    "0x1a9b8e5b5284f3147f4ad052d0540c5df58327a450d5eaa88753d86756984607": {
+      "condition_id": "0x1a9b8e5b5284f3147f4ad052d0540c5df58327a450d5eaa88753d86756984607",
+      "title": "LoL: Weibo Gaming vs Bilibili Gaming - Game 2 Winner",
+      "outcome": "Bilibili Gaming",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.77,
+      "whale_address": "0x68a6cc32c1c9aa0ba02a9c7c9fc29a4f5721e96b",
+      "whale_name": "win911",
+      "whale_size": 744.825,
+      "is_known_whale": false,
+      "tx": "0xb6909eb8f9fa497b14f8fd09d5f5287e698fc767538d9ad4443b4c28f5d79771",
+      "timestamp": "2026-04-12T13:12:03.413192+00:00"
+    },
+    "0xe642d230e2395546139b52ab3b78c7831d53af2b6ae645696f95c9d59114fc84": {
+      "condition_id": "0xe642d230e2395546139b52ab3b78c7831d53af2b6ae645696f95c9d59114fc84",
+      "title": "Upper Austria Ladies Linz: Mirra Andreeva vs Anastasia Potap",
+      "outcome": "Anastasia Potapova",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.36,
+      "whale_address": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
+      "whale_name": "RN1",
+      "whale_size": 19616.0,
+      "is_known_whale": true,
+      "tx": "0xa7c605adbc2e47cd7bbeb5d6931ddb2769123aceba10eb7453862a1031fb0a3c",
+      "timestamp": "2026-04-12T13:12:03.413206+00:00"
     }
   },
   "history": [],
   "consecutive_losses": 0,
   "cooldown_until": null,
   "top_traders": [
+    {
+      "address": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
+      "name": "RN1",
+      "trades": 3,
+      "volume": 25896.72,
+      "last_seen": "2026-04-12T13:12:03.375858+00:00",
+      "active_markets": 3
+    },
     {
       "address": "0xf940e58b04f9726c3858528d8f65d55abad47736",
       "name": "0xf940E58B04F9726c3858528d8f65d55abAD47736-1773233405316",
@@ -1771,6 +1863,30 @@
       "volume": 3030.65,
       "last_seen": "2026-04-12T11:41:54.244455+00:00",
       "active_markets": 3
+    },
+    {
+      "address": "0x230287e270f04ba48df3162c5f7de6bdb8a0d6d2",
+      "name": "pilotguy",
+      "trades": 3,
+      "volume": 1949.37,
+      "last_seen": "2026-04-12T13:12:03.397353+00:00",
+      "active_markets": 2
+    },
+    {
+      "address": "0xd27d1e863b5b29af53495f7c072d492bdfdaa84f",
+      "name": "",
+      "trades": 3,
+      "volume": 1937.96,
+      "last_seen": "2026-04-12T13:12:03.404884+00:00",
+      "active_markets": 2
+    },
+    {
+      "address": "0xfb512d428db90455c9507d2578cc306b2701082d",
+      "name": "",
+      "trades": 3,
+      "volume": 1913.42,
+      "last_seen": "2026-04-12T13:12:03.327053+00:00",
+      "active_markets": 2
     },
     {
       "address": "0x32ccd9015a900fde62040162a04bedf093c668b3",
@@ -1797,9 +1913,9 @@
       "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 310,
+  "total_wallets_tracked": 316,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T13:02:02.459563+00:00"
+  "updated": "2026-04-12T13:12:03.416701+00:00"
 }
