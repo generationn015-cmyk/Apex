@@ -215,7 +215,7 @@
     "condition_id": "0x6509c26f04acbe80e73144486933fff507901867925f165421d66155193fce55",
     "direction": "YES",
     "entry_price": 0.345,
-    "current_price": 0.315,
+    "current_price": 0.795,
     "bet_size": 10.68,
     "edge": 0.015,
     "confidence": 0.36,
@@ -225,8 +225,10 @@
     "opened_at": "2026-04-12T07:37:20.645553+00:00",
     "expires_at": "2026-04-12T19:37:20.645562+00:00",
     "max_hold_hours": 12,
-    "status": "OPEN",
-    "pnl_pct": -8.7
+    "status": "CLOSED",
+    "pnl_pct": 130.4,
+    "close_reason": "TAKE_PROFIT",
+    "closed_at": "2026-04-12T21:49:42.298448+00:00"
   },
   {
     "id": "ad55adf607a3",
@@ -272,7 +274,7 @@
     "condition_id": "0x9b6fef249040fd17e9c107955b37ac2c3e923509b6b0ff01cc463a331ddeb894",
     "direction": "YES",
     "entry_price": 0.1595,
-    "current_price": 0.1595,
+    "current_price": 0.159,
     "bet_size": 12.14,
     "edge": 0.013,
     "confidence": 0.1725,
@@ -283,7 +285,7 @@
     "expires_at": "2026-04-14T01:43:34.840462+00:00",
     "max_hold_hours": 36,
     "status": "OPEN",
-    "pnl_pct": 0.0
+    "pnl_pct": -0.3
   },
   {
     "id": "a0713b0f0a01",
@@ -291,7 +293,7 @@
     "condition_id": "0x7976b8dbacf9077eb1453a62bcefd6ab2df199acd28aad276ff0d920d6992892",
     "direction": "YES",
     "entry_price": 0.1705,
-    "current_price": 0.1715,
+    "current_price": 0.1795,
     "bet_size": 11.17,
     "edge": 0.013,
     "confidence": 0.1835,
@@ -302,7 +304,7 @@
     "expires_at": "2026-04-14T02:45:59.069029+00:00",
     "max_hold_hours": 36,
     "status": "OPEN",
-    "pnl_pct": 0.6
+    "pnl_pct": 5.3
   },
   {
     "id": "135278adf449",
@@ -310,7 +312,7 @@
     "condition_id": "0xb6b3d7a2037b3faa7e1306d741840d453432902d73cc9a146a035e40271eae73",
     "direction": "YES",
     "entry_price": 0.1865,
-    "current_price": 0.1845,
+    "current_price": 0.17,
     "bet_size": 10.27,
     "edge": 0.015,
     "confidence": 0.2015,
@@ -321,7 +323,7 @@
     "expires_at": "2026-04-13T03:48:51.477148+00:00",
     "max_hold_hours": 12,
     "status": "OPEN",
-    "pnl_pct": -1.1
+    "pnl_pct": -8.8
   },
   {
     "id": "d598f3c79ce9",
