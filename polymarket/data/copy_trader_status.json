@@ -3234,6 +3234,62 @@
       "is_known_whale": false,
       "tx": "0x53d04749bbde8cafbcd6ebc07e4c26bf978f199592d9f77edfadc7fd7d9e35af",
       "timestamp": "2026-04-12T15:52:21.620717+00:00"
+    },
+    "0x61d9486c0f7e14ed98f3b177b6adcb3cd45646c92e8bbfbf209789b86472d4b6": {
+      "condition_id": "0x61d9486c0f7e14ed98f3b177b6adcb3cd45646c92e8bbfbf209789b86472d4b6",
+      "title": "Will Wes Moore win the 2028 Democratic presidential nominati",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.988,
+      "whale_address": "0x75f703df538a816c405f21a6d57137a258f6950d",
+      "whale_name": "easywin-622",
+      "whale_size": 2560.0,
+      "is_known_whale": false,
+      "tx": "0xd97676ff40fce9ef3e0e37697891d3a3e447169868cb8ddb422cfcdc6ab37130",
+      "timestamp": "2026-04-12T16:02:23.916646+00:00"
+    },
+    "0x55296b9a020cfd62455ce8db1b8ba4d84b85486c3110c36e5891613198044fa4": {
+      "condition_id": "0x55296b9a020cfd62455ce8db1b8ba4d84b85486c3110c36e5891613198044fa4",
+      "title": "Bitcoin Up or Down - April 12, 11AM ET",
+      "outcome": "Up",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.999,
+      "whale_address": "0xdeca32428d5cf4b1c4d7266a950e20791676ddd5",
+      "whale_name": "durrrrrrrr",
+      "whale_size": 494.86436999999995,
+      "is_known_whale": false,
+      "tx": "0xb3c15165c3847c8a06a4dac290e53cae6a073aba8755742315a65a44d32d7cc3",
+      "timestamp": "2026-04-12T16:02:23.916797+00:00"
+    },
+    "0x1e5bebba6f7f2dd2b5d7fb22283c642e5adf7a13374bd6f8e8618aeb3738da40": {
+      "condition_id": "0x1e5bebba6f7f2dd2b5d7fb22283c642e5adf7a13374bd6f8e8618aeb3738da40",
+      "title": "LoL: Team Vitality vs Shifters - Game 2 Winner",
+      "outcome": "Team Vitality",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.7,
+      "whale_address": "0x6463ff43c933d1cceb887ed70d8c0c042b431f5c",
+      "whale_name": "infinitynoob",
+      "whale_size": 535.14,
+      "is_known_whale": false,
+      "tx": "0xc7a1717b8e6175f32134cefe7ced924999240a0c342f5b17907f3bb794e84f14",
+      "timestamp": "2026-04-12T16:02:23.916877+00:00"
+    },
+    "0x35ccc1642ee9d8067402b3117bf0f61d638deece559197638446e86c5d4aa695": {
+      "condition_id": "0x35ccc1642ee9d8067402b3117bf0f61d638deece559197638446e86c5d4aa695",
+      "title": "Will Enrique Valderrama finish in second place in the first ",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.001,
+      "whale_address": "0x2ed9d74485a0322c68a03534d18b1c1a4b6aca97",
+      "whale_name": "Predicion",
+      "whale_size": 1000.0,
+      "is_known_whale": false,
+      "tx": "0xb48ce7413339f3b5d8c69aad4c50e96539dd626b275e21de067c832988b318df",
+      "timestamp": "2026-04-12T16:02:23.916938+00:00"
     }
   },
   "history": [],
@@ -3361,9 +3417,9 @@
       "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 503,
+  "total_wallets_tracked": 510,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T15:52:21.627400+00:00"
+  "updated": "2026-04-12T16:02:23.930107+00:00"
 }
