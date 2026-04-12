@@ -2002,6 +2002,132 @@
       "is_known_whale": false,
       "tx": "0xc57b7fad6d6eafe44f5e11abc782cebbfedd942a172ac11f774732bb3063d1f5",
       "timestamp": "2026-04-12T13:32:05.571859+00:00"
+    },
+    "0xfc8bda00a4d6d8c558ecb680cf4712fb3a35ba2a240f25960999633d7134f14d": {
+      "condition_id": "0xfc8bda00a4d6d8c558ecb680cf4712fb3a35ba2a240f25960999633d7134f14d",
+      "title": "Indian Premier League: Mumbai Indians vs Royal Challengers B",
+      "outcome": "Mumbai Indians",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.57,
+      "whale_address": "0x4a3d9401153b513cb6b7391ba74ef5f288704841",
+      "whale_name": "BoundaryBets",
+      "whale_size": 924.56,
+      "is_known_whale": false,
+      "tx": "0x4718e2aa4da1fea6d2dc3ca4bd8636610c49b4b41a8bf8dbd3064736df5c6d03",
+      "timestamp": "2026-04-12T13:42:06.537844+00:00"
+    },
+    "0x9a82adce146a51aa3161e1c3526da8418e567a0718586ad829e0c518d4dbf397": {
+      "condition_id": "0x9a82adce146a51aa3161e1c3526da8418e567a0718586ad829e0c518d4dbf397",
+      "title": "Military action against Iran ends on April 14, 2026?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.0029850746268656717,
+      "whale_address": "0xf306b4d5dbbba7de581274a3555fda48d5112155",
+      "whale_name": "SkyGuardians",
+      "whale_size": 3350.0,
+      "is_known_whale": false,
+      "tx": "0xc4501f8774a4acc88cd49acdf8da969ac3a9c04482cc35efe9be8981984f4e4d",
+      "timestamp": "2026-04-12T13:42:06.538756+00:00"
+    },
+    "0x4ecb42908f3770a5ebab7fc167a7cd818beb6dfe69d18eee3e47e94adc305599": {
+      "condition_id": "0x4ecb42908f3770a5ebab7fc167a7cd818beb6dfe69d18eee3e47e94adc305599",
+      "title": "Portsmouth FC vs. Ipswich Town FC: O/U 2.5",
+      "outcome": "Under",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.53,
+      "whale_address": "0x6478c297bae6ac98423f02d7cbec3ba2a42d49f3",
+      "whale_name": "NoahRodriguez2956",
+      "whale_size": 750.0,
+      "is_known_whale": false,
+      "tx": "0x2e5423171b350c2082e51de0091e0df727bf583ecb7fa388801344161a7952a7",
+      "timestamp": "2026-04-12T13:42:06.538791+00:00"
+    },
+    "0x4df3729a2df15097102cc146d51c3a9977ef95a8cb132e01be7aba2ed2daec5c": {
+      "condition_id": "0x4df3729a2df15097102cc146d51c3a9977ef95a8cb132e01be7aba2ed2daec5c",
+      "title": "Nottingham Forest FC vs. Aston Villa FC: O/U 2.5",
+      "outcome": "Under",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.1794616144898306,
+      "whale_address": "0x017603f2660af0884ada60dff797bc634641910e",
+      "whale_name": "0xDamonnnn",
+      "whale_size": 1087.011113,
+      "is_known_whale": false,
+      "tx": "0x7c2adcc1b8fcab1fd4831daf2ab5abb7a8996efd4fe315e987bf97bea819fb2f",
+      "timestamp": "2026-04-12T13:42:06.538810+00:00"
+    },
+    "0xe55ca7ac5719e19c51aafcccd2be36aa63401812bf02c203be0c5f694c76de74": {
+      "condition_id": "0xe55ca7ac5719e19c51aafcccd2be36aa63401812bf02c203be0c5f694c76de74",
+      "title": "Dota 2: Team Nemesis vs Carstensz - Game 2 Winner",
+      "outcome": "Carstensz",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.22,
+      "whale_address": "0x8ca2d3cd0f4930a74e22c35d8cf7a02daf265d25",
+      "whale_name": "",
+      "whale_size": 513.60371,
+      "is_known_whale": false,
+      "tx": "0xfd4cb5288fc8566bbc959c1cce99be582571275f09f8f8fef4c151bdc5786d04",
+      "timestamp": "2026-04-12T13:42:06.538841+00:00"
+    },
+    "0x9e570fa9b5258f954859874e92e2de4be636f377d9968150915670d9bac09100": {
+      "condition_id": "0x9e570fa9b5258f954859874e92e2de4be636f377d9968150915670d9bac09100",
+      "title": "US escorts commercial ship through Hormuz by April 15?",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.054318688659514856,
+      "whale_address": "0xe98e1f6e463d419b5aff415dce56ffac49caa597",
+      "whale_name": "kongen.af.klubben",
+      "whale_size": 3547.82,
+      "is_known_whale": false,
+      "tx": "0xcd32291e72a339e2f28d73f18b8f29a48316cd9d4e87150cc4fdb0038887e807",
+      "timestamp": "2026-04-12T13:42:06.538860+00:00"
+    },
+    "0x0beb7a5b6063f9250cb909b53c689b779354a9ffab3b53a215181780ff7b58ab": {
+      "condition_id": "0x0beb7a5b6063f9250cb909b53c689b779354a9ffab3b53a215181780ff7b58ab",
+      "title": "Open Capfinances Rouen Metropole: Elsa Jacquemot vs Katie Bo",
+      "outcome": "Katie Boulter",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.51,
+      "whale_address": "0xcd3fe2f02819b8a9dc435a892251d3f226ef8e2b",
+      "whale_name": "sweetcaroline",
+      "whale_size": 9548.08907,
+      "is_known_whale": false,
+      "tx": "0x72588e6c1ad42e3340ff77d7830a8def6fc564501c5e374449715ee8cbce0282",
+      "timestamp": "2026-04-12T13:42:06.538876+00:00"
+    },
+    "0x589a7bf8129ed3f4c231c19f6884283e05b2a1194747477ad8cb8d9d76f0e9bd": {
+      "condition_id": "0x589a7bf8129ed3f4c231c19f6884283e05b2a1194747477ad8cb8d9d76f0e9bd",
+      "title": "Bitcoin Up or Down - April 12, 9:35AM-9:40AM ET",
+      "outcome": "Down",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.98,
+      "whale_address": "0x2ccc3001214a5383187f82b2b184b5e3303dcd45",
+      "whale_name": "kichifuel",
+      "whale_size": 641.1654,
+      "is_known_whale": false,
+      "tx": "0x96cb7c0e9410c0fe838e801f90ff0807e2beac98c0aa9dd06d641ec92ecc265c",
+      "timestamp": "2026-04-12T13:42:06.538891+00:00"
+    },
+    "0x2025e80747b6dea5002fc83fbdebaa18dc082a1d30ee78bfe4e67bcd519f1376": {
+      "condition_id": "0x2025e80747b6dea5002fc83fbdebaa18dc082a1d30ee78bfe4e67bcd519f1376",
+      "title": "Game Handicap: BLG (-1.5) vs Weibo Gaming (+1.5)",
+      "outcome": "Bilibili Gaming",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.999,
+      "whale_address": "0x9eab25866fdb1013031de0be13ce7e4711a97e13",
+      "whale_name": "bip777",
+      "whale_size": 403.69,
+      "is_known_whale": false,
+      "tx": "0x6d37065890d883b60ea5eff9f45f75b55871b1b7b145539fa91b196dccbe00e5",
+      "timestamp": "2026-04-12T13:42:06.538910+00:00"
     }
   },
   "history": [],
@@ -2011,9 +2137,9 @@
     {
       "address": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
       "name": "RN1",
-      "trades": 3,
-      "volume": 25896.72,
-      "last_seen": "2026-04-12T13:12:03.375858+00:00",
+      "trades": 4,
+      "volume": 28542.04,
+      "last_seen": "2026-04-12T13:42:06.502785+00:00",
       "active_markets": 3
     },
     {
@@ -2089,9 +2215,9 @@
       "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 335,
+  "total_wallets_tracked": 351,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T13:32:05.578500+00:00"
+  "updated": "2026-04-12T13:42:06.542265+00:00"
 }
