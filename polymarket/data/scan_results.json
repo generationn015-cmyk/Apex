@@ -8,7 +8,7 @@
     "liquidity": 70585.9737,
     "volume": 5884233.4716140805,
     "is_btc": false,
-    "minutes_to_resolve": -147960.9
+    "minutes_to_resolve": -147962.1
   },
   {
     "question": "Will Harvey Weinstein be sentenced to no prison time?",
@@ -19,7 +19,7 @@
     "liquidity": 2826.11308,
     "volume": 314603.834208001,
     "is_btc": false,
-    "minutes_to_resolve": -147240.9
+    "minutes_to_resolve": -147242.1
   },
   {
     "question": "Will Harvey Weinstein be sentenced to between 5 and 10 years in prison?",
@@ -30,7 +30,7 @@
     "liquidity": 2495.97539,
     "volume": 48696.19651000013,
     "is_btc": false,
-    "minutes_to_resolve": -147240.9
+    "minutes_to_resolve": -147242.1
   },
   {
     "question": "Will Harvey Weinstein be sentenced to between 10 and 20 years in prison?",
@@ -41,7 +41,7 @@
     "liquidity": 1324.0301,
     "volume": 135564.89159500005,
     "is_btc": false,
-    "minutes_to_resolve": -147240.9
+    "minutes_to_resolve": -147242.1
   },
   {
     "question": "Will Harvey Weinstein be sentenced to between 20 and 30 years in prison?",
@@ -52,7 +52,7 @@
     "liquidity": 3710.19725,
     "volume": 176073.83239500038,
     "is_btc": false,
-    "minutes_to_resolve": -147240.9
+    "minutes_to_resolve": -147242.1
   },
   {
     "question": "Will Harvey Weinstein be sentenced to more than 30 years in prison?",
@@ -63,7 +63,7 @@
     "liquidity": 3547.58617,
     "volume": 52861.992455000065,
     "is_btc": false,
-    "minutes_to_resolve": -147240.9
+    "minutes_to_resolve": -147242.1
   },
   {
     "question": "Will MegaETH perform an airdrop by June 30? ",
@@ -74,7 +74,7 @@
     "liquidity": 5712.02231,
     "volume": 1069515.524976001,
     "is_btc": false,
-    "minutes_to_resolve": -101580.9
+    "minutes_to_resolve": -101582.1
   },
   {
     "question": "Will Cooper Flagg win the 2025\u201326 NBA Rookie of the Year award?",
@@ -85,7 +85,7 @@
     "liquidity": 6703.91934,
     "volume": 543754.8018449994,
     "is_btc": false,
-    "minutes_to_resolve": 50759.1
+    "minutes_to_resolve": 50757.9
   },
   {
     "question": "Will Kon Knueppel win the 2025\u201326 NBA Rookie of the Year award?",
@@ -96,7 +96,7 @@
     "liquidity": 17144.75928,
     "volume": 831567.708131,
     "is_btc": false,
-    "minutes_to_resolve": 50759.1
+    "minutes_to_resolve": 50757.9
   },
   {
     "question": "Will the Carolina Hurricanes win the 2026 NHL Stanley Cup?",
@@ -107,7 +107,7 @@
     "liquidity": 88852.9726,
     "volume": 297875.64322100056,
     "is_btc": false,
-    "minutes_to_resolve": 112679.1
+    "minutes_to_resolve": 112677.9
   },
   {
     "question": "Will the Edmonton Oilers win the 2026 NHL Stanley Cup?",
@@ -118,7 +118,7 @@
     "liquidity": 44387.5835,
     "volume": 481382.6850260016,
     "is_btc": false,
-    "minutes_to_resolve": 112679.1
+    "minutes_to_resolve": 112677.9
   },
   {
     "question": "Will the Dallas Stars win the 2026 NHL Stanley Cup?",
@@ -129,7 +129,7 @@
     "liquidity": 84911.95928,
     "volume": 1092809.0243329962,
     "is_btc": false,
-    "minutes_to_resolve": 112679.1
+    "minutes_to_resolve": 112677.9
   },
   {
     "question": "Will the Colorado Avalanche win the 2026 NHL Stanley Cup?",
@@ -140,7 +140,7 @@
     "liquidity": 104378.25024,
     "volume": 13432030.311785033,
     "is_btc": false,
-    "minutes_to_resolve": 112679.1
+    "minutes_to_resolve": 112677.9
   },
   {
     "question": "Will the Vegas Golden Knights win the 2026 NHL Stanley Cup?",
@@ -151,7 +151,7 @@
     "liquidity": 92508.17583,
     "volume": 1423848.6864829992,
     "is_btc": false,
-    "minutes_to_resolve": 112679.1
+    "minutes_to_resolve": 112677.9
   },
   {
     "question": "Will the Tampa Bay Lightning win the 2026 NHL Stanley Cup?",
@@ -162,7 +162,7 @@
     "liquidity": 77603.80597,
     "volume": 1496719.1441229794,
     "is_btc": false,
-    "minutes_to_resolve": 112679.1
+    "minutes_to_resolve": 112677.9
   },
   {
     "question": "Will the Buffalo Sabres win the 2026 NHL Stanley Cup?",
@@ -173,7 +173,7 @@
     "liquidity": 100701.83639,
     "volume": 2895805.3749019997,
     "is_btc": false,
-    "minutes_to_resolve": 112679.1
+    "minutes_to_resolve": 112677.9
   },
   {
     "question": "Will the Oklahoma City Thunder win the 2026 NBA Finals?",
@@ -184,7 +184,7 @@
     "liquidity": 222460.2172,
     "volume": 6493771.848863971,
     "is_btc": false,
-    "minutes_to_resolve": 114119.1
+    "minutes_to_resolve": 114117.9
   },
   {
     "question": "Will the Boston Celtics win the 2026 NBA Finals?",
@@ -195,7 +195,7 @@
     "liquidity": 166033.34679,
     "volume": 6358047.169029084,
     "is_btc": false,
-    "minutes_to_resolve": 114119.1
+    "minutes_to_resolve": 114117.9
   },
   {
     "question": "Will the Denver Nuggets win the 2026 NBA Finals?",
@@ -206,7 +206,7 @@
     "liquidity": 233790.875,
     "volume": 3999455.632054971,
     "is_btc": false,
-    "minutes_to_resolve": 114119.1
+    "minutes_to_resolve": 114117.9
   },
   {
     "question": "Will the San Antonio Spurs win the 2026 NBA Finals?",
@@ -217,7 +217,7 @@
     "liquidity": 146165.86657,
     "volume": 15603063.269733833,
     "is_btc": false,
-    "minutes_to_resolve": 114119.1
+    "minutes_to_resolve": 114117.9
   },
   {
     "question": "Will the Detroit Pistons win the 2026 NBA Finals?",
@@ -228,7 +228,7 @@
     "liquidity": 260519.13907,
     "volume": 7030067.874953955,
     "is_btc": false,
-    "minutes_to_resolve": 114119.1
+    "minutes_to_resolve": 114117.9
   },
   {
     "question": "Will Spain win the 2026 FIFA World Cup?",
@@ -239,7 +239,7 @@
     "liquidity": 656105.12306,
     "volume": 12304604.815243024,
     "is_btc": false,
-    "minutes_to_resolve": 141479.1
+    "minutes_to_resolve": 141477.9
   },
   {
     "question": "Will England win the 2026 FIFA World Cup?",
@@ -250,7 +250,7 @@
     "liquidity": 1101802.37406,
     "volume": 10742160.999100821,
     "is_btc": false,
-    "minutes_to_resolve": 141479.1
+    "minutes_to_resolve": 141477.9
   },
   {
     "question": "Will France win the 2026 FIFA World Cup?",
@@ -261,7 +261,7 @@
     "liquidity": 1044309.82135,
     "volume": 11532102.57543188,
     "is_btc": false,
-    "minutes_to_resolve": 141479.1
+    "minutes_to_resolve": 141477.9
   },
   {
     "question": "Will Brazil win the 2026 FIFA World Cup?",
@@ -272,7 +272,7 @@
     "liquidity": 763236.69033,
     "volume": 10663037.407398054,
     "is_btc": false,
-    "minutes_to_resolve": 141479.1
+    "minutes_to_resolve": 141477.9
   },
   {
     "question": "Will Argentina win the 2026 FIFA World Cup?",
@@ -283,7 +283,7 @@
     "liquidity": 812077.20512,
     "volume": 10874555.358531104,
     "is_btc": false,
-    "minutes_to_resolve": 141479.1
+    "minutes_to_resolve": 141477.9
   },
   {
     "question": "Will Germany win the 2026 FIFA World Cup?",
@@ -294,7 +294,7 @@
     "liquidity": 993529.29026,
     "volume": 9541729.943090526,
     "is_btc": false,
-    "minutes_to_resolve": 141479.1
+    "minutes_to_resolve": 141477.9
   },
   {
     "question": "Will Portugal win the 2026 FIFA World Cup?",
@@ -305,7 +305,7 @@
     "liquidity": 408148.5512,
     "volume": 11343755.132191647,
     "is_btc": false,
-    "minutes_to_resolve": 141479.1
+    "minutes_to_resolve": 141477.9
   },
   {
     "question": "Russia-Ukraine Ceasefire before GTA VI?",
@@ -316,7 +316,7 @@
     "liquidity": 54451.5393,
     "volume": 1487417.8792659983,
     "is_btc": false,
-    "minutes_to_resolve": 158039.1
+    "minutes_to_resolve": 158037.9
   },
   {
     "question": "New Rihanna Album before GTA VI?",
@@ -327,7 +327,7 @@
     "liquidity": 40488.0875,
     "volume": 691589.1432670034,
     "is_btc": false,
-    "minutes_to_resolve": 158039.1
+    "minutes_to_resolve": 158037.9
   },
   {
     "question": "New Playboi Carti Album before GTA VI?",
@@ -338,7 +338,7 @@
     "liquidity": 37761.4323,
     "volume": 722816.207517998,
     "is_btc": false,
-    "minutes_to_resolve": 158039.1
+    "minutes_to_resolve": 158037.9
   },
   {
     "question": "Will Jesus Christ return before GTA VI?",
@@ -349,7 +349,7 @@
     "liquidity": 863827.9631,
     "volume": 10977810.166106082,
     "is_btc": false,
-    "minutes_to_resolve": 158039.1
+    "minutes_to_resolve": 158037.9
   },
   {
     "question": "Trump out as President before GTA VI?",
@@ -360,7 +360,7 @@
     "liquidity": 64660.9844,
     "volume": 584281.055065012,
     "is_btc": false,
-    "minutes_to_resolve": 158039.1
+    "minutes_to_resolve": 158037.9
   },
   {
     "question": "Will China invades Taiwan before GTA VI?",
@@ -371,7 +371,7 @@
     "liquidity": 80643.3765,
     "volume": 1779120.8263280618,
     "is_btc": false,
-    "minutes_to_resolve": 158039.1
+    "minutes_to_resolve": 158037.9
   },
   {
     "question": "Will bitcoin hit $1m before GTA VI?",
@@ -382,7 +382,7 @@
     "liquidity": 470026.17118,
     "volume": 3970772.4163655615,
     "is_btc": true,
-    "minutes_to_resolve": 158039.1
+    "minutes_to_resolve": 158037.9
   },
   {
     "question": "Xi Jinping out before 2027?",
@@ -393,7 +393,7 @@
     "liquidity": 144682.55064,
     "volume": 8070759.575016684,
     "is_btc": false,
-    "minutes_to_resolve": 377639.1
+    "minutes_to_resolve": 377637.9
   },
   {
     "question": "Putin out as President of Russia by December 31, 2026?",
@@ -404,7 +404,7 @@
     "liquidity": 197704.0184,
     "volume": 3809185.520667965,
     "is_btc": false,
-    "minutes_to_resolve": 378749.1
+    "minutes_to_resolve": 378747.9
   },
   {
     "question": "Will Gavin Newsom win the 2028 Democratic presidential nomination?",
@@ -415,7 +415,7 @@
     "liquidity": 454819.48567,
     "volume": 22351022.447066635,
     "is_btc": false,
-    "minutes_to_resolve": 1352519.1
+    "minutes_to_resolve": 1352517.9
   },
   {
     "question": "Will Alexandria Ocasio-Cortez win the 2028 Democratic presidential nomination?",
@@ -426,7 +426,7 @@
     "liquidity": 484770.53374,
     "volume": 11549856.49125124,
     "is_btc": false,
-    "minutes_to_resolve": 1352519.1
+    "minutes_to_resolve": 1352517.9
   },
   {
     "question": "Will Kamala Harris win the 2028 Democratic presidential nomination?",
@@ -437,7 +437,7 @@
     "liquidity": 258250.70052,
     "volume": 9640017.081235962,
     "is_btc": false,
-    "minutes_to_resolve": 1352519.1
+    "minutes_to_resolve": 1352517.9
   },
   {
     "question": "Will Jon Ossoff win the 2028 Democratic presidential nomination?",
@@ -448,7 +448,7 @@
     "liquidity": 334816.5412,
     "volume": 7989152.474359924,
     "is_btc": false,
-    "minutes_to_resolve": 1352519.1
+    "minutes_to_resolve": 1352517.9
   },
   {
     "question": "Will JD Vance win the 2028 US Presidential Election?",
@@ -459,7 +459,7 @@
     "liquidity": 716199.17823,
     "volume": 10117027.55756485,
     "is_btc": false,
-    "minutes_to_resolve": 1352519.1
+    "minutes_to_resolve": 1352517.9
   },
   {
     "question": "Will Gavin Newsom win the 2028 US Presidential Election?",
@@ -470,7 +470,7 @@
     "liquidity": 407206.00425,
     "volume": 13694375.3814221,
     "is_btc": false,
-    "minutes_to_resolve": 1352519.1
+    "minutes_to_resolve": 1352517.9
   },
   {
     "question": "Will Alexandria Ocasio-Cortez win the 2028 US Presidential Election?",
@@ -481,7 +481,7 @@
     "liquidity": 475688.37595,
     "volume": 10772839.646781867,
     "is_btc": false,
-    "minutes_to_resolve": 1352519.1
+    "minutes_to_resolve": 1352517.9
   },
   {
     "question": "Will Marco Rubio win the 2028 US Presidential Election?",
@@ -492,6 +492,6 @@
     "liquidity": 279881.68896,
     "volume": 6001374.77184494,
     "is_btc": false,
-    "minutes_to_resolve": 1352519.1
+    "minutes_to_resolve": 1352517.9
   }
 ]
