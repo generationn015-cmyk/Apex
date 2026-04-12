@@ -3402,6 +3402,90 @@
       "is_known_whale": false,
       "tx": "0xc6afd6b274bca4b5bf006e9dacd3078da88f72c0ef0804cff4ff332859ee50cc",
       "timestamp": "2026-04-12T16:42:28.876489+00:00"
+    },
+    "0x3b28a55447b6f863746e4f0b0b71e6061d4d665db9513f60a78e83b6430d6073": {
+      "condition_id": "0x3b28a55447b6f863746e4f0b0b71e6061d4d665db9513f60a78e83b6430d6073",
+      "title": "Hawks vs. Heat",
+      "outcome": "Hawks",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.36,
+      "whale_address": "0x5ae14dc9e0cf9df72de8d873dcea05aacb799fad",
+      "whale_name": "ohuhusos",
+      "whale_size": 9808.0,
+      "is_known_whale": false,
+      "tx": "0xe5180801d8f2a5d1dd79dc37643dd51f7a9466a0ee87ec64a61a154ad3de8e69",
+      "timestamp": "2026-04-12T16:52:29.979598+00:00"
+    },
+    "0x19bbe36782dd640c5e639e80172873ad2758ba3b7db987b8c40adf58f22ec276": {
+      "condition_id": "0x19bbe36782dd640c5e639e80172873ad2758ba3b7db987b8c40adf58f22ec276",
+      "title": "Miami Marlins vs. Detroit Tigers",
+      "outcome": "Miami Marlins",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.38,
+      "whale_address": "0x661f257d22ba65fce0c01f5c255a21320504098a",
+      "whale_name": "",
+      "whale_size": 7033.25217,
+      "is_known_whale": false,
+      "tx": "0x7962de4675ee8593be25203e5100b4ce46447c2ea9ba54b57937da93e8077661",
+      "timestamp": "2026-04-12T16:52:29.980631+00:00"
+    },
+    "0xd320393d0cd7fb64078233d31a373295e8be25eb3a6c8bcfeb1d8ce5e74e6e41": {
+      "condition_id": "0xd320393d0cd7fb64078233d31a373295e8be25eb3a6c8bcfeb1d8ce5e74e6e41",
+      "title": "OGC Nice vs. Le Havre AC: O/U 2.5",
+      "outcome": "Over",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.47852613949036965,
+      "whale_address": "0x447db9f8a899fd05f6bef03b80e67b532a1abd4a",
+      "whale_name": "Bacon99",
+      "whale_size": 411.41150999999996,
+      "is_known_whale": false,
+      "tx": "0x2e07edeb502f1746052f916b07bb4654dc7e46f472f60a1bbab32501ac7f3852",
+      "timestamp": "2026-04-12T16:52:29.980694+00:00"
+    },
+    "0xf0a155db50f824cf8d1d70918d227fb911eb584f2ad56c270262d8eba5961916": {
+      "condition_id": "0xf0a155db50f824cf8d1d70918d227fb911eb584f2ad56c270262d8eba5961916",
+      "title": "Bitcoin Up or Down - April 12, 12:45PM-12:50PM ET",
+      "outcome": "Down",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.845944343864977,
+      "whale_address": "0x7bbaa0232a6f34f4f86f4f9756d84bbfd1419bac",
+      "whale_name": "0x7Bbaa0232a6f34F4F86f4F9756D84BBfD1419BAC-1773933643299",
+      "whale_size": 1027.38,
+      "is_known_whale": false,
+      "tx": "0x630bd1ce2e54efe006979f7d45b85935f63e9bfce75f8e2fc343eace7ef3ee42",
+      "timestamp": "2026-04-12T16:52:29.980726+00:00"
+    },
+    "0x154633adab6f5bb5cd97e9706e59a997e8fedcb6c9ce771eb237a677391a653f": {
+      "condition_id": "0x154633adab6f5bb5cd97e9706e59a997e8fedcb6c9ce771eb237a677391a653f",
+      "title": "Dota 2: MOUZ vs Team Lynx (BO3) - DreamLeague Western Europe",
+      "outcome": "MOUZ",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.8042797212712003,
+      "whale_address": "0xd20fa26cdfee7d1ceaaa8a301db896d94c5e2f35",
+      "whale_name": "kiyrgx",
+      "whale_size": 2472.096126,
+      "is_known_whale": false,
+      "tx": "0xbddee6c2ce797c9741495270895d1a3bdbed3b226cac626ad74773474334281f",
+      "timestamp": "2026-04-12T16:52:29.980754+00:00"
+    },
+    "0x1c7c39658dd44cf56bd13e1aef46bc3287f2c5f6dd87abc8b754fce8fb6791f5": {
+      "condition_id": "0x1c7c39658dd44cf56bd13e1aef46bc3287f2c5f6dd87abc8b754fce8fb6791f5",
+      "title": "Counter-Strike: Bebop vs Hashiras (BO3) - NODWIN Clutch Seri",
+      "outcome": "Hashiras",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.56,
+      "whale_address": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
+      "whale_name": "RN1",
+      "whale_size": 296.04,
+      "is_known_whale": true,
+      "tx": "0x04c9400ed2d9f53385cdca39c13ac7d6c98c28953729467b5d3da8eefca2c577",
+      "timestamp": "2026-04-12T16:52:29.980783+00:00"
     }
   },
   "history": [],
@@ -3411,10 +3495,10 @@
     {
       "address": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
       "name": "RN1",
-      "trades": 4,
-      "volume": 28542.04,
-      "last_seen": "2026-04-12T13:42:06.502785+00:00",
-      "active_markets": 3
+      "trades": 5,
+      "volume": 28838.08,
+      "last_seen": "2026-04-12T16:52:29.945326+00:00",
+      "active_markets": 4
     },
     {
       "address": "0xd1a63a243042d864520512fbdbd2fd20e0ab1507",
@@ -3529,9 +3613,9 @@
       "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 550,
+  "total_wallets_tracked": 563,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T16:42:28.887248+00:00"
+  "updated": "2026-04-12T16:52:29.989135+00:00"
 }
