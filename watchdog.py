@@ -36,24 +36,20 @@ LOGS_DIR    = ROOT / "logs"
 LIVE_FILE   = LOGS_DIR / ".go_live"      # created by dashboard Go Live button
 STATUS_FILE = LOGS_DIR / "watchdog_status.json"
 
-_SE_ROOT   = Path.home() / "signal_engine"
-_SE_UV     = _SE_ROOT / ".venv" / "bin" / "python3"
-_SE_PY     = str(_SE_UV) if _SE_UV.exists() else sys.executable
-
-_WOLF_ROOT = Path.home() / "wolf"
-_WOLF_UV   = _WOLF_ROOT / ".venv" / "bin" / "python3"
-_WOLF_PY   = str(_WOLF_UV) if _WOLF_UV.exists() else sys.executable
+# Always use the APEX venv Python so dependencies (pandas etc.) are available
+_APEX_UV = ROOT / ".venv" / "bin" / "python3"
+_APEX_PY = str(_APEX_UV) if _APEX_UV.exists() else sys.executable
 
 # Base process definitions (apex_bot cmd built dynamically based on LIVE_FILE)
 _PROCESS_DEFS = {
     "telegram_bot": {
-        "cmd": [sys.executable, str(ROOT / "telegram" / "bot.py")],
+        "cmd": [_APEX_PY, str(ROOT / "telegram" / "bot.py")],
         "env_extra": {},
         "critical": True,
         "affects_live_toggle": False,
     },
     "polymarket_sniper": {
-        "cmd": [sys.executable, str(ROOT / "polymarket" / "sniper.py")],
+        "cmd": [_APEX_PY, str(ROOT / "polymarket" / "sniper.py")],
         "env_extra": {},
         "critical": False,
         "affects_live_toggle": False,
@@ -65,7 +61,7 @@ _PROCESS_DEFS = {
 
 
 def _apex_cmd(live: bool) -> list:
-    cmd = [sys.executable, str(ROOT / "main.py")]
+    cmd = [_APEX_PY, str(ROOT / "main.py")]
     if live:
         cmd.append("--live")
     return cmd
