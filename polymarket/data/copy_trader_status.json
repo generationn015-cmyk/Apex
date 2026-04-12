@@ -3493,6 +3493,14 @@
   "cooldown_until": null,
   "top_traders": [
     {
+      "address": "0x4a3d9401153b513cb6b7391ba74ef5f288704841",
+      "name": "BoundaryBets",
+      "trades": 3,
+      "volume": 31937.13,
+      "last_seen": "2026-04-12T17:02:31.029006+00:00",
+      "active_markets": 2
+    },
+    {
       "address": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
       "name": "RN1",
       "trades": 5,
@@ -3597,25 +3605,17 @@
       "active_markets": 4
     },
     {
-      "address": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
-      "name": "",
+      "address": "0xe8e1b119302ae410e77b2af7d7456809007549dd",
+      "name": "DefenceOfTheAssets",
       "trades": 4,
-      "volume": 1286.8,
-      "last_seen": "2026-04-12T15:02:15.724160+00:00",
+      "volume": 1320.52,
+      "last_seen": "2026-04-12T17:02:31.100312+00:00",
       "active_markets": 4
-    },
-    {
-      "address": "0xd8d7b8a47a128b13b5153858ba5421bfdefb406d",
-      "name": "",
-      "trades": 3,
-      "volume": 1167.35,
-      "last_seen": "2026-04-12T14:42:13.281032+00:00",
-      "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 563,
+  "total_wallets_tracked": 567,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T16:52:29.989135+00:00"
+  "updated": "2026-04-12T17:02:31.219480+00:00"
 }
