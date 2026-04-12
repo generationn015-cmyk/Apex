@@ -2996,6 +2996,90 @@
       "is_known_whale": false,
       "tx": "0xe7a769a6224145ced07fd2a776e9e230023183bd32c97921791680142191b656",
       "timestamp": "2026-04-12T15:22:18.036055+00:00"
+    },
+    "0xc3e70023c2307f50b8131cde5b68336e2d8dbb3056fdcc831c338e18b26698db": {
+      "condition_id": "0xc3e70023c2307f50b8131cde5b68336e2d8dbb3056fdcc831c338e18b26698db",
+      "title": "Dota 2: 1win vs MODUS - Game 2 Winner",
+      "outcome": "MODUS",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.3538000741207789,
+      "whale_address": "0xbaa51c5cae49c4aee18177c5e46f780eb74aa51a",
+      "whale_name": "Leovcidade",
+      "whale_size": 582.048894,
+      "is_known_whale": false,
+      "tx": "0x128bf9721889bd6c60b8c54f1a08158f4d4a464bee1a431c7243a335d49738d2",
+      "timestamp": "2026-04-12T15:32:19.157900+00:00"
+    },
+    "0x08f550e7d58eddc2eee16f8615085d1bc0c09719325a69180d0e4ad88653e8a7": {
+      "condition_id": "0x08f550e7d58eddc2eee16f8615085d1bc0c09719325a69180d0e4ad88653e8a7",
+      "title": "Will the price of Ethereum be above $2,200 on April 12?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.9792626590197393,
+      "whale_address": "0xaaa2f2b357e327e92d082bac2242d9f89426bc92",
+      "whale_name": "YoungRich",
+      "whale_size": 550.169041,
+      "is_known_whale": false,
+      "tx": "0x7856d433c1643a55d0efa38f6d8cd90c2b5aeb759dbda666ebdaa51b0b4bf669",
+      "timestamp": "2026-04-12T15:32:19.158868+00:00"
+    },
+    "0x7faf2289ca076266b0c719ee19f7285006ac805cacf67eaf8119f3b928d78cb8": {
+      "condition_id": "0x7faf2289ca076266b0c719ee19f7285006ac805cacf67eaf8119f3b928d78cb8",
+      "title": "Bitcoin Up or Down - April 12, 11:25AM-11:30AM ET",
+      "outcome": "Down",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.9117970608361302,
+      "whale_address": "0x7bbaa0232a6f34f4f86f4f9756d84bbfd1419bac",
+      "whale_name": "0x7Bbaa0232a6f34F4F86f4F9756D84BBfD1419BAC-1773933643299",
+      "whale_size": 613.78,
+      "is_known_whale": false,
+      "tx": "0x674bebe579c6c48dec9d1d16105fe5aaba7da636097f3c7dc02d6c75fda28dcf",
+      "timestamp": "2026-04-12T15:32:19.158928+00:00"
+    },
+    "0xbbc90d561dd28bdb098520e355bc0c23e61936625dc345906608501b4b3f0a5f": {
+      "condition_id": "0xbbc90d561dd28bdb098520e355bc0c23e61936625dc345906608501b4b3f0a5f",
+      "title": "RC Celta de Vigo vs. Real Oviedo: O/U 2.5",
+      "outcome": "Under",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.55,
+      "whale_address": "0x047f8f1a63ab774329129165bf7145b3ad916f34",
+      "whale_name": "harbor222",
+      "whale_size": 1033.852,
+      "is_known_whale": false,
+      "tx": "0x4c3b6aeb89ef5e0451ce4f7e945e29f40e8e07639f153e796c1b4dec4f785219",
+      "timestamp": "2026-04-12T15:32:19.158963+00:00"
+    },
+    "0x54888ec9e1f00808dc6f5c2080c8576d284cdd54487b63bfde44652d308231ad": {
+      "condition_id": "0x54888ec9e1f00808dc6f5c2080c8576d284cdd54487b63bfde44652d308231ad",
+      "title": "Viktor Orb\u00e1n out by December 31, 2026?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.2089540334094613,
+      "whale_address": "0x38f15b38a4ed9e92ff8cc07eb7ea705e859d49ce",
+      "whale_name": "",
+      "whale_size": 940.3025,
+      "is_known_whale": false,
+      "tx": "0x1e1f65f6f742a93fb9391f2da5c9f86844e39e6112a3e92f17c77d7bdbb017b7",
+      "timestamp": "2026-04-12T15:32:19.158992+00:00"
+    },
+    "0xdc0e74ac518af6fedaaf69b0df12e3ad12b8bf854fb93900811a847e22d37f71": {
+      "condition_id": "0xdc0e74ac518af6fedaaf69b0df12e3ad12b8bf854fb93900811a847e22d37f71",
+      "title": "1. FC K\u00f6ln vs. SV Werder Bremen: O/U 3.5",
+      "outcome": "Under",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.01,
+      "whale_address": "0x8a924f330c0d15d6295c4cbb89b93eef5d5c6941",
+      "whale_name": "itsallovernow",
+      "whale_size": 9702.0297,
+      "is_known_whale": false,
+      "tx": "0xae29222841ec0e6a71778b0cc840aa9261c4784eaebd6a952e43fe751e7c8132",
+      "timestamp": "2026-04-12T15:32:19.159023+00:00"
     }
   },
   "history": [],
@@ -3123,9 +3207,9 @@
       "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 469,
+  "total_wallets_tracked": 480,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T15:22:18.042325+00:00"
+  "updated": "2026-04-12T15:32:19.166623+00:00"
 }
