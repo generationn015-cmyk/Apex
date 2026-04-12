@@ -2128,6 +2128,76 @@
       "is_known_whale": false,
       "tx": "0x6d37065890d883b60ea5eff9f45f75b55871b1b7b145539fa91b196dccbe00e5",
       "timestamp": "2026-04-12T13:42:06.538910+00:00"
+    },
+    "0xd5838ece4ebf8e730d443e601874dbd47fd905b88ab4c22312059f36fa30ebf3": {
+      "condition_id": "0xd5838ece4ebf8e730d443e601874dbd47fd905b88ab4c22312059f36fa30ebf3",
+      "title": "Will the price of Ethereum be above $1,800 on April 13?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.004,
+      "whale_address": "0xa62c41929814bd6efa808da05619ac24787be626",
+      "whale_name": "Acespace18",
+      "whale_size": 928.288,
+      "is_known_whale": false,
+      "tx": "0x599f780d9ae8ac27f6ab68c25e28b2c8c14a815310ee2bd6adb7d5f9a309a7b9",
+      "timestamp": "2026-04-12T13:52:07.551842+00:00"
+    },
+    "0xe2b8ee307b34c83572661063275f0de6d98ee4c34d35ce93b7eda421922b219a": {
+      "condition_id": "0xe2b8ee307b34c83572661063275f0de6d98ee4c34d35ce93b7eda421922b219a",
+      "title": "Will Real Betis Balompi\u00e9 win on 2026-04-12?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.92,
+      "whale_address": "0x204f72f35326db932158cba6adff0b9a1da95e14",
+      "whale_name": "swisstony",
+      "whale_size": 444.58043999999995,
+      "is_known_whale": true,
+      "tx": "0x67a413ed00912ebebd36304263af53809da10e3dc81ea643ca7f0dd0faa50c30",
+      "timestamp": "2026-04-12T13:52:07.552670+00:00"
+    },
+    "0x248b9fd33e2743e65354180a5396df9ea357bef3d4ed71e473bfcb3b6576526b": {
+      "condition_id": "0x248b9fd33e2743e65354180a5396df9ea357bef3d4ed71e473bfcb3b6576526b",
+      "title": "Set 1 Winner: Alcaraz vs Sinner",
+      "outcome": "Alcaraz",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.49800537681033735,
+      "whale_address": "0x946142debde5f46d16501e0f5bcd378dd90b7fc6",
+      "whale_name": "Fantya",
+      "whale_size": 1153.1,
+      "is_known_whale": false,
+      "tx": "0x387ba23a6e81b12bb94e11be3218dd981a12f3663a16c66bd2d4e12750576bbb",
+      "timestamp": "2026-04-12T13:52:07.552718+00:00"
+    },
+    "0xe7c38752b555fbc45b4d878eff1c5f7a447381e92e6edb90ed07068db31dbf5e": {
+      "condition_id": "0xe7c38752b555fbc45b4d878eff1c5f7a447381e92e6edb90ed07068db31dbf5e",
+      "title": "Open Capfinances Rouen Metropole, Qualification: Elvina Kali",
+      "outcome": "Elvina Kalieva",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.87,
+      "whale_address": "0x36d8cbf698826ca74d9e444df634e303de4cc7c7",
+      "whale_name": "0x36D8cBf698826Ca74d9e444Df634e303de4cC7C7-1774411370400",
+      "whale_size": 1047.74779,
+      "is_known_whale": false,
+      "tx": "0x0190dfe1141b0c83946a6f1423f70f7bf452f2824573dd95ae7e0b71cc39f0c6",
+      "timestamp": "2026-04-12T13:52:07.552754+00:00"
+    },
+    "0xb10980a4e2699225a50ee6433bf9845a0e66bb713cf8aa482066df7a9d604109": {
+      "condition_id": "0xb10980a4e2699225a50ee6433bf9845a0e66bb713cf8aa482066df7a9d604109",
+      "title": "Houston Astros vs. Seattle Mariners",
+      "outcome": "Seattle Mariners",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.58,
+      "whale_address": "0xd4dafa21aad27e8514b5a5dad9278c3ece243175",
+      "whale_name": "DonChon",
+      "whale_size": 6894.0268,
+      "is_known_whale": false,
+      "tx": "0xc432bae45930ea3a89a86cb88a9e68406012ddb3e672c99d9ec94fae9c82d458",
+      "timestamp": "2026-04-12T13:52:07.552781+00:00"
     }
   },
   "history": [],
@@ -2191,6 +2261,14 @@
       "active_markets": 2
     },
     {
+      "address": "0x204f72f35326db932158cba6adff0b9a1da95e14",
+      "name": "swisstony",
+      "trades": 3,
+      "volume": 1612.59,
+      "last_seen": "2026-04-12T13:52:07.347209+00:00",
+      "active_markets": 3
+    },
+    {
       "address": "0x32ccd9015a900fde62040162a04bedf093c668b3",
       "name": "pilotlady",
       "trades": 3,
@@ -2215,9 +2293,9 @@
       "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 351,
+  "total_wallets_tracked": 364,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T13:42:06.542265+00:00"
+  "updated": "2026-04-12T13:52:07.557928+00:00"
 }
