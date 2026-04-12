@@ -343,5 +343,24 @@
     "max_hold_hours": 12,
     "status": "OPEN",
     "pnl_pct": 1.5
+  },
+  {
+    "id": "0f36e21a0967",
+    "market": "Will Arsenal win the 2025\u201326 English Premier League?",
+    "condition_id": "0xcba24842ceac7a40d2a8b9adde1f4407999b6505193b9fd68156ae76fbffa706",
+    "direction": "NO",
+    "entry_price": 0.415,
+    "current_price": 0.415,
+    "bet_size": 11.57,
+    "edge": 0.013,
+    "confidence": 0.428,
+    "source": "sports",
+    "trader": "",
+    "score": 6.7,
+    "opened_at": "2026-04-12T21:49:53.999733+00:00",
+    "expires_at": "2026-04-13T09:49:53.999741+00:00",
+    "max_hold_hours": 12,
+    "status": "OPEN",
+    "pnl_pct": 0.0
   }
 ]
