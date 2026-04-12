@@ -2688,6 +2688,118 @@
       "is_known_whale": true,
       "tx": "0xd0dde841929ebcff09ed4a396bedda65f8e05e42d74b18b92a2d1e7b1bcfed67",
       "timestamp": "2026-04-12T14:52:14.370989+00:00"
+    },
+    "0x6cc44493f1c2f27a564a6a57b740818e4cb6abe5bf7793b65f1e799053366cae": {
+      "condition_id": "0x6cc44493f1c2f27a564a6a57b740818e4cb6abe5bf7793b65f1e799053366cae",
+      "title": "Will the price of Bitcoin be above $72,000 on April 12?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.997,
+      "whale_address": "0x8611527a75891f117c74d4a0843ec659f5b7d340",
+      "whale_name": "Candela",
+      "whale_size": 1999.568,
+      "is_known_whale": false,
+      "tx": "0x01197c62cabac88bd8f5821933fee2ca4a791922530aadf129ff8e965e277242",
+      "timestamp": "2026-04-12T15:02:15.822764+00:00"
+    },
+    "0x86ec3fe77e4063fc9c287241cb53e2557174dd6244e8774b01d093e485afa71d": {
+      "condition_id": "0x86ec3fe77e4063fc9c287241cb53e2557174dd6244e8774b01d093e485afa71d",
+      "title": "Will Manchester City FC win on 2026-04-12?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.5,
+      "whale_address": "0x8310308a509afb014a76922c21334b629ea3c875",
+      "whale_name": "0x8310308a509AFB014a76922c21334b629ea3c875-1772047896545",
+      "whale_size": 4137.0,
+      "is_known_whale": false,
+      "tx": "0x9f64d4f201cf49308e7b0375b0abc0b369ae3ba28236b4fe99a5d018317a75a6",
+      "timestamp": "2026-04-12T15:02:15.823589+00:00"
+    },
+    "0x3e83e356dcc083d6e8a1d5230a08ce4ee4db3720e0715429eff32578a212786e": {
+      "condition_id": "0x3e83e356dcc083d6e8a1d5230a08ce4ee4db3720e0715429eff32578a212786e",
+      "title": "LoL: Sentinels vs Cloud9 (BO3) - LCS Regular Season",
+      "outcome": "Cloud9",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.7662017191176037,
+      "whale_address": "0xcf609d3256f0f37f0595e5dc64012fa3a8fea6f5",
+      "whale_name": "0xcF609D3256f0f37f0595E5Dc64012Fa3a8fEa6f5-1771809916847",
+      "whale_size": 4535.94804,
+      "is_known_whale": false,
+      "tx": "0x548ef872bbb986f1576e337b865e0865566c4942d4411090cd7355f6cdec620f",
+      "timestamp": "2026-04-12T15:02:15.823638+00:00"
+    },
+    "0x6a3c4614673a761f5ff713878cadfe67b91b5520af0a39b52765b72aec766e89": {
+      "condition_id": "0x6a3c4614673a761f5ff713878cadfe67b91b5520af0a39b52765b72aec766e89",
+      "title": "Spread: Manchester City FC (-1.5)",
+      "outcome": "Manchester City FC",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.279999999832,
+      "whale_address": "0xc947e50afbfd642f685f7c1803c0da8304b93462",
+      "whale_name": "6anhzi3yy6yf",
+      "whale_size": 3494.28572,
+      "is_known_whale": false,
+      "tx": "0x37a2321c3e55bcec25ea305f9e2584ffc7911e62e6e37fc286f6fcd1419ded81",
+      "timestamp": "2026-04-12T15:02:15.823657+00:00"
+    },
+    "0x988300b2a07f127c46badd6257e2ee550a22cb7e3428d06b9a9c5f3de0138578": {
+      "condition_id": "0x988300b2a07f127c46badd6257e2ee550a22cb7e3428d06b9a9c5f3de0138578",
+      "title": "Bitcoin Up or Down - April 12, 11:30AM-11:45AM ET",
+      "outcome": "Down",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.51,
+      "whale_address": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+      "whale_name": "",
+      "whale_size": 249.67919,
+      "is_known_whale": true,
+      "tx": "0xca71491c40add1c3164473f42d8c97eb8e3f2ef4a46eafea6d9f9a1e6a51b9f0",
+      "timestamp": "2026-04-12T15:02:15.823673+00:00"
+    },
+    "0xa70536635597605cd93a042fd2ab0373f8bb505e47b01d925231027d66081dab": {
+      "condition_id": "0xa70536635597605cd93a042fd2ab0373f8bb505e47b01d925231027d66081dab",
+      "title": "Pittsburgh Pirates vs. Chicago Cubs",
+      "outcome": "Chicago Cubs",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.54,
+      "whale_address": "0x16bb9951a36fce71e2ef57890b786145e0ba8492",
+      "whale_name": "SDTrading",
+      "whale_size": 2879.8124900000003,
+      "is_known_whale": false,
+      "tx": "0xb3b75c3f4a589515162b1edbdbd496d9e1b413edaac4b169cbae553fa0e33ba7",
+      "timestamp": "2026-04-12T15:02:15.823689+00:00"
+    },
+    "0x7434b22007745d99095c102119fdb6b975d34869212e9dda4c6c5c48db0683a7": {
+      "condition_id": "0x7434b22007745d99095c102119fdb6b975d34869212e9dda4c6c5c48db0683a7",
+      "title": "Russia x Ukraine ceasefire by April 30, 2026?",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.028,
+      "whale_address": "0x56fbc403425c0435e9f969bde91bf87412189601",
+      "whale_name": "0x56fbc403425c0435E9F969bdE7BF87412189701",
+      "whale_size": 496.27,
+      "is_known_whale": false,
+      "tx": "0x058fa57750d9f6940f63036b9a125fe801f697d33d8d08275dc10d6b114cb2af",
+      "timestamp": "2026-04-12T15:02:15.823701+00:00"
+    },
+    "0xa59bb6bb91e5c1e4d533864520fbd3bb75d6d0ebb813b4cd8a8b88479bfa8966": {
+      "condition_id": "0xa59bb6bb91e5c1e4d533864520fbd3bb75d6d0ebb813b4cd8a8b88479bfa8966",
+      "title": "Will Carlos Roberto Massa J\u00fanior win the 2026 Brazilian pres",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.002,
+      "whale_address": "0x16f05178ac9fbcbf4e3027ca3e616e4d82c2afa5",
+      "whale_name": "nelegal7",
+      "whale_size": 500.0,
+      "is_known_whale": false,
+      "tx": "0x3e4dd0ff8ae99584c1352b55293e42eb2b9c1fcd95c0ceff6c34ff58c155e6be",
+      "timestamp": "2026-04-12T15:02:15.823716+00:00"
     }
   },
   "history": [],
@@ -2783,19 +2895,19 @@
       "active_markets": 4
     },
     {
+      "address": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+      "name": "",
+      "trades": 4,
+      "volume": 1286.8,
+      "last_seen": "2026-04-12T15:02:15.724160+00:00",
+      "active_markets": 4
+    },
+    {
       "address": "0xd8d7b8a47a128b13b5153858ba5421bfdefb406d",
       "name": "",
       "trades": 3,
       "volume": 1167.35,
       "last_seen": "2026-04-12T14:42:13.281032+00:00",
-      "active_markets": 3
-    },
-    {
-      "address": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
-      "name": "",
-      "trades": 3,
-      "volume": 1037.12,
-      "last_seen": "2026-04-12T12:52:01.387032+00:00",
       "active_markets": 3
     },
     {
@@ -2815,9 +2927,9 @@
       "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 434,
+  "total_wallets_tracked": 446,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T14:52:14.377678+00:00"
+  "updated": "2026-04-12T15:02:15.828517+00:00"
 }
