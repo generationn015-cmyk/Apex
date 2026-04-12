@@ -2800,6 +2800,62 @@
       "is_known_whale": false,
       "tx": "0x3e4dd0ff8ae99584c1352b55293e42eb2b9c1fcd95c0ceff6c34ff58c155e6be",
       "timestamp": "2026-04-12T15:02:15.823716+00:00"
+    },
+    "0x9c1aa909ae64d05ed58dedcb789dd266412dccf0dbb65710c1cc88765fecb53c": {
+      "condition_id": "0x9c1aa909ae64d05ed58dedcb789dd266412dccf0dbb65710c1cc88765fecb53c",
+      "title": "Will Sunderland AFC win on 2026-04-12?",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.999,
+      "whale_address": "0x355b6e7f4e7a0746102cc78bdae7472e0bb018ec",
+      "whale_name": "azorez94",
+      "whale_size": 1621.02,
+      "is_known_whale": false,
+      "tx": "0xe01fbdb03da6317ce7ed7df5a3b34c505806f786cb928bc291342f04bf445b63",
+      "timestamp": "2026-04-12T15:12:16.959103+00:00"
+    },
+    "0xdd3d104667774208eae2239f576122ecdd1c04ba81cc14d26d22a36b33887977": {
+      "condition_id": "0xdd3d104667774208eae2239f576122ecdd1c04ba81cc14d26d22a36b33887977",
+      "title": "Will Fernando Haddad win the 2026 Brazilian presidential ele",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.045,
+      "whale_address": "0x4b671467efda1a4020af5eca1e73096ff0c8525d",
+      "whale_name": "dinod",
+      "whale_size": 540.0,
+      "is_known_whale": false,
+      "tx": "0x724022838395cf183c8c74ef6da7a4125a0f7c6ef131e4001901539cb52bf7ab",
+      "timestamp": "2026-04-12T15:12:16.959917+00:00"
+    },
+    "0xd31eb8c5ce9274ff5a6ca1b330395ece389fdecf342fa07f5fa76f73bdfab87f": {
+      "condition_id": "0xd31eb8c5ce9274ff5a6ca1b330395ece389fdecf342fa07f5fa76f73bdfab87f",
+      "title": "Will the highest temperature in Munich be 6\u00b0C on April 14?",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.00266252,
+      "whale_address": "0x104171232971a6db8cf938f76fdbebbb81c5f452",
+      "whale_name": "aapang",
+      "whale_size": 500.0,
+      "is_known_whale": false,
+      "tx": "0xe19488ec6382ba83a874058c8fb3b548712c9aaa6ab6b0faa974800ea5c95a82",
+      "timestamp": "2026-04-12T15:12:16.959963+00:00"
+    },
+    "0xa6ddb7146f48a12dbf73456d654211b01d7493829932c31b7fe85d82120d338f": {
+      "condition_id": "0xa6ddb7146f48a12dbf73456d654211b01d7493829932c31b7fe85d82120d338f",
+      "title": "Iran x Israel/US conflict ends by April 30?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.48552347332423573,
+      "whale_address": "0x8b14a322db0e518ed3e3fbe69f65690f3787d0b1",
+      "whale_name": "wki2026",
+      "whale_size": 1029.816325,
+      "is_known_whale": false,
+      "tx": "0x51d3100b5e8d3f8c3c53a4689daad9ff9efb76b653ed2e38c16f494a0a831091",
+      "timestamp": "2026-04-12T15:12:16.959991+00:00"
     }
   },
   "history": [],
@@ -2927,9 +2983,9 @@
       "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 446,
+  "total_wallets_tracked": 457,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T15:02:15.828517+00:00"
+  "updated": "2026-04-12T15:12:16.966202+00:00"
 }
