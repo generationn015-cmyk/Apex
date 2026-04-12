@@ -2618,6 +2618,76 @@
       "is_known_whale": false,
       "tx": "0xd296ed10829e5cb34d85013b7bc17e0018e5a6ef554248dfaec330c775cfaea2",
       "timestamp": "2026-04-12T14:42:13.337949+00:00"
+    },
+    "0xcccb7e7613a087c132b69cbf3a02bece3fdcb824c1da54ae79acc8d4a562d902": {
+      "condition_id": "0xcccb7e7613a087c132b69cbf3a02bece3fdcb824c1da54ae79acc8d4a562d902",
+      "title": "GTA VI released before June 2026?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.984,
+      "whale_address": "0xfbe498e29adb3cea575fcdf4e2df83d2ac75f4c3",
+      "whale_name": "shelestartem21",
+      "whale_size": 552.540625,
+      "is_known_whale": false,
+      "tx": "0x940992c2a9ec1fc5a1e8c810976a3c21affc8fbd3a1838c22892ad76d8081a4c",
+      "timestamp": "2026-04-12T14:52:14.369898+00:00"
+    },
+    "0x28957df5b1a57670af4c9e0e1e62690db3e59c5dcbabf34620318300860faf73": {
+      "condition_id": "0x28957df5b1a57670af4c9e0e1e62690db3e59c5dcbabf34620318300860faf73",
+      "title": "Bitcoin Up or Down - April 12, 10:45AM-10:50AM ET",
+      "outcome": "Down",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.9551119281350857,
+      "whale_address": "0x9fe347a973c00945d7d7d95d9a1f79336dd2341f",
+      "whale_name": "goodboy8888",
+      "whale_size": 521.8069399999999,
+      "is_known_whale": false,
+      "tx": "0x5495e657e5a395a83c632c5c65e4e81d01ae157539840a128df10f7a768d4ee2",
+      "timestamp": "2026-04-12T14:52:14.370871+00:00"
+    },
+    "0x649ad05a2868343271fe82ea692031d567ca1af652e3529788933157e94aa088": {
+      "condition_id": "0x649ad05a2868343271fe82ea692031d567ca1af652e3529788933157e94aa088",
+      "title": "Will the Minnesota Timberwolves win the 2026 NBA Finals?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.01640114436379973,
+      "whale_address": "0x738a70f4a656b19621ce2f0a2e873edb005bb44c",
+      "whale_name": "doubledown",
+      "whale_size": 6270.294116,
+      "is_known_whale": false,
+      "tx": "0xeff572e4597c007003ca0825bfa2c48166dd643c0ad6518a581aec3952fc9efb",
+      "timestamp": "2026-04-12T14:52:14.370924+00:00"
+    },
+    "0x16d52b2db68983b9078e0299a86096725664ca7a434017922f7ea1c06b92b034": {
+      "condition_id": "0x16d52b2db68983b9078e0299a86096725664ca7a434017922f7ea1c06b92b034",
+      "title": "Henry Cavill announced as next James Bond?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.023308708030467234,
+      "whale_address": "0x67228f462a219e8b45c90de693b1db0db575d2f4",
+      "whale_name": "Kyndekhar",
+      "whale_size": 429.024165,
+      "is_known_whale": false,
+      "tx": "0x96e74a27551c6eb308c57d2ab75d9aceef551aba95bb1c329441bd919976059a",
+      "timestamp": "2026-04-12T14:52:14.370960+00:00"
+    },
+    "0x8711a6ab6b2724dc67ce7baa65ad0de0f5711f5472c79efebb8127be3c846872": {
+      "condition_id": "0x8711a6ab6b2724dc67ce7baa65ad0de0f5711f5472c79efebb8127be3c846872",
+      "title": "Dota 2: MOUZ vs Team Lynx - Game 1 Winner",
+      "outcome": "MOUZ",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.35922430510665804,
+      "whale_address": "0xe8e1b119302ae410e77b2af7d7456809007549dd",
+      "whale_name": "DefenceOfTheAssets",
+      "whale_size": 379.3154,
+      "is_known_whale": true,
+      "tx": "0xd0dde841929ebcff09ed4a396bedda65f8e05e42d74b18b92a2d1e7b1bcfed67",
+      "timestamp": "2026-04-12T14:52:14.370989+00:00"
     }
   },
   "history": [],
@@ -2729,6 +2799,14 @@
       "active_markets": 3
     },
     {
+      "address": "0xe8e1b119302ae410e77b2af7d7456809007549dd",
+      "name": "DefenceOfTheAssets",
+      "trades": 3,
+      "volume": 1008.94,
+      "last_seen": "2026-04-12T14:52:14.340285+00:00",
+      "active_markets": 3
+    },
+    {
       "address": "0x849ccb5907938ce8be18ed5dbf583288e2da4009",
       "name": "Ondra",
       "trades": 3,
@@ -2737,9 +2815,9 @@
       "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 423,
+  "total_wallets_tracked": 434,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T14:42:13.342776+00:00"
+  "updated": "2026-04-12T14:52:14.377678+00:00"
 }
