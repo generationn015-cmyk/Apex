@@ -1,0 +1,13 @@
+run = "streamlit run dashboard/app.py --server.port 8080 --server.address 0.0.0.0"
+language = "python3"
+entrypoint = "dashboard/app.py"
+
+[env]
+PYTHONPATH = "."
+
+[nix]
+channel = "stable-23_11"
+
+[deployment]
+run = ["sh", "-c", "streamlit run dashboard/app.py --server.port 8080 --server.address 0.0.0.0"]
+deploymentTarget = "cloudrun"

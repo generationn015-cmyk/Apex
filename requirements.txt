@@ -1,0 +1,22 @@
+# APEX — Python dependencies
+# Install: pip install -r requirements.txt
+# Or with uv: uv pip install -r requirements.txt
+
+# Core async
+aiohttp>=3.9.0
+
+# Market data + indicators
+pandas>=2.0.0
+pandas-ta>=0.3.14b
+numpy>=1.26.0
+
+# Anthropic AI (optional — for signal review)
+anthropic>=0.25.0
+
+# Dashboard (Replit)
+streamlit>=1.32.0
+plotly>=5.20.0
+
+# Utilities
+requests>=2.31.0
+python-dotenv>=1.0.0

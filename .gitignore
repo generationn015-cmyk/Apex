@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.env
+logs/
+paper/
+polymarket/data/
+*.log
+*.pid
+*.jsonl
+state.json
+uv.lock
