@@ -242,5 +242,24 @@
     "max_hold_hours": 12,
     "status": "OPEN",
     "pnl_pct": -8.7
+  },
+  {
+    "id": "b5c844db1afd",
+    "market": "Will Aston Villa FC win on 2026-04-12?",
+    "condition_id": "",
+    "direction": "YES",
+    "entry_price": 0.31,
+    "current_price": 0.31,
+    "bet_size": 13.19,
+    "edge": 0.019,
+    "confidence": 0.3099999999952132,
+    "source": "copy_trade",
+    "trader": "RN1",
+    "score": 6.3,
+    "opened_at": "2026-04-12T13:13:17.754695+00:00",
+    "expires_at": "2026-04-14T01:13:17.754804+00:00",
+    "max_hold_hours": 36,
+    "status": "OPEN",
+    "pnl_pct": 0.0
   }
 ]
