@@ -4129,7 +4129,7 @@
       "whale_size": 896.2,
       "is_known_whale": false,
       "tx": "0x37bed191aa977d69b162145e77f649a446c80db35dedabca76b5e113c337339f",
-      "timestamp": "2026-04-12T18:36:10.055792+00:00"
+      "timestamp": "2026-04-12T18:38:34.254249+00:00"
     },
     "0xeb26a040fbe8c0f1a44338ef79417b20ccb80ea18a5096d901b5fc3bff53e690": {
       "condition_id": "0xeb26a040fbe8c0f1a44338ef79417b20ccb80ea18a5096d901b5fc3bff53e690",
@@ -4143,7 +4143,7 @@
       "whale_size": 561.797751,
       "is_known_whale": false,
       "tx": "0x7f9618fe5ace0fc60f74dea00022794838d13e04054bb870ee858d9ad0010940",
-      "timestamp": "2026-04-12T18:36:10.055903+00:00"
+      "timestamp": "2026-04-12T18:38:34.254385+00:00"
     },
     "0xd2e28481d67a091898f2e3febde6be9b5291c9d40e342b75bfac28dc5d58a5ea": {
       "condition_id": "0xd2e28481d67a091898f2e3febde6be9b5291c9d40e342b75bfac28dc5d58a5ea",
@@ -4157,7 +4157,7 @@
       "whale_size": 742.6,
       "is_known_whale": false,
       "tx": "0xae54d01807b1de8a6170c8c88ab07c739cc9d78ad155b50b9581664855654667",
-      "timestamp": "2026-04-12T18:36:10.055915+00:00"
+      "timestamp": "2026-04-12T18:38:34.254433+00:00"
     },
     "0xd78a4caeb2797d5f513dc02227cf9411a89de10ed440b1f4fb5a9460dec0086e": {
       "condition_id": "0xd78a4caeb2797d5f513dc02227cf9411a89de10ed440b1f4fb5a9460dec0086e",
@@ -4171,7 +4171,7 @@
       "whale_size": 496.61,
       "is_known_whale": false,
       "tx": "0x29f90046b310873ce60f5f0dda02b7bc03bea8848b3176f6068108c439d0bc2d",
-      "timestamp": "2026-04-12T18:36:10.055925+00:00"
+      "timestamp": "2026-04-12T18:38:34.254446+00:00"
     },
     "0xc5675bc58c8117391cc243780c1b709ce1ef744aa27779c78ee82f3dc974ca1b": {
       "condition_id": "0xc5675bc58c8117391cc243780c1b709ce1ef744aa27779c78ee82f3dc974ca1b",
@@ -4185,7 +4185,7 @@
       "whale_size": 3000.0,
       "is_known_whale": false,
       "tx": "0x94758d3337762401ef3cddd238b899a1fae5d5380064e112f3e7cca4c429125c",
-      "timestamp": "2026-04-12T18:36:10.055933+00:00"
+      "timestamp": "2026-04-12T18:38:34.254458+00:00"
     }
   },
   "history": [],
@@ -4277,7 +4277,7 @@
       "name": "oneheadedtiger",
       "trades": 4,
       "volume": 3958.05,
-      "last_seen": "2026-04-12T18:36:10.034117+00:00",
+      "last_seen": "2026-04-12T18:38:34.232038+00:00",
       "active_markets": 3
     },
     {
@@ -4293,7 +4293,7 @@
       "name": "239393828",
       "trades": 3,
       "volume": 3262.05,
-      "last_seen": "2026-04-12T18:36:10.023089+00:00",
+      "last_seen": "2026-04-12T18:38:34.221847+00:00",
       "active_markets": 3
     },
     {
@@ -4317,5 +4317,5 @@
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T18:36:10.061975+00:00"
+  "updated": "2026-04-12T18:38:34.259511+00:00"
 }
