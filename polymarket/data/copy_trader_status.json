@@ -2296,6 +2296,104 @@
       "is_known_whale": false,
       "tx": "0x914cde3dcd5b8899e3e8c2fa306b64a60d5f39f27feb1482c184322fc3b6c677",
       "timestamp": "2026-04-12T14:02:08.746625+00:00"
+    },
+    "0x1436f134cbbf9612b7a7b598a95a6d20010b92e126895e58ae1c617196ae1ffd": {
+      "condition_id": "0x1436f134cbbf9612b7a7b598a95a6d20010b92e126895e58ae1c617196ae1ffd",
+      "title": "Will the price of Bitcoin be above $74,000 on April 12?",
+      "outcome": "No",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.999,
+      "whale_address": "0x239dd679644aaec01fa9330d8f2391c3f153f8a5",
+      "whale_name": "rakitit",
+      "whale_size": 1452.49,
+      "is_known_whale": false,
+      "tx": "0xdd1f88c7e4eb145c696003c4a0054109645b17b2fde32cc58b8c60fd4b91c998",
+      "timestamp": "2026-04-12T14:12:10.016152+00:00"
+    },
+    "0x4ac8e94a0bb53ff54e6180ad22d8776da9fc67fa31369976cc352d4747fbd30f": {
+      "condition_id": "0x4ac8e94a0bb53ff54e6180ad22d8776da9fc67fa31369976cc352d4747fbd30f",
+      "title": "Barcelona Open, Qualification: Marco Trungelliti vs Pedro Ma",
+      "outcome": "Pedro Martinez",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.2771355388537189,
+      "whale_address": "0x8bc2f8994458800d9c4dbd1d4507b32e4f7a4c80",
+      "whale_name": "0x8Bc2f8994458800d9C4DBD1d4507b32e4F7a4C80-1758128210877",
+      "whale_size": 2126.18,
+      "is_known_whale": false,
+      "tx": "0x33fef3671f2bcb846c4b157d4f2f83cd5dd8902cb697171b914d90269f022199",
+      "timestamp": "2026-04-12T14:12:10.016866+00:00"
+    },
+    "0x0d14f5dc9fb3250ec888b1ac8d9fe9a0ce06f9d3ea60fdf138e8690622fea84c": {
+      "condition_id": "0x0d14f5dc9fb3250ec888b1ac8d9fe9a0ce06f9d3ea60fdf138e8690622fea84c",
+      "title": "Will the Fed decrease interest rates by 25 bps after the Apr",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.989,
+      "whale_address": "0x9b9ff79cdc3c6dc3abbc494b06ea577567bea26a",
+      "whale_name": "BigFishSushiChief",
+      "whale_size": 478.0,
+      "is_known_whale": true,
+      "tx": "0xaec6837cd9a994439d953c2ba3f07bfc7520c303d74a7232953f864e2792f2d0",
+      "timestamp": "2026-04-12T14:12:10.016908+00:00"
+    },
+    "0xd4d00e5bf8b960cc37c74c1ec19e41e00b0706add203ddcfbb65ad006c5c223a": {
+      "condition_id": "0xd4d00e5bf8b960cc37c74c1ec19e41e00b0706add203ddcfbb65ad006c5c223a",
+      "title": "Will the Fed increase interest rates by 25+ bps after the Ap",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.995,
+      "whale_address": "0x9b9ff79cdc3c6dc3abbc494b06ea577567bea26a",
+      "whale_name": "BigFishSushiChief",
+      "whale_size": 478.0,
+      "is_known_whale": true,
+      "tx": "0xc4cee4b2ad714e092ab1cf877d17c26ddb71a2f166991ea9ddee9d6521612213",
+      "timestamp": "2026-04-12T14:12:10.016931+00:00"
+    },
+    "0xd72622d154dfe65b9c019d6afcfe75a55717e5c502db611f555b101aafbf6ec5": {
+      "condition_id": "0xd72622d154dfe65b9c019d6afcfe75a55717e5c502db611f555b101aafbf6ec5",
+      "title": "Will the Fed decrease interest rates by 50+ bps after the Ap",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.997,
+      "whale_address": "0x9b9ff79cdc3c6dc3abbc494b06ea577567bea26a",
+      "whale_name": "BigFishSushiChief",
+      "whale_size": 478.0,
+      "is_known_whale": true,
+      "tx": "0x0879cb91534fcfc01768b77ecef872af56587c8505b00366a4d876a7d242bfa5",
+      "timestamp": "2026-04-12T14:12:10.016951+00:00"
+    },
+    "0xd08544f6162283dc8d0a82f16362aab837a8537379df9bbe604960eec9cd4618": {
+      "condition_id": "0xd08544f6162283dc8d0a82f16362aab837a8537379df9bbe604960eec9cd4618",
+      "title": "US-Iran nuclear deal by April 30?",
+      "outcome": "No",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.8482288831064851,
+      "whale_address": "0x9b6fce29d890c77230ad4fdc2b85eae29d250e5f",
+      "whale_name": "AnnabelleNoir",
+      "whale_size": 1998.4,
+      "is_known_whale": false,
+      "tx": "0x6b04216feb21658d74ed622ddd922a7a67f157ce5cd8d3a008932060d07eff49",
+      "timestamp": "2026-04-12T14:12:10.016973+00:00"
+    },
+    "0xc38376d8028e7a1f79192e78fc025088dc82b965be8fa5a282c388931ad56a04": {
+      "condition_id": "0xc38376d8028e7a1f79192e78fc025088dc82b965be8fa5a282c388931ad56a04",
+      "title": "Parma Calcio 1913 vs. SSC Napoli: O/U 1.5",
+      "outcome": "Under",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.22,
+      "whale_address": "0x204f72f35326db932158cba6adff0b9a1da95e14",
+      "whale_name": "swisstony",
+      "whale_size": 433.6104,
+      "is_known_whale": true,
+      "tx": "0x92213f2d3a0680bdc0779afd981bab75a8e1743e33741b412e05ea2459ef3209",
+      "timestamp": "2026-04-12T14:12:10.016996+00:00"
     }
   },
   "history": [],
@@ -2317,6 +2415,14 @@
       "volume": 10825.79,
       "last_seen": "2026-04-12T12:01:56.395905+00:00",
       "active_markets": 2
+    },
+    {
+      "address": "0xe8dd7741ccb12350957ec71e9ee332e0d1e6ec86",
+      "name": "influenz.eth",
+      "trades": 5,
+      "volume": 4519.25,
+      "last_seen": "2026-04-12T14:12:10.006787+00:00",
+      "active_markets": 3
     },
     {
       "address": "0x5d1d9cfd66ee3068c2a8a57dedf1e1b006dcafd2",
@@ -2343,6 +2449,14 @@
       "active_markets": 3
     },
     {
+      "address": "0x204f72f35326db932158cba6adff0b9a1da95e14",
+      "name": "swisstony",
+      "trades": 4,
+      "volume": 2046.2,
+      "last_seen": "2026-04-12T14:12:09.967220+00:00",
+      "active_markets": 4
+    },
+    {
       "address": "0xd27d1e863b5b29af53495f7c072d492bdfdaa84f",
       "name": "",
       "trades": 3,
@@ -2351,20 +2465,20 @@
       "active_markets": 2
     },
     {
+      "address": "0x9b9ff79cdc3c6dc3abbc494b06ea577567bea26a",
+      "name": "BigFishSushiChief",
+      "trades": 4,
+      "volume": 1912.0,
+      "last_seen": "2026-04-12T14:12:09.827479+00:00",
+      "active_markets": 4
+    },
+    {
       "address": "0x116c6d1117c8690203bad2e6c5bee0d9f27fe162",
       "name": "oorangutan",
       "trades": 4,
       "volume": 1654.92,
       "last_seen": "2026-04-12T13:32:05.536066+00:00",
       "active_markets": 2
-    },
-    {
-      "address": "0x204f72f35326db932158cba6adff0b9a1da95e14",
-      "name": "swisstony",
-      "trades": 3,
-      "volume": 1612.59,
-      "last_seen": "2026-04-12T13:52:07.347209+00:00",
-      "active_markets": 3
     },
     {
       "address": "0x32ccd9015a900fde62040162a04bedf093c668b3",
@@ -2391,9 +2505,9 @@
       "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 377,
+  "total_wallets_tracked": 387,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T14:02:08.753894+00:00"
+  "updated": "2026-04-12T14:12:10.021019+00:00"
 }
