@@ -1,11 +1,11 @@
 {
-  "updated_at": "2026-04-12T07:53:21.120386+00:00",
+  "updated_at": "2026-04-12T07:58:38.962480+00:00",
   "mode": "paper",
-  "cycle": 24,
+  "cycle": 25,
   "stats": {
-    "total_trades": 13,
+    "total_trades": 14,
     "closed": 0,
-    "open": 13,
+    "open": 14,
     "wins": 0,
     "losses": 0,
     "win_rate": 0,
@@ -22,19 +22,19 @@
         "asset": "BTC/USDT",
         "signal": "SELL",
         "strength": 0.75,
-        "entry_price": 71735.33,
-        "stop_loss": 72313.51676,
-        "take_profit": 70868.04986,
-        "trade_id": "SENTINEL_1775980400167",
+        "entry_price": 71760.0,
+        "stop_loss": 72338.3856,
+        "take_profit": 70892.4216,
+        "trade_id": "SENTINEL_1775980717791",
         "indicators": {
-          "ema8": 71952.3338,
-          "ema21": 72407.3428,
-          "ema50": 72444.1584,
+          "ema8": 71957.816,
+          "ema21": 72409.5855,
+          "ema50": 72445.1259,
           "adx": 31.6,
           "squeeze_release": false,
           "in_squeeze": false,
-          "slope8": -0.3638,
-          "dist_pct": 0.928
+          "slope8": -0.3562,
+          "dist_pct": 0.897
         }
       }
     ]
