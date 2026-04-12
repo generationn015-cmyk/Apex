@@ -108,7 +108,11 @@ def cmd_status() -> str:
     if state:
         s = state.get("stats", {})
         lines.append(f"\n<b>Crypto Agents</b>: C{state.get('cycle',0)}")
-        lines.append(f"  {s.get('wins',0)}W/{s.get('losses',0)}L | PnL: ${s.get('total_pnl',0):+.2f}")
+        unreal = s.get('unrealized_pnl', 0)
+        pnl_line = f"  {s.get('wins',0)}W/{s.get('losses',0)}L | PnL: ${s.get('total_pnl',0):+.2f}"
+        if unreal:
+            pnl_line += f" (open: ${unreal:+.2f})"
+        lines.append(pnl_line)
 
     if copy:
         cp = copy.get("positions", {})
@@ -147,11 +151,15 @@ def cmd_agents() -> str:
         return "No agent data."
     s = state.get("stats", {})
     sigs = state.get("last_signals", {})
+    unreal = s.get('unrealized_pnl', 0)
+    pnl_str = f"${s.get('total_pnl',0):+.2f}"
+    if unreal:
+        pnl_str += f" (open: ${unreal:+.2f})"
     lines = [
         f"<b>Crypto Agents</b> (C{state.get('cycle',0)} {state.get('mode','?').upper()})",
         f"Trades: {s.get('total_trades',0)} ({s.get('open',0)} open)",
         f"Record: {s.get('wins',0)}W / {s.get('losses',0)}L",
-        f"PnL: ${s.get('total_pnl',0):+.2f}",
+        f"PnL: {pnl_str}",
     ]
     for agent, signals in sigs.items():
         if signals:
@@ -263,10 +271,29 @@ def cmd_resume() -> str:
 
 
 def cmd_live() -> str:
-    from configs.config import LIGHTER_API_KEY_ID
-    if not LIGHTER_API_KEY_ID:
-        return "Cannot go live: LIGHTER_API_KEY_ID not set."
-    return "Restart with: python3 main.py --live"
+    _LIVE_FLAG = _LOGS / ".go_live"
+    if _LIVE_FLAG.exists():
+        return "Already in LIVE mode. /paper to switch back."
+    try:
+        sys.path.insert(0, str(_ROOT / "polymarket"))
+        from polyconfig import POLY_PRIVATE_KEY
+        if not POLY_PRIVATE_KEY:
+            return ("Cannot go live: POLY_PRIVATE_KEY not set in polyconfig.py.\n"
+                    "Set your Polymarket wallet key first.")
+    except Exception:
+        pass
+    _LIVE_FLAG.touch()
+    return ("LIVE MODE ACTIVATED.\n"
+            "Watchdog will restart bots in live mode.\n"
+            "/paper to switch back to paper trading.")
+
+
+def cmd_paper() -> str:
+    _LIVE_FLAG = _LOGS / ".go_live"
+    if not _LIVE_FLAG.exists():
+        return "Already in PAPER mode."
+    _LIVE_FLAG.unlink()
+    return "PAPER MODE restored. Watchdog will restart bots in paper mode."
 
 
 def cmd_ping() -> str:
@@ -288,7 +315,8 @@ def cmd_help() -> str:
         "/report  — full performance\n"
         "/pause   — pause trading\n"
         "/resume  — resume trading\n"
-        "/live    — switch to live\n"
+        "/live    — switch to live mode\n"
+        "/paper   — switch to paper mode\n"
         "/ping    — health check"
     )
 
@@ -297,43 +325,72 @@ COMMANDS = {
     "/status": cmd_status, "/btc": cmd_btc, "/agents": cmd_agents,
     "/poly": cmd_poly, "/copy": cmd_copy, "/balance": cmd_balance,
     "/report": cmd_report, "/pause": cmd_pause, "/resume": cmd_resume,
-    "/live": cmd_live, "/ping": cmd_ping, "/help": cmd_help,
-    "ping": cmd_ping,
+    "/live": cmd_live, "/paper": cmd_paper, "/ping": cmd_ping,
+    "/help": cmd_help, "ping": cmd_ping,
 }
 
 
 # ── Hourly Digest ────────────────────────────────────────────────────────────
 
 def _build_digest() -> str | None:
-    """One clean message: bankroll + wins/losses. Nothing else."""
+    """Hourly debrief: bankroll, P&L, W/L for every active agent."""
     btc = _json(_POLY / "btc_5m_state.json")
     state = _json(STATE_FILE)
     copy = _json(_POLY / "copy_trader_status.json")
+    sniper = _json(_POLY / "sniper_state.json")
     has_data = False
-    lines = ["<b>APEX Hourly</b>"]
+    lines = ["<b>APEX Hourly Debrief</b>"]
 
+    # BTC 5-Min Sniper
     if btc:
         trades = btc.get("trades", [])
         resolved = [t for t in trades if t.get("resolved")]
         wins = sum(1 for t in resolved if t.get("won"))
+        losses = len(resolved) - wins
         pnl = sum(t.get("pnl", 0) for t in resolved)
-        lines.append(f"BTC: ${btc['bankroll']:.2f} ({wins}W/{len(resolved)-wins}L ${pnl:+.2f})")
+        lines.append(f"\n<b>BTC Sniper</b>")
+        lines.append(f"  Bank: ${btc['bankroll']:.2f} | {wins}W/{losses}L | PnL: ${pnl:+.2f}")
         has_data = True
 
+    # Crypto Agents (ATLAS, ORACLE, SNIPER, SENTINEL)
     if state:
         s = state.get("stats", {})
-        if s.get("total_trades", 0):
-            lines.append(f"Agents: {s.get('wins',0)}W/{s.get('losses',0)}L ${s.get('total_pnl',0):+.2f}")
-            has_data = True
+        mode = state.get("mode", "paper").upper()
+        unreal = s.get('unrealized_pnl', 0)
+        lines.append(f"\n<b>Crypto Agents</b> ({mode} C{state.get('cycle',0)})")
+        lines.append(f"  {s.get('wins',0)}W/{s.get('losses',0)}L | "
+                     f"Realized: ${s.get('total_pnl',0):+.2f} | "
+                     f"Open: ${unreal:+.2f}")
+        lines.append(f"  Trades: {s.get('total_trades',0)} ({s.get('open',0)} open)")
+        has_data = True
 
-    if copy and copy.get("positions"):
-        lines.append(f"Copy: {len(copy['positions'])} open | {copy.get('total_wallets_tracked',0)} wallets")
+    # Polymarket Sniper
+    if sniper:
+        pos = sniper.get("positions", {})
+        hist = sniper.get("history", [])
+        wins = sum(1 for h in hist if h.get("result") == "WIN")
+        lines.append(f"\n<b>Poly Sniper</b>")
+        lines.append(f"  Bank: ${sniper.get('bankroll',0):.2f} | "
+                     f"{len(pos)} open | {wins}W/{len(hist)-wins}L")
+        has_data = True
+
+    # Copy Trader
+    if copy:
+        pos = copy.get("positions", {})
+        hist = copy.get("history", [])
+        resolved = [x for x in hist if x.get("resolved")]
+        cpnl = sum(x.get("pnl", 0) for x in resolved)
+        lines.append(f"\n<b>Copy Trader</b>")
+        lines.append(f"  Bank: ${copy.get('bankroll',0):.2f} | "
+                     f"{len(pos)} open | {copy.get('total_wallets_tracked',0)} wallets")
+        if resolved:
+            lines.append(f"  PnL: ${cpnl:+.2f}")
         has_data = True
 
     if _is_paused():
-        lines.append("⚠ PAUSED")
+        lines.append("\n⚠ PAUSED")
 
-    lines.append(datetime.now(timezone.utc).strftime("%H:%M UTC"))
+    lines.append(f"\n{datetime.now(timezone.utc).strftime('%H:%M UTC')}")
     return "\n".join(lines) if has_data else None
 
 

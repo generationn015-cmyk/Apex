@@ -37,7 +37,7 @@ _HEADERS = {
     "Accept": "application/json",
 }
 
-from polymarket.scanner import KellyEngine, parse_market, is_btc_market
+from polymarket.scanner import KellyEngine, parse_market, is_btc_market, estimate_true_prob
 from polymarket.polyconfig import (
     GAMMA_API, MIN_EDGE, KELLY_FRACTION, MAX_POSITION_PCT,
     STARTING_BANKROLL, MIN_LIQUIDITY, MIN_VOLUME,
@@ -50,8 +50,18 @@ from polymarket.polyconfig import (
 # ── Telegram ──────────────────────────────────────────────────────────────────
 
 def _tg(text: str):
-    """Silenced — all notifications go through the bot's hourly digest."""
-    pass
+    """Send trade entry notifications to Telegram."""
+    import urllib.parse, urllib.request
+    data = urllib.parse.urlencode({
+        "chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "HTML",
+    }).encode()
+    try:
+        urllib.request.urlopen(
+            f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage",
+            data=data, timeout=10,
+        )
+    except Exception:
+        pass
 
 
 # ── Market fetcher ────────────────────────────────────────────────────────────
@@ -76,6 +86,43 @@ def _gamma_get(params: dict) -> list[dict]:
     except Exception as e:
         print(f"[Polymarket] fetch error: {e}")
         return []
+
+
+def _fetch_market_resolution(condition_id: str) -> tuple[bool, str | None]:
+    """Check if a market has resolved via CLOB API. Returns (closed, winning_outcome)."""
+    url = f"https://clob.polymarket.com/markets/{condition_id}"
+    try:
+        if _HAS_REQUESTS:
+            r = _requests.get(url, headers=_HEADERS, timeout=10)
+            if r.status_code == 200:
+                m = r.json()
+            else:
+                return False, None
+        else:
+            req = urllib.request.Request(url, headers=_HEADERS)
+            with urllib.request.urlopen(req, timeout=10) as f:
+                m = json.loads(f.read().decode())
+
+        if not m.get("closed", False):
+            return False, None
+
+        # Find winning outcome from tokens
+        tokens = m.get("tokens", [])
+        for tok in tokens:
+            if tok.get("winner"):
+                outcome = tok.get("outcome", "")
+                # Map outcome to YES/NO for our direction field
+                if outcome.lower() in ("yes", "over"):
+                    return True, "YES"
+                elif outcome.lower() in ("no", "under"):
+                    return True, "NO"
+                else:
+                    # For non-binary markets, use token index
+                    idx = tokens.index(tok)
+                    return True, "YES" if idx == 0 else "NO"
+        return True, None  # closed but no winner found yet
+    except Exception:
+        return False, None
 
 
 def fetch_markets(limit: int = 200) -> list[dict]:
@@ -167,10 +214,18 @@ class SniperState:
                 pass
 
     def save(self):
+        # Build flat trades list for dashboard compatibility
+        trades = []
+        for cid, pos in self.positions.items():
+            trades.append({**pos, "condition_id": cid, "resolved": False})
+        for h in self.history:
+            trades.append(h)
+
         self.path.write_text(json.dumps({
             "bankroll":  self.bankroll,
             "positions": self.positions,
             "history":   self.history,
+            "trades":    trades,
             "updated":   datetime.now(timezone.utc).isoformat(),
         }, indent=2))
 
@@ -186,9 +241,63 @@ class SniperState:
             "edge":      bet["edge"],
             "opened_at": datetime.now(timezone.utc).isoformat(),
         }
-        if not PAPER_TRADE_ONLY:
-            self.bankroll -= bet["bet_size"]
+        self.bankroll -= bet["bet_size"]
         self.save()
+
+    def resolve_positions(self):
+        """Check open positions against CLOB API for resolution."""
+        if not self.positions:
+            return
+        resolved_ids = []
+        # Batch: check max 15 per cycle to avoid rate limits
+        items = list(self.positions.items())[:15]
+        for cid, pos in items:
+            try:
+                closed, winner = _fetch_market_resolution(cid)
+                if not closed:
+                    continue
+                if winner is None:
+                    continue
+
+                won = (pos["direction"] == winner)
+                bet_size = pos["bet_size"]
+                entry_price = pos["entry_price"]
+
+                if won:
+                    payout = bet_size / entry_price
+                    pnl = round(payout - bet_size, 2)
+                else:
+                    pnl = round(-bet_size, 2)
+
+                pos["resolved"] = True
+                pos["won"] = won
+                pos["result"] = "WIN" if won else "LOSS"
+                pos["pnl"] = pnl
+                pos["resolved_at"] = datetime.now(timezone.utc).isoformat()
+                pos["condition_id"] = cid
+
+                self.history.append(pos)
+                returned = bet_size + pnl
+                self.bankroll += returned
+                resolved_ids.append(cid)
+
+                tag = "✅" if won else "❌"
+                _tg(f"{tag} <b>Sniper {'WIN' if won else 'LOSS'}</b>\n"
+                    f"{pos['question'][:60]}\n"
+                    f"Direction: {pos['direction']} → {winner}\n"
+                    f"PnL: <b>${pnl:+.2f}</b>\n"
+                    f"Bankroll: ${self.bankroll:.2f}")
+
+                print(f"  [AutoRedeem] ${returned:+.2f} returned → bankroll ${self.bankroll:.2f}")
+                print(f"  [Resolved] {'WIN' if won else 'LOSS'} ${pnl:+.2f} | {pos['question'][:50]}")
+            except Exception as e:
+                print(f"[Sniper] resolve error {cid[:16]}: {e}")
+
+        for cid in resolved_ids:
+            del self.positions[cid]
+        if resolved_ids:
+            self.save()
+            print(f"[Sniper] Resolved {len(resolved_ids)} positions")
 
     def pnl_summary(self) -> str:
         open_count = len(self.positions)
@@ -213,7 +322,9 @@ def run_sniper(once: bool = False):
     )
 
     mode_tag = "PAPER" if PAPER_TRADE_ONLY else "LIVE"
-    _tg(f"🎯 <b>Polymarket Sniper online ({mode_tag})</b>\n{state.pnl_summary()}")
+    _tg(f"<b>APEX Dashboard</b>\nhttp://159.26.103.221:8501\n\n"
+        f"Sniper: {mode_tag} | Bankroll: ${state.bankroll:.2f} | "
+        f"{len(state.positions)} open")
     print(f"[Sniper] Started ({mode_tag})")
 
     while True:
@@ -229,6 +340,10 @@ def run_sniper(once: bool = False):
 
 
 def _cycle(state: SniperState, kelly: KellyEngine):
+    # Resolve any closed markets first
+    state.resolve_positions()
+    kelly.bankroll = state.bankroll
+
     markets = fetch_markets(200)
     if not markets:
         print("[Sniper] No markets returned")
@@ -315,16 +430,37 @@ def _cycle(state: SniperState, kelly: KellyEngine):
 
 def _estimate_true_prob(market: dict) -> float:
     """
-    Vig-removed true probability.
-    For binary markets: remove the vig by normalising both sides.
-    true_yes = yes_price / (yes_price + no_price)
+    Estimate true probability via spread removal + favorite-longshot bias.
+
+    Polymarket prices sum to ~1.0 (no built-in vig), so edge comes from
+    market microstructure:
+      - Thin markets have wider effective spreads
+      - Favorite-longshot bias: extreme prices overshoot true prob
+      - Volume momentum: high 24h volume = informed money moving the line
     """
     yes = market["yes_price"]
-    no  = market["no_price"]
-    total = yes + no
-    if total <= 0:
-        return yes
-    return yes / total
+    volume24h = market.get("volume24h", 0)
+    volume = market.get("volume", 0)
+
+    # Wider spread in thinner markets
+    spread = 0.008 if volume > 100_000 else 0.015
+
+    # Favorite-longshot bias correction (well-documented in prediction markets):
+    # - Events priced above ~0.65 tend to be overpriced (favorite bias → fair < yes)
+    # - Events priced below ~0.35 tend to be overpriced too (longshot bias → fair > yes)
+    # - Mid-range: use volume momentum for direction
+    if yes > 0.70:
+        fair = yes - spread * 1.5   # overpriced favorite → NO edge
+    elif yes < 0.30:
+        fair = yes + spread * 1.5   # overpriced longshot → YES edge
+    else:
+        # Mid-range: slight volume-momentum tilt
+        momentum = 0.0
+        if volume24h > 30_000 and volume > 200_000:
+            momentum = 0.006 if yes > 0.5 else -0.006
+        fair = yes + momentum
+
+    return max(0.05, min(0.95, fair))
 
 
 if __name__ == "__main__":

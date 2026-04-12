@@ -38,7 +38,49 @@ from polymarket.polyconfig import (
 )
 
 _HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
+CLOB_API = "https://clob.polymarket.com"
 DATA_API = "https://data-api.polymarket.com"
+
+
+def _tg(text: str):
+    """Send notification to Telegram."""
+    data = urllib.parse.urlencode({
+        "chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "HTML",
+    }).encode()
+    try:
+        urllib.request.urlopen(
+            f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage",
+            data=data, timeout=10,
+        )
+    except Exception:
+        pass
+
+
+def _fetch_market_resolution(condition_id: str) -> tuple[bool, str | None]:
+    """Check if a market resolved via CLOB API. Returns (closed, winning_outcome_label)."""
+    url = f"{CLOB_API}/markets/{condition_id}"
+    try:
+        if _HAS_REQUESTS:
+            r = _req.get(url, headers=_HEADERS, timeout=10)
+            if r.status_code == 200:
+                m = r.json()
+            else:
+                return False, None
+        else:
+            req = urllib.request.Request(url, headers=_HEADERS)
+            with urllib.request.urlopen(req, timeout=10) as f:
+                m = json.loads(f.read().decode())
+
+        if not m.get("closed", False):
+            return False, None
+
+        tokens = m.get("tokens", [])
+        for tok in tokens:
+            if tok.get("winner"):
+                return True, tok.get("outcome", "")
+        return True, None  # closed but winner not set yet
+    except Exception:
+        return False, None
 STATE_PATH = DATA_DIR / "copy_trader_state.json"
 WHALE_DB_PATH = DATA_DIR / "whale_stats.json"
 STATUS_PATH = DATA_DIR / "copy_trader_status.json"
@@ -155,6 +197,15 @@ class CopyState:
                 self.consecutive_losses = d.get("consecutive_losses", 0)
                 self.cooldown_until = d.get("cooldown_until")
                 self.seen_tx = set(d.get("seen_tx", []))
+
+                # Reset stale state: positions opened without bankroll tracking
+                if (self.bankroll == STARTING_BANKROLL
+                        and len(self.positions) > 10
+                        and len(self.history) == 0):
+                    print(f"[CopyTrader] Resetting {len(self.positions)} stale positions "
+                          f"(no bankroll tracking)")
+                    self.positions = {}
+                    self.bankroll = STARTING_BANKROLL
             except Exception:
                 pass
 
@@ -180,6 +231,76 @@ class CopyState:
         except Exception:
             return False
 
+    def resolve_positions(self):
+        """Check open positions against CLOB API for resolution."""
+        if not self.positions:
+            return
+        resolved_ids = []
+        # Batch: check max 30 per cycle
+        items = list(self.positions.items())[:30]
+        for cid, pos in items:
+            try:
+                closed, winning_outcome = _fetch_market_resolution(cid)
+                if not closed:
+                    continue
+                if winning_outcome is None:
+                    continue
+
+                # Determine if our position won
+                our_outcome = pos.get("outcome", "")
+                side = pos.get("side", "BUY")
+                bet_size = pos.get("bet_size", 0)
+                entry_price = pos.get("entry_price", 0.5)
+
+                if side == "BUY":
+                    won = our_outcome.lower() == winning_outcome.lower()
+                else:
+                    won = our_outcome.lower() != winning_outcome.lower()
+
+                if won:
+                    payout = bet_size / entry_price if entry_price > 0 else bet_size
+                    pnl = round(payout - bet_size, 2)
+                else:
+                    pnl = round(-bet_size, 2)
+
+                pos["resolved"] = True
+                pos["won"] = won
+                pos["pnl"] = pnl
+                pos["resolved_at"] = datetime.now(timezone.utc).isoformat()
+
+                self.history.append(pos)
+                returned = bet_size + pnl
+                self.bankroll += returned
+                resolved_ids.append(cid)
+                print(f"  [AutoRedeem] ${returned:+.2f} returned → bankroll ${self.bankroll:.2f}")
+
+                if won:
+                    self.consecutive_losses = 0
+                else:
+                    self.consecutive_losses += 1
+                    if self.consecutive_losses >= MAX_CONSECUTIVE_LOSSES:
+                        self.cooldown_until = (
+                            datetime.now(timezone.utc) + timedelta(hours=COOLDOWN_HOURS)
+                        ).isoformat()
+
+                tag = "✅" if won else "❌"
+                name = pos.get("whale_name", "")[:15]
+                _tg(f"{tag} <b>Copy {'WIN' if won else 'LOSS'}</b>\n"
+                    f"{pos.get('title', '')[:50]}\n"
+                    f"{side} {our_outcome} | Whale: {name}\n"
+                    f"PnL: <b>${pnl:+.2f}</b> | Bank: ${self.bankroll:.2f}")
+
+                print(f"  [Resolved] {'WIN' if won else 'LOSS'} ${pnl:+.2f} | "
+                      f"{pos.get('title', '')[:50]}")
+            except Exception as e:
+                print(f"[CopyTrader] resolve error {cid[:16]}: {e}")
+
+        for cid in resolved_ids:
+            del self.positions[cid]
+        if resolved_ids:
+            self.save()
+            print(f"[CopyTrader] Resolved {len(resolved_ids)} positions")
+
     def summary(self) -> str:
         total = len(self.history)
         pnl = sum(h.get("pnl", 0) for h in self.history)
@@ -190,6 +311,9 @@ class CopyState:
 # -- Core Logic --------------------------------------------------------------
 
 def _cycle(state: CopyState, whale_db: WhaleDB):
+    # Resolve any closed markets first
+    state.resolve_positions()
+
     if state.is_cooling_down():
         print(f"[CopyTrader] Cooling down until {state.cooldown_until}")
         return
@@ -257,8 +381,7 @@ def _cycle(state: CopyState, whale_db: WhaleDB):
         }
 
         state.positions[cid] = position
-        if not PAPER_TRADE_ONLY:
-            state.bankroll -= bet_size
+        state.bankroll -= bet_size
         copied += 1
 
         name = position["whale_name"] or wallet[:10] + "..."
