@@ -3598,6 +3598,104 @@
       "is_known_whale": true,
       "tx": "0xd527bcc7d74983d3947e887ff530b8d9a98db826a9a39a29913c73af58f6134b",
       "timestamp": "2026-04-12T17:22:33.929627+00:00"
+    },
+    "0xcb330cfb85e593db969f47e9f0be7828c461a38761ae84af4188f8c8bedabd75": {
+      "condition_id": "0xcb330cfb85e593db969f47e9f0be7828c461a38761ae84af4188f8c8bedabd75",
+      "title": "Will OGC Nice win on 2026-04-12?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.001,
+      "whale_address": "0x1a449cfe19beecd5b3673533fbf2e149ab642820",
+      "whale_name": "Count1976",
+      "whale_size": 970.03,
+      "is_known_whale": false,
+      "tx": "0xdf559c179d923d8f6bc162ba0526e5e837903c4f9e773455cde0618a1bbfef37",
+      "timestamp": "2026-04-12T17:32:35.147719+00:00"
+    },
+    "0xfb249b1f8641119db93c85ec74b91f91c1f7a08d0e0d28b828fc39533029bb4f": {
+      "condition_id": "0xfb249b1f8641119db93c85ec74b91f91c1f7a08d0e0d28b828fc39533029bb4f",
+      "title": "Will the price of Ethereum be above $2,000 on April 13?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.02,
+      "whale_address": "0x64cd4f429626f1d9a854e9e39a8cf0a227077a07",
+      "whale_name": "iegyana",
+      "whale_size": 464.72,
+      "is_known_whale": false,
+      "tx": "0x6c7ceaf28e1f631f98dfa958cda978589669ac35b0503a879d7088760adece5f",
+      "timestamp": "2026-04-12T17:32:35.148521+00:00"
+    },
+    "0x73cf15faa3a6d78f6db12014a0f4fe7a392ee412d2f2c1b9731140f0dd20a3b6": {
+      "condition_id": "0x73cf15faa3a6d78f6db12014a0f4fe7a392ee412d2f2c1b9731140f0dd20a3b6",
+      "title": "Penguins vs. Capitals: O/U 5.5",
+      "outcome": "Over",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.67,
+      "whale_address": "0xc257ea7e3a81ca8e16df8935d44d513959fa358e",
+      "whale_name": "YT-JuicySlots",
+      "whale_size": 500.0,
+      "is_known_whale": false,
+      "tx": "0xeea7d9d4dfedb804b06a0b0218468649d69b9e52b76300e28b0a98b3d497d7dc",
+      "timestamp": "2026-04-12T17:32:35.148558+00:00"
+    },
+    "0x4f8d342acd647e7fdb4856d4bc7acb5b86b96e9776582b4c4f5ae3328e6be6b1": {
+      "condition_id": "0x4f8d342acd647e7fdb4856d4bc7acb5b86b96e9776582b4c4f5ae3328e6be6b1",
+      "title": "Dota 2: Team Liquid vs Natus Vincere (BO3) - DreamLeague Wes",
+      "outcome": "Team Liquid",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.61,
+      "whale_address": "0x36d8cbf698826ca74d9e444df634e303de4cc7c7",
+      "whale_name": "0x36D8cBf698826Ca74d9e444Df634e303de4cC7C7-1774411370400",
+      "whale_size": 933.9435,
+      "is_known_whale": false,
+      "tx": "0xfff0309ebe4d3dc2888272dc3dd4ddef192a2a0e69fa8101731424a5b34c72f6",
+      "timestamp": "2026-04-12T17:32:35.148578+00:00"
+    },
+    "0x5cd9c297101cb7efa2377f59dbd807a68182295abcf023754ccf2e7efa415509": {
+      "condition_id": "0x5cd9c297101cb7efa2377f59dbd807a68182295abcf023754ccf2e7efa415509",
+      "title": "Will RC Celta de Vigo vs. Real Oviedo end in a draw?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.17,
+      "whale_address": "0xc68603e0fa68857282c1119c6cbcfc20fa2d5a55",
+      "whale_name": "Nmcp",
+      "whale_size": 1199.373,
+      "is_known_whale": false,
+      "tx": "0x3ef884bf99f9f731dab2290698fd1d42d2f994c62151f25c373deda10606f98c",
+      "timestamp": "2026-04-12T17:32:35.148596+00:00"
+    },
+    "0x424ecd6b78b49c251d0e1b9517f1a125f6c84db3d6b1af0e5cf79383666368df": {
+      "condition_id": "0x424ecd6b78b49c251d0e1b9517f1a125f6c84db3d6b1af0e5cf79383666368df",
+      "title": "Galatasaray SK vs. Kocaelispor: O/U 2.5",
+      "outcome": "Over",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.4,
+      "whale_address": "0x33bb7c0506f1a76f169534c196bd4e71db0398b3",
+      "whale_name": "johndove",
+      "whale_size": 719.315,
+      "is_known_whale": false,
+      "tx": "0x4912ccfc8a84cf0e4c4e5934b32abc1aa8282df035a7326b58f1e9c397c9a179",
+      "timestamp": "2026-04-12T17:32:35.148615+00:00"
+    },
+    "0xe1e99b9aa90e0ae6129e94d6aa1c5849a11a1e65a94df5119733680509f64c33": {
+      "condition_id": "0xe1e99b9aa90e0ae6129e94d6aa1c5849a11a1e65a94df5119733680509f64c33",
+      "title": "Ethereum Up or Down - April 12, 1:15PM-1:30PM ET",
+      "outcome": "Up",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.999,
+      "whale_address": "0xdeca32428d5cf4b1c4d7266a950e20791676ddd5",
+      "whale_name": "durrrrrrrr",
+      "whale_size": 1240.98065,
+      "is_known_whale": true,
+      "tx": "0x189472b3a2bf55231f279cf043e54b8574d6908a85c0b05088d227468e1c36ac",
+      "timestamp": "2026-04-12T17:32:35.148632+00:00"
     }
   },
   "history": [],
@@ -3685,6 +3783,14 @@
       "active_markets": 2
     },
     {
+      "address": "0xdeca32428d5cf4b1c4d7266a950e20791676ddd5",
+      "name": "durrrrrrrr",
+      "trades": 3,
+      "volume": 1993.84,
+      "last_seen": "2026-04-12T17:32:35.130772+00:00",
+      "active_markets": 3
+    },
+    {
       "address": "0xd27d1e863b5b29af53495f7c072d492bdfdaa84f",
       "name": "",
       "trades": 3,
@@ -3715,19 +3821,11 @@
       "volume": 1588.64,
       "last_seen": "2026-04-12T17:12:32.354976+00:00",
       "active_markets": 5
-    },
-    {
-      "address": "0xe8e1b119302ae410e77b2af7d7456809007549dd",
-      "name": "DefenceOfTheAssets",
-      "trades": 4,
-      "volume": 1320.52,
-      "last_seen": "2026-04-12T17:02:31.100312+00:00",
-      "active_markets": 4
     }
   ],
-  "total_wallets_tracked": 587,
+  "total_wallets_tracked": 593,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T17:22:33.936397+00:00"
+  "updated": "2026-04-12T17:32:35.155088+00:00"
 }
