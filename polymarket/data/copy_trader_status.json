@@ -1120,6 +1120,118 @@
       "is_known_whale": true,
       "tx": "0x19aedcaf2a56762a51fabf2496353676780a27946e10a3f05bcb07eca819f00e",
       "timestamp": "2026-04-12T11:41:54.250647+00:00"
+    },
+    "0x46f2f457e14ee9021ebd0ef4c27eacd98fdceaf7f2938b484e2551e9e3275ae8": {
+      "condition_id": "0x46f2f457e14ee9021ebd0ef4c27eacd98fdceaf7f2938b484e2551e9e3275ae8",
+      "title": "Will \u00c9douard Philippe win the 2027 French presidential elect",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.78,
+      "whale_address": "0x57b4877581c20031028d85c376e618e5c24159af",
+      "whale_name": "dfgnbhfgh",
+      "whale_size": 700.0,
+      "is_known_whale": false,
+      "tx": "0x6cb0eb4ec2d36446600ff034f5ad5e552ee86917d48121ec23a650fdca821f03",
+      "timestamp": "2026-04-12T11:51:55.491519+00:00"
+    },
+    "0x947431c4ee78ad87921e641d154b99861e13013cad1b71b3779a0b2f28e13ee0": {
+      "condition_id": "0x947431c4ee78ad87921e641d154b99861e13013cad1b71b3779a0b2f28e13ee0",
+      "title": "BMW Open, Qualification: Diego Dedura-Palomero vs Sumit Naga",
+      "outcome": "Diego Dedura-Palomero",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.7006764488437294,
+      "whale_address": "0xe4d38496a46e4bfd2036d4e9389a955595d6c2f0",
+      "whale_name": "leleo17",
+      "whale_size": 1774.547458,
+      "is_known_whale": false,
+      "tx": "0x695c997cc6e50b7867006944f53cd4aa8c17c4dd1bdf80c435c73840f734bd9f",
+      "timestamp": "2026-04-12T11:51:55.492545+00:00"
+    },
+    "0xf6238ffcc5672cfe1f8cf4afa8c269dabda5b44f1ad9e6148f2769de63a5b160": {
+      "condition_id": "0xf6238ffcc5672cfe1f8cf4afa8c269dabda5b44f1ad9e6148f2769de63a5b160",
+      "title": "Will Elon Musk post 340-359 tweets from April 7 to April 14,",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.025,
+      "whale_address": "0x849ccb5907938ce8be18ed5dbf583288e2da4009",
+      "whale_name": "Ondra",
+      "whale_size": 200.97,
+      "is_known_whale": true,
+      "tx": "0x600c7e2a4222586929c0b457f67c0755b88409121503d53bac3c44bdea16c1cd",
+      "timestamp": "2026-04-12T11:51:55.492618+00:00"
+    },
+    "0xd595eb9b81885ff018738300c79047e3ec89e87294424f57a29a7fa9162bf116": {
+      "condition_id": "0xd595eb9b81885ff018738300c79047e3ec89e87294424f57a29a7fa9162bf116",
+      "title": "Will Trump acquire Greenland before 2027?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.907,
+      "whale_address": "0x2ecbc1b349e78f44df8e5c040aaa0f497d77f583",
+      "whale_name": "curaviva91",
+      "whale_size": 731.0,
+      "is_known_whale": false,
+      "tx": "0x7a2cef90dd1d6b8a523a9051fb1e50a3066e016b22318626394ab865c7d23a35",
+      "timestamp": "2026-04-12T11:51:55.492664+00:00"
+    },
+    "0x751a248e4b64f14b95cbddf168ef2ab869bd5420c717891789ec8d61ae5b21c9": {
+      "condition_id": "0x751a248e4b64f14b95cbddf168ef2ab869bd5420c717891789ec8d61ae5b21c9",
+      "title": "Will CA Osasuna win on 2026-04-12?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.41999999895,
+      "whale_address": "0xeddf63c15ceb54cb8f6d1c7617f1afa59886a953",
+      "whale_name": "lizhh",
+      "whale_size": 467.904765,
+      "is_known_whale": false,
+      "tx": "0xc5509285e69472a3e3abf4d8f0d3c1b47290850913b7a98bfe42451650c61b70",
+      "timestamp": "2026-04-12T11:51:55.492707+00:00"
+    },
+    "0x4327a50baca03761d82d38d9c93ef58373556f8991f61b3258d3149399716f6d": {
+      "condition_id": "0x4327a50baca03761d82d38d9c93ef58373556f8991f61b3258d3149399716f6d",
+      "title": "Barcelona Open, Qualification: Juan Manuel Cerundolo vs Jesp",
+      "outcome": "Juan Manuel Cerundolo",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.98,
+      "whale_address": "0x528ff0b0cc2c8228721b30828ea574aba54e2101",
+      "whale_name": "PFL27",
+      "whale_size": 1555.7598400000002,
+      "is_known_whale": false,
+      "tx": "0x5a8f1029e15c08111fd59a8d43f9e5530825db6d1341e8344762fcab70507a7a",
+      "timestamp": "2026-04-12T11:51:55.492811+00:00"
+    },
+    "0x7006600f9017480a548bb86d1ac705e878af9784765461b8df4075754523a3bc": {
+      "condition_id": "0x7006600f9017480a548bb86d1ac705e878af9784765461b8df4075754523a3bc",
+      "title": "RC Celta de Vigo vs. Real Oviedo: Both Teams to Score",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.5399999996811902,
+      "whale_address": "0x32ccd9015a900fde62040162a04bedf093c668b3",
+      "whale_name": "pilotlady",
+      "whale_size": 309.338075,
+      "is_known_whale": true,
+      "tx": "0x55a595357e1bc58d223de1045ace9a72d65487ef91efe0d7a74c7b9d259c351c",
+      "timestamp": "2026-04-12T11:51:55.492887+00:00"
+    },
+    "0xcfdfb349ae16ab2a531d3c3a23692f1911bc228127669a03cccd44c2a47fa5ee": {
+      "condition_id": "0xcfdfb349ae16ab2a531d3c3a23692f1911bc228127669a03cccd44c2a47fa5ee",
+      "title": "Will Elon Musk post 280-299 tweets from April 7 to April 14,",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.27,
+      "whale_address": "0x849ccb5907938ce8be18ed5dbf583288e2da4009",
+      "whale_name": "Ondra",
+      "whale_size": 378.0,
+      "is_known_whale": true,
+      "tx": "0x119193caf83dd0072812137164587008cf479fb875d3cb857c03b8bb223e3852",
+      "timestamp": "2026-04-12T11:51:55.492929+00:00"
     }
   },
   "history": [],
@@ -1133,11 +1245,27 @@
       "volume": 3030.65,
       "last_seen": "2026-04-12T11:41:54.244455+00:00",
       "active_markets": 3
+    },
+    {
+      "address": "0x32ccd9015a900fde62040162a04bedf093c668b3",
+      "name": "pilotlady",
+      "trades": 3,
+      "volume": 1061.52,
+      "last_seen": "2026-04-12T11:51:55.441324+00:00",
+      "active_markets": 3
+    },
+    {
+      "address": "0x849ccb5907938ce8be18ed5dbf583288e2da4009",
+      "name": "Ondra",
+      "trades": 3,
+      "volume": 840.97,
+      "last_seen": "2026-04-12T11:51:55.453321+00:00",
+      "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 217,
+  "total_wallets_tracked": 227,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T11:41:54.253081+00:00"
+  "updated": "2026-04-12T11:51:55.497766+00:00"
 }
