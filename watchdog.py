@@ -58,15 +58,9 @@ _PROCESS_DEFS = {
         "critical": False,
         "affects_live_toggle": False,
     },
-    # signal_engine self-manages via signal_engine_v2.py + its own PID file.
-    # Do NOT manage it here — the main.py stub causes infinite restart loops.
-    "wolf_bot": {
-        "cmd": [_WOLF_PY, str(_WOLF_ROOT / "wolf" / "main.py")],
-        "env_extra": {"PYTHONPATH": str(_WOLF_ROOT)},
-        "critical": False,
-        "cwd": str(_WOLF_ROOT),
-        "affects_live_toggle": False,
-    },
+    # signal_engine: self-manages via signal_engine_v2.py + its own PID file.
+    # wolf_bot: self-manages, started independently — do not duplicate here.
+    # Both removed to prevent infinite restart spam.
 }
 
 
