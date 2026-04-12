@@ -2856,6 +2856,146 @@
       "is_known_whale": false,
       "tx": "0x51d3100b5e8d3f8c3c53a4689daad9ff9efb76b653ed2e38c16f494a0a831091",
       "timestamp": "2026-04-12T15:12:16.959991+00:00"
+    },
+    "0xdb17a33be216f9f9a3abec33c115695d0f6afbfa911fec153990e5e50303a4ff": {
+      "condition_id": "0xdb17a33be216f9f9a3abec33c115695d0f6afbfa911fec153990e5e50303a4ff",
+      "title": "LoL: Team Vitality vs Shifters - Game 1 Winner",
+      "outcome": "Shifters",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.4085804816223067,
+      "whale_address": "0x31864feb9d25dee93728c6225ba891530967e9ca",
+      "whale_name": "johnbaster",
+      "whale_size": 1550.0022,
+      "is_known_whale": false,
+      "tx": "0x3f0832c2140f5ed9c3c540a554d8a863e6b93779e0d3f122b077ed0b5d62ee1c",
+      "timestamp": "2026-04-12T15:22:18.034950+00:00"
+    },
+    "0xf6e0ce3940225a09fc7e00f963bf4db7139dcfc2ec6b4bbefd079af65fb197d7": {
+      "condition_id": "0xf6e0ce3940225a09fc7e00f963bf4db7139dcfc2ec6b4bbefd079af65fb197d7",
+      "title": "Will Sweden win the televote for Eurovision 2026?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.025,
+      "whale_address": "0x7b174f852722db65501bc534de12e231f59451b1",
+      "whale_name": "cryplor",
+      "whale_size": 904.8,
+      "is_known_whale": false,
+      "tx": "0xbad2ba6b9d8d6a510ba428ac675eff6ebf5ed285cd83cadb30d8ac5a7f2aefd7",
+      "timestamp": "2026-04-12T15:22:18.035845+00:00"
+    },
+    "0x37345ad4b3bff09564534b08f22c585529c1f071749c0d85edf2a1a4dbdd0006": {
+      "condition_id": "0x37345ad4b3bff09564534b08f22c585529c1f071749c0d85edf2a1a4dbdd0006",
+      "title": "Bitcoin Up or Down - April 12, 11:15AM-11:20AM ET",
+      "outcome": "Up",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.20186871848062501,
+      "whale_address": "0x24d1782344f34c248b8668035dd4d25badd458a1",
+      "whale_name": "Rotikid",
+      "whale_size": 458.50042,
+      "is_known_whale": false,
+      "tx": "0x54b71fcbc490e5b2c1b6db637937f7b853cdfe92ab4d620770cb9d4c4ea3a8c7",
+      "timestamp": "2026-04-12T15:22:18.035889+00:00"
+    },
+    "0x29b94c94c285befa6618c4971ab9b4d496641074fe4dd3aa5e75ca4d8cbe3e9e": {
+      "condition_id": "0x29b94c94c285befa6618c4971ab9b4d496641074fe4dd3aa5e75ca4d8cbe3e9e",
+      "title": "Military action against Iran ends on April 18, 2026?",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.001,
+      "whale_address": "0xd1a63a243042d864520512fbdbd2fd20e0ab1507",
+      "whale_name": "DkOYL",
+      "whale_size": 7311.69,
+      "is_known_whale": true,
+      "tx": "0x468f0c38f38a37ea98cd43a6abe11df248552553717999b21cfdb108a228f9d6",
+      "timestamp": "2026-04-12T15:22:18.035915+00:00"
+    },
+    "0xeafe9416b103ad3af0c783a8a03a1d1d379dcd6389b988546ba99900a0f075a4": {
+      "condition_id": "0xeafe9416b103ad3af0c783a8a03a1d1d379dcd6389b988546ba99900a0f075a4",
+      "title": "Ethereum Up or Down - April 12, 11:15AM-11:20AM ET",
+      "outcome": "Up",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.07448821794575092,
+      "whale_address": "0x0b64507dae3947cc0bf49bf9ee3c8dd550ce88db",
+      "whale_name": "AlterSigma",
+      "whale_size": 786.44713,
+      "is_known_whale": false,
+      "tx": "0xf510340ba1431345d4a50cfadecbf0ab3bbe8ba4c35186d010d27ad805016e11",
+      "timestamp": "2026-04-12T15:22:18.035938+00:00"
+    },
+    "0x96075b2dc8900a5e46571e1735fe931dae24c4eb26bc25be1d0dd5a3b35a6a76": {
+      "condition_id": "0x96075b2dc8900a5e46571e1735fe931dae24c4eb26bc25be1d0dd5a3b35a6a76",
+      "title": "Military action against Iran ends on April 16, 2026?",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.001,
+      "whale_address": "0xd1a63a243042d864520512fbdbd2fd20e0ab1507",
+      "whale_name": "DkOYL",
+      "whale_size": 4807.45,
+      "is_known_whale": true,
+      "tx": "0xb67e59350091875783f9aa578ce9eee7ec6d661ca39b91366223d7d85184e3a5",
+      "timestamp": "2026-04-12T15:22:18.035963+00:00"
+    },
+    "0x78f5630bafa15147941daa2fd2926b43febe6af1544cd9d8527b226914f3ca11": {
+      "condition_id": "0x78f5630bafa15147941daa2fd2926b43febe6af1544cd9d8527b226914f3ca11",
+      "title": "Will Alfonso L\u00f3pez Chau win the 2026 Peruvian presidential e",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.022726628381162878,
+      "whale_address": "0xdbbdf053670b4f18ebe9a12ed642e486cdaf784a",
+      "whale_name": "jsp123",
+      "whale_size": 4877.39,
+      "is_known_whale": false,
+      "tx": "0x39b7216813276419f26f80f9638c3538326b4cdee41fcb7c91a5ded13d6ff7c1",
+      "timestamp": "2026-04-12T15:22:18.035986+00:00"
+    },
+    "0xc2a6974255400b14911eb965e315962300a7eb3d7bb6a09e674820c422a60642": {
+      "condition_id": "0xc2a6974255400b14911eb965e315962300a7eb3d7bb6a09e674820c422a60642",
+      "title": "Military action against Iran ends on April 17, 2026?",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.001,
+      "whale_address": "0xd1a63a243042d864520512fbdbd2fd20e0ab1507",
+      "whale_name": "DkOYL",
+      "whale_size": 6993.38,
+      "is_known_whale": true,
+      "tx": "0x5762618d460bb165f6cc7d956fcf71200e74d7bf3b4466289ea02e73e68801ec",
+      "timestamp": "2026-04-12T15:22:18.036009+00:00"
+    },
+    "0x7a2e3914e7ebdc1ebb407f9e1e11ec751f53b7a8539ad4e14ad7dbb899e209d8": {
+      "condition_id": "0x7a2e3914e7ebdc1ebb407f9e1e11ec751f53b7a8539ad4e14ad7dbb899e209d8",
+      "title": "Military action against Iran ends on April 19, 2026?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.001,
+      "whale_address": "0x28b978fc65ad03b5d71e4cc4cd558d54bcd4a995",
+      "whale_name": "tangora",
+      "whale_size": 50000.0,
+      "is_known_whale": false,
+      "tx": "0x97bebdf659fc127e5f741aa70249870458a8c9f087a0145c031d1701527a5469",
+      "timestamp": "2026-04-12T15:22:18.036031+00:00"
+    },
+    "0x5db999fad322cea2914535aae5517060c3f80ad6d8c0231cde2124a434d16846": {
+      "condition_id": "0x5db999fad322cea2914535aae5517060c3f80ad6d8c0231cde2124a434d16846",
+      "title": "Will the U.S. invade Iran before 2027?",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.38146825,
+      "whale_address": "0x33179aadfdfb68cdbd665ca58c91df2a5672ab0c",
+      "whale_name": "wfwefdewed",
+      "whale_size": 400.0,
+      "is_known_whale": false,
+      "tx": "0xe7a769a6224145ced07fd2a776e9e230023183bd32c97921791680142191b656",
+      "timestamp": "2026-04-12T15:22:18.036055+00:00"
     }
   },
   "history": [],
@@ -2869,6 +3009,14 @@
       "volume": 28542.04,
       "last_seen": "2026-04-12T13:42:06.502785+00:00",
       "active_markets": 3
+    },
+    {
+      "address": "0xd1a63a243042d864520512fbdbd2fd20e0ab1507",
+      "name": "DkOYL",
+      "trades": 4,
+      "volume": 20013.84,
+      "last_seen": "2026-04-12T15:22:17.996354+00:00",
+      "active_markets": 4
     },
     {
       "address": "0xf940e58b04f9726c3858528d8f65d55abad47736",
@@ -2973,19 +3121,11 @@
       "volume": 1008.94,
       "last_seen": "2026-04-12T14:52:14.340285+00:00",
       "active_markets": 3
-    },
-    {
-      "address": "0x849ccb5907938ce8be18ed5dbf583288e2da4009",
-      "name": "Ondra",
-      "trades": 3,
-      "volume": 840.97,
-      "last_seen": "2026-04-12T11:51:55.453321+00:00",
-      "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 457,
+  "total_wallets_tracked": 469,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T15:12:16.966202+00:00"
+  "updated": "2026-04-12T15:22:18.042325+00:00"
 }
