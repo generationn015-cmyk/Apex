@@ -4,6 +4,13 @@ All secrets come from environment variables. Never hardcode keys.
 Copy .env.example to .env and fill in your values.
 """
 import os
+from pathlib import Path
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).parent.parent / ".env")
+except ImportError:
+    pass
 
 # ── Telegram ─────────────────────────────────────────────────────────────────
 TELEGRAM_TOKEN   = os.getenv("TELEGRAM_TOKEN",   "8723118008:AAFv1tIx4vn60jWJZ_IVQ04mSgqZ8zm5Z_M")
