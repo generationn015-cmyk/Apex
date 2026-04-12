@@ -2534,6 +2534,90 @@
       "is_known_whale": false,
       "tx": "0x2fc4dc6d2dbebd4234b7896a6887757a1921fefeb8bcab1e41081827e6738d99",
       "timestamp": "2026-04-12T14:32:12.122434+00:00"
+    },
+    "0xb8fe7c7b220cade5c49cc8ca6373f8fdbcbd72d7bc88ec04726ce17cb1005a06": {
+      "condition_id": "0xb8fe7c7b220cade5c49cc8ca6373f8fdbcbd72d7bc88ec04726ce17cb1005a06",
+      "title": "Will Calcio Padova win on 2026-04-12?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.86,
+      "whale_address": "0x204f72f35326db932158cba6adff0b9a1da95e14",
+      "whale_name": "swisstony",
+      "whale_size": 274.8408,
+      "is_known_whale": true,
+      "tx": "0xca8c754e1c7734f35916ae6bfb288e791ffebc828741567bc5d3466fdd83a277",
+      "timestamp": "2026-04-12T14:42:13.336890+00:00"
+    },
+    "0x1077393906f25eb78b4fe469d8840c7950d0176ee05412b02a9e3df033a01b8b": {
+      "condition_id": "0x1077393906f25eb78b4fe469d8840c7950d0176ee05412b02a9e3df033a01b8b",
+      "title": "Trump announces tariff for Iran military cooperation by Apri",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.10876800431668451,
+      "whale_address": "0x25257a6a89dba93dd0c536b6279365632a4eb919",
+      "whale_name": "Trading4Fridge",
+      "whale_size": 1149.03,
+      "is_known_whale": false,
+      "tx": "0x18daacc6f0d4112d249ca4faba7fe2e1154c1f0d198c658424c44a529f05fe74",
+      "timestamp": "2026-04-12T14:42:13.337831+00:00"
+    },
+    "0xa1f08ec3bcc1434cb0b695bd5ee9f81268ef45fb73f752b3a1c1fb1d35750866": {
+      "condition_id": "0xa1f08ec3bcc1434cb0b695bd5ee9f81268ef45fb73f752b3a1c1fb1d35750866",
+      "title": "Will Real Madrid win the 2025\u201326 La Liga?",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.012,
+      "whale_address": "0x8a3f2a278d5a1bffaf79e65d35c5e3ad2583e8b6",
+      "whale_name": "0x8a3F2a278d5A1BFfAF79E65D35c5E3AD2583e8b6-1772944362092",
+      "whale_size": 1000.0,
+      "is_known_whale": false,
+      "tx": "0x30afdf0ac8650b91d30ba19d79f2424093b72fc9e2427bc834fba4b48db331e0",
+      "timestamp": "2026-04-12T14:42:13.337876+00:00"
+    },
+    "0x5d457b59794a43124e76283b9eedfaeb8a3ce2f4b3654b68a6d1c44b6c563b75": {
+      "condition_id": "0x5d457b59794a43124e76283b9eedfaeb8a3ce2f4b3654b68a6d1c44b6c563b75",
+      "title": "Will Parma Calcio 1913 win on 2026-04-12?",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.04,
+      "whale_address": "0xd8d7b8a47a128b13b5153858ba5421bfdefb406d",
+      "whale_name": "",
+      "whale_size": 328.18,
+      "is_known_whale": true,
+      "tx": "0x7836a0e2b969c8e644b57a279afaf5a4fdbc2b4718ed0a912e60d5656d6fe8d3",
+      "timestamp": "2026-04-12T14:42:13.337904+00:00"
+    },
+    "0xecae825f7a3b710792298d14fa2d84c929d45b5d75de17f1e461170235fd18f7": {
+      "condition_id": "0xecae825f7a3b710792298d14fa2d84c929d45b5d75de17f1e461170235fd18f7",
+      "title": "Alcaraz vs. Sinner: Match O/U 23.5",
+      "outcome": "Under",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.5126689195259813,
+      "whale_address": "0xdd8e67a862bd81067891ad41e86e9673229ef023",
+      "whale_name": "TexMexTRex",
+      "whale_size": 1922.059312,
+      "is_known_whale": false,
+      "tx": "0xde684bc9871e2ba01a6968398220635c82f5b5da8d68252edddbf016a5fccb3d",
+      "timestamp": "2026-04-12T14:42:13.337928+00:00"
+    },
+    "0x73e39c98045179951b7c527b749118771c10a15a32eee5ebc98f9e3650a69fe1": {
+      "condition_id": "0x73e39c98045179951b7c527b749118771c10a15a32eee5ebc98f9e3650a69fe1",
+      "title": "Will the next Prime Minister of Hungary be L\u00e1szl\u00f3 Toroczkai?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.001,
+      "whale_address": "0xb11ed390a5de05a4c9157b7f6b96cc3f46839df4",
+      "whale_name": "0xB11Ed390A5DE05A4c9157B7F6B96CC3f46839df4-1775986967561",
+      "whale_size": 13000.0,
+      "is_known_whale": false,
+      "tx": "0xd296ed10829e5cb34d85013b7bc17e0018e5a6ef554248dfaec330c775cfaea2",
+      "timestamp": "2026-04-12T14:42:13.337949+00:00"
     }
   },
   "history": [],
@@ -2591,10 +2675,10 @@
     {
       "address": "0x204f72f35326db932158cba6adff0b9a1da95e14",
       "name": "swisstony",
-      "trades": 4,
-      "volume": 2046.2,
-      "last_seen": "2026-04-12T14:12:09.967220+00:00",
-      "active_markets": 4
+      "trades": 5,
+      "volume": 2321.04,
+      "last_seen": "2026-04-12T14:42:13.191429+00:00",
+      "active_markets": 5
     },
     {
       "address": "0xd27d1e863b5b29af53495f7c072d492bdfdaa84f",
@@ -2623,9 +2707,17 @@
     {
       "address": "0x32ccd9015a900fde62040162a04bedf093c668b3",
       "name": "pilotlady",
+      "trades": 4,
+      "volume": 1378.3,
+      "last_seen": "2026-04-12T14:42:13.151180+00:00",
+      "active_markets": 4
+    },
+    {
+      "address": "0xd8d7b8a47a128b13b5153858ba5421bfdefb406d",
+      "name": "",
       "trades": 3,
-      "volume": 1061.52,
-      "last_seen": "2026-04-12T11:51:55.441324+00:00",
+      "volume": 1167.35,
+      "last_seen": "2026-04-12T14:42:13.281032+00:00",
       "active_markets": 3
     },
     {
@@ -2645,9 +2737,9 @@
       "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 410,
+  "total_wallets_tracked": 423,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T14:32:12.128511+00:00"
+  "updated": "2026-04-12T14:42:13.342776+00:00"
 }
