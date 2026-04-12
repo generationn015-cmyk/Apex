@@ -246,8 +246,10 @@
     "opened_at": "2026-04-12T10:36:43.734790+00:00",
     "expires_at": "2026-04-12T22:36:43.734814+00:00",
     "max_hold_hours": 12,
-    "status": "OPEN",
-    "pnl_pct": -8.7
+    "status": "CLOSED",
+    "pnl_pct": -8.7,
+    "close_reason": "EXPIRED",
+    "closed_at": "2026-04-12T22:45:05.695672+00:00"
   },
   {
     "id": "b5c844db1afd",
