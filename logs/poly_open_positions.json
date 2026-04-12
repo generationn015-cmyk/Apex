@@ -5,7 +5,7 @@
     "condition_id": "0x1480b819d03d4b6388d70e848b0384adf38c38d955cb783cdbcf6d4a436dee14",
     "direction": "NO",
     "entry_price": 0.285,
-    "current_price": 0.225,
+    "current_price": 0.235,
     "bet_size": 17.0,
     "edge": 0.017,
     "confidence": 0.302,
@@ -16,7 +16,7 @@
     "expires_at": "2026-04-12T15:13:56.547151+00:00",
     "max_hold_hours": 24,
     "status": "OPEN",
-    "pnl_pct": -21.1
+    "pnl_pct": -17.5
   },
   {
     "id": "63eb2bae4ac0",
@@ -24,7 +24,7 @@
     "condition_id": "0x5ec80dc407457301f282a2b44341947afc700dfaa7923d14c8894e04bc63b03f",
     "direction": "YES",
     "entry_price": 0.285,
-    "current_price": 0.225,
+    "current_price": 0.235,
     "bet_size": 15.64,
     "edge": 0.013,
     "confidence": 0.298,
@@ -35,7 +35,7 @@
     "expires_at": "2026-04-12T15:13:56.551432+00:00",
     "max_hold_hours": 24,
     "status": "OPEN",
-    "pnl_pct": -21.1
+    "pnl_pct": -17.5
   },
   {
     "id": "bce2173f1479",
@@ -167,7 +167,7 @@
     "condition_id": "0x7a00c50eb4e76f5bc25b38a83c029dfde5faa9268e4ade490c931a384f8d157a",
     "direction": "YES",
     "entry_price": 0.2845,
-    "current_price": 0.2865,
+    "current_price": 0.2845,
     "bet_size": 13.74,
     "edge": 0.015,
     "confidence": 0.2995,
@@ -178,6 +178,25 @@
     "expires_at": "2026-04-12T16:56:44.340776+00:00",
     "max_hold_hours": 12,
     "status": "OPEN",
-    "pnl_pct": 0.7
+    "pnl_pct": 0.0
+  },
+  {
+    "id": "d639694c7569",
+    "market": "Will the Oklahoma City Thunder win the 2026 NBA Finals?",
+    "condition_id": "0x22e7b5e35423e76842dd3a5e1a21d13793811080d5e7b2896d0c001bd5e97d54",
+    "direction": "YES",
+    "entry_price": 0.395,
+    "current_price": 0.395,
+    "bet_size": 12.64,
+    "edge": 0.015,
+    "confidence": 0.41,
+    "source": "sports",
+    "trader": "",
+    "score": 6.8,
+    "opened_at": "2026-04-12T06:01:04.460407+00:00",
+    "expires_at": "2026-04-12T18:01:04.460415+00:00",
+    "max_hold_hours": 12,
+    "status": "OPEN",
+    "pnl_pct": 0.0
   }
 ]
