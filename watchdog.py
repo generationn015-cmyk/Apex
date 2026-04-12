@@ -59,7 +59,7 @@ _PROCESS_DEFS = {
         "cmd": [_APEX_PY, str(ROOT / "polymarket" / "btc_5m_sniper.py")],
         "env_extra": {},
         "critical": False,
-        "affects_live_toggle": False,
+        "affects_live_toggle": True,
     },
     "copy_trader": {
         "cmd": [_APEX_PY, str(ROOT / "polymarket" / "copy_trader.py")],
@@ -98,7 +98,11 @@ class ProcessManager:
                 "critical":  True,
                 "cwd":       str(ROOT),
             }
-        return _PROCESS_DEFS[name]
+        cfg = dict(_PROCESS_DEFS[name])
+        # Append --live to btc_5m_sniper when in live mode
+        if name == "btc_5m_sniper" and self._apex_live:
+            cfg["cmd"] = cfg["cmd"] + ["--live"]
+        return cfg
 
     def start(self, name: str):
         cfg      = self._cfg(name)
@@ -148,19 +152,30 @@ class ProcessManager:
         self.start(name)
 
     def check_live_toggle(self):
-        """Detect dashboard Go Live / Go Paper toggle and restart apex_bot only."""
+        """Detect live/paper toggle and restart affected processes."""
         want_live = LIVE_FILE.exists()
         if want_live == self._apex_live:
             return   # no change
 
         mode_str = "LIVE" if want_live else "PAPER"
-        print(f"[Watchdog] Mode change detected → {mode_str}. Restarting apex_bot...")
-        _tg(f"🔄 <b>APEX mode switching to {mode_str}</b> (dashboard toggle)")
-        self.kill("apex_bot")
+        print(f"[Watchdog] Mode change detected → {mode_str}. Restarting affected processes...")
+        _tg(f"🔄 <b>APEX mode switching to {mode_str}</b>")
         self._apex_live = want_live
-        time.sleep(2)
+
+        # Restart apex_bot (always affected)
+        self.kill("apex_bot")
+        time.sleep(1)
         self.start("apex_bot")
-        _tg(f"{'🔴' if want_live else '📋'} <b>apex_bot restarted in {mode_str} mode</b>")
+
+        # Restart any process with affects_live_toggle=True
+        for name, cfg in _PROCESS_DEFS.items():
+            if cfg.get("affects_live_toggle"):
+                self.kill(name)
+                time.sleep(1)
+                self.start(name)
+                print(f"[Watchdog] Restarted {name} in {mode_str} mode")
+
+        _tg(f"{'🔴' if want_live else '📋'} <b>APEX restarted in {mode_str} mode</b>")
 
     def write_status(self):
         """Write process status to logs/watchdog_status.json for dashboard."""
