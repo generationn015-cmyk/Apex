@@ -616,15 +616,57 @@
       "is_known_whale": false,
       "tx": "0x1e658692bda3da332cb2409e55f289897a29c6331d51f6e6aaff2132de347212",
       "timestamp": "2026-04-12T10:41:48.524028+00:00"
+    },
+    "0xf50019861496ba6722d9adc7bff0066870398a02f7cc4f1353d1f0fe45510326": {
+      "condition_id": "0xf50019861496ba6722d9adc7bff0066870398a02f7cc4f1353d1f0fe45510326",
+      "title": "Will Brentford finish in 3rd place in the 2025-26 English Pr",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.996,
+      "whale_address": "0xa2b6bdcb498fe7367ded4ae2db7e9cb3db2c7b4d",
+      "whale_name": "DoloresDolorem",
+      "whale_size": 768.29,
+      "is_known_whale": false,
+      "tx": "0x3c13dc931750be981c400fc4fbe1baac4acd5216c8f289792afc1a37b735470b",
+      "timestamp": "2026-04-12T10:51:49.341678+00:00"
+    },
+    "0x289568d555ec620ed6fa33c936c5f42649d3a2e30748a1daf7079f42453fbea4": {
+      "condition_id": "0x289568d555ec620ed6fa33c936c5f42649d3a2e30748a1daf7079f42453fbea4",
+      "title": "Will Ivory Coast win the 2026 FIFA World Cup?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.996,
+      "whale_address": "0xeb24e4214cf8bea49f9d91947d4e421739e522e2",
+      "whale_name": "afdfwe67",
+      "whale_size": 1376.0,
+      "is_known_whale": false,
+      "tx": "0xacf63f81488a35fc0ce46ce31895eb23b907a4ef64fca16770bc2a1d1bb72118",
+      "timestamp": "2026-04-12T10:51:49.343202+00:00"
+    },
+    "0x6509c26f04acbe80e73144486933fff507901867925f165421d66155193fce55": {
+      "condition_id": "0x6509c26f04acbe80e73144486933fff507901867925f165421d66155193fce55",
+      "title": "Will Rory McIlroy win the 2026 Masters tournament?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.36,
+      "whale_address": "0x428b221c57b3ce2bcc127c17b034dcb453df5b25",
+      "whale_name": "Sammy778",
+      "whale_size": 621.5,
+      "is_known_whale": false,
+      "tx": "0x435cf19e6cca2c14de17764c64a573c884fc69bc0d87e65234bfb8063e99a709",
+      "timestamp": "2026-04-12T10:51:49.343282+00:00"
     }
   },
   "history": [],
   "consecutive_losses": 0,
   "cooldown_until": null,
   "top_traders": [],
-  "total_wallets_tracked": 128,
+  "total_wallets_tracked": 140,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T10:41:48.526303+00:00"
+  "updated": "2026-04-12T10:51:49.346314+00:00"
 }
