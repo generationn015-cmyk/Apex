@@ -4129,7 +4129,7 @@
       "whale_size": 896.2,
       "is_known_whale": false,
       "tx": "0x37bed191aa977d69b162145e77f649a446c80db35dedabca76b5e113c337339f",
-      "timestamp": "2026-04-12T18:36:10.055792+00:00"
+      "timestamp": "2026-04-12T18:38:34.254249+00:00"
     },
     "0xeb26a040fbe8c0f1a44338ef79417b20ccb80ea18a5096d901b5fc3bff53e690": {
       "condition_id": "0xeb26a040fbe8c0f1a44338ef79417b20ccb80ea18a5096d901b5fc3bff53e690",
@@ -4143,7 +4143,7 @@
       "whale_size": 561.797751,
       "is_known_whale": false,
       "tx": "0x7f9618fe5ace0fc60f74dea00022794838d13e04054bb870ee858d9ad0010940",
-      "timestamp": "2026-04-12T18:36:10.055903+00:00"
+      "timestamp": "2026-04-12T18:38:34.254385+00:00"
     },
     "0xd2e28481d67a091898f2e3febde6be9b5291c9d40e342b75bfac28dc5d58a5ea": {
       "condition_id": "0xd2e28481d67a091898f2e3febde6be9b5291c9d40e342b75bfac28dc5d58a5ea",
@@ -4157,7 +4157,7 @@
       "whale_size": 742.6,
       "is_known_whale": false,
       "tx": "0xae54d01807b1de8a6170c8c88ab07c739cc9d78ad155b50b9581664855654667",
-      "timestamp": "2026-04-12T18:36:10.055915+00:00"
+      "timestamp": "2026-04-12T18:38:34.254433+00:00"
     },
     "0xd78a4caeb2797d5f513dc02227cf9411a89de10ed440b1f4fb5a9460dec0086e": {
       "condition_id": "0xd78a4caeb2797d5f513dc02227cf9411a89de10ed440b1f4fb5a9460dec0086e",
@@ -4171,7 +4171,7 @@
       "whale_size": 496.61,
       "is_known_whale": false,
       "tx": "0x29f90046b310873ce60f5f0dda02b7bc03bea8848b3176f6068108c439d0bc2d",
-      "timestamp": "2026-04-12T18:36:10.055925+00:00"
+      "timestamp": "2026-04-12T18:38:34.254446+00:00"
     },
     "0xc5675bc58c8117391cc243780c1b709ce1ef744aa27779c78ee82f3dc974ca1b": {
       "condition_id": "0xc5675bc58c8117391cc243780c1b709ce1ef744aa27779c78ee82f3dc974ca1b",
@@ -4185,77 +4185,105 @@
       "whale_size": 3000.0,
       "is_known_whale": false,
       "tx": "0x94758d3337762401ef3cddd238b899a1fae5d5380064e112f3e7cca4c429125c",
-      "timestamp": "2026-04-12T18:36:10.055933+00:00"
+      "timestamp": "2026-04-12T18:38:34.254458+00:00"
     },
-    "0x6bd5604f755fe4322fb2d08b54397a0325e79fd4b3dde1c552fb27c741e50cca": {
-      "condition_id": "0x6bd5604f755fe4322fb2d08b54397a0325e79fd4b3dde1c552fb27c741e50cca",
-      "title": "Bitcoin Up or Down - April 12, 5:30PM-5:45PM ET",
+    "0xb6b3d7a2037b3faa7e1306d741840d453432902d73cc9a146a035e40271eae73": {
+      "condition_id": "0xb6b3d7a2037b3faa7e1306d741840d453432902d73cc9a146a035e40271eae73",
+      "title": "Will the San Antonio Spurs win the 2026 NBA Finals?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.171,
+      "whale_address": "0xd513e5f8b10cb278be5a1bc90a3161fa72ac989d",
+      "whale_name": "Tomas193",
+      "whale_size": 2184.0,
+      "is_known_whale": false,
+      "tx": "0x9992437cb9b7fc0b2ad7889de149916685531dedcf7983ef162f7031e0c88a01",
+      "timestamp": "2026-04-12T21:41:02.047416+00:00"
+    },
+    "0x14228ee62e89d1e0f58562c372d45f5ab67a995e5a339408f124b598e6ba8876": {
+      "condition_id": "0x14228ee62e89d1e0f58562c372d45f5ab67a995e5a339408f124b598e6ba8876",
+      "title": "Military action against Iran ends by April 22, 2026?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.999,
+      "whale_address": "0x95074f700f93bdf6e62fc965e0832064c0877b04",
+      "whale_name": "CAR-LGBTFriendlyVersion",
+      "whale_size": 10068.55,
+      "is_known_whale": false,
+      "tx": "0xc1f67dd5c7a08b8aebaeaec3d363705158fd0baa60eaada37e81e18b04e457a8",
+      "timestamp": "2026-04-12T21:41:02.047887+00:00"
+    },
+    "0xc64a77f9126ab445ae479ecd9c229aa4f666187dc2c0c9729879a2c602e9c0d8": {
+      "condition_id": "0xc64a77f9126ab445ae479ecd9c229aa4f666187dc2c0c9729879a2c602e9c0d8",
+      "title": "Canadiens vs. Islanders",
+      "outcome": "Islanders",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.54,
+      "whale_address": "0xead152b855effa6b5b5837f53b24c0756830c76a",
+      "whale_name": "elkmonkey",
+      "whale_size": 455.39,
+      "is_known_whale": true,
+      "tx": "0x106113b7cff0e95bf749e8add8457abc6b3e431de8f6acd4069af393f2fb43f7",
+      "timestamp": "2026-04-12T21:41:02.048035+00:00"
+    },
+    "0x9331e5a32f1064b275002f2b4257920b188c32ef86eb0dc1177507a1f69f137a": {
+      "condition_id": "0x9331e5a32f1064b275002f2b4257920b188c32ef86eb0dc1177507a1f69f137a",
+      "title": "Bitcoin Up or Down - April 12, 5:45PM-5:50PM ET",
       "outcome": "Up",
       "side": "BUY",
       "bet_size": 10.0,
-      "entry_price": 0.24252136855778364,
-      "whale_address": "0x95ef1e9e7175f25d5b76394beced39b7abd0ff92",
-      "whale_name": "0x95eF1E9e7175F25D5B76394bECED39b7ABd0Ff92-1774136253139",
-      "whale_size": 412.3348,
+      "entry_price": 0.01,
+      "whale_address": "0x6c646ceb0aa71d1ec87732058104b638ac83c336",
+      "whale_name": "bictoinathath",
+      "whale_size": 464.36,
       "is_known_whale": false,
-      "tx": "0xfd257ad299772fd49e3b7a7603e2347bb9ceb489f88597f15bc0a6972e0fc1ac",
-      "timestamp": "2026-04-12T21:38:37.774175+00:00"
+      "tx": "0xf1036ed6d2a1939175e6a8da7b1831a2a38304bb17ea1f912bf4d81f294b1c19",
+      "timestamp": "2026-04-12T21:51:03.353302+00:00"
     },
-    "0x9be548b590f9f3530718929f5f3bde42c6c8ccc1e687dc7a6a84d448f580b64e": {
-      "condition_id": "0x9be548b590f9f3530718929f5f3bde42c6c8ccc1e687dc7a6a84d448f580b64e",
-      "title": "Bitcoin Up or Down - April 12, 5:30PM-5:35PM ET",
-      "outcome": "Up",
-      "side": "BUY",
-      "bet_size": 10.0,
-      "entry_price": 0.13,
-      "whale_address": "0x3c4294c251bfd4a6f3abcc9823bbbab0878ee05c",
-      "whale_name": "0x3C4294c251BFd4a6F3AbcC9823bBBaB0878EE05c-1761213594402",
-      "whale_size": 459.18455,
-      "is_known_whale": false,
-      "tx": "0x81c80692ffbdf7fb61a51f4f8ed8f636092640266738b36ba67650aae1c5cb58",
-      "timestamp": "2026-04-12T21:38:37.774604+00:00"
-    },
-    "0x3d81f5fda824933887bba2db2e739b71c87ae538860523789a652363bad3bc3f": {
-      "condition_id": "0x3d81f5fda824933887bba2db2e739b71c87ae538860523789a652363bad3bc3f",
-      "title": "Chicago White Sox vs. Kansas City Royals: O/U 9.5",
-      "outcome": "Under",
-      "side": "BUY",
-      "bet_size": 10.0,
-      "entry_price": 0.68,
-      "whale_address": "0x1c70ac3d24049820abc5e31af2cac9710124b25e",
-      "whale_name": "Frowner",
-      "whale_size": 495.2,
-      "is_known_whale": false,
-      "tx": "0x783ca6286ecefd0e0469f769f4d45ec1a5cbf878b95cbbf78803b54c466a11b5",
-      "timestamp": "2026-04-12T21:48:39.233351+00:00"
-    },
-    "0x2db28d9969199f10f557ce63be3be92ba38f902f7ac5a89bfe7bfe9a1a000c0e": {
-      "condition_id": "0x2db28d9969199f10f557ce63be3be92ba38f902f7ac5a89bfe7bfe9a1a000c0e",
-      "title": "Will the price of Bitcoin be above $74,000 on April 13?",
+    "0x3dcdeddaa3a83a5509886e5ed070fafd95ed6cf3703908016761c5d277e51253": {
+      "condition_id": "0x3dcdeddaa3a83a5509886e5ed070fafd95ed6cf3703908016761c5d277e51253",
+      "title": "Will the price of Ethereum be between $1,700 and $1,800 on A",
       "outcome": "No",
       "side": "BUY",
       "bet_size": 10.0,
-      "entry_price": 0.968,
-      "whale_address": "0xd0fc2a8919031e50984585d0b3cbe4a6c33cc1e8",
-      "whale_name": "Miffffy",
-      "whale_size": 972.7536,
+      "entry_price": 0.999,
+      "whale_address": "0x9e2db5b6988d97e8fcfb6074021502ab12e92f31",
+      "whale_name": "Maie",
+      "whale_size": 906.76471,
       "is_known_whale": false,
-      "tx": "0xb08a1526fb9d1cae7e4d8805b87e6055d2f7a706dd06a50da73782c1910b8889",
-      "timestamp": "2026-04-12T21:48:39.233660+00:00"
+      "tx": "0x77b2c0f6fcde260f0de46e369c94c309ebe49b582806d315cc43e0bdb1133d48",
+      "timestamp": "2026-04-12T21:51:03.354825+00:00"
     },
-    "0x895d88db2f28a6317cb02d536f82bee6b5ff4891a4d2da329b7ae01b395ac9fa": {
-      "condition_id": "0x895d88db2f28a6317cb02d536f82bee6b5ff4891a4d2da329b7ae01b395ac9fa",
-      "title": "Bitcoin Up or Down - April 12, 5PM ET",
+    "0x57f482edecabefb71cc8faf77d706e62498812927692948074fce8c2b66029a3": {
+      "condition_id": "0x57f482edecabefb71cc8faf77d706e62498812927692948074fce8c2b66029a3",
+      "title": "Wizards vs. Cavaliers",
+      "outcome": "Cavaliers",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.8,
+      "whale_address": "0x7ea571c40408f340c1c8fc8eaacebab53c1bde7b",
+      "whale_name": "Cannae",
+      "whale_size": 502.7155,
+      "is_known_whale": false,
+      "tx": "0xb87f4c3a8b4436be48b96c267338092d66568d9da2f21d94e514140af5a86f02",
+      "timestamp": "2026-04-12T21:51:03.355001+00:00"
+    },
+    "0xe29d398f46ede9214df455aea668ef25b550cfcb94767586a57074da6787463f": {
+      "condition_id": "0xe29d398f46ede9214df455aea668ef25b550cfcb94767586a57074da6787463f",
+      "title": "Ethereum Up or Down - April 12, 5PM ET",
       "outcome": "Down",
       "side": "BUY",
       "bet_size": 10.0,
-      "entry_price": 0.4279183032207384,
-      "whale_address": "0xef104cc70851a4246e8e06790d7fad9708190b43",
-      "whale_name": "fiankee",
-      "whale_size": 488.22612,
+      "entry_price": 0.9860561769424385,
+      "whale_address": "0x2ea0d4536ddf1e105070965e8c146b88ef43d448",
+      "whale_name": "slimDunx",
+      "whale_size": 496.48076,
       "is_known_whale": false,
-      "tx": "0x3de80505b9119340af04e96571ff78d6b678c3d34d41de492051a63409425c2f",
-      "timestamp": "2026-04-12T21:48:39.237670+00:00"
+      "tx": "0xf42fab31a81fc8aa2d0613cab2ca9ceb7a5a71d6dc0f1dfd2c1b86ab176d57dc",
+      "timestamp": "2026-04-12T21:51:03.355125+00:00"
     }
   },
   "history": [],
@@ -4335,6 +4363,14 @@
       "active_markets": 3
     },
     {
+      "address": "0xead152b855effa6b5b5837f53b24c0756830c76a",
+      "name": "elkmonkey",
+      "trades": 7,
+      "volume": 4144.64,
+      "last_seen": "2026-04-12T21:41:02.005368+00:00",
+      "active_markets": 4
+    },
+    {
       "address": "0x507e52ef684ca2dd91f90a9d26d149dd3288beae",
       "name": "GamblingIsAllYouNeed",
       "trades": 3,
@@ -4347,15 +4383,7 @@
       "name": "oneheadedtiger",
       "trades": 4,
       "volume": 3958.05,
-      "last_seen": "2026-04-12T18:36:10.034117+00:00",
-      "active_markets": 3
-    },
-    {
-      "address": "0xead152b855effa6b5b5837f53b24c0756830c76a",
-      "name": "elkmonkey",
-      "trades": 6,
-      "volume": 3689.25,
-      "last_seen": "2026-04-12T18:26:04.633553+00:00",
+      "last_seen": "2026-04-12T18:38:34.232038+00:00",
       "active_markets": 3
     },
     {
@@ -4363,7 +4391,7 @@
       "name": "239393828",
       "trades": 3,
       "volume": 3262.05,
-      "last_seen": "2026-04-12T18:36:10.023089+00:00",
+      "last_seen": "2026-04-12T18:38:34.221847+00:00",
       "active_markets": 3
     },
     {
@@ -4383,9 +4411,9 @@
       "active_markets": 4
     }
   ],
-  "total_wallets_tracked": 682,
+  "total_wallets_tracked": 693,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T21:48:39.253483+00:00"
+  "updated": "2026-04-12T21:51:03.368218+00:00"
 }
