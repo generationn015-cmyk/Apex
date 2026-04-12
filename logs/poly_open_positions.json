@@ -274,7 +274,7 @@
     "condition_id": "0x9b6fef249040fd17e9c107955b37ac2c3e923509b6b0ff01cc463a331ddeb894",
     "direction": "YES",
     "entry_price": 0.1595,
-    "current_price": 0.159,
+    "current_price": 0.158,
     "bet_size": 12.14,
     "edge": 0.013,
     "confidence": 0.1725,
@@ -285,7 +285,7 @@
     "expires_at": "2026-04-14T01:43:34.840462+00:00",
     "max_hold_hours": 36,
     "status": "OPEN",
-    "pnl_pct": -0.3
+    "pnl_pct": -0.9
   },
   {
     "id": "a0713b0f0a01",
@@ -312,7 +312,7 @@
     "condition_id": "0xb6b3d7a2037b3faa7e1306d741840d453432902d73cc9a146a035e40271eae73",
     "direction": "YES",
     "entry_price": 0.1865,
-    "current_price": 0.17,
+    "current_price": 0.1715,
     "bet_size": 10.27,
     "edge": 0.015,
     "confidence": 0.2015,
@@ -323,7 +323,7 @@
     "expires_at": "2026-04-13T03:48:51.477148+00:00",
     "max_hold_hours": 12,
     "status": "OPEN",
-    "pnl_pct": -8.8
+    "pnl_pct": -8.0
   },
   {
     "id": "d598f3c79ce9",
