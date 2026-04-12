@@ -22,13 +22,20 @@ TD_ROOT = Path.home() / "trading-dashboard"   # copy trading + polymarket
 LOGS = ROOT / "logs"
 
 # Source → destination mappings (all land in apex/logs/ for git tracking)
+POLY_DATA = ROOT / "polymarket" / "data"
+
 SYNC_MAP = {
     # APEX crypto bot
     ROOT  / "logs" / "state.json":           LOGS / "state.json",
     ROOT  / "logs" / "paper_trades.jsonl":   LOGS / "paper_trades.jsonl",
+    # Polymarket sniper + BTC 5-min (these stay in polymarket/data/ in git)
+    POLY_DATA / "btc_5m_state.json":         POLY_DATA / "btc_5m_state.json",
+    POLY_DATA / "sniper_state.json":         POLY_DATA / "sniper_state.json",
+    POLY_DATA / "copy_trader_status.json":   POLY_DATA / "copy_trader_status.json",
+    POLY_DATA / "scan_results.json":         POLY_DATA / "scan_results.json",
     # Signal engine (Pocket Option forex)
     SE_ROOT / "signals_log.jsonl":           LOGS / "signals_log.jsonl",
-    # Polymarket copy trading (trading-dashboard)
+    # Legacy polymarket (trading-dashboard)
     TD_ROOT / "polymarket/data/open_positions.json": LOGS / "poly_open_positions.json",
     TD_ROOT / "polymarket/data/paper_results.json":  LOGS / "poly_paper_results.json",
     TD_ROOT / "polymarket/data/scan_log.jsonl":      LOGS / "poly_scan_log.jsonl",
@@ -54,6 +61,10 @@ def sync_to_github(token: str = "", remote: str = "origin") -> bool:
     Pulls from: APEX logs, signal_engine, trading-dashboard polymarket.
     All files land in apex/logs/ so one repo covers everything.
     """
+    if not token:
+        # No token configured — skip silently (set GITHUB_TOKEN env var to enable)
+        return False
+
     LOGS.mkdir(exist_ok=True)
 
     # Copy all source files into apex/logs/

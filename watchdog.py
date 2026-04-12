@@ -54,9 +54,18 @@ _PROCESS_DEFS = {
         "critical": False,
         "affects_live_toggle": False,
     },
-    # signal_engine: self-manages via signal_engine_v2.py + its own PID file.
-    # wolf_bot: self-manages, started independently — do not duplicate here.
-    # Both removed to prevent infinite restart spam.
+    "btc_5m_sniper": {
+        "cmd": [_APEX_PY, str(ROOT / "polymarket" / "btc_5m_sniper.py")],
+        "env_extra": {},
+        "critical": False,
+        "affects_live_toggle": False,
+    },
+    "copy_trader": {
+        "cmd": [_APEX_PY, str(ROOT / "polymarket" / "copy_trader.py")],
+        "env_extra": {},
+        "critical": False,
+        "affects_live_toggle": False,
+    },
 }
 
 

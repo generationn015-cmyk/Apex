@@ -26,64 +26,133 @@ from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from polymarket.scanner import KellyEngine, parse_market
+try:
+    import requests as _requests
+    _HAS_REQUESTS = True
+except ImportError:
+    _HAS_REQUESTS = False
+
+_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+    "Accept": "application/json",
+}
+
+from polymarket.scanner import KellyEngine, parse_market, is_btc_market
 from polymarket.polyconfig import (
     GAMMA_API, MIN_EDGE, KELLY_FRACTION, MAX_POSITION_PCT,
     STARTING_BANKROLL, MIN_LIQUIDITY, MIN_VOLUME,
     TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID,
     PAPER_TRADE_ONLY, DATA_DIR,
+    BTC_SNIPER_ENABLED, BTC_SNIPER_MAX_MINUTES, BTC_SNIPER_MIN_MINUTES,
+    BTC_SNIPER_MIN_EDGE, BTC_SNIPER_MAX_BET_PCT,
 )
 
 # ── Telegram ──────────────────────────────────────────────────────────────────
 
 def _tg(text: str):
-    if not TELEGRAM_BOT_TOKEN:
-        return
-    data = urllib.parse.urlencode({
-        "chat_id": TELEGRAM_CHAT_ID,
-        "text": text,
-        "parse_mode": "HTML",
-    }).encode()
+    """Write notification to shared queue file instead of sending directly."""
     try:
-        urllib.request.urlopen(
-            f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage",
-            data=data, timeout=10
-        )
+        queue_path = DATA_DIR / "notification_queue.jsonl"
+        entry = json.dumps({
+            "source": "polymarket_sniper",
+            "text": text,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        })
+        with open(queue_path, "a") as f:
+            f.write(entry + "\n")
     except Exception:
         pass
 
 
 # ── Market fetcher ────────────────────────────────────────────────────────────
 
-def fetch_markets(limit: int = 100) -> list[dict]:
-    """Fetch active markets from Gamma API."""
-    url = f"{GAMMA_API}/markets?active=true&closed=false&limit={limit}"
+def _gamma_get(params: dict) -> list[dict]:
+    """Single Gamma API call; returns list of raw market dicts."""
+    url = f"{GAMMA_API}/markets"
+    if _HAS_REQUESTS:
+        try:
+            r = _requests.get(url, params=params, headers=_HEADERS, timeout=15)
+            if r.status_code == 200:
+                raw = r.json()
+                return raw if isinstance(raw, list) else raw.get("data", [])
+        except Exception:
+            pass
     try:
-        with urllib.request.urlopen(url, timeout=15) as f:
+        full_url = url + "?" + urllib.parse.urlencode(params)
+        req = urllib.request.Request(full_url, headers=_HEADERS)
+        with urllib.request.urlopen(req, timeout=15) as f:
             raw = json.loads(f.read().decode())
-            # Gamma returns list directly or {"data": [...]}
-            if isinstance(raw, list):
-                return raw
-            return raw.get("data", [])
+            return raw if isinstance(raw, list) else raw.get("data", [])
     except Exception as e:
         print(f"[Polymarket] fetch error: {e}")
         return []
 
 
+def fetch_markets(limit: int = 200) -> list[dict]:
+    """
+    Fetch active markets from Gamma API.
+    Makes two calls:
+      1. Standard volume-sorted scan (broad market view)
+      2. BTC keyword search (targeted for BTC rapid markets)
+    Deduplicates by conditionId.
+    """
+    base = {"active": "true", "closed": "false"}
+
+    raw_all = _gamma_get({**base, "limit": limit})
+
+    # Targeted BTC search — catches rapid BTC price markets
+    raw_btc = _gamma_get({**base, "limit": 50, "search": "bitcoin"})
+    raw_btc += _gamma_get({**base, "limit": 50, "search": "btc"})
+
+    # Deduplicate by conditionId
+    seen: set[str] = set()
+    combined: list[dict] = []
+    for m in raw_all + raw_btc:
+        cid = m.get("conditionId") or m.get("condition_id", "")
+        if cid and cid not in seen:
+            seen.add(cid)
+            combined.append(m)
+
+    if not combined:
+        print("[Polymarket] No markets returned")
+    return combined
+
+
 def filter_eligible(markets: list[dict]) -> list[dict]:
-    """Keep only markets with sufficient liquidity, volume, and short-term resolution."""
+    """
+    Keep markets with sufficient liquidity/volume.
+    BTC short-duration markets (within BTC_SNIPER_MAX_MINUTES) get a separate
+    'btc_short' flag so _cycle can apply tighter edge + smaller sizing.
+    """
     eligible = []
     for m in markets:
         parsed = parse_market(m)
         if not parsed:
             continue
+        if parsed.get("closed"):
+            continue
+
+        mins = parsed.get("minutes_to_resolve")
+        is_btc = parsed.get("is_btc", False)
+
+        # BTC short-duration tier: relaxed liquidity/volume requirements
+        if (BTC_SNIPER_ENABLED and is_btc and mins is not None
+                and BTC_SNIPER_MIN_MINUTES <= mins <= BTC_SNIPER_MAX_MINUTES):
+            parsed["btc_short"] = True
+            eligible.append(parsed)
+            continue
+
+        # Standard tier: full liquidity + volume requirements
         if parsed["liquidity"] < MIN_LIQUIDITY:
             continue
         if parsed["volume"] < MIN_VOLUME:
             continue
-        if parsed.get("closed"):
-            continue
+        parsed["btc_short"] = False
         eligible.append(parsed)
+
+    # BTC short-duration markets first (time-sensitive)
+    eligible.sort(key=lambda x: (not x.get("btc_short", False),
+                                  x.get("minutes_to_resolve") or 9999))
     return eligible
 
 
@@ -176,7 +245,9 @@ def _cycle(state: SniperState, kelly: KellyEngine):
         return
 
     eligible = filter_eligible(markets)
-    print(f"[Sniper] {len(markets)} total → {len(eligible)} eligible")
+    btc_short_count = sum(1 for m in eligible if m.get("btc_short"))
+    print(f"[Sniper] {len(markets)} total → {len(eligible)} eligible "
+          f"({btc_short_count} BTC short-duration)")
 
     fired = 0
     for market in eligible:
@@ -184,7 +255,14 @@ def _cycle(state: SniperState, kelly: KellyEngine):
         if state.already_open(cid):
             continue
 
-        # Kelly sizing — uses vig-removed edge
+        is_btc_short = market.get("btc_short", False)
+        mins = market.get("minutes_to_resolve")
+
+        # Use BTC-specific edge/sizing for short-duration markets
+        min_edge_gate = BTC_SNIPER_MIN_EDGE if is_btc_short else MIN_EDGE
+        max_bet_pct   = BTC_SNIPER_MAX_BET_PCT if is_btc_short else kelly.max_position_pct
+
+        # Kelly sizing with the appropriate bankroll cap
         bet = kelly.calculate(
             market_prob=_estimate_true_prob(market),
             market_price=market["yes_price"],
@@ -192,16 +270,21 @@ def _cycle(state: SniperState, kelly: KellyEngine):
         if bet is None:
             continue
 
-        # Edge gate
-        if bet["edge"] < MIN_EDGE:
+        if bet["edge"] < min_edge_gate:
             continue
+
+        # Apply BTC short-duration bet cap
+        if is_btc_short:
+            bet["bet_size"] = min(bet["bet_size"], state.bankroll * max_bet_pct)
+            bet["bet_size"] = round(bet["bet_size"], 2)
 
         # Open position
         state.open_position(market, bet)
         fired += 1
 
+        tier_tag = f"⚡ BTC {mins:.0f}min" if is_btc_short else "🎯"
         summary = (
-            f"🎯 <b>Polymarket Signal</b>\n"
+            f"{tier_tag} <b>Polymarket Signal</b>\n"
             f"<b>{market['question'][:80]}</b>\n"
             f"Direction: {bet['direction']}\n"
             f"Edge: {bet['edge']*100:.1f}%  |  Kelly: {bet['kelly_pct']:.1f}%\n"
@@ -209,7 +292,9 @@ def _cycle(state: SniperState, kelly: KellyEngine):
             f"Bankroll: ${state.bankroll:.2f}"
         )
         _tg(summary)
-        print(f"  ✅ {bet['direction']} | ${bet['bet_size']:.2f} | edge={bet['edge']*100:.1f}% | {market['question'][:60]}")
+        print(f"  {'⚡' if is_btc_short else '✅'} {bet['direction']} | "
+              f"${bet['bet_size']:.2f} | edge={bet['edge']*100:.1f}% | "
+              f"{market['question'][:60]}")
 
     if fired == 0:
         print("[Sniper] No edges found this cycle")

@@ -1,0 +1,20 @@
+run = "streamlit run dashboard/app.py --server.port 8080 --server.address 0.0.0.0 --server.headless true --browser.gatherUsageStats false"
+language = "python3"
+entrypoint = "dashboard/app.py"
+
+[env]
+PYTHONPATH = "."
+
+[nix]
+channel = "stable-23_11"
+
+[packager]
+language = "python3"
+
+[packager.features]
+packageSearch = true
+guessImports = true
+
+[deployment]
+run = ["sh", "-c", "pip install streamlit plotly pandas numpy && streamlit run dashboard/app.py --server.port 8080 --server.address 0.0.0.0 --server.headless true --browser.gatherUsageStats false"]
+deploymentTarget = "cloudrun"

@@ -1,0 +1,22 @@
+{
+  "updated_at": "2026-04-12T09:32:27.544972+00:00",
+  "processes": {
+    "apex_bot": {
+      "status": "running",
+      "pid": 317,
+      "mode": "paper"
+    },
+    "telegram_bot": {
+      "status": "running",
+      "pid": 318
+    },
+    "polymarket_sniper": {
+      "status": "running",
+      "pid": 319
+    },
+    "btc_5m_sniper": {
+      "status": "running",
+      "pid": 320
+    }
+  }
+}
