@@ -61,7 +61,8 @@ def sync_to_github(token: str = "", remote: str = "origin") -> bool:
     for src, dst in SYNC_MAP.items():
         if src.exists():
             try:
-                shutil.copy2(str(src), str(dst))
+                if src.resolve() != dst.resolve():
+                    shutil.copy2(str(src), str(dst))
                 staged.append(str(dst))
             except Exception as e:
                 print(f"  [DataSync] copy {src.name} failed: {e}")
