@@ -1708,6 +1708,48 @@
       "is_known_whale": false,
       "tx": "0x035f38c4cdd8e5e6fcc370c494670d55087d0581b9bcc23b037f557c3833a990",
       "timestamp": "2026-04-12T12:52:01.477825+00:00"
+    },
+    "0x1557dc9975290e0d1d3af1721ded3539c5ee03b0f100fb3ef053016a30ec3c9e": {
+      "condition_id": "0x1557dc9975290e0d1d3af1721ded3539c5ee03b0f100fb3ef053016a30ec3c9e",
+      "title": "Will Tottenham Hotspur FC win on 2026-04-12?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.3799999992717109,
+      "whale_address": "0xc905611985a8a4a63c98e1c66a8eeb88de84850b",
+      "whale_name": "0xC905611985A8a4A63C98E1c66a8EEB88De84850b-1774690196695",
+      "whale_size": 646.820086,
+      "is_known_whale": false,
+      "tx": "0x4f41feb9706e7c2543c448d87f3afc6b9a1c8240a7f6e504b9adc4ce20cdeb49",
+      "timestamp": "2026-04-12T13:02:02.452765+00:00"
+    },
+    "0x4073f3a877f8c754c9c65aa13b85b9c70f71885647284ad68bf9b91aa763ccc4": {
+      "condition_id": "0x4073f3a877f8c754c9c65aa13b85b9c70f71885647284ad68bf9b91aa763ccc4",
+      "title": "Will Crystal Palace FC vs. Newcastle United FC end in a draw",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.3,
+      "whale_address": "0x6d11cd749eb59c8ffa6d38be80ad0ad0a255c449",
+      "whale_name": "1xx2",
+      "whale_size": 14831.85,
+      "is_known_whale": false,
+      "tx": "0x2d595553b5bcc26c27ac2e92baa741aac901ee4fb8df3fa3f9a874edf9ff4e7f",
+      "timestamp": "2026-04-12T13:02:02.453795+00:00"
+    },
+    "0x87b82498e168f1fcbeaaede7da0860a6affd98312378a6f1493fcbf9899024c4": {
+      "condition_id": "0x87b82498e168f1fcbeaaede7da0860a6affd98312378a6f1493fcbf9899024c4",
+      "title": "LoL: Oh My God vs LGD Gaming (BO3) - LPL Group Nirvana",
+      "outcome": "LGD Gaming",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.999,
+      "whale_address": "0x8e8ccd010d924673af70bc0191c4f49329da65dd",
+      "whale_name": "DogecoinMillionaire",
+      "whale_size": 3195.73,
+      "is_known_whale": false,
+      "tx": "0x68c7f09d4d124c363bd52d5b6469438e16507215c2020fc47350ddfcabe61215",
+      "timestamp": "2026-04-12T13:02:02.453861+00:00"
     }
   },
   "history": [],
@@ -1755,9 +1797,9 @@
       "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 301,
+  "total_wallets_tracked": 310,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T12:52:01.481945+00:00"
+  "updated": "2026-04-12T13:02:02.459563+00:00"
 }
