@@ -3290,6 +3290,48 @@
       "is_known_whale": false,
       "tx": "0xb48ce7413339f3b5d8c69aad4c50e96539dd626b275e21de067c832988b318df",
       "timestamp": "2026-04-12T16:02:23.916938+00:00"
+    },
+    "0x0bd17d8648d3ca39d1e82f3a0c12c4771b097e9aee34bb891a599abc3630e4f8": {
+      "condition_id": "0x0bd17d8648d3ca39d1e82f3a0c12c4771b097e9aee34bb891a599abc3630e4f8",
+      "title": "Bitcoin Up or Down - April 12, 12:05PM-12:10PM ET",
+      "outcome": "Up",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.01,
+      "whale_address": "0x4be35cb6d93c8ccde08aaf728568daaf61b383a9",
+      "whale_name": "",
+      "whale_size": 442.07072,
+      "is_known_whale": false,
+      "tx": "0xc30e1046cd782a53775a021e0c3f8c3d6b11a9a736049f8d24f13ae51a1c61a2",
+      "timestamp": "2026-04-12T16:12:25.209684+00:00"
+    },
+    "0xe3e7ba8172cfce77cf03496e4f1f07b85420e18d350ab1ddf1a4b50af05823b5": {
+      "condition_id": "0xe3e7ba8172cfce77cf03496e4f1f07b85420e18d350ab1ddf1a4b50af05823b5",
+      "title": "Will Elon Musk post 65-89 tweets from April 11 to April 13, ",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.35124340693552836,
+      "whale_address": "0x4d0a7253794c788695b9d2805bf285dc49d6c96f",
+      "whale_name": "Gabbers",
+      "whale_size": 908.602697,
+      "is_known_whale": false,
+      "tx": "0xb9e57c47bb1f21f1f8d514cb75937eb7636f0e04d502b746ac7422be2bed290d",
+      "timestamp": "2026-04-12T16:12:25.210920+00:00"
+    },
+    "0x7772c2282fe8fa4be8d55fe2da4e8db17aca2585d1cc4f5b5462b1e68147313f": {
+      "condition_id": "0x7772c2282fe8fa4be8d55fe2da4e8db17aca2585d1cc4f5b5462b1e68147313f",
+      "title": "Ethereum Up or Down - April 12, 12:05PM-12:10PM ET",
+      "outcome": "Down",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.99,
+      "whale_address": "0xdf0d2ccfe3d7c2ef120395534e43afe283509f79",
+      "whale_name": "0xdf0D2CcfE3d7C2EF120395534e43Afe283509F79-1774320078733",
+      "whale_size": 634.11311,
+      "is_known_whale": false,
+      "tx": "0xe8d953e0ca1aa56fcc304f4d154b1657f15f0f366a54516cc126a6d64814a82f",
+      "timestamp": "2026-04-12T16:12:25.210978+00:00"
     }
   },
   "history": [],
@@ -3417,9 +3459,9 @@
       "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 510,
+  "total_wallets_tracked": 520,
   "wins": 0,
   "losses": 0,
   "win_rate": 0,
-  "updated": "2026-04-12T16:02:23.930107+00:00"
+  "updated": "2026-04-12T16:12:25.219998+00:00"
 }
