@@ -35,8 +35,19 @@ from strategies.oracle   import analyze_ORACLE
 from strategies.sniper   import analyze_SNIPER
 from strategies.sentinel import analyze_SENTINEL
 def _tg(text: str):
-    """Silenced — all notifications go through the hourly Telegram digest."""
-    pass
+    """Send trade entry/exit notifications to Telegram."""
+    from configs.config import TELEGRAM_TOKEN, TELEGRAM_CHAT_ID
+    import urllib.parse, urllib.request
+    data = urllib.parse.urlencode({
+        "chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "HTML",
+    }).encode()
+    try:
+        urllib.request.urlopen(
+            f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
+            data=data, timeout=10,
+        )
+    except Exception:
+        pass
 
 ANALYZERS = {
     "ATLAS":    analyze_ATLAS,
@@ -117,6 +128,7 @@ class ApexBot:
         self.cycle    = 0
         self.last_heartbeat = 0.0
         self._state: dict = {}
+        self._last_signal: dict[str, tuple[str, float]] = {}  # "AGENT_ASSET" -> (direction, timestamp)
 
     def _build_executor(self):
         from configs.config import LIGHTER_API_KEY_ID, LIGHTER_API_KEY_SECRET
@@ -231,8 +243,26 @@ class ApexBot:
                 if strength >= 0.70 and not claude_review(review_data):
                     continue
 
+                # ── Duplicate position check ─────────────────────────────────
+                if self.paper_engine.has_open_position(agent_name, asset):
+                    print(f"  {agent_name}/{asset}: already has open position — skipping")
+                    continue
+
+                # ── Signal cooldown (4h between same-direction entries) ──────
+                SIGNAL_COOLDOWN_HOURS = 4.0
+                sig_key = f"{agent_name}_{asset}"
+                last_sig = self._last_signal.get(sig_key)
+                if last_sig and last_sig[0] == signal:
+                    elapsed = time.time() - last_sig[1]
+                    if elapsed < SIGNAL_COOLDOWN_HOURS * 3600:
+                        print(f"  {agent_name}/{asset}: cooldown ({elapsed/3600:.1f}h < {SIGNAL_COOLDOWN_HOURS}h)")
+                        continue
+
                 # ── Execute ──────────────────────────────────────────────────
-                amount = capital * (RISK["max_risk_pct"] / 100)
+                risk_dollars = capital * (RISK["max_risk_pct"] / 100)
+                notional = risk_dollars / stop_pct if stop_pct > 0 else risk_dollars
+                max_notional = capital * (RISK["max_position_pct"] / 100)
+                amount = min(notional, max_notional)
                 trade  = self.paper_engine.open_trade(
                     agent=agent_name, asset=asset,
                     direction=signal, entry_price=entry_price,
@@ -242,6 +272,7 @@ class ApexBot:
                     notes=f"strength={strength}",
                 )
 
+                self._last_signal[sig_key] = (signal, time.time())
                 signals_fired += 1
                 agent_signals.append({
                     "agent": agent_name, "asset": asset,
@@ -258,11 +289,9 @@ class ApexBot:
                 pct   = stop_pct * 100
                 try:
                     _tg(
-                        f"{'🟢' if signal == 'BUY' else '🔴'} <b>{arrow} {signal}  {asset}</b>\n"
-                        f"Agent: {agent_name}  ·  Strength: {strength*100:.0f}%\n"
-                        f"Entry:  <code>${entry_price:,.4f}</code>\n"
-                        f"Stop:   <code>${stop_price:,.4f}</code>  (-{pct:.1f}%)\n"
-                        f"Target: <code>${take_profit:,.4f}</code>  (+{pct*rr_ratio:.1f}%)"
+                        f"{'🟢' if signal == 'BUY' else '🔴'} <b>{signal} {asset}</b>\n"
+                        f"{agent_name} · {strength*100:.0f}% · ${entry_price:,.0f}\n"
+                        f"SL ${stop_price:,.0f} · TP ${take_profit:,.0f}"
                     )
                 except Exception:
                     pass
@@ -302,19 +331,18 @@ class ApexBot:
             try:
                 emoji = "✅" if is_win else "❌"
                 _tg(
-                    f"{emoji} <b>TRADE CLOSED [{tag}]  {stop['asset']}</b>\n"
-                    f"Agent: {stop['agent']}  ·  {'WIN' if is_win else 'LOSS'}\n"
-                    f"Exit: <code>${stop['exit_price']:,.4f}</code>  "
-                    f"PnL: <b>{pnl_sign}${abs(pnl):.2f}</b>"
+                    f"{emoji} <b>{tag} {stop['asset']} {pnl_sign}${abs(pnl):.2f}</b>\n"
+                    f"{stop['agent']} · ${stop['exit_price']:,.0f}"
                 )
             except Exception:
                 pass
 
         # ── Summary ───────────────────────────────────────────────────────────
-        stats = self.paper_engine.get_agent_stats()
+        stats = self.paper_engine.get_agent_stats(current_prices=current_prices)
         print(f"\n  Signals: {signals_fired}  |  "
               f"Trades: {stats['total_trades']} total / {stats['open']} open  |  "
-              f"WR: {stats['win_rate']}%  |  PnL: ${stats['total_pnl']:.2f}")
+              f"WR: {stats['win_rate']}%  |  PnL: ${stats['total_pnl']:.2f}  |  "
+              f"Open: ${stats['unrealized_pnl']:.2f}")
 
         # ── Persist state ─────────────────────────────────────────────────────
         self._save_state(stats, cycle_results)

@@ -14,6 +14,8 @@ Commands:
   /pause     — pause all trading
   /resume    — resume trading
   /live      — switch to live mode
+  /paper     — switch to paper mode
+  /msg <text> — relay message to terminal
   /ping      — health check
   /help      — list all commands
 """
@@ -22,6 +24,9 @@ import time
 import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
+
+DETROIT_TZ = ZoneInfo("America/Detroit")
 from pathlib import Path
 
 import sys
@@ -94,7 +99,7 @@ def cmd_status() -> str:
 
     # Bankrolls
     btc = _json(_POLY / "btc_5m_state.json")
-    copy = _json(_POLY / "copy_trader_status.json")
+    copy = _json(_POLY / "copy_trader_state.json")
     state = _json(STATE_FILE)
 
     if btc:
@@ -194,7 +199,7 @@ def cmd_poly() -> str:
 
 
 def cmd_copy() -> str:
-    copy = _json(_POLY / "copy_trader_status.json")
+    copy = _json(_POLY / "copy_trader_state.json")
     if not copy:
         return "Copy trader not running."
     pos = copy.get("positions", {})
@@ -212,7 +217,7 @@ def cmd_copy() -> str:
 
 def cmd_balance() -> str:
     btc = _json(_POLY / "btc_5m_state.json")
-    copy = _json(_POLY / "copy_trader_status.json")
+    copy = _json(_POLY / "copy_trader_state.json")
     sniper = _json(_POLY / "sniper_state.json")
     state = _json(STATE_FILE)
     lines = ["<b>Bankrolls</b>"]
@@ -231,7 +236,7 @@ def cmd_balance() -> str:
 def cmd_report() -> str:
     btc = _json(_POLY / "btc_5m_state.json")
     state = _json(STATE_FILE)
-    copy = _json(_POLY / "copy_trader_status.json")
+    copy = _json(_POLY / "copy_trader_state.json")
     lines = [f"<b>APEX Performance Report</b>",
              f"{datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}"]
 
@@ -303,6 +308,25 @@ def cmd_ping() -> str:
     return f"PONG — {updated} UTC{p}"
 
 
+def cmd_msg(text: str = "") -> str:
+    """Relay a message to the terminal via a file that Claude Code can read."""
+    msg = text.strip()
+    if not msg:
+        return "Usage: /msg <your message>\nThis sends your message to the terminal."
+    relay_file = _LOGS / "telegram_relay.jsonl"
+    entry = json.dumps({
+        "text": msg,
+        "time": datetime.now(timezone.utc).isoformat(),
+        "read": False,
+    })
+    try:
+        with open(relay_file, "a") as f:
+            f.write(entry + "\n")
+    except Exception as e:
+        return f"Relay failed: {e}"
+    return f"Sent to terminal: {msg}"
+
+
 def cmd_help() -> str:
     return (
         "<b>APEX Commands</b>\n"
@@ -317,6 +341,7 @@ def cmd_help() -> str:
         "/resume  — resume trading\n"
         "/live    — switch to live mode\n"
         "/paper   — switch to paper mode\n"
+        "/msg     — relay message to terminal\n"
         "/ping    — health check"
     )
 
@@ -333,79 +358,75 @@ COMMANDS = {
 # ── Hourly Digest ────────────────────────────────────────────────────────────
 
 def _build_digest() -> str | None:
-    """Hourly debrief: bankroll, P&L, W/L for every active agent."""
+    """Hourly debrief: bankroll, P&L, W/L for every active bot."""
+    from zoneinfo import ZoneInfo
+    det = ZoneInfo("America/Detroit")
     btc = _json(_POLY / "btc_5m_state.json")
     state = _json(STATE_FILE)
-    copy = _json(_POLY / "copy_trader_status.json")
+    copy = _json(_POLY / "copy_trader_state.json")
     sniper = _json(_POLY / "sniper_state.json")
     has_data = False
-    lines = ["<b>APEX Hourly Debrief</b>"]
+    lines = ["<b>APEX Hourly Update</b>"]
 
-    # BTC 5-Min Sniper
     if btc:
         trades = btc.get("trades", [])
         resolved = [t for t in trades if t.get("resolved")]
         wins = sum(1 for t in resolved if t.get("won"))
         losses = len(resolved) - wins
         pnl = sum(t.get("pnl", 0) for t in resolved)
-        lines.append(f"\n<b>BTC Sniper</b>")
-        lines.append(f"  Bank: ${btc['bankroll']:.2f} | {wins}W/{losses}L | PnL: ${pnl:+.2f}")
+        pending = len(trades) - len(resolved)
+        lines.append(f"\n⚡ <b>BTC Sniper</b>: ${btc['bankroll']:.0f}")
+        lines.append(f"  {wins}W/{losses}L · ${pnl:+.0f} PnL · {pending} pending")
         has_data = True
 
-    # Crypto Agents (ATLAS, ORACLE, SNIPER, SENTINEL)
     if state:
         s = state.get("stats", {})
-        mode = state.get("mode", "paper").upper()
-        unreal = s.get('unrealized_pnl', 0)
-        lines.append(f"\n<b>Crypto Agents</b> ({mode} C{state.get('cycle',0)})")
-        lines.append(f"  {s.get('wins',0)}W/{s.get('losses',0)}L | "
-                     f"Realized: ${s.get('total_pnl',0):+.2f} | "
-                     f"Open: ${unreal:+.2f}")
-        lines.append(f"  Trades: {s.get('total_trades',0)} ({s.get('open',0)} open)")
-        has_data = True
+        total = s.get('total_trades', 0)
+        if total > 0 or s.get('open', 0) > 0:
+            lines.append(f"\n📊 <b>Crypto Agents</b>: {s.get('wins',0)}W/{s.get('losses',0)}L")
+            lines.append(f"  PnL ${s.get('total_pnl',0):+.0f} · {s.get('open',0)} open")
+            has_data = True
 
-    # Polymarket Sniper
     if sniper:
         pos = sniper.get("positions", {})
         hist = sniper.get("history", [])
-        wins = sum(1 for h in hist if h.get("result") == "WIN")
-        lines.append(f"\n<b>Poly Sniper</b>")
-        lines.append(f"  Bank: ${sniper.get('bankroll',0):.2f} | "
-                     f"{len(pos)} open | {wins}W/{len(hist)-wins}L")
+        lines.append(f"\n🎯 <b>Poly Sniper</b>: ${sniper.get('bankroll',0):.0f}")
+        lines.append(f"  {len(pos)} open · {len(hist)} resolved")
         has_data = True
 
-    # Copy Trader
     if copy:
         pos = copy.get("positions", {})
         hist = copy.get("history", [])
-        resolved = [x for x in hist if x.get("resolved")]
-        cpnl = sum(x.get("pnl", 0) for x in resolved)
-        lines.append(f"\n<b>Copy Trader</b>")
-        lines.append(f"  Bank: ${copy.get('bankroll',0):.2f} | "
-                     f"{len(pos)} open | {copy.get('total_wallets_tracked',0)} wallets")
-        if resolved:
-            lines.append(f"  PnL: ${cpnl:+.2f}")
+        cpnl = sum(x.get("pnl", 0) for x in hist)
+        lines.append(f"\n🐋 <b>Copy Trader</b>: ${copy.get('bankroll',0):.0f}")
+        lines.append(f"  {len(pos)} open · {len(hist)} resolved · ${cpnl:+.0f} PnL")
         has_data = True
 
     if _is_paused():
         lines.append("\n⚠ PAUSED")
 
-    lines.append(f"\n{datetime.now(timezone.utc).strftime('%H:%M UTC')}")
+    now_det = datetime.now(det)
+    lines.append(f"\n{now_det.strftime('%-I:%M %p ET')}")
     return "\n".join(lines) if has_data else None
 
 
 def _should_digest() -> bool:
+    """Fire once per clock-hour in Detroit (America/Detroit) time."""
+    now = datetime.now(DETROIT_TZ)
     try:
         if _DIGEST_FILE.exists():
-            return (time.time() - float(_DIGEST_FILE.read_text().strip())) >= _DIGEST_INTERVAL
+            last_hour = int(_DIGEST_FILE.read_text().strip())
+            return now.hour != last_hour
     except Exception:
         pass
     return True
 
 
 def _mark_digest():
+    """Store current Detroit hour (0-23) so digest fires once per clock-hour."""
     try:
-        _DIGEST_FILE.write_text(str(time.time()))
+        now = datetime.now(DETROIT_TZ)
+        _DIGEST_FILE.write_text(str(now.hour))
     except Exception:
         pass
 
@@ -456,15 +477,28 @@ def run_bot():
             first = text.split()[0]
             if first.startswith("/"):
                 cmd = first.split("@")[0].lower()
-                handler = COMMANDS.get(cmd)
-                if handler:
+                # /msg takes the rest of the message as argument
+                if cmd == "/msg":
+                    rest = text[len(first):].strip()
                     try:
-                        _send(handler())
+                        _send(cmd_msg(rest))
                     except Exception as e:
                         _send(f"Error: {e}")
                 else:
-                    _send(f"Unknown: {cmd}\n/help for commands")
+                    handler = COMMANDS.get(cmd)
+                    if handler:
+                        try:
+                            _send(handler())
+                        except Exception as e:
+                            _send(f"Error: {e}")
+                    else:
+                        _send(f"Unknown: {cmd}\n/help for commands")
             else:
+                # Free-text messages also relay to terminal
+                try:
+                    cmd_msg(text)
+                except Exception:
+                    pass
                 _send(_ai_reply(text))
 
         # Hourly digest — only notification the user gets unprompted

@@ -546,8 +546,7 @@ def run_sniper(live_mode: bool = False):
                     state.bankroll += trade["bet_size"] + trade["pnl"]  # return stake + profit
                     state.save()
 
-                    _tg(f"<b>HEDGE ARB</b> Up+Down={combined:.3f} | "
-                        f"Profit: ${trade['pnl']:+.2f} ({arb_profit_pct:.1f}%)")
+                    _tg(f"🔒 <b>Hedge Arb +${trade['pnl']:.2f}</b> ({arb_profit_pct:.1f}% locked)")
                     last_traded_window = window_ts
                     continue
 
@@ -590,7 +589,11 @@ def run_sniper(live_mode: bool = False):
 
                 # Dislocation check: only fire when edge is big enough
                 # to survive ~3.15% dynamic taker fee at 50/50 odds
-                if result.confidence >= MIN_CONFIDENCE:
+                # MACD gate: delta-only signals (zero MACD confirmation)
+                # need confidence >= 0.60 (big move) to trade without momentum
+                if result.confidence >= MIN_CONFIDENCE and not (
+                    result.macd_confirmation == 0 and result.confidence < 0.60
+                ):
                     direction = result.direction
                     token_id = (market["up_token_id"] if direction == "UP"
                                 else market["down_token_id"])
@@ -620,7 +623,10 @@ def run_sniper(live_mode: bool = False):
                 time.sleep(POLL_INTERVAL_SECS)
 
             # T-5s hard deadline: if not fired, execute best signal if viable
-            if not fired and best_signal and best_signal.confidence >= MIN_CONFIDENCE:
+            # Same MACD gate: require confirmation for sub-0.60 confidence
+            if not fired and best_signal and best_signal.confidence >= MIN_CONFIDENCE and not (
+                best_signal.macd_confirmation == 0 and best_signal.confidence < 0.60
+            ):
                 current_btc = get_btc_price() or tick_buffer[-1]
                 secs_left = _secs_remaining()
                 direction = best_signal.direction
@@ -696,18 +702,13 @@ def _execute_trade(state, executor, market, bet, direction, token_id,
     }
     state.record_trade(trade)
 
-    ind = strategy_result.indicators
-    scores = ind.get("scores", {})
-    top_signals = sorted(scores.items(), key=lambda x: abs(x[1]), reverse=True)[:3]
-    top_str = ", ".join(f"{k}={v:+.1f}" for k, v in top_signals)
-
+    macd_count = strategy_result.macd_confirmation
+    conf_str = f"{strategy_result.confidence:.0%}"
     _tg(
-        f"⚡ <b>BTC 5-Min {direction}</b>\n"
-        f"Conf: {strategy_result.confidence:.0%} | Edge: {bet['edge']*100:.1f}%\n"
-        f"Score: {strategy_result.score:+.1f} | Top: {top_str}\n"
-        f"Bet: ${bet['bet_size']:.2f} | {mode_tag}\n"
-        f"BTC: ${current_btc:,.2f} (start: ${start_price:,.2f})\n"
-        f"{state.summary()}"
+        f"⚡ <b>BTC 5-Min {direction}</b> | {mode_tag}\n"
+        f"{conf_str} conf · {bet['edge']*100:.1f}% edge · ${bet['bet_size']:.2f}\n"
+        f"BTC ${current_btc:,.0f} (open ${start_price:,.0f}) · {secs_left:.0f}s left\n"
+        f"MACD: {macd_count}/7 confirming"
     )
 
     # Wait for resolution
@@ -789,12 +790,15 @@ def _wait_and_resolve(state: SniperState, trade: dict, start_price: float,
     print(f"  {emoji} Resolved: {outcome} | Bet: {bet_direction} | "
           f"PnL: ${pnl:+.2f} | End: ${end_price:,.2f}")
 
+    resolved = [t for t in state.trades if t.get("resolved")]
+    wins = sum(1 for t in resolved if t.get("won"))
+    losses = len(resolved) - wins
+    wr = round(wins / len(resolved) * 100, 1) if resolved else 0
     _tg(
-        f"{emoji} <b>BTC 5-Min Resolved: {outcome}</b>\n"
-        f"Bet: {bet_direction} → {'WIN' if won else 'LOSS'}\n"
-        f"PnL: <b>${pnl:+.2f}</b>\n"
-        f"BTC: ${start_price:,.2f} → ${end_price:,.2f}\n"
-        f"{state.summary()}"
+        f"{emoji} <b>BTC 5-Min {'WIN' if won else 'LOSS'} ${pnl:+.2f}</b>\n"
+        f"Bet {bet_direction} → {outcome}\n"
+        f"BTC ${start_price:,.0f} → ${end_price:,.0f}\n"
+        f"Bank: ${state.bankroll:.0f} | {wins}W/{losses}L ({wr}%)"
     )
 
 

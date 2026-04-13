@@ -285,10 +285,9 @@ class CopyState:
 
                 tag = "✅" if won else "❌"
                 name = pos.get("whale_name", "")[:15]
-                _tg(f"{tag} <b>Copy {'WIN' if won else 'LOSS'}</b>\n"
-                    f"{pos.get('title', '')[:50]}\n"
-                    f"{side} {our_outcome} | Whale: {name}\n"
-                    f"PnL: <b>${pnl:+.2f}</b> | Bank: ${self.bankroll:.2f}")
+                _tg(f"{tag} <b>Copy {'WIN' if won else 'LOSS'} ${pnl:+.2f}</b>\n"
+                    f"{pos.get('title', '')[:45]}\n"
+                    f"Whale: {name} | Bank: ${self.bankroll:.0f}")
 
                 print(f"  [Resolved] {'WIN' if won else 'LOSS'} ${pnl:+.2f} | "
                       f"{pos.get('title', '')[:50]}")

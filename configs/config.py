@@ -21,7 +21,7 @@ TWELVE_DATA_KEYS = [
     os.getenv("TWELVE_DATA_KEY_1", "f78bd5d5350e4c6fa6af4ddaa63a347b"),
     os.getenv("TWELVE_DATA_KEY_2", "28fa4c9f04ca410396bea5132161307f"),
 ]
-TWELVE_DATA_KEY = TWELVE_DATA_KEYS[0]
+TWELVE_DATA_KEY = TWELVE_DATA_KEYS[1]  # Key 0 exhausted, use Key 1
 
 # ── Lighter.xyz Exchange (zero-fee perpetuals) ────────────────────────────────
 # Get keys at: app.lighter.xyz → API Keys
@@ -87,11 +87,11 @@ RISK = {
 }
 
 # ── Session filter (UTC) ─────────────────────────────────────────────────────
-# Crypto trades 24/7 but volume peaks during NY + London overlap
+# Crypto trades 24/7 — agents run around the clock
 SESSION_FILTER = {
-    "enabled":   True,
-    "open_utc":  7,    # 7am UTC = London open
-    "close_utc": 21,   # 9pm UTC = NY close
+    "enabled":   False,
+    "open_utc":  0,
+    "close_utc": 24,
 }
 
 # ── Loop timing ───────────────────────────────────────────────────────────────

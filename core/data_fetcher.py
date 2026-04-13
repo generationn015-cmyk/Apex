@@ -35,7 +35,10 @@ _TD_SYMBOL = {
     "ETH/USDT": "ETH/USD",
     "SOL/USDT": "SOL/USD",
 }
-_BINANCE_URL = "https://api.binance.com/api/v3/klines"
+_BINANCE_URLS = [
+    "https://api.binance.us/api/v3/klines",      # US-accessible
+    "https://api.binance.com/api/v3/klines",      # global (geo-blocked in US)
+]
 
 
 class MarketDataFetcher:
@@ -60,28 +63,37 @@ class MarketDataFetcher:
         if not bi_sym:
             return None
         bi_int = _BINANCE_INTERVAL.get(interval, interval)
-        url    = f"{_BINANCE_URL}?symbol={bi_sym}&interval={bi_int}&limit={limit}"
-        try:
-            async with session.get(url, timeout=aiohttp.ClientTimeout(total=15)) as r:
-                data = await r.json()
-                if not isinstance(data, list):
-                    return None
-                self.requests_made += 1
-                df = pd.DataFrame([
-                    {
-                        "datetime": str(pd.to_datetime(k[0], unit="ms")),
-                        "open":     float(k[1]),
-                        "high":     float(k[2]),
-                        "low":      float(k[3]),
-                        "close":    float(k[4]),
-                        "volume":   float(k[5]),
-                    }
-                    for k in data
-                ])
-                return df
-        except Exception as e:
-            print(f"  [Data] Binance fetch error ({symbol}): {e}")
-            return None
+
+        # Retry up to 3 times with backoff
+        for attempt in range(3):
+            for base_url in _BINANCE_URLS:
+                url = f"{base_url}?symbol={bi_sym}&interval={bi_int}&limit={limit}"
+                try:
+                    async with session.get(url, timeout=aiohttp.ClientTimeout(total=15)) as r:
+                        data = await r.json()
+                        if not isinstance(data, list):
+                            print(f"  [Binance] {bi_sym} non-list response from {base_url}: {str(data)[:100]}")
+                            continue  # try next URL
+                        self.requests_made += 1
+                        df = pd.DataFrame([
+                            {
+                                "datetime": str(pd.to_datetime(k[0], unit="ms")),
+                                "open":     float(k[1]),
+                                "high":     float(k[2]),
+                                "low":      float(k[3]),
+                                "close":    float(k[4]),
+                                "volume":   float(k[5]),
+                            }
+                            for k in data
+                        ])
+                        return df
+                except Exception as e:
+                    print(f"  [Binance] {bi_sym} fetch error ({base_url}): {e}")
+                    continue  # try next URL
+            # Backoff before retry
+            if attempt < 2:
+                await asyncio.sleep(2 * (attempt + 1))
+        return None
 
     # ── TwelveData (fallback / non-crypto) ───────────────────────────────────
 

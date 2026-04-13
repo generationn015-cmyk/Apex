@@ -31,7 +31,7 @@ SYNC_MAP = {
     # Polymarket sniper + BTC 5-min (these stay in polymarket/data/ in git)
     POLY_DATA / "btc_5m_state.json":         POLY_DATA / "btc_5m_state.json",
     POLY_DATA / "sniper_state.json":         POLY_DATA / "sniper_state.json",
-    POLY_DATA / "copy_trader_status.json":   POLY_DATA / "copy_trader_status.json",
+    POLY_DATA / "copy_trader_state.json":    POLY_DATA / "copy_trader_state.json",
     POLY_DATA / "scan_results.json":         POLY_DATA / "scan_results.json",
     # Signal engine (Pocket Option forex)
     SE_ROOT / "signals_log.jsonl":           LOGS / "signals_log.jsonl",
@@ -90,7 +90,7 @@ def sync_to_github(token: str = "", remote: str = "origin") -> bool:
 
     stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     ok = (
-        _run(["git", "add"] + staged)
+        _run(["git", "add", "-f"] + staged)
         and _run(["git", "commit", "--allow-empty", "-m", f"data: live sync {stamp}"])
         and _run(["git", "push", remote, "HEAD"])
     )

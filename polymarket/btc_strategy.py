@@ -35,6 +35,7 @@ class StrategyResult:
     score: float            # raw composite score
     indicators: dict        # individual indicator values
     entry_price_est: float  # estimated token cost based on delta
+    macd_confirmation: int = 0  # count of non-zero MACD/tick signals (0 = delta-only)
 
 
 def analyze(
@@ -254,11 +255,19 @@ def analyze(
     confidence = min(abs(total_score) / 10.0, 1.0)
     direction = "UP" if total_score > 0 else "DOWN"
 
+    # -- MACD/Tick Confirmation Count ------------------------------------------
+    # Count how many non-delta signals actually fired (non-zero)
+    _confirm_keys = ["macd_histogram", "macd_acceleration", "macd_cross",
+                     "macd_zero_regime", "fast_macd_confirm", "macd_volume_flow",
+                     "tick_trend"]
+    macd_confirm_count = sum(1 for k in _confirm_keys if abs(scores.get(k, 0)) > 0.01)
+
     # -- Token Price Estimate --------------------------------------------------
     entry_price_est = _estimate_token_price(abs_delta)
 
     details["scores"] = {k: round(v, 2) for k, v in scores.items()}
     details["total_score"] = round(total_score, 2)
+    details["macd_confirmation"] = macd_confirm_count
 
     return StrategyResult(
         direction=direction,
@@ -266,6 +275,7 @@ def analyze(
         score=total_score,
         indicators=details,
         entry_price_est=entry_price_est,
+        macd_confirmation=macd_confirm_count,
     )
 
 

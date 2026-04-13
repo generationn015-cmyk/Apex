@@ -10,7 +10,7 @@ from pathlib import Path
 BULLPEN_PATH = "/home/jefe/.bullpen/bin/bullpen"
 
 # ── Polymarket Wallet Auth (NOT needed for paper trading / copy mode) ─────────
-POLY_PRIVATE_KEY  = ""
+POLY_PRIVATE_KEY  = "0x19c63922c5a7ad781907cda3566e6219889709024b9b2b96dca7a8add2740816"
 POLY_PROXY_WALLET = ""
 
 # ── Alchemy (Polygon RPC — optional, bot works without it) ────────────────────
@@ -40,7 +40,7 @@ KALSHI_API_SECRET = ""
 STARTING_BANKROLL      = 250.0
 MAX_POSITION_PCT       = 0.05    # 5% max per trade
 KELLY_FRACTION         = 0.25    # Quarter-Kelly
-MIN_EDGE               = 0.015   # 1.5% minimum edge to trade
+MIN_EDGE               = 0.01    # 1% minimum edge to trade (quarter-Kelly keeps sizing safe)
 DAILY_LOSS_CAP_PCT     = 0.03    # Halt if -3% in a day
 MIN_LIQUIDITY          = 1000.0  # Skip markets below this
 MIN_VOLUME             = 500.0
@@ -49,8 +49,8 @@ MIN_VOLUME             = 500.0
 MIRROR_RATIO           = 0.15    # Mirror whale at 15% of their size
 MAX_COPY_SIZE          = 10.0    # Hard cap per copy trade
 MIN_WHALE_TRADE_SIZE   = 200.0   # Ignore whale micro-bets below this
-MAX_CONSECUTIVE_LOSSES = 2       # Cooldown after this many consecutive losses
-COOLDOWN_HOURS         = 24
+MAX_CONSECUTIVE_LOSSES = 5       # Cooldown after this many consecutive losses
+COOLDOWN_HOURS         = 6
 TOP_N_TRADERS          = 15      # Increased from 10 to track more
 
 # ── Data Paths ────────────────────────────────────────────────────────────────
@@ -64,8 +64,16 @@ SCAN_RESULTS_PATH   = DATA_DIR / "scan_results.json"
 DAILY_PNL_PATH      = DATA_DIR / "daily_pnl.json"
 
 # ── Scan Schedule ─────────────────────────────────────────────────────────────
-SCAN_INTERVAL_SECS     = 300    # Unified scan every 5 minutes
-COPY_SCAN_INTERVAL     = 600    # Copy layer refresh every 10 min
+SCAN_INTERVAL_SECS     = 60     # Scan every 60s for 5-min BTC market timing
+COPY_SCAN_INTERVAL     = 300    # Copy layer refresh every 5 min
+
+# ── BTC Short-Duration Sniper ─────────────────────────────────────────────────
+# Targets Polymarket's fast-resolving BTC price markets (e.g. "Will BTC be above X in 5min?")
+BTC_SNIPER_ENABLED     = True
+BTC_SNIPER_MAX_MINUTES = 30     # Only enter markets resolving within this window
+BTC_SNIPER_MIN_MINUTES = 1      # Avoid markets resolving in < 1 min (too late to enter)
+BTC_SNIPER_MIN_EDGE    = 0.02   # 2% edge — slightly lower bar for fast-resolving trades
+BTC_SNIPER_MAX_BET_PCT = 0.03   # 3% of bankroll cap per BTC micro-trade
 
 # ── Polymarket API Bases ──────────────────────────────────────────────────────
 GAMMA_API   = "https://gamma-api.polymarket.com"

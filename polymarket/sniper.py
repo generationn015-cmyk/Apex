@@ -179,6 +179,17 @@ def filter_eligible(markets: list[dict]) -> list[dict]:
             eligible.append(parsed)
             continue
 
+        # Skip markets resolving more than 30 days out (capital lock-up, stale edges)
+        end_date = parsed.get("end_date_iso") or m.get("end_date_iso") or m.get("endDate", "")
+        if end_date:
+            try:
+                end_dt = datetime.fromisoformat(end_date.replace("Z", "+00:00"))
+                days_until = (end_dt - datetime.now(timezone.utc)).days
+                if days_until > 30:
+                    continue
+            except Exception:
+                pass
+
         # Standard tier: full liquidity + volume requirements
         if parsed["liquidity"] < MIN_LIQUIDITY:
             continue
@@ -282,11 +293,9 @@ class SniperState:
                 resolved_ids.append(cid)
 
                 tag = "✅" if won else "❌"
-                _tg(f"{tag} <b>Sniper {'WIN' if won else 'LOSS'}</b>\n"
-                    f"{pos['question'][:60]}\n"
-                    f"Direction: {pos['direction']} → {winner}\n"
-                    f"PnL: <b>${pnl:+.2f}</b>\n"
-                    f"Bankroll: ${self.bankroll:.2f}")
+                _tg(f"{tag} <b>Sniper {'WIN' if won else 'LOSS'} ${pnl:+.2f}</b>\n"
+                    f"{pos['question'][:50]}\n"
+                    f"Bank: ${self.bankroll:.0f}")
 
                 print(f"  [AutoRedeem] ${returned:+.2f} returned → bankroll ${self.bankroll:.2f}")
                 print(f"  [Resolved] {'WIN' if won else 'LOSS'} ${pnl:+.2f} | {pos['question'][:50]}")
@@ -322,9 +331,7 @@ def run_sniper(once: bool = False):
     )
 
     mode_tag = "PAPER" if PAPER_TRADE_ONLY else "LIVE"
-    _tg(f"<b>APEX Dashboard</b>\nhttp://159.26.103.221:8501\n\n"
-        f"Sniper: {mode_tag} | Bankroll: ${state.bankroll:.2f} | "
-        f"{len(state.positions)} open")
+    # Startup message silenced — digest covers this
     print(f"[Sniper] Started ({mode_tag})")
 
     while True:
@@ -387,16 +394,7 @@ def _cycle(state: SniperState, kelly: KellyEngine):
         state.open_position(market, bet)
         fired += 1
 
-        tier_tag = f"⚡ BTC {mins:.0f}min" if is_btc_short else "🎯"
-        summary = (
-            f"{tier_tag} <b>Polymarket Signal</b>\n"
-            f"<b>{market['question'][:80]}</b>\n"
-            f"Direction: {bet['direction']}\n"
-            f"Edge: {bet['edge']*100:.1f}%  |  Kelly: {bet['kelly_pct']:.1f}%\n"
-            f"Bet: ${bet['bet_size']:.2f}  |  Mode: {'PAPER' if PAPER_TRADE_ONLY else 'LIVE'}\n"
-            f"Bankroll: ${state.bankroll:.2f}"
-        )
-        _tg(summary)
+        # Entry notification silenced — resolution notification is enough
         print(f"  {'⚡' if is_btc_short else '✅'} {bet['direction']} | "
               f"${bet['bet_size']:.2f} | edge={bet['edge']*100:.1f}% | "
               f"{market['question'][:60]}")
