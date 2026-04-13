@@ -1102,10 +1102,11 @@ function buildMarquee(items) {
 
 // ════════════════ MAIN REFRESH ════════════════
 async function refresh() {
-  const [state, wdog, btc5m, sniper, scan, copyS, trades] = await Promise.all([
+  const [state, wdog, btc5m, eth5m, sniper, scan, copyS, trades] = await Promise.all([
     fetchJSON('logs/state.json'),
     fetchJSON('logs/watchdog_status.json'),
     fetchJSON('polymarket/data/btc_5m_state.json'),
+    fetchJSON('polymarket/data/eth_5m_state.json'),
     fetchJSON('polymarket/data/sniper_state.json'),
     fetchJSON('polymarket/data/scan_results.json'),
     fetchJSON('polymarket/data/copy_trader_state.json'),
@@ -1260,6 +1261,7 @@ async function refresh() {
     apex_bot:         ['APEX Bot',         'lighter.xyz crypto perps'],
     telegram_bot:     ['Telegram Bot',     'command interface'],
     btc_5m_sniper:    ['BTC 5-Min Sniper', 'polymarket BTC up/down'],
+    eth_5m_sniper:    ['ETH 5-Min Sniper', 'polymarket ETH up/down'],
     polymarket_sniper:['Poly Scanner',     'kelly-edge market scanner'],
     copy_trader:      ['Copy Trader',      'whale flow mirroring'],
   };
