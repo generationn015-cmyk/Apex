@@ -1,5 +1,5 @@
 {
-  "bankroll": 122.89000000000001,
+  "bankroll": 7760.030000000001,
   "positions": {
     "0xc64a77f9126ab445ae479ecd9c229aa4f666187dc2c0c9729879a2c602e9c0d8": {
       "condition_id": "0xc64a77f9126ab445ae479ecd9c229aa4f666187dc2c0c9729879a2c602e9c0d8",
@@ -14,20 +14,6 @@
       "is_known_whale": false,
       "tx": "0x570e622f3838c9355291b4ee165594d4feaca5eff2aaa3e67cc43e91b196f8f4",
       "timestamp": "2026-04-12T22:31:24.777544+00:00"
-    },
-    "0x0214efd795ce4e8a54884faa52bacd4eeea7b4958fcf6f6649843bdc70c8fd0c": {
-      "condition_id": "0x0214efd795ce4e8a54884faa52bacd4eeea7b4958fcf6f6649843bdc70c8fd0c",
-      "title": "Will Justin Rose win the 2026 Masters tournament?",
-      "outcome": "Yes",
-      "side": "SELL",
-      "bet_size": 10.0,
-      "entry_price": 0.0013008740785185229,
-      "whale_address": "0xbe8b5f8e7ddefbf7f141eedb900af9a85e67517c",
-      "whale_name": "ITZIKSON",
-      "whale_size": 3433.33,
-      "is_known_whale": false,
-      "tx": "0xc15d48cf34b1d8f75f24f13745688dc3941f7c8253db492f6027ff6b22b7047f",
-      "timestamp": "2026-04-12T22:31:24.777562+00:00"
     },
     "0xbdf6b039349b45e5e93b085c8334c166ad519aa305a8d10f4d34fa377a5b7d37": {
       "condition_id": "0xbdf6b039349b45e5e93b085c8334c166ad519aa305a8d10f4d34fa377a5b7d37",
@@ -252,6 +238,76 @@
       "is_known_whale": false,
       "tx": "0x47140e5f94cea7a795cfb6c0fdbe3d51fa475dd3dc5807d25491722003607332",
       "timestamp": "2026-04-13T02:10:28.621963+00:00"
+    },
+    "0x2cd24d17f5680dc6e7b7d67c712a223ae85550745597e81bd2d2b8d073443951": {
+      "condition_id": "0x2cd24d17f5680dc6e7b7d67c712a223ae85550745597e81bd2d2b8d073443951",
+      "title": "Will Roberto S\u00e1nchez Palomino win the 2026 Peruvian presiden",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.03881232846744362,
+      "whale_address": "0xe091e31beac3cb2579772cf29233533cea6295e5",
+      "whale_name": "gianqui16",
+      "whale_size": 1005.64,
+      "is_known_whale": false,
+      "tx": "0x7ae580de8acec01db2d9b0987383f382e8385590db2beafae040aab696e551c1",
+      "timestamp": "2026-04-13T02:15:56.168954+00:00"
+    },
+    "0xaaeea6132d83815a37850eb44869c0d56096a95851b8c08abd7a621b0021553e": {
+      "condition_id": "0xaaeea6132d83815a37850eb44869c0d56096a95851b8c08abd7a621b0021553e",
+      "title": "Bitcoin Up or Down - April 12, 10:10PM-10:15PM ET",
+      "outcome": "Up",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.020345052083333332,
+      "whale_address": "0x9819e3e2e1992cb0d6cc1742df4f4d81af314951",
+      "whale_name": "nukaktak",
+      "whale_size": 685.27584,
+      "is_known_whale": false,
+      "tx": "0xc9e805feabe3b8cf8a5f84f7b038a0ccfa3e9485c77f99a8c996df0e67965397",
+      "timestamp": "2026-04-13T02:15:56.169396+00:00"
+    },
+    "0xc58cfb7397c4f3f803f5c20135cafa7f6d2c87cf3bb1e6138042b95d828e1866": {
+      "condition_id": "0xc58cfb7397c4f3f803f5c20135cafa7f6d2c87cf3bb1e6138042b95d828e1866",
+      "title": "Will the Charlotte Hornets win the 2026 NBA Finals?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.997,
+      "whale_address": "0x32f40cc3a5dcb6ff254670ae9cbaaac9195b6a6a",
+      "whale_name": "hbewzhila",
+      "whale_size": 1487.52,
+      "is_known_whale": false,
+      "tx": "0x054e7ed243618ac4b813cd4bae693e07bbc05234cac6741d4c0bdb505f5a9233",
+      "timestamp": "2026-04-13T02:15:56.169550+00:00"
+    },
+    "0x8a44e7882366f983ac281d12f1468db816fa26e5e1715c6ee93ebc9bd31931f9": {
+      "condition_id": "0x8a44e7882366f983ac281d12f1468db816fa26e5e1715c6ee93ebc9bd31931f9",
+      "title": "Spread: Trail Blazers (-18.5)",
+      "outcome": "Trail Blazers",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.47,
+      "whale_address": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+      "whale_name": "ferrariChampions2026",
+      "whale_size": 710.02815,
+      "is_known_whale": false,
+      "tx": "0xf962572ea7b7b8899908e32586c1feeae2ca85f4a43228bc31509481fc3f0056",
+      "timestamp": "2026-04-13T02:15:56.169608+00:00"
+    },
+    "0xabb437693e1f6f4f858062c2581e0e6c40e6ba84a0f2eb74034392850a404275": {
+      "condition_id": "0xabb437693e1f6f4f858062c2581e0e6c40e6ba84a0f2eb74034392850a404275",
+      "title": "Ethereum Up or Down - April 12, 10:00PM-10:15PM ET",
+      "outcome": "Down",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.999,
+      "whale_address": "0xd26a07185f9075c541dc085e47c9bcbe9c8cc5ea",
+      "whale_name": "addyfizzle10",
+      "whale_size": 593.41728,
+      "is_known_whale": false,
+      "tx": "0x9be5963ad1e62a43fabc91448f0302d885afac6350c5e72c5a53b1e97a4fc1aa",
+      "timestamp": "2026-04-13T02:15:56.169658+00:00"
     }
   },
   "history": [
@@ -380,9 +436,27 @@
       "won": false,
       "pnl": -7.17,
       "resolved_at": "2026-04-13T02:10:23.683929+00:00"
+    },
+    {
+      "condition_id": "0x0214efd795ce4e8a54884faa52bacd4eeea7b4958fcf6f6649843bdc70c8fd0c",
+      "title": "Will Justin Rose win the 2026 Masters tournament?",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 10.0,
+      "entry_price": 0.0013008740785185229,
+      "whale_address": "0xbe8b5f8e7ddefbf7f141eedb900af9a85e67517c",
+      "whale_name": "ITZIKSON",
+      "whale_size": 3433.33,
+      "is_known_whale": false,
+      "tx": "0xc15d48cf34b1d8f75f24f13745688dc3941f7c8253db492f6027ff6b22b7047f",
+      "timestamp": "2026-04-12T22:31:24.777562+00:00",
+      "resolved": true,
+      "won": true,
+      "pnl": 7677.14,
+      "resolved_at": "2026-04-13T02:15:31.356330+00:00"
     }
   ],
-  "consecutive_losses": 2,
+  "consecutive_losses": 0,
   "cooldown_until": null,
   "top_traders": [
     {
@@ -506,9 +580,9 @@
       "active_markets": 3
     }
   ],
-  "total_wallets_tracked": 758,
-  "wins": 2,
+  "total_wallets_tracked": 766,
+  "wins": 3,
   "losses": 5,
-  "win_rate": 28.6,
-  "updated": "2026-04-13T02:10:28.623918+00:00"
+  "win_rate": 37.5,
+  "updated": "2026-04-13T02:15:56.173057+00:00"
 }
