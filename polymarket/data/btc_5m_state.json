@@ -2447,10 +2447,12 @@
       "order_id": "paper_1776054295207",
       "mode": "PAPER",
       "timestamp": "2026-04-13T04:24:55.207271+00:00",
-      "resolved": false
+      "resolved": true,
+      "won": false,
+      "pnl": -18.88
     }
   ],
   "windows_scanned": 169,
   "windows_traded": 68,
-  "updated": "2026-04-13T04:24:55.207340+00:00"
+  "updated": "2026-04-13T04:25:09.281536+00:00"
 }
