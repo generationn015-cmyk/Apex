@@ -1,5 +1,5 @@
 {
-  "bankroll": 219.58,
+  "bankroll": 218.66000000000003,
   "positions": {
     "0xfc6260666d020a912a87d9000eff5116d2adfb8c30aba543427a4c1f1411f1a0": {
       "question": "MegaETH market cap (FDV) >$2B one day after launch?",
@@ -272,6 +272,14 @@
       "entry_price": 0.275,
       "edge": 0.012,
       "opened_at": "2026-04-12T23:58:54.790605+00:00"
+    },
+    "0x2096cd3bedb878cbfb5d30308968616a1dfd80e17b278ca6bdc72f9dde4776a7": {
+      "question": "Will Cooper Flagg win the 2025\u201326 NBA Rookie of the Year award?",
+      "direction": "NO",
+      "bet_size": 0.92,
+      "entry_price": 0.28700000000000003,
+      "edge": 0.012,
+      "opened_at": "2026-04-13T00:34:12.635785+00:00"
     }
   },
   "history": [],
@@ -615,7 +623,17 @@
       "opened_at": "2026-04-12T23:58:54.790605+00:00",
       "condition_id": "0x9fe87b4bec41ca0b2e5f09b79e59f9aba6a88feab636db30b70fa103c1b54e5a",
       "resolved": false
+    },
+    {
+      "question": "Will Cooper Flagg win the 2025\u201326 NBA Rookie of the Year award?",
+      "direction": "NO",
+      "bet_size": 0.92,
+      "entry_price": 0.28700000000000003,
+      "edge": 0.012,
+      "opened_at": "2026-04-13T00:34:12.635785+00:00",
+      "condition_id": "0x2096cd3bedb878cbfb5d30308968616a1dfd80e17b278ca6bdc72f9dde4776a7",
+      "resolved": false
     }
   ],
-  "updated": "2026-04-12T23:58:54.795094+00:00"
+  "updated": "2026-04-13T00:34:12.638265+00:00"
 }
