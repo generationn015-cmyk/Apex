@@ -8,7 +8,7 @@
     "liquidity": 9973.67495,
     "volume": 84794.65075400002,
     "is_btc": false,
-    "minutes_to_resolve": -148128.9
+    "minutes_to_resolve": -148130.0
   },
   {
     "question": "Will Harvey Weinstein be sentenced to between 5 and 10 years in prison?",
@@ -19,7 +19,7 @@
     "liquidity": 2646.1586,
     "volume": 48825.04629300012,
     "is_btc": false,
-    "minutes_to_resolve": -148128.9
+    "minutes_to_resolve": -148130.0
   },
   {
     "question": "Will Harvey Weinstein be sentenced to more than 30 years in prison?",
@@ -30,7 +30,7 @@
     "liquidity": 3642.5399,
     "volume": 52895.15982100007,
     "is_btc": false,
-    "minutes_to_resolve": -148128.9
+    "minutes_to_resolve": -148130.0
   },
   {
     "question": "MegaETH market cap (FDV) >$2B one day after launch?",
@@ -41,7 +41,7 @@
     "liquidity": 73322.5114,
     "volume": 5885284.67413408,
     "is_btc": false,
-    "minutes_to_resolve": -148848.9
+    "minutes_to_resolve": -148850.0
   },
   {
     "question": "Will Harvey Weinstein be sentenced to between 10 and 20 years in prison?",
@@ -52,7 +52,7 @@
     "liquidity": 1205.18801,
     "volume": 135753.79768400008,
     "is_btc": false,
-    "minutes_to_resolve": -148128.9
+    "minutes_to_resolve": -148130.0
   },
   {
     "question": "Will Harvey Weinstein be sentenced to between 20 and 30 years in prison?",
@@ -63,7 +63,7 @@
     "liquidity": 2242.81443,
     "volume": 176147.61841100038,
     "is_btc": false,
-    "minutes_to_resolve": -148128.9
+    "minutes_to_resolve": -148130.0
   },
   {
     "question": "Will MegaETH perform an airdrop by June 30? ",
@@ -74,7 +74,7 @@
     "liquidity": 9242.21803,
     "volume": 1103340.3673900007,
     "is_btc": false,
-    "minutes_to_resolve": -102468.9
+    "minutes_to_resolve": -102470.0
   },
   {
     "question": "Will Harvey Weinstein be sentenced to no prison time?",
@@ -85,6 +85,6 @@
     "liquidity": 2450.13867,
     "volume": 314811.793643001,
     "is_btc": false,
-    "minutes_to_resolve": -148128.9
+    "minutes_to_resolve": -148130.0
   }
 ]
