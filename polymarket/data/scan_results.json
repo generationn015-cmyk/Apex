@@ -8,7 +8,7 @@
     "liquidity": 9613.76616,
     "volume": 84794.65075400002,
     "is_btc": false,
-    "minutes_to_resolve": -148243.4
+    "minutes_to_resolve": -148244.4
   },
   {
     "question": "Will Harvey Weinstein be sentenced to between 5 and 10 years in prison?",
@@ -19,7 +19,7 @@
     "liquidity": 2872.81865,
     "volume": 48873.416293000126,
     "is_btc": false,
-    "minutes_to_resolve": -148243.4
+    "minutes_to_resolve": -148244.4
   },
   {
     "question": "Will Harvey Weinstein be sentenced to more than 30 years in prison?",
@@ -30,7 +30,7 @@
     "liquidity": 3617.43159,
     "volume": 52895.15982100007,
     "is_btc": false,
-    "minutes_to_resolve": -148243.4
+    "minutes_to_resolve": -148244.4
   },
   {
     "question": "MegaETH market cap (FDV) >$2B one day after launch?",
@@ -41,7 +41,7 @@
     "liquidity": 73325.9247,
     "volume": 5885394.67413408,
     "is_btc": false,
-    "minutes_to_resolve": -148963.4
+    "minutes_to_resolve": -148964.4
   },
   {
     "question": "Will Harvey Weinstein be sentenced to between 10 and 20 years in prison?",
@@ -52,7 +52,7 @@
     "liquidity": 1197.31389,
     "volume": 135767.00768400007,
     "is_btc": false,
-    "minutes_to_resolve": -148243.4
+    "minutes_to_resolve": -148244.4
   },
   {
     "question": "Will Harvey Weinstein be sentenced to between 20 and 30 years in prison?",
@@ -63,7 +63,7 @@
     "liquidity": 2223.1129,
     "volume": 176147.61841100038,
     "is_btc": false,
-    "minutes_to_resolve": -148243.4
+    "minutes_to_resolve": -148244.4
   },
   {
     "question": "Will MegaETH perform an airdrop by June 30? ",
@@ -74,7 +74,7 @@
     "liquidity": 8958.44165,
     "volume": 1103446.9176070008,
     "is_btc": false,
-    "minutes_to_resolve": -102583.4
+    "minutes_to_resolve": -102584.4
   },
   {
     "question": "Will Harvey Weinstein be sentenced to no prison time?",
@@ -85,6 +85,6 @@
     "liquidity": 2140.62806,
     "volume": 314839.703643001,
     "is_btc": false,
-    "minutes_to_resolve": -148243.4
+    "minutes_to_resolve": -148244.4
   }
 ]
