@@ -86,8 +86,18 @@ STATE_PATH = DATA_DIR / "btc_5m_state.json"
 # ── Telegram ──────────────────────────────────────────────────────────────────
 
 def _tg(text: str):
-    """Silenced — all notifications go through the bot's hourly digest."""
-    pass
+    """Send trade entry/exit notifications to Telegram."""
+    import urllib.parse, urllib.request
+    data = urllib.parse.urlencode({
+        "chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "HTML",
+    }).encode()
+    try:
+        urllib.request.urlopen(
+            f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage",
+            data=data, timeout=10,
+        )
+    except Exception:
+        pass
 
 
 # ── BTC Price Feed ────────────────────────────────────────────────────────────
@@ -393,6 +403,7 @@ class SniperState:
     def record_trade(self, trade: dict):
         self.trades.append(trade)
         self.windows_traded += 1
+        self.bankroll -= trade.get("bet_size", 0)
         self.save()
 
     def record_resolution(self, window_ts: int, won: bool, pnl: float):
@@ -402,7 +413,7 @@ class SniperState:
                 t["resolved"] = True
                 t["won"] = won
                 t["pnl"] = round(pnl, 2)
-                self.bankroll += pnl
+                self.bankroll += t["bet_size"] + pnl  # return stake + net
                 break
         self.save()
 
@@ -427,9 +438,14 @@ def run_sniper(live_mode: bool = False):
     executor = _build_executor(live_mode)
     mode_tag = "LIVE" if live_mode else "PAPER"
 
-    _tg(f"{'🔴' if live_mode else '📋'} <b>BTC 5-Min Sniper v2 online ({mode_tag})</b>\n"
-        f"7 indicators + MACD + T-{ENTRY_WINDOW_SECS}s entry\n"
-        f"{state.summary()}")
+    # Reset state on first live launch (don't carry paper trades into live)
+    if live_mode and state.trades and state.trades[0].get("mode") == "paper":
+        print(f"[BTC-5M] Resetting state for LIVE mode (was paper with {len(state.trades)} trades)")
+        state.bankroll = 50.0  # live bankroll
+        state.trades = []
+        state.windows_scanned = 0
+        state.windows_traded = 0
+        state.save()
     print(f"[BTC-5M] Started ({mode_tag}) — v2 multi-indicator strategy")
     print(f"[BTC-5M] Config: min_conf={MIN_CONFIDENCE}, edge>{MIN_EDGE*100:.0f}%, "
           f"max_bet={MAX_BET_PCT*100:.0f}%, "
@@ -527,7 +543,7 @@ def run_sniper(live_mode: bool = False):
                         "pnl": round(arb_bet * (1.0 - combined) / combined, 2),
                     }
                     state.record_trade(trade)
-                    state.bankroll += trade["pnl"]  # instant lock
+                    state.bankroll += trade["bet_size"] + trade["pnl"]  # return stake + profit
                     state.save()
 
                     _tg(f"<b>HEDGE ARB</b> Up+Down={combined:.3f} | "
