@@ -8,7 +8,7 @@
     "liquidity": 9958.29599,
     "volume": 84459.434454,
     "is_btc": false,
-    "minutes_to_resolve": -147970.2
+    "minutes_to_resolve": -147971.2
   },
   {
     "question": "Will Harvey Weinstein be sentenced to between 5 and 10 years in prison?",
@@ -19,7 +19,7 @@
     "liquidity": 2877.3939,
     "volume": 48792.696510000125,
     "is_btc": false,
-    "minutes_to_resolve": -147970.2
+    "minutes_to_resolve": -147971.2
   },
   {
     "question": "Will Harvey Weinstein be sentenced to more than 30 years in prison?",
@@ -30,7 +30,7 @@
     "liquidity": 3624.29844,
     "volume": 52861.992455000065,
     "is_btc": false,
-    "minutes_to_resolve": -147970.2
+    "minutes_to_resolve": -147971.2
   },
   {
     "question": "MegaETH market cap (FDV) >$2B one day after launch?",
@@ -41,7 +41,7 @@
     "liquidity": 73650.8285,
     "volume": 5885041.58524808,
     "is_btc": false,
-    "minutes_to_resolve": -148690.2
+    "minutes_to_resolve": -148691.2
   },
   {
     "question": "Will Harvey Weinstein be sentenced to between 10 and 20 years in prison?",
@@ -52,7 +52,7 @@
     "liquidity": 1173.37874,
     "volume": 135623.54159500005,
     "is_btc": false,
-    "minutes_to_resolve": -147970.2
+    "minutes_to_resolve": -147971.2
   },
   {
     "question": "Will Harvey Weinstein be sentenced to between 20 and 30 years in prison?",
@@ -63,7 +63,7 @@
     "liquidity": 2251.42477,
     "volume": 176109.1523950004,
     "is_btc": false,
-    "minutes_to_resolve": -147970.2
+    "minutes_to_resolve": -147971.2
   },
   {
     "question": "Will Harvey Weinstein be sentenced to no prison time?",
@@ -74,7 +74,7 @@
     "liquidity": 2496.74647,
     "volume": 314789.844208001,
     "is_btc": false,
-    "minutes_to_resolve": -147970.2
+    "minutes_to_resolve": -147971.2
   },
   {
     "question": "Will MegaETH perform an airdrop by June 30? ",
@@ -85,6 +85,6 @@
     "liquidity": 8885.52832,
     "volume": 1088664.1249760007,
     "is_btc": false,
-    "minutes_to_resolve": -102310.2
+    "minutes_to_resolve": -102311.2
   }
 ]
