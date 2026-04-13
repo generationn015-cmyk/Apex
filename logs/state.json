@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-04-13T08:54:53.288674+00:00",
+  "updated_at": "2026-04-13T08:59:53.938096+00:00",
   "mode": "paper",
-  "cycle": 73,
+  "cycle": 74,
   "stats": {
     "total_trades": 1,
     "closed": 0,
@@ -10,8 +10,8 @@
     "losses": 0,
     "win_rate": 0,
     "total_pnl": 0,
-    "unrealized_pnl": 0.1,
-    "net_pnl": 0.1,
+    "unrealized_pnl": 0.04,
+    "net_pnl": 0.04,
     "by_asset": {}
   },
   "last_signals": {
