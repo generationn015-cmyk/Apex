@@ -172,6 +172,11 @@ def filter_eligible(markets: list[dict]) -> list[dict]:
         mins = parsed.get("minutes_to_resolve")
         is_btc = parsed.get("is_btc", False)
 
+        # Skip markets already past their end date (Polymarket sometimes
+        # leaves closed=false for weeks on stale markets — capital trap)
+        if mins is not None and mins <= 0:
+            continue
+
         # BTC short-duration tier: relaxed liquidity/volume requirements
         if (BTC_SNIPER_ENABLED and is_btc and mins is not None
                 and BTC_SNIPER_MIN_MINUTES <= mins <= BTC_SNIPER_MAX_MINUTES):

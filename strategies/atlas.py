@@ -92,19 +92,19 @@ def analyze_ATLAS(df: pd.DataFrame, df_4h: pd.DataFrame | None = None) -> dict |
 
     if bull and htf_bull:
         signal   = "BUY"
-        strength = 0.65
+        strength = 0.55          # continuation — below 0.65 threshold
         if fresh_cross_up:
-            strength += 0.20   # Fresh cross bonus
+            strength = 0.85      # fresh cross — tradeable event
         if adx > 35:
-            strength += 0.10   # Strong trend bonus
+            strength += 0.10     # Strong trend bonus
         if vol_ratio > 1.5:
-            strength += 0.05   # High volume bonus
+            strength += 0.05     # High volume bonus
 
     elif bear and htf_bear:
         signal   = "SELL"
-        strength = 0.65
+        strength = 0.55          # continuation — below 0.65 threshold
         if fresh_cross_dn:
-            strength += 0.20
+            strength = 0.85      # fresh cross — tradeable event
         if adx > 35:
             strength += 0.10
         if vol_ratio > 1.5:

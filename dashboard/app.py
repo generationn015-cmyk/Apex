@@ -319,6 +319,7 @@ with tab_overview:
         "telegram_bot":       ("Telegram Bot",          "Command interface"),
         "btc_5m_sniper":      ("BTC 5-Min Sniper",      "Polymarket BTC Up/Down 5-min windows"),
         "polymarket_sniper":  ("Polymarket Scanner",     "Kelly-edge scanner across all markets"),
+        "copy_trader":        ("Copy Trader",            "Whale flow mirroring — Kelly-sized"),
     }
 
     proc_html = '<div class="floor-grid">'
@@ -375,6 +376,11 @@ with tab_overview:
     if isinstance(sniper_state, dict):
         sniper_bankroll = sniper_state.get("bankroll", 0)
         sniper_trades_list = sniper_state.get("trades", [])
+        if not sniper_trades_list:
+            # Fallback: build from positions + history
+            for cid, pos in sniper_state.get("positions", {}).items():
+                sniper_trades_list.append({**pos, "condition_id": cid, "resolved": False})
+            sniper_trades_list.extend(sniper_state.get("history", []))
         for t in sniper_trades_list:
             if t.get("resolved"):
                 sniper_pnl += t.get("pnl", 0)
@@ -871,8 +877,16 @@ with tab_crypto:
 # ═══════════════════════════════════════════════════════════════════════════════
 with tab_scanner:
     # ── Sniper positions ─────────────────────────────────────────────────
-    sniper_trades = sniper_state.get("trades", []) if isinstance(sniper_state, dict) else []
-    sniper_bankroll_val = sniper_state.get("bankroll", 0) if isinstance(sniper_state, dict) else 0
+    if isinstance(sniper_state, dict):
+        sniper_trades = sniper_state.get("trades", [])
+        if not sniper_trades:
+            for cid, pos in sniper_state.get("positions", {}).items():
+                sniper_trades.append({**pos, "condition_id": cid, "resolved": False})
+            sniper_trades.extend(sniper_state.get("history", []))
+        sniper_bankroll_val = sniper_state.get("bankroll", 0)
+    else:
+        sniper_trades = []
+        sniper_bankroll_val = 0
 
     if not sniper_trades and not scan_results:
         st.markdown(

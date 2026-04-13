@@ -107,9 +107,9 @@ def analyze_SENTINEL(df: pd.DataFrame, df_4h: pd.DataFrame | None = None) -> dic
 
     if bull_perfect and slope_bull:
         signal   = "BUY"
-        strength = 0.70
+        strength = 0.55              # persistent alignment — below 0.65 threshold
         if squeeze_release:
-            strength = min(strength + 0.20, 1.0)  # Squeeze breakout bonus
+            strength = 0.90          # squeeze breakout — tradeable event
         elif not in_squeeze:
             strength = min(strength + 0.05, 1.0)
         if adx > 35:
@@ -117,9 +117,9 @@ def analyze_SENTINEL(df: pd.DataFrame, df_4h: pd.DataFrame | None = None) -> dic
 
     elif bear_perfect and slope_bear:
         signal   = "SELL"
-        strength = 0.70
+        strength = 0.55              # persistent alignment — below 0.65 threshold
         if squeeze_release:
-            strength = min(strength + 0.20, 1.0)
+            strength = 0.90          # squeeze breakout — tradeable event
         elif not in_squeeze:
             strength = min(strength + 0.05, 1.0)
         if adx > 35:

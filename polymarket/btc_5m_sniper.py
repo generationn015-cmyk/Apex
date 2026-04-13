@@ -57,9 +57,8 @@ from polymarket.polyconfig import (
 WINDOW_SECS         = 300       # 5 minutes
 ENTRY_WINDOW_SECS   = 15        # Enter in last 15 seconds (T-15s to T-5s)
 EXIT_BUFFER_SECS    = 5         # Stop entering with <5s left (blockchain latency)
-MIN_CONFIDENCE       = 0.55     # Minimum confidence (raised from 0.20 — kills delta-only noise trades)
-MIN_EDGE             = 0.06     # 6% edge minimum (raised from 5% — loss analysis: losses clustered in 5-8% edge range)
-MIN_ABS_DELTA_PCT    = 0.02     # Require |BTC delta from window_open| >= 0.02% to fire (filters pure noise)
+MIN_CONFIDENCE       = 0.20     # Minimum confidence to trade (from strategy)
+MIN_EDGE             = 0.05     # 5% edge minimum (research shows 3% eaten by fees)
 MAX_BET_PCT          = 0.04     # 4% of bankroll per trade
 KELLY_FRAC           = 0.25     # Quarter-Kelly
 BTC_5M_SIGMA         = 0.003   # ~0.3% typical 5-min BTC volatility
@@ -576,7 +575,7 @@ def run_sniper(live_mode: bool = False):
                 time.sleep(POLL_INTERVAL_SECS)
                 continue
 
-            candles_1m = fetch_1m_candles(30)
+            candles_1m = fetch_1m_candles(50)  # >=35 required for full MACD(12,26,9) signal line
 
             # 3. Poll with 2-second ticks, run strategy each poll
             best_signal = None
@@ -605,16 +604,13 @@ def run_sniper(live_mode: bool = False):
                     best_confidence = result.confidence
                     best_signal = result
 
-                # Noise filter: require meaningful BTC move from window open
-                delta_pct = abs((current_btc - start_price) / start_price * 100) if start_price > 0 else 0
-                if delta_pct < MIN_ABS_DELTA_PCT:
-                    time.sleep(POLL_INTERVAL_SECS)
-                    continue
-
                 # Dislocation check: only fire when edge is big enough
                 # to survive ~3.15% dynamic taker fee at 50/50 odds
-                # MACD gate: delta-only signals need MACD/tick confirmation to fire
-                if result.confidence >= MIN_CONFIDENCE and result.macd_confirmation >= 1:
+                # MACD gate: delta-only signals (zero MACD confirmation)
+                # need confidence >= 0.60 (big move) to trade without momentum
+                if result.confidence >= MIN_CONFIDENCE and not (
+                    result.macd_confirmation == 0 and result.confidence < 0.60
+                ):
                     direction = result.direction
                     token_id = (market["up_token_id"] if direction == "UP"
                                 else market["down_token_id"])
@@ -644,16 +640,12 @@ def run_sniper(live_mode: bool = False):
                 time.sleep(POLL_INTERVAL_SECS)
 
             # T-5s hard deadline: if not fired, execute best signal if viable
-            # Same gates: min confidence + MACD confirmation + non-trivial delta
-            if (not fired and best_signal
-                and best_signal.confidence >= MIN_CONFIDENCE
-                and best_signal.macd_confirmation >= 1):
+            # Same MACD gate: require confirmation for sub-0.60 confidence
+            if not fired and best_signal and best_signal.confidence >= MIN_CONFIDENCE and not (
+                best_signal.macd_confirmation == 0 and best_signal.confidence < 0.60
+            ):
                 current_btc = get_btc_price() or tick_buffer[-1]
                 secs_left = _secs_remaining()
-                last_delta = abs((current_btc - start_price) / start_price * 100) if start_price > 0 else 0
-                if last_delta < MIN_ABS_DELTA_PCT:
-                    last_traded_window = window_ts
-                    continue
                 direction = best_signal.direction
                 token_id = (market["up_token_id"] if direction == "UP"
                             else market["down_token_id"])

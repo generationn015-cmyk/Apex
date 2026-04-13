@@ -10,9 +10,29 @@ Uses fixed data_sources.py for Bullpen CLI integration.
 from __future__ import annotations
 import json
 import requests
+from datetime import datetime, timezone
 from typing import Optional
 
 from polymarket.polyconfig import GAMMA_API, CLOB_API, MIN_EDGE, KELLY_FRACTION, MAX_POSITION_PCT, STARTING_BANKROLL, MIN_LIQUIDITY, MIN_VOLUME, DATA_DIR
+
+_BTC_KEYWORDS = {"btc", "bitcoin"}
+
+
+def _minutes_to_resolve(end_str: str) -> Optional[float]:
+    """Return minutes until market resolves, or None if unparseable."""
+    if not end_str:
+        return None
+    try:
+        end_dt = datetime.fromisoformat(end_str.replace("Z", "+00:00"))
+        delta = (end_dt - datetime.now(timezone.utc)).total_seconds() / 60.0
+        return round(delta, 1)
+    except Exception:
+        return None
+
+
+def is_btc_market(question: str) -> bool:
+    q = question.lower()
+    return any(k in q for k in _BTC_KEYWORDS)
 
 
 class KellyEngine:
@@ -65,15 +85,19 @@ def parse_market(m: dict) -> Optional[dict]:
         volume = float(m.get("volume", m.get("volumeNum", 0)) or 0)
         volume24h = float(m.get("volume24hr", m.get("volume_24h", 0)) or 0)
 
+        question = m.get("question", "")
+        end_str  = m.get("endDate", m.get("endDateIso", ""))
         return {
-            "question": m.get("question", ""),
+            "question": question,
             "condition_id": m.get("conditionId", m.get("condition_id", "")),
             "yes_price": yes_price,
             "no_price": 1.0 - yes_price,
             "liquidity": liquidity,
             "volume": volume,
             "volume24h": volume24h,
-            "end_date": m.get("endDate", m.get("endDateIso", "")),
+            "end_date": end_str,
+            "minutes_to_resolve": _minutes_to_resolve(end_str),
+            "is_btc": is_btc_market(question),
             "active": m.get("active", True),
             "closed": m.get("closed", False),
         }

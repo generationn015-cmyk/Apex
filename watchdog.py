@@ -263,7 +263,7 @@ def run_watchdog():
     last_data_sync  = 0.0   # force first sync immediately
     CHECK_INTERVAL  = 15
     HEARTBEAT_SECS  = 3600
-    DATA_SYNC_SECS  = 60    # push data to GitHub every 60 seconds
+    DATA_SYNC_SECS  = 1800  # push data every 30 min (Vercel free tier = 100 builds/day)
 
     try:
         while True:

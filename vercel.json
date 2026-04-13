@@ -3,5 +3,12 @@
   "framework": null,
   "buildCommand": "",
   "outputDirectory": ".",
-  "installCommand": "echo skip"
+  "installCommand": "echo skip",
+  "git": {
+    "deploymentEnabled": {
+      "master": true,
+      "main": false
+    }
+  },
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- index.html vercel.json"
 }

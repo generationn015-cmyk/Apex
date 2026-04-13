@@ -24,8 +24,9 @@ class PaperTrade:
         self.opened_at = datetime.now(timezone.utc).isoformat()
         self.closed_at = None
         self.stop_loss = None
+        self.take_profit = None
         self.pnl = 0.0
-        self.status = "OPEN"  # OPEN, CLOSED (WIN/LOSS), STOPPED
+        self.status = "OPEN"  # OPEN, WIN, LOSS, STOPPED, TIMEOUT
         self.notes = ""
 
     def to_dict(self):
@@ -42,6 +43,7 @@ class PaperTrade:
             "opened_at": self.opened_at,
             "closed_at": self.closed_at,
             "stop_loss": self.stop_loss,
+            "take_profit": self.take_profit,
             "pnl": self.pnl,
             "status": self.status,
             "notes": self.notes,
@@ -54,10 +56,10 @@ class PaperTrade:
         
         if self.direction == "BUY":
             self.pnl = (self.exit_price - self.entry_price) / self.entry_price * self.amount
-            self.status = "WIN" if self.pnl > 0 else "LOSS"
+            self.status = "WIN" if self.pnl >= 0 else "LOSS"
         else:  # SELL
             self.pnl = (self.entry_price - self.exit_price) / self.entry_price * self.amount
-            self.status = "WIN" if self.pnl > 0 else "LOSS"
+            self.status = "WIN" if self.pnl >= 0 else "LOSS"
         return self.to_dict()
 
 
@@ -82,10 +84,12 @@ class PaperEngine:
                         pass
 
     def open_trade(self, agent, asset, direction, entry_price,
-                    amount, strategy, broker="paper", notes="", stop_loss=None):
+                    amount, strategy, broker="paper", notes="",
+                    stop_loss=None, take_profit=None):
         trade = PaperTrade(agent, asset, direction, entry_price, amount, strategy, broker)
         trade.notes = notes
         trade.stop_loss = stop_loss
+        trade.take_profit = take_profit
         self.trades[trade.trade_id] = trade
         self._append_trade(trade)
         return trade
@@ -100,66 +104,108 @@ class PaperEngine:
         self._append_trade(trade)
         return result
 
-    def check_stop_losses(self, current_prices: dict):
-        """Check all open trades against stop loss and current prices."""
+    def check_exits(self, current_prices: dict, max_age_hours: float = 48.0):
+        """Check all open trades for SL, TP, and timeout exits."""
         HARD_STOP_LOSS_PCT = 0.05  # 5% default stop loss
+        now = datetime.now(timezone.utc)
 
-        checked = []
-        for tid, trade in self.trades.items():
+        closed = []
+        # snapshot keys to avoid dict-size-change during iteration
+        for tid in list(self.trades.keys()):
+            trade = self.trades[tid]
             if trade.status != "OPEN":
                 continue
             price = current_prices.get(trade.asset)
             if price is None:
                 continue
 
+            # Ensure stop loss is set
             if trade.stop_loss is None:
-                # Set 5% stop loss on entry
                 if trade.direction == "BUY":
                     trade.stop_loss = trade.entry_price * (1 - HARD_STOP_LOSS_PCT)
                 else:
                     trade.stop_loss = trade.entry_price * (1 + HARD_STOP_LOSS_PCT)
-            
-            # Check stop loss hit
-            stopped = False
-            if trade.direction == "BUY" and price <= trade.stop_loss:
-                stopped = True
-            elif trade.direction == "SELL" and price >= trade.stop_loss:
-                stopped = True
-            
-            if stopped:
+
+            # Take profit hit
+            if trade.take_profit is not None:
+                tp_hit = (
+                    (trade.direction == "BUY"  and price >= trade.take_profit) or
+                    (trade.direction == "SELL" and price <= trade.take_profit)
+                )
+                if tp_hit:
+                    result = self.close_trade(tid, price, reason="TAKE_PROFIT")
+                    if result:
+                        closed.append(result)
+                    continue
+
+            # Stop loss hit
+            sl_hit = (
+                (trade.direction == "BUY"  and price <= trade.stop_loss) or
+                (trade.direction == "SELL" and price >= trade.stop_loss)
+            )
+            if sl_hit:
                 result = self.close_trade(tid, price, reason="STOP_LOSS")
-                checked.append(result)
-        
-        return checked
+                if result:
+                    closed.append(result)
+                continue
+
+            # Timeout — close stale positions older than max_age_hours
+            try:
+                opened_at = datetime.fromisoformat(trade.opened_at)
+                age_hours = (now - opened_at).total_seconds() / 3600.0
+                if age_hours > max_age_hours:
+                    result = self.close_trade(tid, price, reason="TIMEOUT")
+                    if result:
+                        closed.append(result)
+            except Exception:
+                pass
+
+        return closed
+
+    # backwards-compat alias
+    def check_stop_losses(self, current_prices: dict):
+        return self.check_exits(current_prices)
 
     def _append_trade(self, trade):
         with open(self.log_path, "a") as f:
             f.write(json.dumps(trade.to_dict()) + "\n")
 
-    def get_agent_stats(self, agent_name=None):
+    def get_agent_stats(self, agent_name=None, current_prices=None):
         trades = list(self.trades.values())
         if agent_name:
             trades = [t for t in trades if t.agent == agent_name]
-        
-        closed = [t for t in trades if t.status in ("WIN", "LOSS", "STOPPED")]
-        wins = [t for t in closed if t.status == "WIN"]
-        losses = [t for t in closed if t.status in ("LOSS", "STOPPED")]
-        
+
+        closed = [t for t in trades if t.status != "OPEN"]
+        wins = [t for t in closed if t.pnl >= 0]
+        losses = [t for t in closed if t.pnl < 0]
+
         total_pnl = sum(t.pnl for t in closed)
         win_rate = (len(wins) / len(closed) * 100) if closed else 0
-        
+
+        # Unrealized PnL for open positions
+        unrealized = 0.0
+        if current_prices:
+            for t in trades:
+                if t.status == "OPEN":
+                    price = current_prices.get(t.asset)
+                    if price:
+                        if t.direction == "BUY":
+                            unrealized += (price - t.entry_price) / t.entry_price * t.amount
+                        else:
+                            unrealized += (t.entry_price - price) / t.entry_price * t.amount
+
         # By asset
         by_asset = {}
         for t in closed:
             a = t.asset
             if a not in by_asset:
                 by_asset[a] = {"wins": 0, "losses": 0, "pnl": 0}
-            if t.status == "WIN":
+            if t.pnl >= 0:
                 by_asset[a]["wins"] += 1
             else:
                 by_asset[a]["losses"] += 1
             by_asset[a]["pnl"] += t.pnl
-        
+
         return {
             "total_trades": len(trades),
             "closed": len(closed),
@@ -168,8 +214,17 @@ class PaperEngine:
             "losses": len(losses),
             "win_rate": round(win_rate, 1),
             "total_pnl": round(total_pnl, 2),
+            "unrealized_pnl": round(unrealized, 2),
+            "net_pnl": round(total_pnl + unrealized, 2),
             "by_asset": by_asset,
         }
+
+    def has_open_position(self, agent: str, asset: str) -> bool:
+        """Check if an agent already has an open position on an asset."""
+        for t in self.trades.values():
+            if t.status == "OPEN" and t.agent == agent and t.asset == asset:
+                return True
+        return False
 
     def get_open_trades(self, agent_name=None):
         trades = []
