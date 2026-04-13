@@ -1,5 +1,5 @@
 {
-  "bankroll": 410.39290871166736,
+  "bankroll": 436.7006010193597,
   "trades": [
     {
       "window_ts": 1775982300,
@@ -2075,10 +2075,12 @@
       "order_id": "paper_1776041997327",
       "mode": "PAPER",
       "timestamp": "2026-04-13T00:59:57.327481+00:00",
-      "resolved": false
+      "resolved": true,
+      "won": true,
+      "pnl": 9.21
     }
   ],
   "windows_scanned": 142,
   "windows_traded": 58,
-  "updated": "2026-04-13T00:59:57.327536+00:00"
+  "updated": "2026-04-13T01:00:09.525662+00:00"
 }
