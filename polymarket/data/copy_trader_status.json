@@ -1,5 +1,5 @@
 {
-  "bankroll": 190.0,
+  "bankroll": 119.76,
   "positions": {
     "0x14267ebbbc0ac689c27c64836481edeeb8460fcb3cfee5c67903b8377e326916": {
       "condition_id": "0x14267ebbbc0ac689c27c64836481edeeb8460fcb3cfee5c67903b8377e326916",
@@ -29,20 +29,6 @@
       "tx": "0x7ae580de8acec01db2d9b0987383f382e8385590db2beafae040aab696e551c1",
       "timestamp": "2026-04-13T02:17:02.346099+00:00"
     },
-    "0xaaeea6132d83815a37850eb44869c0d56096a95851b8c08abd7a621b0021553e": {
-      "condition_id": "0xaaeea6132d83815a37850eb44869c0d56096a95851b8c08abd7a621b0021553e",
-      "title": "Bitcoin Up or Down - April 12, 10:10PM-10:15PM ET",
-      "outcome": "Up",
-      "side": "BUY",
-      "bet_size": 10.0,
-      "entry_price": 0.020345052083333332,
-      "whale_address": "0x9819e3e2e1992cb0d6cc1742df4f4d81af314951",
-      "whale_name": "nukaktak",
-      "whale_size": 685.27584,
-      "is_known_whale": false,
-      "tx": "0xc9e805feabe3b8cf8a5f84f7b038a0ccfa3e9485c77f99a8c996df0e67965397",
-      "timestamp": "2026-04-13T02:17:02.346157+00:00"
-    },
     "0xc58cfb7397c4f3f803f5c20135cafa7f6d2c87cf3bb1e6138042b95d828e1866": {
       "condition_id": "0xc58cfb7397c4f3f803f5c20135cafa7f6d2c87cf3bb1e6138042b95d828e1866",
       "title": "Will the Charlotte Hornets win the 2026 NBA Finals?",
@@ -71,7 +57,167 @@
       "tx": "0xf962572ea7b7b8899908e32586c1feeae2ca85f4a43228bc31509481fc3f0056",
       "timestamp": "2026-04-13T02:17:02.346241+00:00"
     },
-    "0xabb437693e1f6f4f858062c2581e0e6c40e6ba84a0f2eb74034392850a404275": {
+    "0x924a2942747dd75703321a7c8d809c68f6a514c3b0f2a2e64274e02310634669": {
+      "condition_id": "0x924a2942747dd75703321a7c8d809c68f6a514c3b0f2a2e64274e02310634669",
+      "title": "Strait of Hormuz traffic returns to normal by end of April?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.14,
+      "whale_address": "0x931a4fc1cf2e5d416c3cb211c8b40523e0e01f6c",
+      "whale_name": "",
+      "whale_size": 533.0,
+      "is_known_whale": false,
+      "tx": "0xe2fc465b25badf166a2b3d6ff996c78c44a332de111b7242101316fb0d128260",
+      "timestamp": "2026-04-13T02:22:18.962737+00:00"
+    },
+    "0x6ad98d73bdc3b27e7c6ef2bfc45c4dbe9cfabb797a391e310a2fec75ff8071d2": {
+      "condition_id": "0x6ad98d73bdc3b27e7c6ef2bfc45c4dbe9cfabb797a391e310a2fec75ff8071d2",
+      "title": "Bitcoin Up or Down - April 12, 10:15PM-10:20PM ET",
+      "outcome": "Down",
+      "side": "BUY",
+      "bet_size": 9.5,
+      "entry_price": 0.043590014753171556,
+      "whale_address": "0x7ac52e88d67f315ddf930b5a9dbac7a5cfd1c61f",
+      "whale_name": "0x7aC52e88D67F315DDF930b5a9DBac7A5cFD1c61f-1773272256375",
+      "whale_size": 1068.0639549999999,
+      "is_known_whale": false,
+      "tx": "0xb05446a7648fbd05377f246a4359ebba030f2ba5f537b802768aa24d71e02e71",
+      "timestamp": "2026-04-13T02:22:18.963124+00:00"
+    },
+    "0x2d915df49ec431ee198064f0a6d62dee60d2f7c449711c07397af59de918b7d9": {
+      "condition_id": "0x2d915df49ec431ee198064f0a6d62dee60d2f7c449711c07397af59de918b7d9",
+      "title": "Will Malta be in the top 10 at Eurovision 2026?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 9.03,
+      "entry_price": 0.71,
+      "whale_address": "0xc0b2af148bf7aa2049b01376321312c30f7a9d96",
+      "whale_name": "roboraptors",
+      "whale_size": 877.0,
+      "is_known_whale": false,
+      "tx": "0xf582d4eb8cb641a778caa8973e18a25cc1e57af9bc293d448494f324a173f8ee",
+      "timestamp": "2026-04-13T02:22:18.963196+00:00"
+    },
+    "0x8b203037c7c0e21b500314f8398d2a8ea294b7ce1f4f9185f426425a3505bc45": {
+      "condition_id": "0x8b203037c7c0e21b500314f8398d2a8ea294b7ce1f4f9185f426425a3505bc45",
+      "title": "Will LeBron James win the 2028 Democratic presidential nomin",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 8.57,
+      "entry_price": 0.9929999999957752,
+      "whale_address": "0xcf02c93ad09d3aaf6c532cb8ed504c2ac2a327c6",
+      "whale_name": "afedf",
+      "whale_size": 1183.484285,
+      "is_known_whale": false,
+      "tx": "0x09a4ff96909662ad2a4dc7b74f3dc7a6ca43c2203292ad09a601367b9f10a9a1",
+      "timestamp": "2026-04-13T02:22:18.963253+00:00"
+    },
+    "0xfb01330f64761f0addbeb44d5c6aa05a55a3bf9f94a36d613777f1be099e6d25": {
+      "condition_id": "0xfb01330f64761f0addbeb44d5c6aa05a55a3bf9f94a36d613777f1be099e6d25",
+      "title": "Jazz vs. Lakers",
+      "outcome": "Lakers",
+      "side": "BUY",
+      "bet_size": 8.15,
+      "entry_price": 0.9958654710596009,
+      "whale_address": "0xd48a81db62f742c4e42d86dfc23a7ee345366e90",
+      "whale_name": "NiFengFanPan",
+      "whale_size": 8207.9218,
+      "is_known_whale": true,
+      "tx": "0x9c8c9b9cbddf752562e6dbe3be73a37846f0ec7579a6458b11aa8ec131e6540b",
+      "timestamp": "2026-04-13T02:22:18.963313+00:00"
+    },
+    "0xb1a0c0e3c5ebe6fcd3fb541efabc01bdc977d6938a2e6112b3a7514538383a5a": {
+      "condition_id": "0xb1a0c0e3c5ebe6fcd3fb541efabc01bdc977d6938a2e6112b3a7514538383a5a",
+      "title": "Nuggets vs. Spurs",
+      "outcome": "Spurs",
+      "side": "BUY",
+      "bet_size": 7.74,
+      "entry_price": 0.32,
+      "whale_address": "0xa73a1952f1f0d94aeb396ffdaf7e111a8eab656a",
+      "whale_name": "oneheadedlebron",
+      "whale_size": 951.1916,
+      "is_known_whale": true,
+      "tx": "0x5b86c452d973f18216f4c1170fbab413eae5a85b3f72cf4fe46247b298fd993e",
+      "timestamp": "2026-04-13T02:22:18.963352+00:00"
+    },
+    "0x4405c62496c4fdd275d17ec31567a01534013c518c314ce61bb633b5e7cb6426": {
+      "condition_id": "0x4405c62496c4fdd275d17ec31567a01534013c518c314ce61bb633b5e7cb6426",
+      "title": "Will the Toronto Raptors win the 2026 NBA Finals?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 7.35,
+      "entry_price": 0.995,
+      "whale_address": "0x78a49441029a7f01c175c4acc7572cee7f333095",
+      "whale_name": "yjughnbh",
+      "whale_size": 1359.216,
+      "is_known_whale": false,
+      "tx": "0x3afb98380b10b19e1c774cefe4eae2b930c4a358c0dd3d5c44ec4dd921af45c6",
+      "timestamp": "2026-04-13T02:22:18.963476+00:00"
+    },
+    "0x567f1ff714731fafa702d454a105b064a7ec4d10f6fb71ad3221f4918681c709": {
+      "condition_id": "0x567f1ff714731fafa702d454a105b064a7ec4d10f6fb71ad3221f4918681c709",
+      "title": "Will the Philadelphia 76ers win the 2026 NBA Finals?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 6.98,
+      "entry_price": 0.996,
+      "whale_address": "0x5fc7b50c8dbb63153729cf52f250df61ea8c404b",
+      "whale_name": "dhghf",
+      "whale_size": 1046.71675,
+      "is_known_whale": false,
+      "tx": "0x0f900d9fd22825e64c62c458bdec75695c8427dc236c0c30bf0e0cdd3f7789d1",
+      "timestamp": "2026-04-13T02:22:18.963519+00:00"
+    },
+    "0x4e35620fc5c5ccf36f9dbc904423894fc0c49830814e2a137b97b9108bddad74": {
+      "condition_id": "0x4e35620fc5c5ccf36f9dbc904423894fc0c49830814e2a137b97b9108bddad74",
+      "title": "Will the price of Ethereum be above $1,700 on April 16?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 6.63,
+      "entry_price": 0.004,
+      "whale_address": "0xd86cde234ba0498404dfd64147d898e6bcb6d09a",
+      "whale_name": "Surewinz92",
+      "whale_size": 1891.85095,
+      "is_known_whale": false,
+      "tx": "0x774bebc19a43ca69a95b62cfe356ef2ce7b0c433252047990f87274bd31a0e82",
+      "timestamp": "2026-04-13T02:22:18.963552+00:00"
+    },
+    "0xcb951bbdbb2bbc31803745656c98fb1cf0c0d4243c2650418e0f452ce35aae7b": {
+      "condition_id": "0xcb951bbdbb2bbc31803745656c98fb1cf0c0d4243c2650418e0f452ce35aae7b",
+      "title": "Will Tisza win 70\u201379 seats in the Hungarian National Assembl",
+      "outcome": "No",
+      "side": "SELL",
+      "bet_size": 6.3,
+      "entry_price": 0.999,
+      "whale_address": "0xb12b01101d1873f9bcac4942bb3796e9bd7a5a89",
+      "whale_name": "StackingMillions",
+      "whale_size": 565.0,
+      "is_known_whale": false,
+      "tx": "0xfa2704a77ff88a37433c81e5f3319a1d37bac07a44bc72766161bfa97c3db0a2",
+      "timestamp": "2026-04-13T02:22:18.963584+00:00"
+    }
+  },
+  "history": [
+    {
+      "condition_id": "0xaaeea6132d83815a37850eb44869c0d56096a95851b8c08abd7a621b0021553e",
+      "title": "Bitcoin Up or Down - April 12, 10:10PM-10:15PM ET",
+      "outcome": "Up",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.020345052083333332,
+      "whale_address": "0x9819e3e2e1992cb0d6cc1742df4f4d81af314951",
+      "whale_name": "nukaktak",
+      "whale_size": 685.27584,
+      "is_known_whale": false,
+      "tx": "0xc9e805feabe3b8cf8a5f84f7b038a0ccfa3e9485c77f99a8c996df0e67965397",
+      "timestamp": "2026-04-13T02:17:02.346157+00:00",
+      "resolved": true,
+      "won": false,
+      "pnl": -10.0,
+      "resolved_at": "2026-04-13T02:22:06.094961+00:00"
+    },
+    {
       "condition_id": "0xabb437693e1f6f4f858062c2581e0e6c40e6ba84a0f2eb74034392850a404275",
       "title": "Ethereum Up or Down - April 12, 10:00PM-10:15PM ET",
       "outcome": "Down",
@@ -83,10 +229,13 @@
       "whale_size": 593.41728,
       "is_known_whale": false,
       "tx": "0x9be5963ad1e62a43fabc91448f0302d885afac6350c5e72c5a53b1e97a4fc1aa",
-      "timestamp": "2026-04-13T02:17:02.346279+00:00"
+      "timestamp": "2026-04-13T02:17:02.346279+00:00",
+      "resolved": true,
+      "won": true,
+      "pnl": 0.01,
+      "resolved_at": "2026-04-13T02:22:12.901376+00:00"
     }
-  },
-  "history": [],
+  ],
   "consecutive_losses": 0,
   "cooldown_until": null,
   "top_traders": [
@@ -123,12 +272,28 @@
       "active_markets": 2
     },
     {
+      "address": "0xd48a81db62f742c4e42d86dfc23a7ee345366e90",
+      "name": "NiFengFanPan",
+      "trades": 3,
+      "volume": 9710.88,
+      "last_seen": "2026-04-13T02:22:18.405565+00:00",
+      "active_markets": 2
+    },
+    {
       "address": "0xcf609d3256f0f37f0595e5dc64012fa3a8fea6f5",
       "name": "0xcF609D3256f0f37f0595E5Dc64012Fa3a8fEa6f5-1771809916847",
       "trades": 3,
       "volume": 9154.8,
       "last_seen": "2026-04-12T17:59:36.221634+00:00",
       "active_markets": 3
+    },
+    {
+      "address": "0x204f72f35326db932158cba6adff0b9a1da95e14",
+      "name": "swisstony",
+      "trades": 11,
+      "volume": 7866.05,
+      "last_seen": "2026-04-13T02:22:18.616287+00:00",
+      "active_markets": 11
     },
     {
       "address": "0x5d1d9cfd66ee3068c2a8a57dedf1e1b006dcafd2",
@@ -139,12 +304,12 @@
       "active_markets": 5
     },
     {
-      "address": "0x204f72f35326db932158cba6adff0b9a1da95e14",
-      "name": "swisstony",
-      "trades": 10,
-      "volume": 6721.11,
-      "last_seen": "2026-04-12T17:59:36.109111+00:00",
-      "active_markets": 10
+      "address": "0xa73a1952f1f0d94aeb396ffdaf7e111a8eab656a",
+      "name": "oneheadedlebron",
+      "trades": 4,
+      "volume": 5897.83,
+      "last_seen": "2026-04-13T02:22:18.500765+00:00",
+      "active_markets": 2
     },
     {
       "address": "0xead152b855effa6b5b5837f53b24c0756830c76a",
@@ -171,14 +336,6 @@
       "active_markets": 3
     },
     {
-      "address": "0xa73a1952f1f0d94aeb396ffdaf7e111a8eab656a",
-      "name": "oneheadedlebron",
-      "trades": 3,
-      "volume": 4946.64,
-      "last_seen": "2026-04-13T02:17:01.943599+00:00",
-      "active_markets": 2
-    },
-    {
       "address": "0xd106952ebf30a3125affd8a23b6c1f30c35fc79c",
       "name": "Herdonia",
       "trades": 3,
@@ -195,25 +352,17 @@
       "active_markets": 4
     },
     {
-      "address": "0x507e52ef684ca2dd91f90a9d26d149dd3288beae",
-      "name": "GamblingIsAllYouNeed",
-      "trades": 3,
-      "volume": 4021.93,
-      "last_seen": "2026-04-12T18:05:58.655522+00:00",
-      "active_markets": 2
-    },
-    {
-      "address": "0xfdc0bd67fbd71aa8edd00121eb2a7fcbddc34b85",
-      "name": "oneheadedtiger",
-      "trades": 4,
-      "volume": 3958.05,
-      "last_seen": "2026-04-12T18:38:34.232038+00:00",
-      "active_markets": 3
+      "address": "0xd27d1e863b5b29af53495f7c072d492bdfdaa84f",
+      "name": "",
+      "trades": 6,
+      "volume": 4224.62,
+      "last_seen": "2026-04-13T02:22:17.912529+00:00",
+      "active_markets": 4
     }
   ],
-  "total_wallets_tracked": 766,
-  "wins": 0,
-  "losses": 0,
-  "win_rate": 0,
-  "updated": "2026-04-13T02:17:02.348722+00:00"
+  "total_wallets_tracked": 784,
+  "wins": 1,
+  "losses": 1,
+  "win_rate": 50.0,
+  "updated": "2026-04-13T02:22:18.965412+00:00"
 }
