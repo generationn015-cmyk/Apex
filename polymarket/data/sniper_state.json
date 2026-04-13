@@ -1,5 +1,5 @@
 {
-  "bankroll": 244.23,
+  "bankroll": 242.78,
   "positions": {
     "0xfc6260666d020a912a87d9000eff5116d2adfb8c30aba543427a4c1f1411f1a0": {
       "question": "MegaETH market cap (FDV) >$2B one day after launch?",
@@ -40,6 +40,14 @@
       "entry_price": 0.0735,
       "edge": 0.0225,
       "opened_at": "2026-04-13T02:17:29.921969+00:00"
+    },
+    "0xe2b48e3b44de9658ee9c8b37354301763e33c0b502fd966839d644b4c0a9dea8": {
+      "question": "Will Harvey Weinstein be sentenced to less than 5 years in prison?",
+      "direction": "YES",
+      "bet_size": 1.45,
+      "entry_price": 0.053,
+      "edge": 0.0225,
+      "opened_at": "2026-04-13T05:39:02.395396+00:00"
     }
   },
   "history": [],
@@ -93,7 +101,17 @@
       "opened_at": "2026-04-13T02:17:29.921969+00:00",
       "condition_id": "0x2499928ffbe6022444543dcd940075259cecb5e41e346284b578cb64e1404d32",
       "resolved": false
+    },
+    {
+      "question": "Will Harvey Weinstein be sentenced to less than 5 years in prison?",
+      "direction": "YES",
+      "bet_size": 1.45,
+      "entry_price": 0.053,
+      "edge": 0.0225,
+      "opened_at": "2026-04-13T05:39:02.395396+00:00",
+      "condition_id": "0xe2b48e3b44de9658ee9c8b37354301763e33c0b502fd966839d644b4c0a9dea8",
+      "resolved": false
     }
   ],
-  "updated": "2026-04-13T02:17:29.922065+00:00"
+  "updated": "2026-04-13T05:39:02.395474+00:00"
 }
