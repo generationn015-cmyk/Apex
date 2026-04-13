@@ -1,5 +1,5 @@
 {
-  "bankroll": 36.81000000000001,
+  "bankroll": 31.560000000000006,
   "positions": {
     "0x14267ebbbc0ac689c27c64836481edeeb8460fcb3cfee5c67903b8377e326916": {
       "condition_id": "0x14267ebbbc0ac689c27c64836481edeeb8460fcb3cfee5c67903b8377e326916",
@@ -490,6 +490,48 @@
       "is_known_whale": false,
       "tx": "0xb2f72f02595c91a85739e9c8365127d73fdc9a995c42d95527dcac72cc00c722",
       "timestamp": "2026-04-13T02:42:19.999548+00:00"
+    },
+    "0x3db74f14fa0c4d8acb19ff4ffa18d523597a8e553ec565d494290a908d99395a": {
+      "condition_id": "0x3db74f14fa0c4d8acb19ff4ffa18d523597a8e553ec565d494290a908d99395a",
+      "title": "Will the Milwaukee Brewers win the 2026 World Series?",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 1.84,
+      "entry_price": 0.028,
+      "whale_address": "0x93561519df38769ee8c9921631576bd2ad10e55b",
+      "whale_name": "0x93561519Df38769ee8c9921631576BD2ad10e55b-1762408048893",
+      "whale_size": 1681.0,
+      "is_known_whale": false,
+      "tx": "0xc50cdc0d4cc26bfa2de2bdaa25e5aa252d3b3859e078ec5afe013d926a6f4b85",
+      "timestamp": "2026-04-13T02:47:55.122703+00:00"
+    },
+    "0x62485cbdbfd155f836e445e2ca2ac755e480b6a06c2a467434908d6cd6dba275": {
+      "condition_id": "0x62485cbdbfd155f836e445e2ca2ac755e480b6a06c2a467434908d6cd6dba275",
+      "title": "Will Bitcoin reach $75,000 in April?",
+      "outcome": "Yes",
+      "side": "SELL",
+      "bet_size": 1.75,
+      "entry_price": 0.54,
+      "whale_address": "0x5b4ab42839ad0d40a916a00a78e6d7af62fb089f",
+      "whale_name": "Allrigged",
+      "whale_size": 499.35,
+      "is_known_whale": false,
+      "tx": "0x3fd75df5b8a71fad30f08785e0cb024ccdc13400ecb042bdd57e491559375661",
+      "timestamp": "2026-04-13T02:47:55.123424+00:00"
+    },
+    "0x68f02eb199157aea543066da83b764333b92ba8e32fa660d78324db78fb8b903": {
+      "condition_id": "0x68f02eb199157aea543066da83b764333b92ba8e32fa660d78324db78fb8b903",
+      "title": "Bitcoin Up or Down - April 12, 10:45PM-10:50PM ET",
+      "outcome": "Up",
+      "side": "BUY",
+      "bet_size": 1.66,
+      "entry_price": 0.5590072341841994,
+      "whale_address": "0x30be23d0622ae9ea3072a0091c214c78cdcbf4c1",
+      "whale_name": "0x11a23114a093cbfd047cd573f2972c202f85569",
+      "whale_size": 433.021462,
+      "is_known_whale": false,
+      "tx": "0x7b73ea68f97c22db5380777e1698a7d8ef48f674f155d4fccb530d087fc82b11",
+      "timestamp": "2026-04-13T02:47:55.123464+00:00"
     }
   },
   "history": [
@@ -588,15 +630,18 @@
     "0xfd97d8b2295c169c3ee0a4d5e49bf019997b56221dfa7c54e458f307570a1569",
     "0x7ac4e25bbbdb0e3e34b2b630552b5d191fbbfb58cc8aabb3f15c189417cda839",
     "0xac3b268b758376f57382fb47c51d697090a9da576c146925bbb34c33e69eb5c3",
+    "0xc24a253b9bb322ba15f55f54a7d91e4b8f38ca90a152cbc87021fbf848391bce",
     "0x8ddfddb86ba2210cba6554b6f19b6762744dd456d9072454b8fcaf6229637e11",
     "0x98bf5f9a8b47d8c00500baeb1b4651af94dce666b12e5a509fc6e2a5aa55f04b",
     "0xf962572ea7b7b8899908e32586c1feeae2ca85f4a43228bc31509481fc3f0056",
     "0x09a4ff96909662ad2a4dc7b74f3dc7a6ca43c2203292ad09a601367b9f10a9a1",
     "0x94ffa8f78f3b69604528e4363606755bf0e6921d340de6eecfb04a053107aaed",
+    "0x6a76f9f626f8c27225b3c7a508d5b15a18625ac278c4a3e90b9cfc8d809d1e24",
     "0x6c7c12d3837e6a448559aba2980531ceb3d2cdf02e576f2bef7c340c6b3d0ca0",
     "0xa27669819a721db5fb407c4c98a28c7ca34840df5ea5d88c2207442a97b48148",
     "0xab170b7bb98aadfc54389b9119ea0b455ef102f576e6a4de4cac8eb302af3ce8",
     "0x2cfaac7c4d15d8cf102e7b649a9cedc1c6dc750327b9220856f4aab3e50ea561",
+    "0x3fd75df5b8a71fad30f08785e0cb024ccdc13400ecb042bdd57e491559375661",
     "0xd9f7abf20f57efe2c03a96697bee308ebb4b6c48665ef20176dcb33d6c77a742",
     "0xe57f0a0ea8987d38d22065b4dee2416c4398905a2ba2e847c2cbf0370d611ae9",
     "0x054e7ed243618ac4b813cd4bae693e07bbc05234cac6741d4c0bdb505f5a9233",
@@ -608,6 +653,7 @@
     "0x0af0343cd9979cdc43dadd44ed1bd7cbf9115616f971039b734985323ac7b901",
     "0xee4334bcd12de83f8f2e85c104d3d0954ea28c34c34b541524d0d9e6274a0c21",
     "0x8703c1c13ed107d9d67e561aa0f90fd92c866865774b8bbcf118afc4efc7edce",
+    "0xc50cdc0d4cc26bfa2de2bdaa25e5aa252d3b3859e078ec5afe013d926a6f4b85",
     "0x85a2ef197773d07525c31e21ec2a09376af5c18493554652799d4f363ffc58a2",
     "0x0323767f0de971d2bd2bca3c83ec796f430b2bb8805505e4aab7a6bb05118480",
     "0x786fa643d2961fa660189485c4bb6f0767106dd13db04b9107834916788c46ed",
@@ -640,12 +686,14 @@
     "0xd2058dc94ba532b5514f50dac88192f206f91f01370a6511fa4528eff245c4a1",
     "0x1778a7ab716c5a75943e2c56daab3da2ce06ed2c1271498ade6cbe7e4ace3312",
     "0x1e137ee56300911ddfa9b656f7442b4d085d659ca81a9d4e835317fd4a79f6e0",
+    "0x7b73ea68f97c22db5380777e1698a7d8ef48f674f155d4fccb530d087fc82b11",
     "0xde5501197bf464f2e9dee28eb001f9c497a68b5bdf1296318769762285ba4614",
     "0x5b86c452d973f18216f4c1170fbab413eae5a85b3f72cf4fe46247b298fd993e",
     "0x71234009e9955b8ceb024ee7d0477335437106b1056b9d283a2be3477a65cbc4",
     "0x2e92bfcbd4a660c2ea77f51b7612fd2c6b8c547af7b39ca30ea23e6e38ce2de6",
     "0x43f4524a89ba7a82a1f53dd2666fc0dafb86d218d6c2f2dac65003878c942286",
     "0xc70ae8e2c866355653bf868d4c5578f5e0b7ee818a970d99bba19c2f26404bba",
+    "0xb49fcaf9db7e00f9dbfe01fb6abbd5f698c11ef285251e99e89f10707ff66d6c",
     "0x3afb98380b10b19e1c774cefe4eae2b930c4a358c0dd3d5c44ec4dd921af45c6",
     "0x5a1271db4b228c52f3ad882b575752ec24ce0402282df012656dd765d0a453cd",
     "0x4af1d8a9ff53bc5aec4df95ab51fb1ed90ee09bbd0f268dc7b5238f2185607e3",
@@ -666,5 +714,5 @@
     "0xae67a1b9fe687381ba250cc119b98fc41d76921c60ce79a33cbf7e3819dc8cc7",
     "0x75370e0f0658a334d27ddd8abeae7c539f04f251c7481ab3e75dff08ce7178fc"
   ],
-  "updated": "2026-04-13T02:42:19.999873+00:00"
+  "updated": "2026-04-13T02:47:55.123583+00:00"
 }
