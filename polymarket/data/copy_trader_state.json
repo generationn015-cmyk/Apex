@@ -1,5 +1,5 @@
 {
-  "bankroll": 68.13000000000001,
+  "bankroll": 64.72000000000001,
   "positions": {
     "0x14267ebbbc0ac689c27c64836481edeeb8460fcb3cfee5c67903b8377e326916": {
       "condition_id": "0x14267ebbbc0ac689c27c64836481edeeb8460fcb3cfee5c67903b8377e326916",
@@ -253,20 +253,6 @@
       "tx": "0xf591a7fa52f47fc4abb0043ed49b607ffae9e095df6320479d378eb98cc47398",
       "timestamp": "2026-04-13T02:31:12.532809+00:00"
     },
-    "0x35458262bc03696ce04b2b15024414e5259f8a92b401f4fc07f20b4e29f1ef53": {
-      "condition_id": "0x35458262bc03696ce04b2b15024414e5259f8a92b401f4fc07f20b4e29f1ef53",
-      "title": "Bitcoin Up or Down - April 12, 10:25PM-10:30PM ET",
-      "outcome": "Down",
-      "side": "BUY",
-      "bet_size": 4.63,
-      "entry_price": 0.01,
-      "whale_address": "0xd1dc8c80d1a86450bba357c7a047062702c1cc46",
-      "whale_name": "x317",
-      "whale_size": 499.99499000000003,
-      "is_known_whale": false,
-      "tx": "0x3500b8a6690e02c6204c62b06f40c3db94937b92b8c0140dc688e4b6aa8aa908",
-      "timestamp": "2026-04-13T02:31:12.533015+00:00"
-    },
     "0xce9a5fa30fe74e323b4a8f15afbb0b7a41a537aa880779ddf7dee22223b2f34a": {
       "condition_id": "0xce9a5fa30fe74e323b4a8f15afbb0b7a41a537aa880779ddf7dee22223b2f34a",
       "title": "Will Donald Trump win the 2028 US Presidential Election?",
@@ -336,6 +322,20 @@
       "is_known_whale": false,
       "tx": "0x9451d49368352474a5ea23b320a05b5d5175f98c20dbd36452bb93cc1af517a3",
       "timestamp": "2026-04-13T02:31:12.533165+00:00"
+    },
+    "0xf2cea45ec282af4f302d2ab85ede73678cd692ebf8c3ab6d52bfa5e19f44c553": {
+      "condition_id": "0xf2cea45ec282af4f302d2ab85ede73678cd692ebf8c3ab6d52bfa5e19f44c553",
+      "title": "Will Matt Gaetz win the 2028 Republican presidential nominat",
+      "outcome": "No",
+      "side": "SELL",
+      "bet_size": 3.41,
+      "entry_price": 0.992,
+      "whale_address": "0x04f9ca85e247a0bd76a30b772018baee2c4a7d37",
+      "whale_name": "7ad11",
+      "whale_size": 1007.04,
+      "is_known_whale": false,
+      "tx": "0xbb7b30de48f2988be71058a0dff381c0778ab2c04245dde39462a26d1c4f6b86",
+      "timestamp": "2026-04-13T02:36:55.205338+00:00"
     }
   },
   "history": [
@@ -392,13 +392,32 @@
       "won": false,
       "pnl": -9.5,
       "resolved_at": "2026-04-13T02:28:16.144919+00:00"
+    },
+    {
+      "condition_id": "0x35458262bc03696ce04b2b15024414e5259f8a92b401f4fc07f20b4e29f1ef53",
+      "title": "Bitcoin Up or Down - April 12, 10:25PM-10:30PM ET",
+      "outcome": "Down",
+      "side": "BUY",
+      "bet_size": 4.63,
+      "entry_price": 0.01,
+      "whale_address": "0xd1dc8c80d1a86450bba357c7a047062702c1cc46",
+      "whale_name": "x317",
+      "whale_size": 499.99499000000003,
+      "is_known_whale": false,
+      "tx": "0x3500b8a6690e02c6204c62b06f40c3db94937b92b8c0140dc688e4b6aa8aa908",
+      "timestamp": "2026-04-13T02:31:12.533015+00:00",
+      "resolved": true,
+      "won": false,
+      "pnl": -4.63,
+      "resolved_at": "2026-04-13T02:36:44.009978+00:00"
     }
   ],
-  "consecutive_losses": 1,
+  "consecutive_losses": 2,
   "cooldown_until": null,
   "seen_tx": [
     "0xfa2704a77ff88a37433c81e5f3319a1d37bac07a44bc72766161bfa97c3db0a2",
     "0xd2058dc94ba532b5514f50dac88192f206f91f01370a6511fa4528eff245c4a1",
+    "0x6c7c12d3837e6a448559aba2980531ceb3d2cdf02e576f2bef7c340c6b3d0ca0",
     "0x1778a7ab716c5a75943e2c56daab3da2ce06ed2c1271498ade6cbe7e4ace3312",
     "0xab170b7bb98aadfc54389b9119ea0b455ef102f576e6a4de4cac8eb302af3ce8",
     "0xbba9d7883d38f6f7e94d6696acc1bf32f0bb7814288e5142e57d0f6b344320b5",
@@ -423,6 +442,7 @@
     "0x7465ae4b2ba4cdf357e34e7e257b6006114fd1325524a7976027a5a2dd549a76",
     "0x63e7840bd5b909cb79d9f68d17f9cd1965766510be30b0b502b1bec19807752a",
     "0x071566e9654ba80a3f21fa399c1973ac6dca8cbbca0df687805139f6ba59ead3",
+    "0xc70ae8e2c866355653bf868d4c5578f5e0b7ee818a970d99bba19c2f26404bba",
     "0xc523560b678c3b230e01bb52b71f9b19add5ca7d0ca2170e3dfa311445fccc45",
     "0x3afb98380b10b19e1c774cefe4eae2b930c4a358c0dd3d5c44ec4dd921af45c6",
     "0x5a1271db4b228c52f3ad882b575752ec24ce0402282df012656dd765d0a453cd",
@@ -432,6 +452,7 @@
     "0x1410da6c4b89307c4893d38b1e05f8ac0afbcabb70b5c5139ef46396667f53bc",
     "0x077802cb7011fd765c4111d498193f226f311e160aa80b113c078a30a16f6b99",
     "0xa1cae2a7b8ab4f8144799917e712a0e5e4e95ae3f86b3d44e5c99105bebff073",
+    "0xa9ba82b63a9ab06b277091dccdbea069a301039c31b564740973f8db9f5a590e",
     "0x84f59f0a23f4b9b8bc0afcae5b2b2d0142b2ebf616025d750d23d4ed1d6cd9ea",
     "0x099e92d6405bda81802fd5051a370194ca3190f48f92b41148418b792ee937df",
     "0x7f63808e159abf9a9f6632a11009b4c47f170edfa9c262a37d64f577fde8170f",
@@ -463,9 +484,11 @@
     "0x786fa643d2961fa660189485c4bb6f0767106dd13db04b9107834916788c46ed",
     "0x09a4ff96909662ad2a4dc7b74f3dc7a6ca43c2203292ad09a601367b9f10a9a1",
     "0x9451d49368352474a5ea23b320a05b5d5175f98c20dbd36452bb93cc1af517a3",
+    "0xc963867108b576afc2cb329f514019aeb3aea2f0e8ca3ad0fd6706d29be2ab15",
+    "0xbb7b30de48f2988be71058a0dff381c0778ab2c04245dde39462a26d1c4f6b86",
     "0x94ffa8f78f3b69604528e4363606755bf0e6921d340de6eecfb04a053107aaed",
     "0x75370e0f0658a334d27ddd8abeae7c539f04f251c7481ab3e75dff08ce7178fc",
     "0xae611b9a54bfc96970ce5741b64c745fbe87ec5980b6bb1293a98676adae54a5"
   ],
-  "updated": "2026-04-13T02:31:12.533257+00:00"
+  "updated": "2026-04-13T02:36:55.205683+00:00"
 }
