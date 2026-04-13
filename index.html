@@ -179,7 +179,13 @@ async function refresh() {
   const modeTag = document.getElementById('modeTag');
   modeTag.textContent = mode.toUpperCase();
   modeTag.className = 'mode-badge mode-' + mode;
-  document.getElementById('lastUpdate').textContent = ago(wdog?.updated_at || btc5m?.updated || state?.updated_at);
+  // Use most recent timestamp from any source
+  const timestamps = [btc5m?.updated, state?.updated_at, wdog?.updated_at].filter(Boolean);
+  const latest = timestamps.sort().reverse()[0];
+  document.getElementById('lastUpdate').textContent = latest ? ago(latest) : 'no data';
+
+  // Debug: log what loaded
+  console.log('Data loaded:', {state:!!state, wdog:!!wdog, btc5m:!!btc5m, sniper:!!sniper, scan:!!scan, copyS:!!copyS, trades:trades?.length});
 
   // BTC 5m stats
   const btcTrades = btc5m?.trades || [];
