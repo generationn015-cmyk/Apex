@@ -8,7 +8,7 @@
     "liquidity": 2780.18098,
     "volume": 48744.39651000013,
     "is_btc": false,
-    "minutes_to_resolve": -147725.9
+    "minutes_to_resolve": -147727.4
   },
   {
     "question": "Will Harvey Weinstein be sentenced to more than 30 years in prison?",
@@ -19,7 +19,7 @@
     "liquidity": 3541.71257,
     "volume": 52861.992455000065,
     "is_btc": false,
-    "minutes_to_resolve": -147725.9
+    "minutes_to_resolve": -147727.4
   },
   {
     "question": "MegaETH market cap (FDV) >$2B one day after launch?",
@@ -30,7 +30,7 @@
     "liquidity": 72987.9225,
     "volume": 5884516.40343108,
     "is_btc": false,
-    "minutes_to_resolve": -148445.9
+    "minutes_to_resolve": -148447.4
   },
   {
     "question": "Will Harvey Weinstein be sentenced to between 10 and 20 years in prison?",
@@ -41,7 +41,7 @@
     "liquidity": 1163.33565,
     "volume": 135573.36159500005,
     "is_btc": false,
-    "minutes_to_resolve": -147725.9
+    "minutes_to_resolve": -147727.4
   },
   {
     "question": "Will Harvey Weinstein be sentenced to between 20 and 30 years in prison?",
@@ -52,7 +52,7 @@
     "liquidity": 2307.82658,
     "volume": 176079.83239500038,
     "is_btc": false,
-    "minutes_to_resolve": -147725.9
+    "minutes_to_resolve": -147727.4
   },
   {
     "question": "Will Harvey Weinstein be sentenced to no prison time?",
@@ -63,7 +63,7 @@
     "liquidity": 1946.84821,
     "volume": 314786.604208001,
     "is_btc": false,
-    "minutes_to_resolve": -147725.9
+    "minutes_to_resolve": -147727.4
   },
   {
     "question": "Will MegaETH perform an airdrop by June 30? ",
@@ -74,6 +74,6 @@
     "liquidity": 7105.16951,
     "volume": 1074754.774976001,
     "is_btc": false,
-    "minutes_to_resolve": -102065.9
+    "minutes_to_resolve": -102067.4
   }
 ]
