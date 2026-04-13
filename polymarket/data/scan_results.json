@@ -8,7 +8,7 @@
     "liquidity": 9857.6836,
     "volume": 84575.014454,
     "is_btc": false,
-    "minutes_to_resolve": -148034.5
+    "minutes_to_resolve": -148035.5
   },
   {
     "question": "Will Harvey Weinstein be sentenced to between 5 and 10 years in prison?",
@@ -19,7 +19,7 @@
     "liquidity": 2913.77781,
     "volume": 48807.39651000012,
     "is_btc": false,
-    "minutes_to_resolve": -148034.5
+    "minutes_to_resolve": -148035.5
   },
   {
     "question": "Will Harvey Weinstein be sentenced to more than 30 years in prison?",
@@ -30,7 +30,7 @@
     "liquidity": 3665.15396,
     "volume": 52861.992455000065,
     "is_btc": false,
-    "minutes_to_resolve": -148034.5
+    "minutes_to_resolve": -148035.5
   },
   {
     "question": "MegaETH market cap (FDV) >$2B one day after launch?",
@@ -41,7 +41,7 @@
     "liquidity": 73557.1585,
     "volume": 5885139.58524808,
     "is_btc": false,
-    "minutes_to_resolve": -148754.5
+    "minutes_to_resolve": -148755.5
   },
   {
     "question": "Will Harvey Weinstein be sentenced to between 10 and 20 years in prison?",
@@ -52,7 +52,7 @@
     "liquidity": 1222.09129,
     "volume": 135702.0876840001,
     "is_btc": false,
-    "minutes_to_resolve": -148034.5
+    "minutes_to_resolve": -148035.5
   },
   {
     "question": "Will Harvey Weinstein be sentenced to between 20 and 30 years in prison?",
@@ -63,7 +63,7 @@
     "liquidity": 2371.7687,
     "volume": 176126.4684110004,
     "is_btc": false,
-    "minutes_to_resolve": -148034.5
+    "minutes_to_resolve": -148035.5
   },
   {
     "question": "Will Harvey Weinstein be sentenced to no prison time?",
@@ -74,7 +74,7 @@
     "liquidity": 2368.94938,
     "volume": 314801.713643001,
     "is_btc": false,
-    "minutes_to_resolve": -148034.5
+    "minutes_to_resolve": -148035.5
   },
   {
     "question": "Will MegaETH perform an airdrop by June 30? ",
@@ -85,6 +85,6 @@
     "liquidity": 9144.507,
     "volume": 1093754.3249760007,
     "is_btc": false,
-    "minutes_to_resolve": -102374.5
+    "minutes_to_resolve": -102375.5
   }
 ]
