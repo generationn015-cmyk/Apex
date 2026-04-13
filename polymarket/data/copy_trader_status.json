@@ -1,5 +1,5 @@
 {
-  "bankroll": 102.67000000000002,
+  "bankroll": 167.18,
   "positions": {
     "0xc64a77f9126ab445ae479ecd9c229aa4f666187dc2c0c9729879a2c602e9c0d8": {
       "condition_id": "0xc64a77f9126ab445ae479ecd9c229aa4f666187dc2c0c9729879a2c602e9c0d8",
@@ -28,20 +28,6 @@
       "is_known_whale": false,
       "tx": "0xc15d48cf34b1d8f75f24f13745688dc3941f7c8253db492f6027ff6b22b7047f",
       "timestamp": "2026-04-12T22:31:24.777562+00:00"
-    },
-    "0x9a5ab1499e56b7f6f4552782e9000db74ca748e7faee148d82cc03aca23dd0ea": {
-      "condition_id": "0x9a5ab1499e56b7f6f4552782e9000db74ca748e7faee148d82cc03aca23dd0ea",
-      "title": "Will AD Cali vs. Llaneros FC end in a draw?",
-      "outcome": "Yes",
-      "side": "BUY",
-      "bet_size": 10.0,
-      "entry_price": 0.14999999838593975,
-      "whale_address": "0x0f15bca68d73e79fda8ad13794861c6644ce0ce5",
-      "whale_name": "h4ckm1n.dev",
-      "whale_size": 464.666665,
-      "is_known_whale": false,
-      "tx": "0xf35d81b2fe88a52a1a7f05d0fdd5415919ae0a5679020b6d2e00b02cca1ecef1",
-      "timestamp": "2026-04-12T22:31:24.777592+00:00"
     },
     "0xbdf6b039349b45e5e93b085c8334c166ad519aa305a8d10f4d34fa377a5b7d37": {
       "condition_id": "0xbdf6b039349b45e5e93b085c8334c166ad519aa305a8d10f4d34fa377a5b7d37",
@@ -141,20 +127,6 @@
       "tx": "0x80a17afe4410bf13ac10305246e3000a7aa5e04bc9dbda08d62e12a04b697c05",
       "timestamp": "2026-04-12T22:41:32.599897+00:00"
     },
-    "0xd462b49dd2177b6a2d3a4439e733b1a4773326b46e0f84657ac306dcd52c9649": {
-      "condition_id": "0xd462b49dd2177b6a2d3a4439e733b1a4773326b46e0f84657ac306dcd52c9649",
-      "title": "Military action against Iran ends by April 21, 2026?",
-      "outcome": "Yes",
-      "side": "BUY",
-      "bet_size": 6.63,
-      "entry_price": 0.999,
-      "whale_address": "0x7e30c3a56d89edac738d788dd218a9e64fb91e50",
-      "whale_name": "Debosnys",
-      "whale_size": 4317.55,
-      "is_known_whale": false,
-      "tx": "0x997237dd12bd045697dd6227ac091538ee579ba85289c4a056eca6a857f69bc6",
-      "timestamp": "2026-04-12T22:41:32.599911+00:00"
-    },
     "0xb1a0c0e3c5ebe6fcd3fb541efabc01bdc977d6938a2e6112b3a7514538383a5a": {
       "condition_id": "0xb1a0c0e3c5ebe6fcd3fb541efabc01bdc977d6938a2e6112b3a7514538383a5a",
       "title": "Nuggets vs. Spurs",
@@ -210,6 +182,20 @@
       "is_known_whale": false,
       "tx": "0x7dc56a4d2156f614e8cb1b2bcfc91b41079e62481e48f9b9e6375ab60b37ec77",
       "timestamp": "2026-04-12T22:41:32.599968+00:00"
+    },
+    "0xbbda4458270174282c098799d270869f24328675755c962a88a6af91886d3e77": {
+      "condition_id": "0xbbda4458270174282c098799d270869f24328675755c962a88a6af91886d3e77",
+      "title": "Nuggets vs. Spurs: O/U 238.5",
+      "outcome": "Under",
+      "side": "BUY",
+      "bet_size": 8.8,
+      "entry_price": 0.28,
+      "whale_address": "0xacb206b460a17382a734de8d931cc176307eb989",
+      "whale_name": "AppleTime67",
+      "whale_size": 1637.7829000000002,
+      "is_known_whale": false,
+      "tx": "0xce5c6f4070d381d0633ca0bf569932553bbad214252abaa5b1dd15a1af92a92b",
+      "timestamp": "2026-04-13T01:59:02.412745+00:00"
     }
   },
   "history": [
@@ -266,10 +252,46 @@
       "won": false,
       "pnl": -7.74,
       "resolved_at": "2026-04-12T22:51:44.953281+00:00"
+    },
+    {
+      "condition_id": "0xd462b49dd2177b6a2d3a4439e733b1a4773326b46e0f84657ac306dcd52c9649",
+      "title": "Military action against Iran ends by April 21, 2026?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 6.63,
+      "entry_price": 0.999,
+      "whale_address": "0x7e30c3a56d89edac738d788dd218a9e64fb91e50",
+      "whale_name": "Debosnys",
+      "whale_size": 4317.55,
+      "is_known_whale": false,
+      "tx": "0x997237dd12bd045697dd6227ac091538ee579ba85289c4a056eca6a857f69bc6",
+      "timestamp": "2026-04-12T22:41:32.599911+00:00",
+      "resolved": true,
+      "won": true,
+      "pnl": 0.01,
+      "resolved_at": "2026-04-13T01:20:44.461685+00:00"
+    },
+    {
+      "condition_id": "0x9a5ab1499e56b7f6f4552782e9000db74ca748e7faee148d82cc03aca23dd0ea",
+      "title": "Will AD Cali vs. Llaneros FC end in a draw?",
+      "outcome": "Yes",
+      "side": "BUY",
+      "bet_size": 10.0,
+      "entry_price": 0.14999999838593975,
+      "whale_address": "0x0f15bca68d73e79fda8ad13794861c6644ce0ce5",
+      "whale_name": "h4ckm1n.dev",
+      "whale_size": 464.666665,
+      "is_known_whale": false,
+      "tx": "0xf35d81b2fe88a52a1a7f05d0fdd5415919ae0a5679020b6d2e00b02cca1ecef1",
+      "timestamp": "2026-04-12T22:31:24.777592+00:00",
+      "resolved": true,
+      "won": true,
+      "pnl": 56.67,
+      "resolved_at": "2026-04-13T01:41:11.952959+00:00"
     }
   ],
-  "consecutive_losses": 3,
-  "cooldown_until": "2026-04-13T22:51:44.953304+00:00",
+  "consecutive_losses": 0,
+  "cooldown_until": null,
   "top_traders": [
     {
       "address": "0x4a3d9401153b513cb6b7391ba74ef5f288704841",
@@ -392,9 +414,9 @@
       "active_markets": 5
     }
   ],
-  "total_wallets_tracked": 745,
-  "wins": 0,
+  "total_wallets_tracked": 747,
+  "wins": 2,
   "losses": 3,
-  "win_rate": 0.0,
-  "updated": "2026-04-12T23:14:53.216877+00:00"
+  "win_rate": 40.0,
+  "updated": "2026-04-13T01:59:02.413578+00:00"
 }
