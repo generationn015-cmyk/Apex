@@ -1,7 +1,207 @@
 {
-  "bankroll": 250.0,
-  "positions": {},
+  "bankroll": 240.69,
+  "positions": {
+    "0xf7b5491e70b477d451afe7d9c1fde4bf1a927e69ff289d294b96df164f6c10f0": {
+      "question": "Will the Carolina Hurricanes win the 2026 NHL Stanley Cup?",
+      "direction": "YES",
+      "bet_size": 0.87,
+      "entry_price": 0.135,
+      "edge": 0.012,
+      "opened_at": "2026-04-13T15:31:03.660556+00:00"
+    },
+    "0x4a67e1270a2ed86be8fc524b6114640e41b0c56303ecaa9584deacd62402650a": {
+      "question": "Will the Edmonton Oilers win the 2026 NHL Stanley Cup?",
+      "direction": "YES",
+      "bet_size": 0.81,
+      "entry_price": 0.075,
+      "edge": 0.012,
+      "opened_at": "2026-04-13T15:31:03.661972+00:00"
+    },
+    "0x44887f53abbfe7531b1384420b185a5f10ee42a4e6c9441d5883abd4f3c1e5ef": {
+      "question": "Will the Dallas Stars win the 2026 NHL Stanley Cup?",
+      "direction": "YES",
+      "bet_size": 0.82,
+      "entry_price": 0.0825,
+      "edge": 0.012,
+      "opened_at": "2026-04-13T15:31:03.668365+00:00"
+    },
+    "0xf8f63bb47b2a7c2e0c1be3cedf4075079b11c07476d76a9469065b0c4791961a": {
+      "question": "Will the Colorado Avalanche win the 2026 NHL Stanley Cup?",
+      "direction": "YES",
+      "bet_size": 0.97,
+      "entry_price": 0.224,
+      "edge": 0.012,
+      "opened_at": "2026-04-13T15:31:03.669907+00:00"
+    },
+    "0x89389a6b1439856a8d366234c795d72865c927a1aa3cf9d4cc04a3a400defde1": {
+      "question": "Will the Vegas Golden Knights win the 2026 NHL Stanley Cup?",
+      "direction": "YES",
+      "bet_size": 0.8,
+      "entry_price": 0.064,
+      "edge": 0.012,
+      "opened_at": "2026-04-13T15:31:03.672327+00:00"
+    },
+    "0xbdd688664b4f3cf7ec4ec011607934fe8ae720c08353fc14a6e9dfbf6bbcf11a": {
+      "question": "Will the Tampa Bay Lightning win the 2026 NHL Stanley Cup?",
+      "direction": "YES",
+      "bet_size": 0.88,
+      "entry_price": 0.1485,
+      "edge": 0.012,
+      "opened_at": "2026-04-13T15:31:03.674157+00:00"
+    },
+    "0xbefea6668e49e328db4d5c792bc15cea309bbc06101dfd6ced1e0556ad3ea301": {
+      "question": "Will the Buffalo Sabres win the 2026 NHL Stanley Cup?",
+      "direction": "YES",
+      "bet_size": 0.79,
+      "entry_price": 0.054,
+      "edge": 0.012,
+      "opened_at": "2026-04-13T15:31:03.676078+00:00"
+    },
+    "0x13e1cc703a120883a709d3bb29707097952845d61ca6793ea2b4328bae2a7451": {
+      "question": "Will the Boston Celtics win the 2026 NBA Finals?",
+      "direction": "YES",
+      "bet_size": 0.85,
+      "entry_price": 0.1165,
+      "edge": 0.012,
+      "opened_at": "2026-04-13T15:31:03.678012+00:00"
+    },
+    "0x4e65282819c98c6aed529f357fbf5983b1ae9407a3c25bd50fe97b2906df68f9": {
+      "question": "Will the Denver Nuggets win the 2026 NBA Finals?",
+      "direction": "YES",
+      "bet_size": 0.84,
+      "entry_price": 0.105,
+      "edge": 0.012,
+      "opened_at": "2026-04-13T15:31:03.681354+00:00"
+    },
+    "0xb6b3d7a2037b3faa7e1306d741840d453432902d73cc9a146a035e40271eae73": {
+      "question": "Will the San Antonio Spurs win the 2026 NBA Finals?",
+      "direction": "YES",
+      "bet_size": 0.88,
+      "entry_price": 0.1505,
+      "edge": 0.012,
+      "opened_at": "2026-04-13T15:31:03.683441+00:00"
+    },
+    "0xe202539dfbeced92dc4112f134a205c80ca6cf4db32bd82f05b291c297219fd8": {
+      "question": "Will the Detroit Pistons win the 2026 NBA Finals?",
+      "direction": "YES",
+      "bet_size": 0.8,
+      "entry_price": 0.058,
+      "edge": 0.012,
+      "opened_at": "2026-04-13T15:31:03.687059+00:00"
+    }
+  },
   "history": [],
-  "trades": [],
-  "updated": "2026-04-13T05:39:02.395474+00:00"
+  "trades": [
+    {
+      "question": "Will the Carolina Hurricanes win the 2026 NHL Stanley Cup?",
+      "direction": "YES",
+      "bet_size": 0.87,
+      "entry_price": 0.135,
+      "edge": 0.012,
+      "opened_at": "2026-04-13T15:31:03.660556+00:00",
+      "condition_id": "0xf7b5491e70b477d451afe7d9c1fde4bf1a927e69ff289d294b96df164f6c10f0",
+      "resolved": false
+    },
+    {
+      "question": "Will the Edmonton Oilers win the 2026 NHL Stanley Cup?",
+      "direction": "YES",
+      "bet_size": 0.81,
+      "entry_price": 0.075,
+      "edge": 0.012,
+      "opened_at": "2026-04-13T15:31:03.661972+00:00",
+      "condition_id": "0x4a67e1270a2ed86be8fc524b6114640e41b0c56303ecaa9584deacd62402650a",
+      "resolved": false
+    },
+    {
+      "question": "Will the Dallas Stars win the 2026 NHL Stanley Cup?",
+      "direction": "YES",
+      "bet_size": 0.82,
+      "entry_price": 0.0825,
+      "edge": 0.012,
+      "opened_at": "2026-04-13T15:31:03.668365+00:00",
+      "condition_id": "0x44887f53abbfe7531b1384420b185a5f10ee42a4e6c9441d5883abd4f3c1e5ef",
+      "resolved": false
+    },
+    {
+      "question": "Will the Colorado Avalanche win the 2026 NHL Stanley Cup?",
+      "direction": "YES",
+      "bet_size": 0.97,
+      "entry_price": 0.224,
+      "edge": 0.012,
+      "opened_at": "2026-04-13T15:31:03.669907+00:00",
+      "condition_id": "0xf8f63bb47b2a7c2e0c1be3cedf4075079b11c07476d76a9469065b0c4791961a",
+      "resolved": false
+    },
+    {
+      "question": "Will the Vegas Golden Knights win the 2026 NHL Stanley Cup?",
+      "direction": "YES",
+      "bet_size": 0.8,
+      "entry_price": 0.064,
+      "edge": 0.012,
+      "opened_at": "2026-04-13T15:31:03.672327+00:00",
+      "condition_id": "0x89389a6b1439856a8d366234c795d72865c927a1aa3cf9d4cc04a3a400defde1",
+      "resolved": false
+    },
+    {
+      "question": "Will the Tampa Bay Lightning win the 2026 NHL Stanley Cup?",
+      "direction": "YES",
+      "bet_size": 0.88,
+      "entry_price": 0.1485,
+      "edge": 0.012,
+      "opened_at": "2026-04-13T15:31:03.674157+00:00",
+      "condition_id": "0xbdd688664b4f3cf7ec4ec011607934fe8ae720c08353fc14a6e9dfbf6bbcf11a",
+      "resolved": false
+    },
+    {
+      "question": "Will the Buffalo Sabres win the 2026 NHL Stanley Cup?",
+      "direction": "YES",
+      "bet_size": 0.79,
+      "entry_price": 0.054,
+      "edge": 0.012,
+      "opened_at": "2026-04-13T15:31:03.676078+00:00",
+      "condition_id": "0xbefea6668e49e328db4d5c792bc15cea309bbc06101dfd6ced1e0556ad3ea301",
+      "resolved": false
+    },
+    {
+      "question": "Will the Boston Celtics win the 2026 NBA Finals?",
+      "direction": "YES",
+      "bet_size": 0.85,
+      "entry_price": 0.1165,
+      "edge": 0.012,
+      "opened_at": "2026-04-13T15:31:03.678012+00:00",
+      "condition_id": "0x13e1cc703a120883a709d3bb29707097952845d61ca6793ea2b4328bae2a7451",
+      "resolved": false
+    },
+    {
+      "question": "Will the Denver Nuggets win the 2026 NBA Finals?",
+      "direction": "YES",
+      "bet_size": 0.84,
+      "entry_price": 0.105,
+      "edge": 0.012,
+      "opened_at": "2026-04-13T15:31:03.681354+00:00",
+      "condition_id": "0x4e65282819c98c6aed529f357fbf5983b1ae9407a3c25bd50fe97b2906df68f9",
+      "resolved": false
+    },
+    {
+      "question": "Will the San Antonio Spurs win the 2026 NBA Finals?",
+      "direction": "YES",
+      "bet_size": 0.88,
+      "entry_price": 0.1505,
+      "edge": 0.012,
+      "opened_at": "2026-04-13T15:31:03.683441+00:00",
+      "condition_id": "0xb6b3d7a2037b3faa7e1306d741840d453432902d73cc9a146a035e40271eae73",
+      "resolved": false
+    },
+    {
+      "question": "Will the Detroit Pistons win the 2026 NBA Finals?",
+      "direction": "YES",
+      "bet_size": 0.8,
+      "entry_price": 0.058,
+      "edge": 0.012,
+      "opened_at": "2026-04-13T15:31:03.687059+00:00",
+      "condition_id": "0xe202539dfbeced92dc4112f134a205c80ca6cf4db32bd82f05b291c297219fd8",
+      "resolved": false
+    }
+  ],
+  "updated": "2026-04-13T15:31:03.687158+00:00"
 }
