@@ -3,106 +3,588 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>APEX Trading HQ</title>
+<title>APEX // Trading Terminal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:#0a0a0f; --s1:#12121a; --s2:#1a1a28; --card:#16162a;
-  --bdr:#252540; --bdr2:#35355a;
-  --txt:#eeeef6; --t2:#9090b0; --t3:#606080;
-  --grn:#00e68a; --red:#ff4466; --blu:#4488ff; --pur:#aa66ff;
-  --amb:#ffaa00; --cyn:#00ccdd;
-  --grn-bg:#00e68a15; --red-bg:#ff446615; --blu-bg:#4488ff15;
+  --bg:        #07070a;
+  --bg2:       #0a0a12;
+  --panel:     #0d0d16;
+  --panel2:    #11111c;
+  --line:      #1c1c2c;
+  --line2:     #2a2a40;
+  --line3:     #3a3a55;
+  --txt:       #ece9dc;
+  --t2:        #888599;
+  --t3:        #4a4a5e;
+  --t4:        #2e2e3e;
+  --grn:       #00ff9c;
+  --grn-dim:   #00ff9c22;
+  --red:       #ff3355;
+  --red-dim:   #ff335522;
+  --amb:       #ffb800;
+  --amb-dim:   #ffb80022;
+  --cyn:       #5fe3ff;
+  --gold:      #d4a574;
+  --mauve:     #b39ddb;
 }
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--txt);font-family:'Inter','SF Pro',-apple-system,system-ui,sans-serif;min-height:100vh}
-a{color:var(--blu);text-decoration:none}
 
-/* Layout */
-.wrap{max-width:1280px;margin:0 auto;padding:16px 20px}
-.hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--bdr);margin-bottom:20px}
-.hdr h1{font-size:20px;font-weight:700;letter-spacing:-.5px}
-.hdr h1 span{color:var(--grn)}
-.hdr-right{display:flex;align-items:center;gap:14px;font-size:12px;color:var(--t2)}
-.live-dot{width:8px;height:8px;border-radius:50%;background:var(--grn);box-shadow:0 0 12px var(--grn);animation:pulse 1.5s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.mode-badge{padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
-.mode-paper{background:#ffaa0020;color:var(--amb);border:1px solid #ffaa0040}
-.mode-live{background:#ff446620;color:var(--red);border:1px solid #ff446640}
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { background: var(--bg); color: var(--txt); }
+body {
+  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.45;
+  min-height: 100vh;
+  letter-spacing: 0.01em;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, #1a1a2810 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 100%, #00ff9c08 0%, transparent 60%),
+    var(--bg);
+  background-attachment: fixed;
+  overflow-x: hidden;
+}
+/* CRT scanlines + grain overlay */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(255,255,255,0.012) 0px,
+    rgba(255,255,255,0.012) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  z-index: 100;
+  mix-blend-mode: overlay;
+}
+body::after {
+  content:'';
+  position: fixed; inset: 0;
+  pointer-events:none;
+  background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.5) 100%);
+  z-index: 101;
+}
 
-/* Stats bar */
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px}
-.stat{background:var(--s1);border:1px solid var(--bdr);border-radius:10px;padding:14px 16px;text-align:center}
-.stat-val{font-size:22px;font-weight:700;margin-bottom:2px}
-.stat-lbl{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.8px}
+a { color: var(--cyn); text-decoration: none; }
 
-/* Tab nav */
-.tabs{display:flex;gap:2px;background:var(--s1);border-radius:10px;padding:3px;margin-bottom:20px;overflow-x:auto}
-.tab{padding:8px 18px;border-radius:8px;font-size:13px;font-weight:500;color:var(--t2);cursor:pointer;white-space:nowrap;transition:.15s}
-.tab:hover{color:var(--txt);background:var(--s2)}
-.tab.active{color:var(--txt);background:var(--card);box-shadow:0 2px 8px #0005}
-.pane{display:none}.pane.active{display:block}
+/* ==================== LAYOUT ==================== */
+.wrap {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+  position: relative;
+  z-index: 1;
+}
 
-/* Cards */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:20px}
-.card{background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:16px;transition:.2s}
-.card:hover{border-color:var(--bdr2);transform:translateY(-1px)}
-.card-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.card-title{font-size:14px;font-weight:600}
-.card-sub{font-size:11px;color:var(--t3);margin-top:2px}
-.badge{padding:2px 8px;border-radius:5px;font-size:10px;font-weight:600}
-.badge-run{background:#00e68a20;color:var(--grn);border:1px solid #00e68a40}
-.badge-dead{background:#ff446620;color:var(--red);border:1px solid #ff446640}
-.badge-off{background:#25254020;color:var(--t3);border:1px solid var(--bdr)}
-.card-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.cs{background:var(--s1);padding:8px;border-radius:6px;text-align:center}
-.cs-v{font-size:14px;font-weight:600}
-.cs-l{font-size:9px;color:var(--t3);text-transform:uppercase;margin-top:1px}
+/* ==================== TICKER STRIP ==================== */
+.ticker {
+  border-bottom: 1px solid var(--line2);
+  background: linear-gradient(180deg, var(--panel2), transparent);
+  font-size: 10px;
+  color: var(--t2);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  padding: 8px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(8px);
+}
+.ticker-left, .ticker-right { display: flex; gap: 18px; align-items: center; }
+.ticker-sep { color: var(--t4); }
+.ticker .glow { color: var(--grn); text-shadow: 0 0 6px var(--grn-dim); }
 
-/* Trade table */
-.tbl-wrap{overflow-x:auto;margin-bottom:20px}
-table{width:100%;border-collapse:collapse;font-size:12px}
-th{text-align:left;padding:8px 10px;color:var(--t3);font-weight:500;font-size:10px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--bdr)}
-td{padding:8px 10px;border-bottom:1px solid var(--bdr)}
-tr:hover td{background:var(--s1)}
-.g{color:var(--grn)}.r{color:var(--red)}.b{color:var(--blu)}.n{color:var(--t2)}
+/* ==================== MASTHEAD ==================== */
+.mast {
+  padding: 48px 0 28px;
+  border-bottom: 1px solid var(--line2);
+  margin-bottom: 32px;
+  position: relative;
+}
+.mast::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--grn) 50%, transparent);
+  opacity: 0.6;
+}
+.mast-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 24px;
+}
+.brand {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(64px, 11vw, 142px);
+  font-weight: 400;
+  line-height: 0.82;
+  letter-spacing: -0.04em;
+  color: var(--txt);
+  display: flex;
+  align-items: baseline;
+  gap: 0.18em;
+}
+.brand .ax { color: var(--txt); }
+.brand .pe { color: var(--grn); text-shadow: 0 0 24px var(--grn-dim); font-style: italic; }
+.brand .star {
+  font-size: 0.18em;
+  color: var(--gold);
+  align-self: flex-start;
+  margin-top: 0.4em;
+  margin-left: 0.2em;
+  letter-spacing: 0.4em;
+}
+.tagline {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--t2);
+  margin-top: 14px;
+  letter-spacing: 0.01em;
+}
+.tagline em { color: var(--gold); font-style: normal; }
+.mast-meta {
+  text-align: right;
+  font-size: 10px;
+  color: var(--t2);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  line-height: 2;
+}
+.mast-meta .v { color: var(--txt); }
+.mast-meta .live {
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.live-dot {
+  width: 7px; height: 7px;
+  background: var(--grn);
+  box-shadow: 0 0 10px var(--grn);
+  animation: pulse 1.4s infinite;
+  display: inline-block;
+}
+@keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.85); } }
 
-/* Section */
-.sec{font-size:14px;font-weight:600;color:var(--t2);margin:20px 0 10px;display:flex;align-items:center;gap:8px}
+.mode-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  border: 1px solid;
+}
+.mode-paper { color: var(--amb); border-color: var(--amb); background: var(--amb-dim); }
+.mode-live  { color: var(--red); border-color: var(--red); background: var(--red-dim); animation: pulse 2s infinite; }
 
-/* Footer */
-.ftr{text-align:center;padding:20px 0;font-size:11px;color:var(--t3);border-top:1px solid var(--bdr);margin-top:30px}
+/* ==================== STAT BAR ==================== */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0;
+  border: 1px solid var(--line2);
+  border-bottom-width: 2px;
+  margin-bottom: 32px;
+  background: linear-gradient(180deg, var(--panel), var(--bg));
+  position: relative;
+}
+.stat-row::before, .stat-row::after {
+  content: '';
+  position: absolute;
+  width: 12px; height: 12px;
+  border: 2px solid var(--grn);
+}
+.stat-row::before { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
+.stat-row::after  { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
 
-/* Responsive */
-@media(max-width:600px){.stats{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.wrap{padding:10px 12px}}
+.stat {
+  padding: 22px 18px;
+  text-align: left;
+  border-right: 1px solid var(--line);
+  position: relative;
+}
+.stat:last-child { border-right: 0; }
+.stat-lbl {
+  font-size: 9px;
+  color: var(--t2);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.stat-lbl::before {
+  content: '';
+  width: 6px; height: 1px;
+  background: var(--t3);
+}
+.stat-val {
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.stat-val.g { color: var(--grn); text-shadow: 0 0 14px var(--grn-dim); }
+.stat-val.r { color: var(--red); text-shadow: 0 0 14px var(--red-dim); }
+.stat-val.b { color: var(--cyn); }
+.stat-val.amb { color: var(--amb); }
+.stat-val.n { color: var(--txt); }
+
+/* ==================== TABS ==================== */
+.tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--line2);
+  margin-bottom: 24px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  padding: 14px 22px;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--t2);
+  cursor: pointer;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color .12s, border-color .12s, background .12s;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.tab:hover { color: var(--txt); background: var(--panel); }
+.tab.active {
+  color: var(--grn);
+  border-bottom-color: var(--grn);
+  background: linear-gradient(180deg, transparent, var(--grn-dim));
+}
+.tab .tab-num {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--gold);
+  letter-spacing: 0;
+}
+.tab.active .tab-num { color: var(--grn); }
+
+.pane { display: none; animation: fadein .3s ease-out; }
+.pane.active { display: block; }
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ==================== SECTION HEADERS ==================== */
+.sec {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 32px 0 16px;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--t2);
+}
+.sec::before {
+  content: '';
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 1px solid var(--grn);
+  border-right: 0; border-bottom: 0;
+}
+.sec::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--line2), transparent);
+}
+.sec .sec-tag {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--gold);
+  text-transform: none;
+  letter-spacing: 0;
+  margin-right: 4px;
+}
+
+/* ==================== CARDS / GRIDS ==================== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 18px;
+}
+@media(max-width: 880px) {
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+
+.card {
+  background: linear-gradient(180deg, var(--panel) 0%, var(--bg2) 100%);
+  border: 1px solid var(--line2);
+  padding: 18px 18px 16px;
+  position: relative;
+  transition: border-color .15s, transform .15s;
+}
+.card::before, .card::after,
+.card .corner-tl, .card .corner-bl {
+  content: '';
+  position: absolute;
+  width: 10px; height: 10px;
+  border: 1px solid var(--t3);
+}
+.card::before    { top: -1px; right: -1px; border-left: 0; border-bottom: 0; }
+.card::after     { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
+.card .corner-tl { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
+.card .corner-bl { bottom: -1px; left: -1px; border-right: 0; border-top: 0; }
+.card:hover { border-color: var(--line3); transform: translateY(-1px); }
+.card:hover::before, .card:hover::after,
+.card:hover .corner-tl, .card:hover .corner-bl { border-color: var(--grn); }
+
+.card-hdr {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.card-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--txt);
+}
+.card-sub {
+  font-size: 10px;
+  color: var(--t2);
+  margin-top: 3px;
+  letter-spacing: 0.04em;
+}
+.card .stat-val { font-size: 22px; margin-top: 4px; }
+
+.badge {
+  padding: 3px 8px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  border: 1px solid;
+  text-transform: uppercase;
+}
+.badge-run  { color: var(--grn); border-color: var(--grn); background: var(--grn-dim); }
+.badge-dead { color: var(--red); border-color: var(--red); background: var(--red-dim); animation: pulse 1.5s infinite; }
+.badge-off  { color: var(--t3); border-color: var(--t4); }
+
+.card-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+.cs {
+  background: var(--bg2);
+  padding: 10px 12px;
+  text-align: left;
+}
+.cs-v { font-size: 14px; font-weight: 500; color: var(--txt); font-variant-numeric: tabular-nums; }
+.cs-l { font-size: 8px; color: var(--t2); text-transform: uppercase; letter-spacing: 0.16em; margin-top: 2px; }
+
+/* ==================== TABLES ==================== */
+.tbl-wrap {
+  border: 1px solid var(--line2);
+  background: var(--panel);
+  position: relative;
+  overflow-x: auto;
+  margin-bottom: 18px;
+}
+.tbl-wrap::before, .tbl-wrap::after {
+  content: '';
+  position: absolute;
+  width: 8px; height: 8px;
+  border: 1px solid var(--t3);
+  pointer-events: none;
+}
+.tbl-wrap::before { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
+.tbl-wrap::after  { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; font-variant-numeric: tabular-nums; }
+th {
+  text-align: left;
+  padding: 11px 14px;
+  color: var(--t2);
+  font-weight: 500;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  border-bottom: 1px solid var(--line2);
+  background: var(--bg2);
+}
+td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--line);
+  color: var(--txt);
+}
+tr:last-child td { border-bottom: 0; }
+tr:hover td { background: var(--bg2); }
+
+.g    { color: var(--grn); }
+.r    { color: var(--red); }
+.b    { color: var(--cyn); }
+.amb  { color: var(--amb); }
+.n    { color: var(--t2); }
+.gold { color: var(--gold); }
+.dim  { color: var(--t3); }
+
+.pill {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  border: 1px solid currentColor;
+}
+
+/* ==================== EMPTY STATE ==================== */
+.empty {
+  border: 1px dashed var(--line2);
+  padding: 60px 24px;
+  text-align: center;
+  color: var(--t3);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent 0px,
+    transparent 8px,
+    var(--panel) 8px,
+    var(--panel) 9px
+  );
+}
+.empty .blink { color: var(--grn); animation: blink 1s steps(2) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ==================== FOOTER ==================== */
+.ftr {
+  margin-top: 60px;
+  padding: 24px 0 16px;
+  border-top: 1px solid var(--line2);
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  color: var(--t3);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+.ftr .quote {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--gold);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 1100px) {
+  .stat-row { grid-template-columns: repeat(4, 1fr); }
+  .stat:nth-child(5) { border-top: 1px solid var(--line); }
+  .stat:nth-child(n+5) { border-top: 1px solid var(--line); }
+}
+@media (max-width: 700px) {
+  .wrap { padding: 0 16px 60px; }
+  .ticker { padding: 8px 16px; flex-wrap: wrap; gap: 8px; font-size: 9px; }
+  .mast { padding: 32px 0 22px; }
+  .mast-grid { grid-template-columns: 1fr; }
+  .mast-meta { text-align: left; }
+  .stat-row { grid-template-columns: repeat(2, 1fr); }
+  .stat { border-right: 1px solid var(--line); border-top: 1px solid var(--line); padding: 16px 14px; }
+  .grid-4 { grid-template-columns: 1fr 1fr; }
+  .grid { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <!-- Header -->
-  <div class="hdr">
-    <div>
-      <h1><span>APEX</span> Trading HQ</h1>
-    </div>
-    <div class="hdr-right">
-      <div class="live-dot" id="liveDot"></div>
-      <span id="modeTag" class="mode-badge mode-paper">PAPER</span>
-      <span id="lastUpdate">--</span>
-    </div>
+
+<!-- ============= TICKER STRIP ============= -->
+<div class="ticker">
+  <div class="ticker-left">
+    <span><span class="live-dot"></span> <span class="glow">LIVE FEED</span></span>
+    <span class="ticker-sep">│</span>
+    <span>NODE: <span class="glow">DET-01</span></span>
+    <span class="ticker-sep">│</span>
+    <span>UTC <span id="utcClock" class="glow">--:--:--</span></span>
   </div>
+  <div class="ticker-right">
+    <span>SYNC <span id="lastUpdate" class="glow">--</span></span>
+    <span class="ticker-sep">│</span>
+    <span>REFRESH <span id="countdown" class="glow">30</span>S</span>
+    <span class="ticker-sep">│</span>
+    <span id="modeTag" class="mode-badge mode-paper">PAPER</span>
+  </div>
+</div>
 
-  <!-- Top Stats — BTC 5-Min focused -->
-  <div class="stats" id="topStats"></div>
+<div class="wrap">
 
-  <!-- Tabs — BTC 5-Min first -->
+  <!-- ============= MASTHEAD ============= -->
+  <header class="mast">
+    <div class="mast-grid">
+      <div>
+        <div class="brand">
+          <span class="ax">AP</span><span class="pe">EX</span>
+          <span class="star">✦ ✦ ✦</span>
+        </div>
+        <div class="tagline">a quiet machine for <em>loud markets</em> &mdash; Detroit, est. MMXXVI</div>
+      </div>
+      <div class="mast-meta">
+        <div>OPERATOR &nbsp;<span class="v">jefe</span></div>
+        <div>VERSION &nbsp;<span class="v">2.6.0</span></div>
+        <div>BANKROLL &nbsp;<span class="v" id="totalBank">$--</span></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============= TOP STATS ============= -->
+  <div class="stat-row" id="topStats"></div>
+
+  <!-- ============= TAB NAV ============= -->
   <div class="tabs" id="tabNav"></div>
 
-  <!-- Tab Panes -->
+  <!-- ============= PANES ============= -->
   <div id="paneBtc5m" class="pane active"></div>
   <div id="paneOverview" class="pane"></div>
   <div id="paneScanner" class="pane"></div>
   <div id="paneCopy" class="pane"></div>
 
-  <div class="ftr">APEX Trading HQ &mdash; Auto-refresh <span id="countdown">30</span>s &mdash; Data via GitHub</div>
+  <!-- ============= FOOTER ============= -->
+  <footer class="ftr">
+    <div>APEX TERMINAL // SYNC VIA GIT // ALL TIMES UTC</div>
+    <div class="quote">&ldquo;the edge is in the patience.&rdquo;</div>
+    <div>© MMXXVI</div>
+  </footer>
+
 </div>
 
 <script>
@@ -111,58 +593,70 @@ const REFRESH = 30;
 let timer = REFRESH;
 
 const TABS = [
-  {id:'BTC 5-Min Sniper', pane:'paneBtc5m'},
-  {id:'System Overview', pane:'paneOverview'},
-  {id:'Poly Scanner', pane:'paneScanner'},
-  {id:'Copy Trader', pane:'paneCopy'},
+  {n:'01', id:'BTC 5-Min Sniper', pane:'paneBtc5m'},
+  {n:'02', id:'System Overview',  pane:'paneOverview'},
+  {n:'03', id:'Poly Scanner',     pane:'paneScanner'},
+  {n:'04', id:'Copy Trader',      pane:'paneCopy'},
 ];
 
 // Render tabs
 const tabNav = document.getElementById('tabNav');
-TABS.forEach((t,i) => {
+TABS.forEach((t, i) => {
   const el = document.createElement('div');
-  el.className = 'tab' + (i===0?' active':'');
-  el.textContent = t.id;
+  el.className = 'tab' + (i === 0 ? ' active' : '');
+  el.innerHTML = `<span class="tab-num">${t.n}</span>${t.id}`;
   el.onclick = () => {
-    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-    document.querySelectorAll('.pane').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.pane').forEach(x => x.classList.remove('active'));
     el.classList.add('active');
     document.getElementById(t.pane).classList.add('active');
   };
   tabNav.appendChild(el);
 });
 
-// Helpers
-const fmt = v => v >= 0 ? `+$${v.toFixed(2)}` : `-$${Math.abs(v).toFixed(2)}`;
-const cls = v => v >= 0 ? 'g' : 'r';
-const pct = v => `${v.toFixed(1)}%`;
+// ==================== HELPERS ====================
+const fmt    = v => v >= 0 ? `+$${v.toFixed(2)}` : `-$${Math.abs(v).toFixed(2)}`;
+const cls    = v => v >= 0 ? 'g' : 'r';
+const pct    = v => `${v.toFixed(1)}%`;
 const ago = ts => {
-  if(!ts) return '--';
-  const d = (Date.now() - new Date(ts).getTime())/1000;
-  if(d<60) return `${Math.floor(d)}s ago`;
-  if(d<3600) return `${Math.floor(d/60)}m ago`;
-  if(d<86400) return `${Math.floor(d/3600)}h ago`;
-  return `${Math.floor(d/86400)}d ago`;
+  if (!ts) return '--';
+  const d = (Date.now() - new Date(ts).getTime()) / 1000;
+  if (d < 60)    return `${Math.floor(d)}s`;
+  if (d < 3600)  return `${Math.floor(d/60)}m`;
+  if (d < 86400) return `${Math.floor(d/3600)}h`;
+  return `${Math.floor(d/86400)}d`;
 };
-const shortAddr = a => a && a.length > 10 ? a.slice(0,6)+'...'+a.slice(-4) : (a||'--');
+const shortAddr = a => a && a.length > 10 ? a.slice(0,6) + '…' + a.slice(-4) : (a || '--');
+
+function corners() { return '<i class="corner-tl"></i><i class="corner-bl"></i>'; }
 
 async function fetchJSON(path) {
   try {
     const r = await fetch(`${BASE}/${path}?t=${Date.now()}`);
-    if(!r.ok) return null;
+    if (!r.ok) return null;
     return r.json();
-  } catch(e) { return null; }
+  } catch { return null; }
 }
-
 async function fetchJSONL(path) {
   try {
     const r = await fetch(`${BASE}/${path}?t=${Date.now()}`);
-    if(!r.ok) return [];
+    if (!r.ok) return [];
     const txt = await r.text();
-    return txt.trim().split('\n').filter(l=>l).map(l=>{try{return JSON.parse(l)}catch{return null}}).filter(Boolean);
-  } catch(e) { return []; }
+    return txt.trim().split('\n').filter(l => l).map(l => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
+  } catch { return []; }
 }
 
+// ==================== UTC CLOCK ====================
+function tickClock() {
+  const d = new Date();
+  const hh = String(d.getUTCHours()).padStart(2,'0');
+  const mm = String(d.getUTCMinutes()).padStart(2,'0');
+  const ss = String(d.getUTCSeconds()).padStart(2,'0');
+  document.getElementById('utcClock').textContent = `${hh}:${mm}:${ss}`;
+}
+setInterval(tickClock, 1000); tickClock();
+
+// ==================== MAIN REFRESH ====================
 async function refresh() {
   const [state, wdog, btc5m, sniper, scan, copyS, trades] = await Promise.all([
     fetchJSON('logs/state.json'),
@@ -174,209 +668,248 @@ async function refresh() {
     fetchJSONL('logs/paper_trades.jsonl'),
   ]);
 
-  // Mode & last update
+  // Mode + last update
   const mode = state?.mode || 'paper';
   const modeTag = document.getElementById('modeTag');
   modeTag.textContent = mode.toUpperCase();
   modeTag.className = 'mode-badge mode-' + mode;
-  // Use most recent timestamp from any source
+
   const timestamps = [btc5m?.updated, state?.updated_at, wdog?.updated_at].filter(Boolean);
   const latest = timestamps.sort().reverse()[0];
-  document.getElementById('lastUpdate').textContent = latest ? ago(latest) : 'no data';
+  document.getElementById('lastUpdate').textContent = latest ? ago(latest) + ' ago' : 'NO DATA';
 
-  // Debug: log what loaded
-  console.log('Data loaded:', {state:!!state, wdog:!!wdog, btc5m:!!btc5m, sniper:!!sniper, scan:!!scan, copyS:!!copyS, trades:trades?.length});
+  // BTC 5m core
+  const btcTrades   = btc5m?.trades || [];
+  const btcResolved = btcTrades.filter(t => t.resolved);
+  const btcWins     = btcResolved.filter(t => t.won).length;
+  const btcLosses   = btcResolved.length - btcWins;
+  const btcPnl      = btcResolved.reduce((s,t) => s + (t.pnl||0), 0);
+  const btcBank     = btc5m?.bankroll || 0;
+  const btcWR       = btcResolved.length ? btcWins / btcResolved.length * 100 : 0;
+  const btcPending  = btcTrades.filter(t => !t.resolved).length;
 
-  // BTC 5m stats
-  const btcTrades = btc5m?.trades || [];
-  const btcResolved = btcTrades.filter(t=>t.resolved);
-  const btcWins = btcResolved.filter(t=>t.won).length;
-  const btcLosses = btcResolved.length - btcWins;
-  const btcPnl = btcResolved.reduce((s,t)=>s+(t.pnl||0),0);
-  const btcBank = btc5m?.bankroll || 0;
-  const btcWR = btcResolved.length ? btcWins/btcResolved.length*100 : 0;
-  const btcPending = btcTrades.filter(t=>!t.resolved).length;
+  // Total bankroll for masthead
+  const sniperBank = sniper?.bankroll || 0;
+  const copyBank   = copyS?.bankroll  || 0;
+  const totalBank  = btcBank + sniperBank + copyBank;
+  document.getElementById('totalBank').textContent = `$${totalBank.toFixed(0)}`;
 
-  // Top stats — BTC 5-Min focused
-  document.getElementById('topStats').innerHTML = [
-    {v:`$${btcBank.toFixed(2)}`, l:'Bankroll', c:btcBank>=250?'g':'r'},
-    {v:fmt(btcPnl), l:'Total PnL', c:cls(btcPnl)},
-    {v:`${btcWins}W / ${btcLosses}L`, l:'Record', c:''},
-    {v:pct(btcWR), l:'Win Rate', c:btcWR>=50?'g':'r'},
-    {v:btcTrades.length, l:'Trades Taken', c:'b'},
-    {v:btc5m?.windows_scanned||0, l:'Windows Scanned', c:''},
-    {v:btcPending, l:'Pending', c:btcPending?'amb':''},
-  ].map(s=>`<div class="stat"><div class="stat-val ${s.c}">${s.v}</div><div class="stat-lbl">${s.l}</div></div>`).join('');
+  // ============= TOP STATS =============
+  const stats = [
+    { v: `$${btcBank.toFixed(2)}`,   l: 'BTC Bankroll',     c: btcBank >= 250 ? 'g' : 'r' },
+    { v: fmt(btcPnl),                l: 'Realized P&L',     c: cls(btcPnl) },
+    { v: `${btcWins}W·${btcLosses}L`, l: 'W / L Record',     c: 'n' },
+    { v: pct(btcWR),                 l: 'Hit Rate',         c: btcWR >= 50 ? 'g' : 'r' },
+    { v: btcTrades.length,           l: 'Total Trades',     c: 'b' },
+    { v: btc5m?.windows_scanned||0,  l: 'Windows Scanned',  c: 'n' },
+    { v: btcPending,                 l: 'Pending Resolve',  c: btcPending ? 'amb' : 'n' },
+  ];
+  document.getElementById('topStats').innerHTML = stats.map(s => `
+    <div class="stat">
+      <div class="stat-lbl">${s.l}</div>
+      <div class="stat-val ${s.c}">${s.v}</div>
+    </div>
+  `).join('');
 
-  // ── TAB: BTC 5-Min (DEFAULT) ──
+  // ============= TAB 01: BTC 5-MIN =============
   let btcHTML = '';
-  if(!btcTrades.length) {
-    btcHTML = '<div class="card" style="text-align:center;padding:40px;color:var(--t3)">No BTC 5-min data yet. Waiting for first trade...</div>';
+  if (!btcTrades.length) {
+    btcHTML = `<div class="empty">[ No BTC 5-min telemetry yet. <span class="blink">_</span> awaiting first signal ]</div>`;
   } else {
-    // Summary cards
-    const avgEdge = btcTrades.reduce((s,t)=>s+(t.edge||0),0)/btcTrades.length;
-    const avgBet = btcTrades.reduce((s,t)=>s+(t.bet_size||0),0)/btcTrades.length;
-    const biggestWin = Math.max(...btcResolved.map(t=>t.pnl||0), 0);
-    const biggestLoss = Math.min(...btcResolved.map(t=>t.pnl||0), 0);
+    const avgEdge    = btcTrades.reduce((s,t) => s + (t.edge||0), 0) / btcTrades.length;
+    const avgBet     = btcTrades.reduce((s,t) => s + (t.bet_size||0), 0) / btcTrades.length;
+    const biggestWin = Math.max(...btcResolved.map(t => t.pnl||0), 0);
+    const biggestLos = Math.min(...btcResolved.map(t => t.pnl||0), 0);
 
-    btcHTML += '<div class="grid">';
-    btcHTML += `<div class="card"><div class="card-title">Average Edge</div><div class="stat-val g" style="font-size:20px;margin-top:6px">${pct(avgEdge*100)}</div></div>`;
-    btcHTML += `<div class="card"><div class="card-title">Avg Bet Size</div><div class="stat-val b" style="font-size:20px;margin-top:6px">$${avgBet.toFixed(2)}</div></div>`;
-    btcHTML += `<div class="card"><div class="card-title">Best Trade</div><div class="stat-val g" style="font-size:20px;margin-top:6px">${fmt(biggestWin)}</div></div>`;
-    btcHTML += `<div class="card"><div class="card-title">Worst Trade</div><div class="stat-val r" style="font-size:20px;margin-top:6px">${fmt(biggestLoss)}</div></div>`;
+    btcHTML += '<div class="grid-4">';
+    btcHTML += `<div class="card">${corners()}<div class="card-hdr"><div><div class="card-title">Avg Edge</div><div class="card-sub">across all signals</div></div></div><div class="stat-val g">${pct(avgEdge*100)}</div></div>`;
+    btcHTML += `<div class="card">${corners()}<div class="card-hdr"><div><div class="card-title">Avg Bet Size</div><div class="card-sub">quarter-kelly</div></div></div><div class="stat-val b">$${avgBet.toFixed(2)}</div></div>`;
+    btcHTML += `<div class="card">${corners()}<div class="card-hdr"><div><div class="card-title">Best Trade</div><div class="card-sub">peak realized</div></div></div><div class="stat-val g">${fmt(biggestWin)}</div></div>`;
+    btcHTML += `<div class="card">${corners()}<div class="card-hdr"><div><div class="card-title">Worst Trade</div><div class="card-sub">drawdown floor</div></div></div><div class="stat-val r">${fmt(biggestLos)}</div></div>`;
     btcHTML += '</div>';
 
-    // Trade history table
-    btcHTML += '<div class="sec">Trade History</div><div class="tbl-wrap"><table><tr><th>Time</th><th>Market</th><th>Direction</th><th>Bet</th><th>Edge</th><th>BTC Price</th><th>Score</th><th>Result</th><th>PnL</th></tr>';
+    btcHTML += '<div class="sec"><span class="sec-tag">i.</span>Trade Log</div><div class="tbl-wrap"><table><thead><tr><th>Time</th><th>Market</th><th>Dir</th><th>Bet</th><th>Edge</th><th>BTC</th><th>Score</th><th>Result</th><th>P&L</th></tr></thead><tbody>';
     [...btcTrades].reverse().forEach(t => {
-      const res = t.resolved ? (t.won?'<span class="g">WIN</span>':'<span class="r">LOSS</span>') : '<span class="n">PENDING</span>';
-      const pnl = t.resolved ? `<span class="${cls(t.pnl)}">${fmt(t.pnl)}</span>` : '--';
-      const dir = t.direction==='UP'?'<span class="g">UP</span>':'<span class="r">DOWN</span>';
-      const score = t.score != null ? (t.score>0?'+':'')+t.score.toFixed(1) : '--';
-      const question = (t.question||'').replace(/Bitcoin Up or Down - /i,'').slice(0,35);
-      btcHTML += `<tr><td>${(t.timestamp||'').slice(11,19)}</td><td style="font-size:11px">${question}</td><td>${dir}</td><td>$${(t.bet_size||0).toFixed(2)}</td><td>${pct((t.edge||0)*100)}</td><td>$${(t.btc_price||0).toLocaleString()}</td><td>${score}</td><td>${res}</td><td>${pnl}</td></tr>`;
+      const res = t.resolved
+        ? (t.won ? '<span class="pill g">WIN</span>' : '<span class="pill r">LOSS</span>')
+        : '<span class="pill amb">PENDING</span>';
+      const pnl = t.resolved ? `<span class="${cls(t.pnl)}">${fmt(t.pnl)}</span>` : '<span class="dim">—</span>';
+      const dir = t.direction === 'UP'
+        ? '<span class="g">▲ UP</span>'
+        : '<span class="r">▼ DN</span>';
+      const score    = t.score != null ? (t.score > 0 ? '+' : '') + t.score.toFixed(1) : '—';
+      const question = (t.question || '').replace(/Bitcoin Up or Down - /i, '').slice(0, 32);
+      btcHTML += `<tr>
+        <td class="dim">${(t.timestamp||'').slice(11,19)}</td>
+        <td>${question}</td>
+        <td>${dir}</td>
+        <td>$${(t.bet_size||0).toFixed(2)}</td>
+        <td class="g">${pct((t.edge||0)*100)}</td>
+        <td class="b">$${(t.btc_price||0).toLocaleString()}</td>
+        <td>${score}</td>
+        <td>${res}</td>
+        <td>${pnl}</td>
+      </tr>`;
     });
-    btcHTML += '</table></div>';
+    btcHTML += '</tbody></table></div>';
 
-    // Indicator breakdown for latest trade
-    const withInd = btcTrades.filter(t=>t.indicators?.scores);
-    if(withInd.length) {
-      const last = withInd[withInd.length-1];
+    // Indicator breakdown
+    const withInd = btcTrades.filter(t => t.indicators?.scores);
+    if (withInd.length) {
+      const last = withInd[withInd.length - 1];
       const scores = last.indicators.scores;
-      btcHTML += `<div class="sec">Latest Signal Breakdown (${(last.question||'').replace(/Bitcoin Up or Down - /i,'').slice(0,40)})</div><div class="grid">`;
-      const indNames = {window_delta:'Window Delta',macd_histogram:'MACD Hist',macd_acceleration:'MACD Accel',macd_cross:'MACD Cross',macd_zero_regime:'MACD Zero',fast_macd_confirm:'Fast MACD',macd_volume_flow:'Vol Flow',tick_trend:'Tick Trend',micro_momentum:'Micro Mom',acceleration:'Accel',ema_cross:'EMA Cross',rsi:'RSI',volume_surge:'Vol Surge',macd:'MACD'};
-      for(const [k,v] of Object.entries(scores)) {
+      const indNames = {window_delta:'Window Δ',macd_histogram:'MACD Hist',macd_acceleration:'MACD Accel',macd_cross:'MACD Cross',macd_zero_regime:'MACD Zero',fast_macd_confirm:'Fast MACD',macd_volume_flow:'Vol Flow',tick_trend:'Tick Trend',micro_momentum:'Micro Mom',acceleration:'Accel',ema_cross:'EMA Cross',rsi:'RSI',volume_surge:'Vol Surge',macd:'MACD'};
+      btcHTML += `<div class="sec"><span class="sec-tag">ii.</span>Latest Signal Decomposition</div><div class="grid">`;
+      for (const [k, v] of Object.entries(scores)) {
         const name = indNames[k] || k;
-        const c = v>0?'g':v<0?'r':'n';
-        btcHTML += `<div class="card" style="text-align:center;padding:12px"><div class="card-sub">${name}</div><div class="stat-val ${c}" style="font-size:18px">${v>0?'+':''}${v.toFixed(1)}</div></div>`;
+        const c = v > 0 ? 'g' : v < 0 ? 'r' : 'n';
+        btcHTML += `<div class="card">${corners()}<div class="card-sub" style="margin-bottom:10px">${name}</div><div class="stat-val ${c}">${v > 0 ? '+' : ''}${v.toFixed(1)}</div></div>`;
       }
       btcHTML += '</div>';
     }
   }
   document.getElementById('paneBtc5m').innerHTML = btcHTML;
 
-  // ── TAB: System Overview ──
+  // ============= TAB 02: SYSTEM OVERVIEW =============
   const procs = wdog?.processes || {};
-  let ovHTML = '<div class="sec">System Processes</div><div class="grid">';
   const procMeta = {
-    apex_bot:['APEX Bot','Lighter.xyz crypto perps'],
-    telegram_bot:['Telegram Bot','Command interface'],
-    btc_5m_sniper:['BTC 5-Min Sniper','Polymarket BTC Up/Down'],
-    polymarket_sniper:['Poly Scanner','Kelly-edge market scanner'],
-    copy_trader:['Copy Trader','Whale flow mirroring'],
+    apex_bot:         ['APEX Bot',        'lighter.xyz crypto perps'],
+    telegram_bot:     ['Telegram Bot',    'command interface'],
+    btc_5m_sniper:    ['BTC 5-Min Sniper','polymarket BTC up/down'],
+    polymarket_sniper:['Poly Scanner',    'kelly-edge market scanner'],
+    copy_trader:      ['Copy Trader',     'whale flow mirroring'],
   };
-  for(const [k,[name,desc]] of Object.entries(procMeta)) {
+  let ovHTML = '<div class="sec"><span class="sec-tag">i.</span>Process Roster</div><div class="grid">';
+  for (const [k, [name, desc]] of Object.entries(procMeta)) {
     const p = procs[k] || {};
     const st = p.status || 'offline';
-    const bc = st==='running'?'badge-run':st==='dead'?'badge-dead':'badge-off';
-    const bl = st==='running'?'RUNNING':st==='dead'?'CRASHED':'OFFLINE';
-    ovHTML += `<div class="card"><div class="card-hdr"><div><div class="card-title">${name}</div><div class="card-sub">${desc}</div></div><span class="badge ${bc}">${bl}</span></div>`;
-    ovHTML += `<div class="card-stats"><div class="cs"><div class="cs-v">${p.pid||'--'}</div><div class="cs-l">PID</div></div><div class="cs"><div class="cs-v">${p.mode||'--'}</div><div class="cs-l">Mode</div></div></div></div>`;
+    const bc = st === 'running' ? 'badge-run' : st === 'dead' ? 'badge-dead' : 'badge-off';
+    const bl = st === 'running' ? 'ONLINE' : st === 'dead' ? 'CRASHED' : 'OFFLINE';
+    ovHTML += `<div class="card">${corners()}
+      <div class="card-hdr">
+        <div>
+          <div class="card-title">${name}</div>
+          <div class="card-sub">${desc}</div>
+        </div>
+        <span class="badge ${bc}">${bl}</span>
+      </div>
+      <div class="card-stats">
+        <div class="cs"><div class="cs-l">PID</div><div class="cs-v">${p.pid || '—'}</div></div>
+        <div class="cs"><div class="cs-l">Mode</div><div class="cs-v">${p.mode || '—'}</div></div>
+      </div>
+    </div>`;
   }
   ovHTML += '</div>';
 
-  // Bankroll summary for all bots
-  const sniperBank = sniper?.bankroll || 0;
-  const copyBank = copyS?.bankroll || 0;
   const cStats = state?.stats || {};
-  const cPnl = cStats.total_pnl || 0;
-  ovHTML += '<div class="sec">All Bankrolls</div><div class="stats">';
-  ovHTML += `<div class="stat"><div class="stat-val g">$${btcBank.toFixed(2)}</div><div class="stat-lbl">BTC Sniper</div></div>`;
-  ovHTML += `<div class="stat"><div class="stat-val">$${sniperBank.toFixed(2)}</div><div class="stat-lbl">Poly Scanner</div></div>`;
-  ovHTML += `<div class="stat"><div class="stat-val">$${copyBank.toFixed(2)}</div><div class="stat-lbl">Copy Trader</div></div>`;
-  ovHTML += `<div class="stat"><div class="stat-val ${cls(cPnl)}">${fmt(cPnl)}</div><div class="stat-lbl">Crypto Agents PnL</div></div>`;
+  const cPnl   = cStats.total_pnl || 0;
+  ovHTML += '<div class="sec"><span class="sec-tag">ii.</span>Capital Allocation</div><div class="stat-row">';
+  ovHTML += `<div class="stat"><div class="stat-lbl">BTC Sniper</div><div class="stat-val g">$${btcBank.toFixed(2)}</div></div>`;
+  ovHTML += `<div class="stat"><div class="stat-lbl">Poly Scanner</div><div class="stat-val n">$${sniperBank.toFixed(2)}</div></div>`;
+  ovHTML += `<div class="stat"><div class="stat-lbl">Copy Trader</div><div class="stat-val n">$${copyBank.toFixed(2)}</div></div>`;
+  ovHTML += `<div class="stat"><div class="stat-lbl">Crypto Agents P&L</div><div class="stat-val ${cls(cPnl)}">${fmt(cPnl)}</div></div>`;
+  ovHTML += `<div class="stat"><div class="stat-lbl">Combined Equity</div><div class="stat-val b">$${totalBank.toFixed(2)}</div></div>`;
   ovHTML += '</div>';
 
   document.getElementById('paneOverview').innerHTML = ovHTML;
 
-  // ── TAB: Poly Scanner ──
+  // ============= TAB 03: POLY SCANNER =============
   const sniperPositions = sniper?.positions || {};
-  const sniperHistory = sniper?.history || [];
+  const sniperHistory   = sniper?.history   || [];
   let scanHTML = '';
 
-  // Sniper stats
-  const sniperResolved = sniperHistory.filter(h=>h.result);
-  const sniperWins = sniperResolved.filter(h=>h.result==='WIN').length;
-  const sniperPnl = sniperHistory.reduce((s,h)=>s+(h.pnl||0),0);
-  if(sniper) {
-    scanHTML += `<div class="stats"><div class="stat"><div class="stat-val">$${sniperBank.toFixed(2)}</div><div class="stat-lbl">Bankroll</div></div><div class="stat"><div class="stat-val ${cls(sniperPnl)}">${fmt(sniperPnl)}</div><div class="stat-lbl">PnL</div></div><div class="stat"><div class="stat-val">${Object.keys(sniperPositions).length}</div><div class="stat-lbl">Open</div></div><div class="stat"><div class="stat-val">${sniperWins}W/${sniperResolved.length-sniperWins}L</div><div class="stat-lbl">Record</div></div></div>`;
+  const sniperResolved = sniperHistory.filter(h => h.result);
+  const sniperWins     = sniperResolved.filter(h => h.result === 'WIN').length;
+  const sniperPnl      = sniperHistory.reduce((s,h) => s + (h.pnl||0), 0);
+
+  if (sniper) {
+    scanHTML += `<div class="stat-row">
+      <div class="stat"><div class="stat-lbl">Bankroll</div><div class="stat-val n">$${sniperBank.toFixed(2)}</div></div>
+      <div class="stat"><div class="stat-lbl">Realized P&L</div><div class="stat-val ${cls(sniperPnl)}">${fmt(sniperPnl)}</div></div>
+      <div class="stat"><div class="stat-lbl">Open Positions</div><div class="stat-val b">${Object.keys(sniperPositions).length}</div></div>
+      <div class="stat"><div class="stat-lbl">Record</div><div class="stat-val n">${sniperWins}W · ${sniperResolved.length - sniperWins}L</div></div>
+    </div>`;
   }
 
-  if(Object.keys(sniperPositions).length) {
-    scanHTML += '<div class="sec">Open Positions</div><div class="tbl-wrap"><table><tr><th>Market</th><th>Side</th><th>Bet</th><th>Edge</th></tr>';
-    for(const [cid,p] of Object.entries(sniperPositions)) {
-      scanHTML += `<tr><td>${(p.question||'').slice(0,60)}</td><td>${p.direction}</td><td>$${(p.bet_size||0).toFixed(2)}</td><td>${pct((p.edge||0)*100)}</td></tr>`;
+  if (Object.keys(sniperPositions).length) {
+    scanHTML += '<div class="sec"><span class="sec-tag">i.</span>Open Positions</div><div class="tbl-wrap"><table><thead><tr><th>Market</th><th>Side</th><th>Bet</th><th>Edge</th></tr></thead><tbody>';
+    for (const [cid, p] of Object.entries(sniperPositions)) {
+      scanHTML += `<tr><td>${(p.question||'').slice(0,60)}</td><td>${p.direction||''}</td><td>$${(p.bet_size||0).toFixed(2)}</td><td class="g">${pct((p.edge||0)*100)}</td></tr>`;
     }
-    scanHTML += '</table></div>';
+    scanHTML += '</tbody></table></div>';
   }
 
-  if(scan && Array.isArray(scan) && scan.length) {
-    scanHTML += '<div class="sec">Latest Scan Results</div><div class="tbl-wrap"><table><tr><th>Market</th><th>Edge</th><th>Confidence</th><th>Price</th></tr>';
-    scan.slice(0,30).forEach(r => {
-      const edge = r.edge||r.kelly_edge||0;
-      scanHTML += `<tr><td>${(r.question||r.market||'').slice(0,60)}</td><td class="g">${pct(edge*100)}</td><td>${pct((r.confidence||r.true_prob||0)*100)}</td><td>${(r.price||r.market_price||0).toFixed(3)}</td></tr>`;
+  if (scan && Array.isArray(scan) && scan.length) {
+    scanHTML += '<div class="sec"><span class="sec-tag">ii.</span>Latest Scan Results</div><div class="tbl-wrap"><table><thead><tr><th>Market</th><th>Edge</th><th>Confidence</th><th>Price</th></tr></thead><tbody>';
+    scan.slice(0, 30).forEach(r => {
+      const edge = r.edge || r.kelly_edge || 0;
+      scanHTML += `<tr><td>${(r.question||r.market||'').slice(0,60)}</td><td class="g">${pct(edge*100)}</td><td>${pct((r.confidence||r.true_prob||0)*100)}</td><td class="b">${(r.price||r.market_price||0).toFixed(3)}</td></tr>`;
     });
-    scanHTML += '</table></div>';
+    scanHTML += '</tbody></table></div>';
   }
 
-  if(!scanHTML) scanHTML = '<div class="card" style="text-align:center;padding:40px;color:var(--t3)">No scanner data yet.</div>';
+  if (!scanHTML) scanHTML = `<div class="empty">[ scanner queue empty <span class="blink">_</span> ]</div>`;
   document.getElementById('paneScanner').innerHTML = scanHTML;
 
-  // ── TAB: Copy Trader ──
-  const copyHist = copyS?.history || [];
-  const copyResolved = copyHist.filter(h=>h.resolved);
-  const copyPnl = copyResolved.reduce((s,h)=>s+(h.pnl||0),0);
+  // ============= TAB 04: COPY TRADER =============
+  const copyHist     = copyS?.history || [];
+  const copyResolved = copyHist.filter(h => h.resolved);
+  const copyPnl      = copyResolved.reduce((s,h) => s + (h.pnl||0), 0);
   let copyHTML = '';
-  if(!copyS) {
-    copyHTML = '<div class="card" style="text-align:center;padding:40px;color:var(--t3)">Copy Trader not started yet.</div>';
+
+  if (!copyS) {
+    copyHTML = `<div class="empty">[ copy trader idle <span class="blink">_</span> awaiting whale signals ]</div>`;
   } else {
     const cBank = copyS.bankroll || 0;
-    const cPos = Object.keys(copyS.positions||{}).length;
-    const cWallets = copyS.total_wallets_tracked || 0;
-    const cWins = copyResolved.filter(h=>h.won).length;
-    const cWR = copyResolved.length ? cWins/copyResolved.length*100 : 0;
+    const cPos  = Object.keys(copyS.positions || {}).length;
+    const cWal  = copyS.total_wallets_tracked || 0;
+    const cWins = copyResolved.filter(h => h.won).length;
+    const cWR   = copyResolved.length ? cWins / copyResolved.length * 100 : 0;
 
-    copyHTML += `<div class="stats"><div class="stat"><div class="stat-val">$${cBank.toFixed(2)}</div><div class="stat-lbl">Bankroll</div></div><div class="stat"><div class="stat-val ${cls(copyPnl)}">${fmt(copyPnl)}</div><div class="stat-lbl">PnL</div></div><div class="stat"><div class="stat-val">${pct(cWR)}</div><div class="stat-lbl">Win Rate</div></div><div class="stat"><div class="stat-val">${cPos}</div><div class="stat-lbl">Open</div></div><div class="stat"><div class="stat-val">${cWallets}</div><div class="stat-lbl">Wallets</div></div></div>`;
+    copyHTML += `<div class="stat-row">
+      <div class="stat"><div class="stat-lbl">Bankroll</div><div class="stat-val n">$${cBank.toFixed(2)}</div></div>
+      <div class="stat"><div class="stat-lbl">Realized P&L</div><div class="stat-val ${cls(copyPnl)}">${fmt(copyPnl)}</div></div>
+      <div class="stat"><div class="stat-lbl">Hit Rate</div><div class="stat-val ${cWR >= 50 ? 'g' : 'r'}">${pct(cWR)}</div></div>
+      <div class="stat"><div class="stat-lbl">Open Mirrors</div><div class="stat-val b">${cPos}</div></div>
+      <div class="stat"><div class="stat-lbl">Wallets Tracked</div><div class="stat-val n">${cWal}</div></div>
+    </div>`;
 
-    // Open positions
     const openPos = copyS.positions || {};
-    if(Object.keys(openPos).length) {
-      copyHTML += '<div class="sec">Open Copy Positions</div><div class="tbl-wrap"><table><tr><th>Market</th><th>Side</th><th>Bet</th><th>Whale</th></tr>';
-      for(const [cid,p] of Object.entries(openPos)) {
-        const name = p.whale_name || (p.whale_address||'').slice(0,10);
-        copyHTML += `<tr><td>${(p.title||'').slice(0,50)}</td><td>${p.side||p.direction||''}</td><td>$${(p.bet_size||0).toFixed(2)}</td><td>${name}</td></tr>`;
+    if (Object.keys(openPos).length) {
+      copyHTML += '<div class="sec"><span class="sec-tag">i.</span>Open Mirrors</div><div class="tbl-wrap"><table><thead><tr><th>Market</th><th>Side</th><th>Bet</th><th>Whale</th></tr></thead><tbody>';
+      for (const [cid, p] of Object.entries(openPos)) {
+        const name = p.whale_name || (p.whale_address || '').slice(0, 10);
+        copyHTML += `<tr><td>${(p.title||'').slice(0,50)}</td><td>${p.side || p.direction || ''}</td><td>$${(p.bet_size||0).toFixed(2)}</td><td class="gold">${name}</td></tr>`;
       }
-      copyHTML += '</table></div>';
+      copyHTML += '</tbody></table></div>';
     }
 
-    // Top traders
     const topT = copyS.top_traders || [];
-    if(topT.length) {
-      copyHTML += '<div class="sec">Top Whale Leaderboard</div><div class="tbl-wrap"><table><tr><th>#</th><th>Wallet</th><th>Trades</th><th>Volume</th><th>Markets</th></tr>';
-      topT.slice(0,10).forEach((t,i) => {
-        copyHTML += `<tr><td>${i+1}</td><td>${shortAddr(t.address)}</td><td>${t.trades}</td><td>$${(t.volume||0).toLocaleString()}</td><td>${t.active_markets||0}</td></tr>`;
+    if (topT.length) {
+      copyHTML += '<div class="sec"><span class="sec-tag">ii.</span>Whale Leaderboard</div><div class="tbl-wrap"><table><thead><tr><th>#</th><th>Wallet</th><th>Trades</th><th>Volume</th><th>Markets</th></tr></thead><tbody>';
+      topT.slice(0, 10).forEach((t, i) => {
+        copyHTML += `<tr><td class="gold">${String(i+1).padStart(2,'0')}</td><td>${shortAddr(t.address)}</td><td>${t.trades}</td><td class="b">$${(t.volume||0).toLocaleString()}</td><td>${t.active_markets || 0}</td></tr>`;
       });
-      copyHTML += '</table></div>';
+      copyHTML += '</tbody></table></div>';
     }
 
-    // History
-    if(copyResolved.length) {
-      copyHTML += '<div class="sec">Resolved Copy Trades</div><div class="tbl-wrap"><table><tr><th>Market</th><th>Side</th><th>Bet</th><th>Result</th><th>PnL</th></tr>';
-      [...copyResolved].reverse().slice(0,20).forEach(h => {
-        const res = h.won?'<span class="g">WIN</span>':'<span class="r">LOSS</span>';
+    if (copyResolved.length) {
+      copyHTML += '<div class="sec"><span class="sec-tag">iii.</span>Resolved Mirrors</div><div class="tbl-wrap"><table><thead><tr><th>Market</th><th>Side</th><th>Bet</th><th>Result</th><th>P&L</th></tr></thead><tbody>';
+      [...copyResolved].reverse().slice(0, 20).forEach(h => {
+        const res = h.won ? '<span class="pill g">WIN</span>' : '<span class="pill r">LOSS</span>';
         copyHTML += `<tr><td>${(h.title||'').slice(0,45)}</td><td>${h.side||''}</td><td>$${(h.bet_size||0).toFixed(2)}</td><td>${res}</td><td class="${cls(h.pnl)}">${fmt(h.pnl)}</td></tr>`;
       });
-      copyHTML += '</table></div>';
+      copyHTML += '</tbody></table></div>';
     }
   }
   document.getElementById('paneCopy').innerHTML = copyHTML;
 }
 
-// Countdown + refresh
+// Countdown + auto-refresh
 setInterval(() => {
   timer--;
-  document.getElementById('countdown').textContent = timer;
-  if(timer <= 0) { timer = REFRESH; refresh(); }
+  document.getElementById('countdown').textContent = String(timer).padStart(2,'0');
+  if (timer <= 0) { timer = REFRESH; refresh(); }
 }, 1000);
 
 refresh();

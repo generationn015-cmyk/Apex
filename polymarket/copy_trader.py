@@ -351,12 +351,20 @@ def _cycle(state: CopyState, whale_db: WhaleDB):
         if not cid or cid in state.positions:
             continue
 
-        # Copy from known big wallets, or any whale with large enough trade
-        is_known = wallet in top_addrs
-        size = float(t.get("size", 0))
+        # Skip 5-min coinflip markets — these are pure variance, no edge from whales
+        title_lower = t.get("title", "").lower()
+        if "up or down" in title_lower:
+            continue
 
-        if not is_known and size < MIN_WHALE_TRADE_SIZE * 2:
-            continue  # Unknown wallets need 2x min to copy
+        # Require proven whale history: must be in top traders AND have >=5 trades on record
+        whale_record = whale_db.wallets.get(wallet, {})
+        if whale_record.get("trades", 0) < 5:
+            continue
+        if wallet not in top_addrs:
+            continue
+
+        is_known = True
+        size = float(t.get("size", 0))
 
         # Size the copy
         raw = size * MIRROR_RATIO

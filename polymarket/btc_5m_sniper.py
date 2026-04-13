@@ -702,15 +702,7 @@ def _execute_trade(state, executor, market, bet, direction, token_id,
     }
     state.record_trade(trade)
 
-    macd_count = strategy_result.macd_confirmation
-    conf_str = f"{strategy_result.confidence:.0%}"
-    _tg(
-        f"⚡ <b>BTC 5-Min {direction}</b> | {mode_tag}\n"
-        f"{conf_str} conf · {bet['edge']*100:.1f}% edge · ${bet['bet_size']:.2f}\n"
-        f"BTC ${current_btc:,.0f} (open ${start_price:,.0f}) · {secs_left:.0f}s left\n"
-        f"MACD: {macd_count}/7 confirming"
-    )
-
+    # Entry notification silenced — only wins/losses are reported.
     # Wait for resolution
     _wait_and_resolve(state, trade, start_price, window_ts)
 
