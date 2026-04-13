@@ -1,5 +1,5 @@
 {
-  "bankroll": 119.76,
+  "bankroll": 97.55000000000001,
   "positions": {
     "0x14267ebbbc0ac689c27c64836481edeeb8460fcb3cfee5c67903b8377e326916": {
       "condition_id": "0x14267ebbbc0ac689c27c64836481edeeb8460fcb3cfee5c67903b8377e326916",
@@ -70,20 +70,6 @@
       "is_known_whale": false,
       "tx": "0xe2fc465b25badf166a2b3d6ff996c78c44a332de111b7242101316fb0d128260",
       "timestamp": "2026-04-13T02:22:18.962737+00:00"
-    },
-    "0x6ad98d73bdc3b27e7c6ef2bfc45c4dbe9cfabb797a391e310a2fec75ff8071d2": {
-      "condition_id": "0x6ad98d73bdc3b27e7c6ef2bfc45c4dbe9cfabb797a391e310a2fec75ff8071d2",
-      "title": "Bitcoin Up or Down - April 12, 10:15PM-10:20PM ET",
-      "outcome": "Down",
-      "side": "BUY",
-      "bet_size": 9.5,
-      "entry_price": 0.043590014753171556,
-      "whale_address": "0x7ac52e88d67f315ddf930b5a9dbac7a5cfd1c61f",
-      "whale_name": "0x7aC52e88D67F315DDF930b5a9DBac7A5cFD1c61f-1773272256375",
-      "whale_size": 1068.0639549999999,
-      "is_known_whale": false,
-      "tx": "0xb05446a7648fbd05377f246a4359ebba030f2ba5f537b802768aa24d71e02e71",
-      "timestamp": "2026-04-13T02:22:18.963124+00:00"
     },
     "0x2d915df49ec431ee198064f0a6d62dee60d2f7c449711c07397af59de918b7d9": {
       "condition_id": "0x2d915df49ec431ee198064f0a6d62dee60d2f7c449711c07397af59de918b7d9",
@@ -196,6 +182,62 @@
       "is_known_whale": false,
       "tx": "0xfa2704a77ff88a37433c81e5f3319a1d37bac07a44bc72766161bfa97c3db0a2",
       "timestamp": "2026-04-13T02:22:18.963584+00:00"
+    },
+    "0x158fdaad572880f8de3d3f00e4d3c2fbbae77108d88c29deb800141928c1e040": {
+      "condition_id": "0x158fdaad572880f8de3d3f00e4d3c2fbbae77108d88c29deb800141928c1e040",
+      "title": "Will Jorge Nieto win the 2026 Peruvian presidential election",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 5.99,
+      "entry_price": 0.84491062,
+      "whale_address": "0xde0463ea7f611b065e8ab06bbfbddad75e6dfa37",
+      "whale_name": "mwenya",
+      "whale_size": 500.0,
+      "is_known_whale": false,
+      "tx": "0x7465ae4b2ba4cdf357e34e7e257b6006114fd1325524a7976027a5a2dd549a76",
+      "timestamp": "2026-04-13T02:28:32.733832+00:00"
+    },
+    "0x01ed2876fb6ed7a35e10a19fe89e1c08cda6aad663b35b7e2fcd0013248f879a": {
+      "condition_id": "0x01ed2876fb6ed7a35e10a19fe89e1c08cda6aad663b35b7e2fcd0013248f879a",
+      "title": "Spread: Spurs (-11.5)",
+      "outcome": "Nuggets",
+      "side": "BUY",
+      "bet_size": 5.69,
+      "entry_price": 0.983,
+      "whale_address": "0x16905fb8633a07853b532709572d2a0de0158c4d",
+      "whale_name": "pang1220",
+      "whale_size": 620.63332,
+      "is_known_whale": false,
+      "tx": "0xab170b7bb98aadfc54389b9119ea0b455ef102f576e6a4de4cac8eb302af3ce8",
+      "timestamp": "2026-04-13T02:28:32.733993+00:00"
+    },
+    "0xff0cfa9506cfa95759e4c7591654195bd26e3011f9882b51439135e04f2b69f1": {
+      "condition_id": "0xff0cfa9506cfa95759e4c7591654195bd26e3011f9882b51439135e04f2b69f1",
+      "title": "Will Tunisia win the 2026 FIFA World Cup?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 5.4,
+      "entry_price": 0.998,
+      "whale_address": "0x10756dc2e71d7449051764b3f5d9d70b0986f408",
+      "whale_name": "0x10756dc2E71D7449051764B3f5D9d70B0986F408-1771272793240",
+      "whale_size": 2065.98,
+      "is_known_whale": false,
+      "tx": "0x8703c1c13ed107d9d67e561aa0f90fd92c866865774b8bbcf118afc4efc7edce",
+      "timestamp": "2026-04-13T02:28:32.734044+00:00"
+    },
+    "0xfe230d510eaf545198c0d62bb17871e5fe8989f1b19aa54c0c062b858360987c": {
+      "condition_id": "0xfe230d510eaf545198c0d62bb17871e5fe8989f1b19aa54c0c062b858360987c",
+      "title": "Will Austria win the 2026 FIFA World Cup?",
+      "outcome": "No",
+      "side": "BUY",
+      "bet_size": 5.13,
+      "entry_price": 0.995,
+      "whale_address": "0x0b246ae08cd67249d2ad11c72803d1049565e2a9",
+      "whale_name": "vewleqhb",
+      "whale_size": 1597.417,
+      "is_known_whale": false,
+      "tx": "0x4cc8b65deb52d5d25f9cceb918d50d3a748cf9c2941657cba3184014cea76874",
+      "timestamp": "2026-04-13T02:28:32.734095+00:00"
     }
   },
   "history": [
@@ -234,9 +276,27 @@
       "won": true,
       "pnl": 0.01,
       "resolved_at": "2026-04-13T02:22:12.901376+00:00"
+    },
+    {
+      "condition_id": "0x6ad98d73bdc3b27e7c6ef2bfc45c4dbe9cfabb797a391e310a2fec75ff8071d2",
+      "title": "Bitcoin Up or Down - April 12, 10:15PM-10:20PM ET",
+      "outcome": "Down",
+      "side": "BUY",
+      "bet_size": 9.5,
+      "entry_price": 0.043590014753171556,
+      "whale_address": "0x7ac52e88d67f315ddf930b5a9dbac7a5cfd1c61f",
+      "whale_name": "0x7aC52e88D67F315DDF930b5a9DBac7A5cFD1c61f-1773272256375",
+      "whale_size": 1068.0639549999999,
+      "is_known_whale": false,
+      "tx": "0xb05446a7648fbd05377f246a4359ebba030f2ba5f537b802768aa24d71e02e71",
+      "timestamp": "2026-04-13T02:22:18.963124+00:00",
+      "resolved": true,
+      "won": false,
+      "pnl": -9.5,
+      "resolved_at": "2026-04-13T02:28:16.144919+00:00"
     }
   ],
-  "consecutive_losses": 0,
+  "consecutive_losses": 1,
   "cooldown_until": null,
   "top_traders": [
     {
@@ -360,9 +420,9 @@
       "active_markets": 4
     }
   ],
-  "total_wallets_tracked": 784,
+  "total_wallets_tracked": 792,
   "wins": 1,
-  "losses": 1,
-  "win_rate": 50.0,
-  "updated": "2026-04-13T02:22:18.965412+00:00"
+  "losses": 2,
+  "win_rate": 33.3,
+  "updated": "2026-04-13T02:28:32.735981+00:00"
 }
