@@ -184,13 +184,17 @@ def filter_eligible(markets: list[dict]) -> list[dict]:
             eligible.append(parsed)
             continue
 
-        # Skip markets resolving more than 30 days out (capital lock-up, stale edges)
-        end_date = parsed.get("end_date_iso") or m.get("end_date_iso") or m.get("endDate", "")
-        if end_date:
+        # Skip markets resolving more than 90 days out (capital lock-up, stale edges).
+        # 30-day cutoff was too aggressive — empirically 0 eligible markets across 200 fetched.
+        if mins is not None and mins > 90 * 24 * 60:
+            continue
+        # Fallback for markets where minutes_to_resolve couldn't be parsed
+        end_date = parsed.get("end_date") or m.get("endDate", "")
+        if mins is None and end_date:
             try:
                 end_dt = datetime.fromisoformat(end_date.replace("Z", "+00:00"))
                 days_until = (end_dt - datetime.now(timezone.utc)).days
-                if days_until > 30:
+                if days_until > 90:
                     continue
             except Exception:
                 pass
