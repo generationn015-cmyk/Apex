@@ -5,10 +5,10 @@
     "edge": 0.012,
     "confidence": 0.147,
     "price": 0.135,
-    "liquidity": 124523.0309,
-    "volume": 302841.9961610006,
+    "liquidity": 110240.9216,
+    "volume": 302943.13616100064,
     "is_btc": false,
-    "minutes_to_resolve": 111372.6
+    "minutes_to_resolve": 111345.5
   },
   {
     "question": "Will the Edmonton Oilers win the 2026 NHL Stanley Cup?",
@@ -16,10 +16,10 @@
     "edge": 0.012,
     "confidence": 0.087,
     "price": 0.075,
-    "liquidity": 46691.0894,
-    "volume": 487650.0326260027,
+    "liquidity": 58101.0105,
+    "volume": 487725.0326260027,
     "is_btc": false,
-    "minutes_to_resolve": 111372.6
+    "minutes_to_resolve": 111345.5
   },
   {
     "question": "Will the Dallas Stars win the 2026 NHL Stanley Cup?",
@@ -27,21 +27,21 @@
     "edge": 0.012,
     "confidence": 0.0945,
     "price": 0.0825,
-    "liquidity": 104562.56914,
-    "volume": 1116844.877485995,
+    "liquidity": 89514.22125,
+    "volume": 1116972.7517699949,
     "is_btc": false,
-    "minutes_to_resolve": 111372.6
+    "minutes_to_resolve": 111345.5
   },
   {
     "question": "Will the Colorado Avalanche win the 2026 NHL Stanley Cup?",
     "condition_id": "0xf8f63bb47b2a7c2e0c1be3cedf4075079b11c07476d76a9469065b0c4791961a",
     "edge": 0.012,
-    "confidence": 0.2355,
-    "price": 0.2235,
-    "liquidity": 114705.75238,
-    "volume": 13449886.589812007,
+    "confidence": 0.2345,
+    "price": 0.2225,
+    "liquidity": 114784.02484,
+    "volume": 13449965.589812007,
     "is_btc": false,
-    "minutes_to_resolve": 111372.6
+    "minutes_to_resolve": 111345.5
   },
   {
     "question": "Will the Vegas Golden Knights win the 2026 NHL Stanley Cup?",
@@ -49,10 +49,10 @@
     "edge": 0.012,
     "confidence": 0.076,
     "price": 0.064,
-    "liquidity": 100294.93971,
-    "volume": 1434073.3593749981,
+    "liquidity": 100292.64508,
+    "volume": 1434430.745433998,
     "is_btc": false,
-    "minutes_to_resolve": 111372.6
+    "minutes_to_resolve": 111345.5
   },
   {
     "question": "Will the Tampa Bay Lightning win the 2026 NHL Stanley Cup?",
@@ -60,32 +60,32 @@
     "edge": 0.012,
     "confidence": 0.1605,
     "price": 0.1485,
-    "liquidity": 93755.1374,
-    "volume": 1508203.0228989744,
+    "liquidity": 82134.63142,
+    "volume": 1508385.0228989744,
     "is_btc": false,
-    "minutes_to_resolve": 111372.6
+    "minutes_to_resolve": 111345.5
   },
   {
     "question": "Will the Buffalo Sabres win the 2026 NHL Stanley Cup?",
     "condition_id": "0xbefea6668e49e328db4d5c792bc15cea309bbc06101dfd6ced1e0556ad3ea301",
     "edge": 0.012,
-    "confidence": 0.066,
-    "price": 0.054,
-    "liquidity": 105331.98302,
-    "volume": 2911781.948306998,
+    "confidence": 0.065,
+    "price": 0.053,
+    "liquidity": 105184.70217,
+    "volume": 2911976.338306998,
     "is_btc": false,
-    "minutes_to_resolve": 111372.6
+    "minutes_to_resolve": 111345.5
   },
   {
     "question": "Will the Boston Celtics win the 2026 NBA Finals?",
     "condition_id": "0x13e1cc703a120883a709d3bb29707097952845d61ca6793ea2b4328bae2a7451",
     "edge": 0.012,
-    "confidence": 0.1285,
-    "price": 0.1165,
-    "liquidity": 135667.74247,
-    "volume": 6487250.544313088,
+    "confidence": 0.13,
+    "price": 0.118,
+    "liquidity": 133762.57613,
+    "volume": 6488458.786106088,
     "is_btc": false,
-    "minutes_to_resolve": 112812.6
+    "minutes_to_resolve": 112785.5
   },
   {
     "question": "Will the Denver Nuggets win the 2026 NBA Finals?",
@@ -93,21 +93,21 @@
     "edge": 0.012,
     "confidence": 0.117,
     "price": 0.105,
-    "liquidity": 367482.8956,
-    "volume": 4077889.506987968,
+    "liquidity": 352191.8393,
+    "volume": 4079008.632440968,
     "is_btc": false,
-    "minutes_to_resolve": 112812.6
+    "minutes_to_resolve": 112785.5
   },
   {
     "question": "Will the San Antonio Spurs win the 2026 NBA Finals?",
     "condition_id": "0xb6b3d7a2037b3faa7e1306d741840d453432902d73cc9a146a035e40271eae73",
     "edge": 0.012,
-    "confidence": 0.1625,
-    "price": 0.1505,
-    "liquidity": 206923.39678,
-    "volume": 16014390.728931854,
+    "confidence": 0.165,
+    "price": 0.153,
+    "liquidity": 196411.84052,
+    "volume": 16027582.767967854,
     "is_btc": false,
-    "minutes_to_resolve": 112812.6
+    "minutes_to_resolve": 112785.5
   },
   {
     "question": "Will the Detroit Pistons win the 2026 NBA Finals?",
@@ -115,21 +115,21 @@
     "edge": 0.012,
     "confidence": 0.07,
     "price": 0.058,
-    "liquidity": 258242.35401,
-    "volume": 7121786.130404936,
+    "liquidity": 257385.25615,
+    "volume": 7123824.9064659355,
     "is_btc": false,
-    "minutes_to_resolve": 112812.6
+    "minutes_to_resolve": 112785.5
   },
   {
     "question": "Will Cooper Flagg win the 2025\u201326 NBA Rookie of the Year award?",
     "condition_id": "0x2096cd3bedb878cbfb5d30308968616a1dfd80e17b278ca6bdc72f9dde4776a7",
     "edge": 0.006,
-    "confidence": 0.5745,
-    "price": 0.5685,
-    "liquidity": 8108.47295,
-    "volume": 585089.6437059996,
+    "confidence": 0.5635,
+    "price": 0.5575,
+    "liquidity": 8827.93505,
+    "volume": 585628.1900329996,
     "is_btc": false,
-    "minutes_to_resolve": 49452.6
+    "minutes_to_resolve": 49425.5
   },
   {
     "question": "Will the Oklahoma City Thunder win the 2026 NBA Finals?",
@@ -137,20 +137,20 @@
     "edge": 0.006,
     "confidence": 0.409,
     "price": 0.415,
-    "liquidity": 207820.2159,
-    "volume": 6634921.537187988,
+    "liquidity": 206220.7304,
+    "volume": 6635155.559788988,
     "is_btc": false,
-    "minutes_to_resolve": 112812.6
+    "minutes_to_resolve": 112785.5
   },
   {
     "question": "Will Kon Knueppel win the 2025\u201326 NBA Rookie of the Year award?",
     "condition_id": "0x9fe87b4bec41ca0b2e5f09b79e59f9aba6a88feab636db30b70fa103c1b54e5a",
     "edge": 0.0,
-    "confidence": 0.396,
-    "price": 0.396,
-    "liquidity": 10333.65046,
-    "volume": 854776.4670950001,
+    "confidence": 0.4215,
+    "price": 0.4215,
+    "liquidity": 12516.6832,
+    "volume": 854883.597095,
     "is_btc": false,
-    "minutes_to_resolve": 49452.6
+    "minutes_to_resolve": 49425.5
   }
 ]
