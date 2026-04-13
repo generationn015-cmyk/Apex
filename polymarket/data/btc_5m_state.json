@@ -1,5 +1,5 @@
 {
-  "bankroll": 446.10752409628276,
+  "bankroll": 450.5675240962828,
   "trades": [
     {
       "window_ts": 1775982300,
@@ -2115,9 +2115,46 @@
       "resolved": true,
       "won": true,
       "pnl": 9.41
+    },
+    {
+      "window_ts": 1776042300,
+      "question": "Bitcoin Up or Down - April 12, 9:05PM-9:10PM ET",
+      "direction": "DOWN",
+      "bet_size": 17.84,
+      "edge": 0.1283,
+      "p_win": 0.9283,
+      "market_price": 0.8,
+      "confidence": 0.3,
+      "score": -3.0,
+      "indicators": {
+        "delta_pct": -0.07818,
+        "delta_weight": 5.0,
+        "tick_up_pct": 100.0,
+        "tick_move_pct": 0.0206,
+        "scores": {
+          "window_delta": -5.0,
+          "macd_histogram": 0.0,
+          "macd_acceleration": 0.0,
+          "macd_cross": 0.0,
+          "macd_zero_regime": 0.0,
+          "fast_macd_confirm": 0.0,
+          "macd_volume_flow": 0.0,
+          "tick_trend": 2.0
+        },
+        "total_score": -3.0
+      },
+      "btc_price": 71127.48,
+      "start_price": 71183.13,
+      "secs_remaining": 9.5,
+      "order_id": "paper_1776042591943",
+      "mode": "PAPER",
+      "timestamp": "2026-04-13T01:09:51.943215+00:00",
+      "resolved": true,
+      "won": true,
+      "pnl": 4.46
     }
   ],
-  "windows_scanned": 143,
-  "windows_traded": 59,
-  "updated": "2026-04-13T01:05:09.309862+00:00"
+  "windows_scanned": 144,
+  "windows_traded": 60,
+  "updated": "2026-04-13T01:10:09.481832+00:00"
 }
