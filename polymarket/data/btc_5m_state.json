@@ -2946,5 +2946,14 @@
   ],
   "windows_scanned": 226,
   "windows_traded": 81,
-  "updated": "2026-04-13T09:10:08.265697+00:00"
+  "stats": {
+    "total_trades": 81,
+    "resolved_trades": 78,
+    "pending_trades": 3,
+    "wins": 72,
+    "losses": 6,
+    "win_rate": 92.3,
+    "realized_pnl": 268.21
+  },
+  "updated": "2026-04-13T10:57:47.541814+00:00"
 }
