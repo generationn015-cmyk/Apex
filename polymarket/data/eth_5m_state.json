@@ -1,0 +1,16 @@
+{
+  "bankroll": 100.0,
+  "trades": [],
+  "windows_scanned": 0,
+  "windows_traded": 0,
+  "stats": {
+    "total_trades": 0,
+    "resolved_trades": 0,
+    "pending_trades": 0,
+    "wins": 0,
+    "losses": 0,
+    "win_rate": 0.0,
+    "realized_pnl": 0.0
+  },
+  "updated": "2026-04-13T20:17:17.259432+00:00"
+}

@@ -38,6 +38,7 @@ KALSHI_API_SECRET = ""
 
 # ── Bot Capital & Risk Settings ───────────────────────────────────────────────
 STARTING_BANKROLL      = 250.0
+STARTING_BANKROLL_ETH  = 100.0   # separate envelope for ETH 5-min sniper
 MAX_POSITION_PCT       = 0.05    # 5% max per trade
 KELLY_FRACTION         = 0.25    # Quarter-Kelly
 MIN_EDGE               = 0.01    # 1% minimum edge to trade (quarter-Kelly keeps sizing safe)

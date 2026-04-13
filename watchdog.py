@@ -61,6 +61,12 @@ _PROCESS_DEFS = {
         "critical": False,
         "affects_live_toggle": True,
     },
+    "eth_5m_sniper": {
+        "cmd": [_APEX_PY, str(ROOT / "polymarket" / "eth_5m_sniper.py")],
+        "env_extra": {},
+        "critical": False,
+        "affects_live_toggle": True,
+    },
     "copy_trader": {
         "cmd": [_APEX_PY, str(ROOT / "polymarket" / "copy_trader.py")],
         "env_extra": {},
@@ -99,8 +105,8 @@ class ProcessManager:
                 "cwd":       str(ROOT),
             }
         cfg = dict(_PROCESS_DEFS[name])
-        # Append --live to btc_5m_sniper when in live mode
-        if name == "btc_5m_sniper" and self._apex_live:
+        # Append --live to BTC/ETH 5-min snipers when in live mode
+        if name in ("btc_5m_sniper", "eth_5m_sniper") and self._apex_live:
             cfg["cmd"] = cfg["cmd"] + ["--live"]
         return cfg
 
