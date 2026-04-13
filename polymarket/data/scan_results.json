@@ -5,10 +5,10 @@
     "edge": 0.0225,
     "confidence": 0.0815,
     "price": 0.059,
-    "liquidity": 9958.29599,
-    "volume": 84459.434454,
+    "liquidity": 9798.65358,
+    "volume": 84464.434454,
     "is_btc": false,
-    "minutes_to_resolve": -147973.3
+    "minutes_to_resolve": -147974.3
   },
   {
     "question": "Will Harvey Weinstein be sentenced to between 5 and 10 years in prison?",
@@ -16,10 +16,10 @@
     "edge": 0.0225,
     "confidence": 0.083,
     "price": 0.0605,
-    "liquidity": 2877.3939,
-    "volume": 48792.696510000125,
+    "liquidity": 2858.51391,
+    "volume": 48807.39651000012,
     "is_btc": false,
-    "minutes_to_resolve": -147973.3
+    "minutes_to_resolve": -147974.3
   },
   {
     "question": "Will Harvey Weinstein be sentenced to more than 30 years in prison?",
@@ -27,10 +27,10 @@
     "edge": 0.0225,
     "confidence": 0.0985,
     "price": 0.076,
-    "liquidity": 3624.29844,
+    "liquidity": 3659.7726,
     "volume": 52861.992455000065,
     "is_btc": false,
-    "minutes_to_resolve": -147973.3
+    "minutes_to_resolve": -147974.3
   },
   {
     "question": "MegaETH market cap (FDV) >$2B one day after launch?",
@@ -38,10 +38,10 @@
     "edge": 0.012,
     "confidence": 0.117,
     "price": 0.105,
-    "liquidity": 73650.8285,
-    "volume": 5885041.58524808,
+    "liquidity": 73565.6885,
+    "volume": 5885139.58524808,
     "is_btc": false,
-    "minutes_to_resolve": -148693.3
+    "minutes_to_resolve": -148694.3
   },
   {
     "question": "Will Harvey Weinstein be sentenced to between 10 and 20 years in prison?",
@@ -49,10 +49,10 @@
     "edge": 0.012,
     "confidence": 0.2225,
     "price": 0.2105,
-    "liquidity": 1173.37874,
+    "liquidity": 1165.88796,
     "volume": 135623.54159500005,
     "is_btc": false,
-    "minutes_to_resolve": -147973.3
+    "minutes_to_resolve": -147974.3
   },
   {
     "question": "Will Harvey Weinstein be sentenced to between 20 and 30 years in prison?",
@@ -60,10 +60,10 @@
     "edge": 0.012,
     "confidence": 0.2425,
     "price": 0.2305,
-    "liquidity": 2251.42477,
+    "liquidity": 2223.10097,
     "volume": 176109.1523950004,
     "is_btc": false,
-    "minutes_to_resolve": -147973.3
+    "minutes_to_resolve": -147974.3
   },
   {
     "question": "Will Harvey Weinstein be sentenced to no prison time?",
@@ -71,20 +71,20 @@
     "edge": 0.0,
     "confidence": 0.3335,
     "price": 0.3335,
-    "liquidity": 2496.74647,
+    "liquidity": 2497.53067,
     "volume": 314789.844208001,
     "is_btc": false,
-    "minutes_to_resolve": -147973.3
+    "minutes_to_resolve": -147974.3
   },
   {
     "question": "Will MegaETH perform an airdrop by June 30? ",
     "condition_id": "0xe459d1b598da754c9fd5fc155b6efe3a144aa80abbc7d041fce7d35d903d3c8e",
     "edge": 0.0,
-    "confidence": 0.457,
-    "price": 0.457,
-    "liquidity": 8885.52832,
-    "volume": 1088664.1249760007,
+    "confidence": 0.4575,
+    "price": 0.4575,
+    "liquidity": 8849.60927,
+    "volume": 1088666.4049760008,
     "is_btc": false,
-    "minutes_to_resolve": -102313.3
+    "minutes_to_resolve": -102314.3
   }
 ]
