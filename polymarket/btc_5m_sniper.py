@@ -57,8 +57,9 @@ from polymarket.polyconfig import (
 WINDOW_SECS         = 300       # 5 minutes
 ENTRY_WINDOW_SECS   = 15        # Enter in last 15 seconds (T-15s to T-5s)
 EXIT_BUFFER_SECS    = 5         # Stop entering with <5s left (blockchain latency)
-MIN_CONFIDENCE       = 0.20     # Minimum confidence to trade (from strategy)
-MIN_EDGE             = 0.05     # 5% edge minimum (raised — research shows 3% eaten by fees)
+MIN_CONFIDENCE       = 0.55     # Minimum confidence (raised from 0.20 — kills delta-only noise trades)
+MIN_EDGE             = 0.06     # 6% edge minimum (raised from 5% — loss analysis: losses clustered in 5-8% edge range)
+MIN_ABS_DELTA_PCT    = 0.02     # Require |BTC delta from window_open| >= 0.02% to fire (filters pure noise)
 MAX_BET_PCT          = 0.04     # 4% of bankroll per trade
 KELLY_FRAC           = 0.25     # Quarter-Kelly
 BTC_5M_SIGMA         = 0.003   # ~0.3% typical 5-min BTC volatility
@@ -391,12 +392,32 @@ class SniperState:
             except Exception:
                 pass
 
+    def compute_stats(self) -> dict:
+        """Authoritative trade counts. All consumers must read from here."""
+        total = len(self.trades)
+        resolved = [t for t in self.trades if t.get("resolved")]
+        wins = sum(1 for t in resolved if t.get("won"))
+        losses = len(resolved) - wins
+        pending = total - len(resolved)
+        pnl = round(sum(t.get("pnl", 0) for t in resolved), 2)
+        wr = round(wins / len(resolved) * 100, 1) if resolved else 0.0
+        return {
+            "total_trades": total,
+            "resolved_trades": len(resolved),
+            "pending_trades": pending,
+            "wins": wins,
+            "losses": losses,
+            "win_rate": wr,
+            "realized_pnl": pnl,
+        }
+
     def save(self):
         STATE_PATH.write_text(json.dumps({
             "bankroll": self.bankroll,
             "trades": self.trades[-500:],  # keep last 500
             "windows_scanned": self.windows_scanned,
             "windows_traded": self.windows_traded,
+            "stats": self.compute_stats(),
             "updated": datetime.now(timezone.utc).isoformat(),
         }, indent=2))
 
@@ -418,14 +439,11 @@ class SniperState:
         self.save()
 
     def summary(self) -> str:
-        resolved = [t for t in self.trades if t.get("resolved")]
-        wins = sum(1 for t in resolved if t.get("won"))
-        total = len(resolved)
-        wr = round(wins / total * 100, 1) if total else 0
-        total_pnl = sum(t.get("pnl", 0) for t in resolved)
+        s = self.compute_stats()
         return (f"Bankroll: ${self.bankroll:.2f} | "
-                f"Trades: {total} | WR: {wr}% | "
-                f"PnL: ${total_pnl:+.2f} | "
+                f"Trades: {s['resolved_trades']} ({s['pending_trades']}p) | "
+                f"WR: {s['win_rate']}% | "
+                f"PnL: ${s['realized_pnl']:+.2f} | "
                 f"Scanned: {self.windows_scanned}")
 
 
@@ -587,13 +605,16 @@ def run_sniper(live_mode: bool = False):
                     best_confidence = result.confidence
                     best_signal = result
 
+                # Noise filter: require meaningful BTC move from window open
+                delta_pct = abs((current_btc - start_price) / start_price * 100) if start_price > 0 else 0
+                if delta_pct < MIN_ABS_DELTA_PCT:
+                    time.sleep(POLL_INTERVAL_SECS)
+                    continue
+
                 # Dislocation check: only fire when edge is big enough
                 # to survive ~3.15% dynamic taker fee at 50/50 odds
-                # MACD gate: delta-only signals (zero MACD confirmation)
-                # need confidence >= 0.60 (big move) to trade without momentum
-                if result.confidence >= MIN_CONFIDENCE and not (
-                    result.macd_confirmation == 0 and result.confidence < 0.60
-                ):
+                # MACD gate: delta-only signals need MACD/tick confirmation to fire
+                if result.confidence >= MIN_CONFIDENCE and result.macd_confirmation >= 1:
                     direction = result.direction
                     token_id = (market["up_token_id"] if direction == "UP"
                                 else market["down_token_id"])
@@ -623,12 +644,16 @@ def run_sniper(live_mode: bool = False):
                 time.sleep(POLL_INTERVAL_SECS)
 
             # T-5s hard deadline: if not fired, execute best signal if viable
-            # Same MACD gate: require confirmation for sub-0.60 confidence
-            if not fired and best_signal and best_signal.confidence >= MIN_CONFIDENCE and not (
-                best_signal.macd_confirmation == 0 and best_signal.confidence < 0.60
-            ):
+            # Same gates: min confidence + MACD confirmation + non-trivial delta
+            if (not fired and best_signal
+                and best_signal.confidence >= MIN_CONFIDENCE
+                and best_signal.macd_confirmation >= 1):
                 current_btc = get_btc_price() or tick_buffer[-1]
                 secs_left = _secs_remaining()
+                last_delta = abs((current_btc - start_price) / start_price * 100) if start_price > 0 else 0
+                if last_delta < MIN_ABS_DELTA_PCT:
+                    last_traded_window = window_ts
+                    continue
                 direction = best_signal.direction
                 token_id = (market["up_token_id"] if direction == "UP"
                             else market["down_token_id"])
@@ -782,15 +807,13 @@ def _wait_and_resolve(state: SniperState, trade: dict, start_price: float,
     print(f"  {emoji} Resolved: {outcome} | Bet: {bet_direction} | "
           f"PnL: ${pnl:+.2f} | End: ${end_price:,.2f}")
 
-    resolved = [t for t in state.trades if t.get("resolved")]
-    wins = sum(1 for t in resolved if t.get("won"))
-    losses = len(resolved) - wins
-    wr = round(wins / len(resolved) * 100, 1) if resolved else 0
+    s = state.compute_stats()
     _tg(
         f"{emoji} <b>BTC 5-Min {'WIN' if won else 'LOSS'} ${pnl:+.2f}</b>\n"
         f"Bet {bet_direction} → {outcome}\n"
         f"BTC ${start_price:,.0f} → ${end_price:,.0f}\n"
-        f"Bank: ${state.bankroll:.0f} | {wins}W/{losses}L ({wr}%)"
+        f"Bank: ${state.bankroll:.0f} | {s['wins']}W/{s['losses']}L ({s['win_rate']}%) | "
+        f"{s['resolved_trades']}/{s['total_trades']} resolved"
     )
 
 

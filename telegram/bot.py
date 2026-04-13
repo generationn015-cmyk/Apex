@@ -81,6 +81,28 @@ def _is_paused() -> bool:
     return _PAUSE_FILE.exists()
 
 
+def _btc_stats(btc: dict | None) -> dict:
+    """Authoritative BTC stats. Prefers state['stats'] block, falls back to live compute."""
+    if not btc:
+        return {"total_trades": 0, "resolved_trades": 0, "pending_trades": 0,
+                "wins": 0, "losses": 0, "win_rate": 0.0, "realized_pnl": 0.0}
+    s = btc.get("stats")
+    if isinstance(s, dict) and "resolved_trades" in s:
+        return s
+    trades = btc.get("trades", [])
+    resolved = [t for t in trades if t.get("resolved")]
+    wins = sum(1 for t in resolved if t.get("won"))
+    return {
+        "total_trades": len(trades),
+        "resolved_trades": len(resolved),
+        "pending_trades": len(trades) - len(resolved),
+        "wins": wins,
+        "losses": len(resolved) - wins,
+        "win_rate": round(wins / len(resolved) * 100, 1) if resolved else 0.0,
+        "realized_pnl": round(sum(t.get("pnl", 0) for t in resolved), 2),
+    }
+
+
 # ── Commands ─────────────────────────────────────────────────────────────────
 
 def cmd_status() -> str:
@@ -103,12 +125,10 @@ def cmd_status() -> str:
     state = _json(STATE_FILE)
 
     if btc:
-        trades = btc.get("trades", [])
-        resolved = [t for t in trades if t.get("resolved")]
-        wins = sum(1 for t in resolved if t.get("won"))
-        pnl = sum(t.get("pnl", 0) for t in resolved)
+        s = _btc_stats(btc)
         lines.append(f"\n<b>BTC Sniper</b>: ${btc['bankroll']:.2f}")
-        lines.append(f"  {wins}W/{len(resolved)-wins}L | PnL: ${pnl:+.2f}")
+        lines.append(f"  {s['wins']}W/{s['losses']}L | PnL: ${s['realized_pnl']:+.2f} | "
+                     f"{s['resolved_trades']}/{s['total_trades']} resolved")
 
     if state:
         s = state.get("stats", {})
@@ -132,18 +152,16 @@ def cmd_btc() -> str:
     btc = _json(_POLY / "btc_5m_state.json")
     if not btc:
         return "No BTC sniper data."
-    trades = btc.get("trades", [])
-    resolved = [t for t in trades if t.get("resolved")]
-    wins = sum(1 for t in resolved if t.get("won"))
-    pnl = sum(t.get("pnl", 0) for t in resolved)
+    s = _btc_stats(btc)
     lines = [
         f"<b>BTC 5-Min Sniper</b>",
         f"Bankroll: ${btc['bankroll']:.2f}",
-        f"Record: {wins}W / {len(resolved)-wins}L",
-        f"PnL: ${pnl:+.2f}",
+        f"Record: {s['wins']}W / {s['losses']}L ({s['win_rate']}%)",
+        f"PnL: ${s['realized_pnl']:+.2f}",
+        f"Trades: {s['resolved_trades']} resolved · {s['pending_trades']} pending · {s['total_trades']} total",
         f"Scanned: {btc.get('windows_scanned',0)} windows",
     ]
-    # Last 3 trades
+    resolved = [t for t in btc.get("trades", []) if t.get("resolved")]
     for t in reversed(resolved[-3:]):
         emoji = "W" if t.get("won") else "L"
         lines.append(f"  {t['direction']} {emoji} ${t.get('pnl',0):+.2f} | {t.get('edge',0)*100:.1f}% edge")
@@ -241,12 +259,11 @@ def cmd_report() -> str:
              f"{datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}"]
 
     if btc:
-        trades = btc.get("trades", [])
-        resolved = [t for t in trades if t.get("resolved")]
-        wins = sum(1 for t in resolved if t.get("won"))
-        pnl = sum(t.get("pnl", 0) for t in resolved)
+        s = _btc_stats(btc)
         lines.append(f"\nBTC Sniper: ${btc['bankroll']:.2f}")
-        lines.append(f"  {wins}W/{len(resolved)-wins}L | ${pnl:+.2f}")
+        lines.append(f"  {s['wins']}W/{s['losses']}L | ${s['realized_pnl']:+.2f} | "
+                     f"{s['resolved_trades']}/{s['total_trades']} resolved")
+        resolved = [t for t in btc.get("trades", []) if t.get("resolved")]
         for t in resolved:
             w = "W" if t.get("won") else "L"
             lines.append(f"  {t['direction']} {w} ${t.get('pnl',0):+.2f}")
@@ -369,14 +386,10 @@ def _build_digest() -> str | None:
     lines = ["<b>APEX Hourly Update</b>"]
 
     if btc:
-        trades = btc.get("trades", [])
-        resolved = [t for t in trades if t.get("resolved")]
-        wins = sum(1 for t in resolved if t.get("won"))
-        losses = len(resolved) - wins
-        pnl = sum(t.get("pnl", 0) for t in resolved)
-        pending = len(trades) - len(resolved)
+        s = _btc_stats(btc)
         lines.append(f"\n⚡ <b>BTC Sniper</b>: ${btc['bankroll']:.0f}")
-        lines.append(f"  {wins}W/{losses}L · ${pnl:+.0f} PnL · {pending} pending")
+        lines.append(f"  {s['wins']}W/{s['losses']}L · ${s['realized_pnl']:+.0f} PnL · "
+                     f"{s['pending_trades']} pending · {s['total_trades']} total")
         has_data = True
 
     if state:
