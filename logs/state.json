@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-04-13T20:13:04.619626+00:00",
+  "updated_at": "2026-04-13T20:18:05.801819+00:00",
   "mode": "paper",
-  "cycle": 57,
+  "cycle": 58,
   "stats": {
     "total_trades": 3,
     "closed": 1,
@@ -10,8 +10,8 @@
     "losses": 1,
     "win_rate": 0.0,
     "total_pnl": -0.31,
-    "unrealized_pnl": 0.17,
-    "net_pnl": -0.15,
+    "unrealized_pnl": 0.13,
+    "net_pnl": -0.19,
     "by_asset": {
       "BTC/USDT": {
         "wins": 0,
