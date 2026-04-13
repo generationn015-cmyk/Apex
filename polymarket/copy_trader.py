@@ -88,6 +88,63 @@ STATUS_PATH = DATA_DIR / "copy_trader_status.json"
 
 # -- API --------------------------------------------------------------------
 
+_LEADERBOARD_CACHE: dict = {"ts": 0.0, "wallets": set(), "details": {}}
+_LEADERBOARD_TTL  = 3600  # 1 hour
+
+
+def fetch_leaderboard_top(limit: int = 25, time_period: str = "DAY") -> set[str]:
+    """
+    Fetch top N profitable wallets from Polymarket official leaderboard.
+    Filters to wallets with positive PnL only. Cached for 1 hour.
+    Returns set of proxyWallet addresses (lowercase).
+    """
+    now = time.time()
+    if (now - _LEADERBOARD_CACHE["ts"]) < _LEADERBOARD_TTL and _LEADERBOARD_CACHE["wallets"]:
+        return _LEADERBOARD_CACHE["wallets"]
+
+    url    = f"{DATA_API}/v1/leaderboard"
+    params = {"category": "OVERALL", "timePeriod": time_period,
+              "orderBy": "PNL", "limit": limit}
+    rows: list[dict] = []
+    try:
+        if _HAS_REQUESTS:
+            r = _req.get(url, params=params, headers=_HEADERS, timeout=15)
+            if r.status_code == 200 and isinstance(r.json(), list):
+                rows = r.json()
+        else:
+            qs  = urllib.parse.urlencode(params)
+            req = urllib.request.Request(f"{url}?{qs}", headers=_HEADERS)
+            with urllib.request.urlopen(req, timeout=15) as f:
+                data = json.loads(f.read().decode())
+                rows = data if isinstance(data, list) else []
+    except Exception as e:
+        print(f"[CopyTrader] Leaderboard fetch error: {e}")
+        return _LEADERBOARD_CACHE["wallets"]  # return stale cache rather than empty
+
+    wallets: set[str] = set()
+    details: dict[str, dict] = {}
+    for row in rows:
+        pnl = float(row.get("pnl", 0) or 0)
+        if pnl <= 0:
+            continue  # only profitable traders
+        addr = (row.get("proxyWallet", "") or "").lower()
+        if not addr:
+            continue
+        wallets.add(addr)
+        details[addr] = {
+            "name": row.get("userName", ""),
+            "rank": row.get("rank", ""),
+            "pnl":  round(pnl, 2),
+            "vol":  round(float(row.get("vol", 0) or 0), 2),
+        }
+
+    _LEADERBOARD_CACHE["ts"]      = now
+    _LEADERBOARD_CACHE["wallets"] = wallets
+    _LEADERBOARD_CACHE["details"] = details
+    print(f"[CopyTrader] Leaderboard refreshed: {len(wallets)} profitable top traders ({time_period})")
+    return wallets
+
+
 def fetch_recent_trades(limit: int = 200) -> list[dict]:
     """Fetch recent trades from Polymarket data API."""
     url = f"{DATA_API}/trades"
@@ -340,27 +397,26 @@ def _cycle(state: CopyState, whale_db: WhaleDB):
         if wallet:
             whale_db.record_trade(wallet, t)
 
-    # Get top wallets
-    top = whale_db.get_top_traders()
-    top_addrs = {w["address"] for w in top}
+    # Get top wallets — REAL Polymarket leaderboard (top N profitable DAY traders)
+    leaderboard_wallets = fetch_leaderboard_top(limit=25, time_period="DAY")
+    # Fallback: local volume-ranked wallets if leaderboard API is unreachable
+    local_top_addrs = {w["address"].lower() for w in whale_db.get_top_traders()}
 
     copied = 0
     for t in new_whales:
-        wallet = t.get("proxyWallet", "")
+        wallet = (t.get("proxyWallet", "") or "").lower()
         cid = t.get("conditionId", "")
         if not cid or cid in state.positions:
             continue
 
-        # Skip 5-min coinflip markets — these are pure variance, no edge from whales
+        # Skip 5-min coinflip markets — pure variance, no whale edge
         title_lower = t.get("title", "").lower()
         if "up or down" in title_lower:
             continue
 
-        # Require proven whale history: must be in top traders AND have >=5 trades on record
-        whale_record = whale_db.wallets.get(wallet, {})
-        if whale_record.get("trades", 0) < 5:
-            continue
-        if wallet not in top_addrs:
+        # Gate: wallet must be on the live Polymarket leaderboard (profitable today),
+        # OR in the local high-volume top if the API is down.
+        if wallet not in leaderboard_wallets and wallet not in local_top_addrs:
             continue
 
         is_known = True
