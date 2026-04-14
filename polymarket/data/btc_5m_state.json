@@ -1,5 +1,5 @@
 {
-  "bankroll": 1516.8425436449934,
+  "bankroll": 1456.1725436449933,
   "trades": [
     {
       "window_ts": 1775982300,
@@ -7380,18 +7380,63 @@
       "resolved": true,
       "won": true,
       "pnl": 15.02
+    },
+    {
+      "window_ts": 1776168600,
+      "question": "Bitcoin Up or Down - April 14, 8:10AM-8:15AM ET",
+      "direction": "DOWN",
+      "bet_size": 60.67,
+      "edge": 0.0747,
+      "p_win": 0.9947,
+      "market_price": 0.92,
+      "confidence": 1.0,
+      "score": -13.384,
+      "indicators": {
+        "delta_pct": -0.13334,
+        "delta_weight": 7.0,
+        "macd_hist": -9.6081,
+        "macd_line": -9.602,
+        "macd_signal": 0.0061,
+        "macd_accel": -1.53235,
+        "macd_jerk": 1.552845,
+        "macd_cross": "NONE",
+        "macd_zero_regime": "BELOW",
+        "fast_macd_hist": -9.348198,
+        "fast_macd_agrees": true,
+        "vol_ratio": 4.67,
+        "tick_up_pct": 50.0,
+        "scores": {
+          "window_delta": -7.0,
+          "macd_histogram": -1.94,
+          "macd_acceleration": -0.41,
+          "macd_cross": 0.0,
+          "macd_zero_regime": -1.03,
+          "fast_macd_confirm": -1.5,
+          "macd_volume_flow": -1.5,
+          "tick_trend": 0.0
+        },
+        "total_score": -13.38,
+        "macd_confirmation": 5
+      },
+      "btc_price": 74333.0,
+      "start_price": 74432.25,
+      "secs_remaining": 9.1,
+      "order_id": "paper_1776168892415",
+      "mode": "PAPER",
+      "timestamp": "2026-04-14T12:14:52.416634+00:00",
+      "resolved": false
     }
   ],
-  "windows_scanned": 399,
-  "windows_traded": 178,
+  "windows_scanned": 400,
+  "windows_traded": 179,
   "stats": {
-    "total_trades": 178,
+    "total_trades": 179,
     "resolved_trades": 178,
-    "pending_trades": 0,
+    "pending_trades": 1,
     "wins": 163,
     "losses": 15,
     "win_rate": 91.6,
     "realized_pnl": 1255.68
   },
-  "updated": "2026-04-14T11:15:08.445305+00:00"
+  "updated": "2026-04-14T12:14:52.431398+00:00"
 }
