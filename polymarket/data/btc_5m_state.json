@@ -1,5 +1,5 @@
 {
-  "bankroll": 1036.3059671779836,
+  "bankroll": 1066.1859671779837,
   "trades": [
     {
       "window_ts": 1775982300,
@@ -5534,18 +5534,66 @@
       "resolved": true,
       "won": true,
       "pnl": 3.59
+    },
+    {
+      "window_ts": 1776146400,
+      "question": "Bitcoin Up or Down - April 14, 2:00AM-2:05AM ET",
+      "direction": "UP",
+      "bet_size": 36.52,
+      "edge": 0.0634,
+      "p_win": 0.6134,
+      "market_price": 0.55,
+      "confidence": 0.2738,
+      "score": 2.738,
+      "indicators": {
+        "delta_pct": 0.01774,
+        "delta_weight": 3.0,
+        "macd_hist": 8.3356,
+        "macd_line": -11.5181,
+        "macd_signal": -19.8537,
+        "macd_accel": -1.5247,
+        "macd_jerk": -3.753919,
+        "macd_cross": "NONE",
+        "macd_zero_regime": "BELOW",
+        "fast_macd_hist": 3.030034,
+        "fast_macd_agrees": true,
+        "vol_ratio": 0.19,
+        "tick_up_pct": 0.0,
+        "tick_move_pct": 0.0549,
+        "scores": {
+          "window_delta": 3.0,
+          "macd_histogram": 1.68,
+          "macd_acceleration": -0.2,
+          "macd_cross": 0.0,
+          "macd_zero_regime": -1.24,
+          "fast_macd_confirm": 1.5,
+          "macd_volume_flow": 0.0,
+          "tick_trend": -2.0
+        },
+        "total_score": 2.74,
+        "macd_confirmation": 5
+      },
+      "btc_price": 74266.72,
+      "start_price": 74253.55,
+      "secs_remaining": 12.6,
+      "order_id": "paper_1776146687741",
+      "mode": "PAPER",
+      "timestamp": "2026-04-14T06:04:47.741109+00:00",
+      "resolved": true,
+      "won": true,
+      "pnl": 29.88
     }
   ],
-  "windows_scanned": 335,
-  "windows_traded": 139,
+  "windows_scanned": 337,
+  "windows_traded": 140,
   "stats": {
-    "total_trades": 139,
-    "resolved_trades": 139,
+    "total_trades": 140,
+    "resolved_trades": 140,
     "pending_trades": 0,
-    "wins": 127,
+    "wins": 128,
     "losses": 12,
     "win_rate": 91.4,
-    "realized_pnl": 775.13
+    "realized_pnl": 805.01
   },
-  "updated": "2026-04-14T05:55:08.414393+00:00"
+  "updated": "2026-04-14T06:05:08.408449+00:00"
 }
