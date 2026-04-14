@@ -1,5 +1,5 @@
 {
-  "bankroll": 688.975815597446,
+  "bankroll": 661.415815597446,
   "trades": [
     {
       "window_ts": 1775982300,
@@ -4157,18 +4157,63 @@
       "resolved": true,
       "won": true,
       "pnl": 2.39
+    },
+    {
+      "window_ts": 1776133800,
+      "question": "Bitcoin Up or Down - April 13, 10:30PM-10:35PM ET",
+      "direction": "DOWN",
+      "bet_size": 27.56,
+      "edge": 0.114,
+      "p_win": 0.914,
+      "market_price": 0.8,
+      "confidence": 1.0,
+      "score": -10.653,
+      "indicators": {
+        "delta_pct": -0.07489,
+        "delta_weight": 5.0,
+        "macd_hist": -25.0869,
+        "macd_line": -19.9226,
+        "macd_signal": 5.1643,
+        "macd_accel": -2.427038,
+        "macd_jerk": 3.174038,
+        "macd_cross": "NONE",
+        "macd_zero_regime": "BELOW",
+        "fast_macd_hist": -14.827766,
+        "fast_macd_agrees": true,
+        "vol_ratio": 0,
+        "tick_up_pct": 50.0,
+        "scores": {
+          "window_delta": -5.0,
+          "macd_histogram": -2.0,
+          "macd_acceleration": -0.65,
+          "macd_cross": 0.0,
+          "macd_zero_regime": -1.5,
+          "fast_macd_confirm": -1.5,
+          "macd_volume_flow": 0.0,
+          "tick_trend": 0.0
+        },
+        "total_score": -10.65,
+        "macd_confirmation": 4
+      },
+      "btc_price": 74304.97,
+      "start_price": 74360.66,
+      "secs_remaining": 10.0,
+      "order_id": "paper_1776134091413",
+      "mode": "PAPER",
+      "timestamp": "2026-04-14T02:34:51.413156+00:00",
+      "resolved": false
     }
   ],
-  "windows_scanned": 294,
-  "windows_traded": 110,
+  "windows_scanned": 295,
+  "windows_traded": 111,
   "stats": {
-    "total_trades": 110,
+    "total_trades": 111,
     "resolved_trades": 110,
-    "pending_trades": 0,
+    "pending_trades": 1,
     "wins": 100,
     "losses": 10,
     "win_rate": 90.9,
     "realized_pnl": 427.81
   },
-  "updated": "2026-04-14T02:30:09.660816+00:00"
+  "updated": "2026-04-14T02:34:51.413422+00:00"
 }
