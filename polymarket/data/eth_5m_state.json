@@ -1,5 +1,5 @@
 {
-  "bankroll": 553.0006324338494,
+  "bankroll": 564.1156324338493,
   "trades": [
     {
       "window_ts": 1776112200,
@@ -3576,18 +3576,113 @@
       "resolved": true,
       "won": true,
       "pnl": 5.47
+    },
+    {
+      "window_ts": 1776197100,
+      "question": "Ethereum Up or Down - April 14, 4:05PM-4:10PM ET",
+      "direction": "UP",
+      "bet_size": 22.12,
+      "edge": 0.07,
+      "p_win": 0.87,
+      "market_price": 0.8,
+      "confidence": 0.7969,
+      "score": 7.969,
+      "indicators": {
+        "delta_pct": 0.09623,
+        "delta_weight": 5.0,
+        "macd_hist": 0.3194,
+        "macd_line": 1.8397,
+        "macd_signal": 1.5202,
+        "macd_accel": -0.053649,
+        "macd_jerk": -0.020209,
+        "macd_cross": "NONE",
+        "macd_zero_regime": "ABOVE",
+        "fast_macd_hist": -0.198747,
+        "fast_macd_agrees": false,
+        "vol_ratio": 0.14,
+        "tick_up_pct": 50.0,
+        "scores": {
+          "window_delta": 5.0,
+          "macd_histogram": 2.0,
+          "macd_acceleration": -0.23,
+          "macd_cross": 0.0,
+          "macd_zero_regime": 1.5,
+          "fast_macd_confirm": -0.3,
+          "macd_volume_flow": 0.0,
+          "tick_trend": 0.0
+        },
+        "total_score": 7.97,
+        "macd_confirmation": 4
+      },
+      "btc_price": 2319.61,
+      "start_price": 2317.38,
+      "secs_remaining": 13.7,
+      "order_id": "paper_1776197386576",
+      "mode": "PAPER",
+      "timestamp": "2026-04-14T20:09:46.576673+00:00",
+      "resolved": true,
+      "won": true,
+      "pnl": 5.53
+    },
+    {
+      "window_ts": 1776197400,
+      "question": "Ethereum Up or Down - April 14, 4:10PM-4:15PM ET",
+      "direction": "UP",
+      "bet_size": 22.34,
+      "edge": 0.0515,
+      "p_win": 0.8515,
+      "market_price": 0.8,
+      "confidence": 0.9802,
+      "score": 9.802,
+      "indicators": {
+        "delta_pct": 0.08885,
+        "delta_weight": 5.0,
+        "macd_hist": -0.0339,
+        "macd_line": 1.6298,
+        "macd_signal": 1.6637,
+        "macd_accel": 0.097758,
+        "macd_jerk": 0.177931,
+        "macd_cross": "APPROACHING_BULL",
+        "macd_zero_regime": "ABOVE",
+        "fast_macd_hist": 0.044773,
+        "fast_macd_agrees": false,
+        "vol_ratio": 0.64,
+        "tick_up_pct": 100.0,
+        "tick_move_pct": 0.1057,
+        "scores": {
+          "window_delta": 5.0,
+          "macd_histogram": -0.22,
+          "macd_acceleration": 0.42,
+          "macd_cross": 0.8,
+          "macd_zero_regime": 1.5,
+          "fast_macd_confirm": 0.3,
+          "macd_volume_flow": 0.0,
+          "tick_trend": 2.0
+        },
+        "total_score": 9.8,
+        "macd_confirmation": 6
+      },
+      "btc_price": 2320.7,
+      "start_price": 2318.64,
+      "secs_remaining": 13.6,
+      "order_id": "paper_1776197686630",
+      "mode": "PAPER",
+      "timestamp": "2026-04-14T20:14:46.630133+00:00",
+      "resolved": true,
+      "won": true,
+      "pnl": 5.58
     }
   ],
-  "windows_scanned": 204,
-  "windows_traded": 76,
+  "windows_scanned": 209,
+  "windows_traded": 78,
   "stats": {
-    "total_trades": 76,
-    "resolved_trades": 76,
+    "total_trades": 78,
+    "resolved_trades": 78,
     "pending_trades": 0,
-    "wins": 71,
+    "wins": 73,
     "losses": 5,
-    "win_rate": 93.4,
-    "realized_pnl": 303.32
+    "win_rate": 93.6,
+    "realized_pnl": 314.43
   },
-  "updated": "2026-04-14T19:50:08.322802+00:00"
+  "updated": "2026-04-14T20:15:08.226998+00:00"
 }
