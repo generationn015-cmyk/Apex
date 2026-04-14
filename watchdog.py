@@ -76,6 +76,12 @@ _PROCESS_DEFS = {
         "critical": False,
         "affects_live_toggle": False,
     },
+    "live_sync_daemon": {
+        "cmd": [_APEX_PY, str(ROOT / "core" / "live_sync_daemon.py")],
+        "env_extra": {},
+        "critical": False,
+        "affects_live_toggle": False,
+    },
 }
 
 
