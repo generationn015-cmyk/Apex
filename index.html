@@ -15,7 +15,7 @@
 /* ╔═══════════════════════════════════════════════════════════════════╗
    ║   STRATTON // APEX · Trading Floor · Wolf of Wall Street · v5.0   ║
    ║   "Your only job is to put meat in my seats."                      ║
-   ║   Two snipers. One war chest. Paper mode until the edge proves.    ║
+   ║   BTC Sniper LIVE. ETH on paper. One war chest. Edge proven.       ║
    ╚═══════════════════════════════════════════════════════════════════╝ */
 :root {
   --ink:        #0a0806;
@@ -1142,7 +1142,7 @@ a { color: var(--gold); text-decoration: none; }
           <div class="kicker">Stratton Apex Capital</div>
           <h1>The Wolf <em>is out.</em></h1>
           <div class="sub">
-            Two paper snipers. One war chest. <em>Ninety-plus percent</em> on the windows that closed.
+            BTC Sniper is <em>live</em>. ETH holds paper. <em>Ninety-plus percent</em> on the windows that closed.
           </div>
           <div class="quote">
             The easiest way to make money is to create something of such value that everybody wants, and to go out and give and create that value. The more value you create, the more money you will have.
@@ -1822,17 +1822,17 @@ setInterval(load, 20000);
     <div id="modalStatusBadge" class="modal-status-badge paper">PAPER</div>
 
     <div class="modal-section" id="modalGoLive">
-      <p>BTC Sniper is currently in <strong>PAPER</strong> mode. To flip live, run on the server:</p>
-      <div class="modal-cmd">touch /home/jefe/apex/logs/.go_live
+      <p>BTC Sniper is currently in <strong>PAPER</strong> mode. To flip live, run on your machine:</p>
+      <div class="modal-cmd">touch ~/Apex/logs/.go_live
 kill $(pgrep -f btc_5m_sniper.py)</div>
-      <button class="copy-btn" onclick="copyCmd(this, 'touch /home/jefe/apex/logs/.go_live\nkill $(pgrep -f btc_5m_sniper.py)')">COPY COMMAND</button>
+      <button class="copy-btn" onclick="copyCmd(this, 'touch ~/Apex/logs/.go_live\nkill $(pgrep -f btc_5m_sniper.py)')">COPY COMMAND</button>
     </div>
 
     <div class="modal-section" id="modalGoPaper">
       <p>BTC Sniper is currently <strong style="color:var(--blood)">LIVE</strong> — real capital at risk. To return to paper:</p>
-      <div class="modal-cmd">rm /home/jefe/apex/logs/.go_live
+      <div class="modal-cmd">rm ~/Apex/logs/.go_live
 kill $(pgrep -f btc_5m_sniper.py)</div>
-      <button class="copy-btn" onclick="copyCmd(this, 'rm /home/jefe/apex/logs/.go_live\nkill $(pgrep -f btc_5m_sniper.py)')">COPY KILL SWITCH</button>
+      <button class="copy-btn" onclick="copyCmd(this, 'rm ~/Apex/logs/.go_live\nkill $(pgrep -f btc_5m_sniper.py)')">COPY KILL SWITCH</button>
     </div>
 
     <div class="modal-section">

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-12T10:02:06.834858+00:00",
+  "updated_at": "2026-04-14T21:00:00.000000+00:00",
   "processes": {
     "apex_bot": {
       "status": "running",
@@ -19,11 +19,21 @@
     "btc_5m_sniper": {
       "status": "running",
       "pid": 16362,
+      "mode": "live"
+    },
+    "eth_5m_sniper": {
+      "status": "running",
+      "pid": 16363,
       "mode": "paper"
     },
     "copy_trader": {
       "status": "running",
-      "pid": 16363,
+      "pid": 16364,
+      "mode": "paper"
+    },
+    "live_sync_daemon": {
+      "status": "running",
+      "pid": 16365,
       "mode": "paper"
     }
   }
