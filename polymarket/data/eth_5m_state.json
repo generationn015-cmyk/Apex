@@ -2582,19 +2582,21 @@
       "order_id": "paper_1776177291363",
       "mode": "PAPER",
       "timestamp": "2026-04-14T14:34:51.363448+00:00",
-      "resolved": false
+      "resolved": true,
+      "won": false,
+      "pnl": -19.31
     }
   ],
   "windows_scanned": 150,
   "windows_traded": 55,
   "stats": {
     "total_trades": 55,
-    "resolved_trades": 54,
-    "pending_trades": 1,
+    "resolved_trades": 55,
+    "pending_trades": 0,
     "wins": 52,
-    "losses": 2,
-    "win_rate": 96.3,
-    "realized_pnl": 233.21
+    "losses": 3,
+    "win_rate": 94.5,
+    "realized_pnl": 213.9
   },
-  "updated": "2026-04-14T14:34:51.364283+00:00"
+  "updated": "2026-04-14T14:35:08.543698+00:00"
 }
