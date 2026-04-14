@@ -1,5 +1,5 @@
 {
-  "bankroll": 331.06037625418065,
+  "bankroll": 318.64037625418064,
   "trades": [
     {
       "window_ts": 1776112200,
@@ -1353,18 +1353,63 @@
       "resolved": true,
       "won": true,
       "pnl": 6.98
+    },
+    {
+      "window_ts": 1776149700,
+      "question": "Ethereum Up or Down - April 14, 2:55AM-3:00AM ET",
+      "direction": "UP",
+      "bet_size": 12.42,
+      "edge": 0.0525,
+      "p_win": 0.7025,
+      "market_price": 0.65,
+      "confidence": 0.6917,
+      "score": 6.917,
+      "indicators": {
+        "delta_pct": 0.02021,
+        "delta_weight": 5.0,
+        "macd_hist": 0.1556,
+        "macd_line": 2.379,
+        "macd_signal": 2.2235,
+        "macd_accel": -0.062891,
+        "macd_jerk": -0.012599,
+        "macd_cross": "NONE",
+        "macd_zero_regime": "ABOVE",
+        "fast_macd_hist": -0.11358,
+        "fast_macd_agrees": false,
+        "vol_ratio": 0.0,
+        "tick_up_pct": 50.0,
+        "scores": {
+          "window_delta": 5.0,
+          "macd_histogram": 0.98,
+          "macd_acceleration": -0.27,
+          "macd_cross": 0.0,
+          "macd_zero_regime": 1.5,
+          "fast_macd_confirm": -0.3,
+          "macd_volume_flow": 0.0,
+          "tick_trend": 0.0
+        },
+        "total_score": 6.92,
+        "macd_confirmation": 4
+      },
+      "btc_price": 2375.48,
+      "start_price": 2375.0,
+      "secs_remaining": 2.7,
+      "order_id": "paper_1776149997293",
+      "mode": "PAPER",
+      "timestamp": "2026-04-14T06:59:57.293961+00:00",
+      "resolved": false
     }
   ],
-  "windows_scanned": 69,
-  "windows_traded": 29,
+  "windows_scanned": 73,
+  "windows_traded": 30,
   "stats": {
-    "total_trades": 29,
+    "total_trades": 30,
     "resolved_trades": 29,
-    "pending_trades": 0,
+    "pending_trades": 1,
     "wins": 27,
     "losses": 2,
     "win_rate": 93.1,
     "realized_pnl": 81.41
   },
-  "updated": "2026-04-14T06:40:08.418780+00:00"
+  "updated": "2026-04-14T06:59:57.294260+00:00"
 }
