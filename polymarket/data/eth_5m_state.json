@@ -1,5 +1,5 @@
 {
-  "bankroll": 324.0819147157191,
+  "bankroll": 311.12191471571913,
   "trades": [
     {
       "window_ts": 1776112200,
@@ -1306,18 +1306,63 @@
       "resolved": true,
       "won": false,
       "pnl": -13.5
+    },
+    {
+      "window_ts": 1776148500,
+      "question": "Ethereum Up or Down - April 14, 2:35AM-2:40AM ET",
+      "direction": "UP",
+      "bet_size": 12.96,
+      "edge": 0.0731,
+      "p_win": 0.7231,
+      "market_price": 0.65,
+      "confidence": 0.9208000000000001,
+      "score": 9.208,
+      "indicators": {
+        "delta_pct": 0.04814,
+        "delta_weight": 5.0,
+        "macd_hist": 0.1102,
+        "macd_line": 1.6434,
+        "macd_signal": 1.5332,
+        "macd_accel": 0.060388,
+        "macd_jerk": -0.062023,
+        "macd_cross": "NONE",
+        "macd_zero_regime": "ABOVE",
+        "fast_macd_hist": 0.294962,
+        "fast_macd_agrees": true,
+        "vol_ratio": 0.01,
+        "tick_up_pct": 50.0,
+        "scores": {
+          "window_delta": 5.0,
+          "macd_histogram": 0.7,
+          "macd_acceleration": 0.51,
+          "macd_cross": 0.0,
+          "macd_zero_regime": 1.5,
+          "fast_macd_confirm": 1.5,
+          "macd_volume_flow": 0.0,
+          "tick_trend": 0.0
+        },
+        "total_score": 9.21,
+        "macd_confirmation": 4
+      },
+      "btc_price": 2369.27,
+      "start_price": 2368.13,
+      "secs_remaining": 12.4,
+      "order_id": "paper_1776148788020",
+      "mode": "PAPER",
+      "timestamp": "2026-04-14T06:39:48.020547+00:00",
+      "resolved": false
     }
   ],
-  "windows_scanned": 67,
-  "windows_traded": 28,
+  "windows_scanned": 69,
+  "windows_traded": 29,
   "stats": {
-    "total_trades": 28,
+    "total_trades": 29,
     "resolved_trades": 28,
-    "pending_trades": 0,
+    "pending_trades": 1,
     "wins": 26,
     "losses": 2,
     "win_rate": 92.9,
     "realized_pnl": 74.43
   },
-  "updated": "2026-04-14T06:30:08.351043+00:00"
+  "updated": "2026-04-14T06:39:48.021026+00:00"
 }
