@@ -1,5 +1,5 @@
 {
-  "bankroll": 1433.235913210211,
+  "bankroll": 1375.905913210211,
   "trades": [
     {
       "window_ts": 1775982300,
@@ -7048,18 +7048,63 @@
       "resolved": true,
       "won": false,
       "pnl": -48.47
+    },
+    {
+      "window_ts": 1776161700,
+      "question": "Bitcoin Up or Down - April 14, 6:15AM-6:20AM ET",
+      "direction": "DOWN",
+      "bet_size": 57.33,
+      "edge": 0.072,
+      "p_win": 0.872,
+      "market_price": 0.8,
+      "confidence": 0.5307000000000001,
+      "score": -5.307,
+      "indicators": {
+        "delta_pct": -0.0652,
+        "delta_weight": 5.0,
+        "macd_hist": 4.9463,
+        "macd_line": -6.9779,
+        "macd_signal": -11.9241,
+        "macd_accel": -1.894531,
+        "macd_jerk": 0.747394,
+        "macd_cross": "NONE",
+        "macd_zero_regime": "BELOW",
+        "fast_macd_hist": -5.182263,
+        "fast_macd_agrees": false,
+        "vol_ratio": 0.12,
+        "tick_up_pct": 50.0,
+        "scores": {
+          "window_delta": -5.0,
+          "macd_histogram": 1.0,
+          "macd_acceleration": -0.25,
+          "macd_cross": 0.0,
+          "macd_zero_regime": -0.75,
+          "fast_macd_confirm": -0.3,
+          "macd_volume_flow": 0.0,
+          "tick_trend": 0.0
+        },
+        "total_score": -5.31,
+        "macd_confirmation": 4
+      },
+      "btc_price": 74508.32,
+      "start_price": 74556.93,
+      "secs_remaining": 11.0,
+      "order_id": "paper_1776161989344",
+      "mode": "PAPER",
+      "timestamp": "2026-04-14T10:19:49.344795+00:00",
+      "resolved": false
     }
   ],
-  "windows_scanned": 387,
-  "windows_traded": 171,
+  "windows_scanned": 388,
+  "windows_traded": 172,
   "stats": {
-    "total_trades": 171,
+    "total_trades": 172,
     "resolved_trades": 171,
-    "pending_trades": 0,
+    "pending_trades": 1,
     "wins": 156,
     "losses": 15,
     "win_rate": 91.2,
     "realized_pnl": 1172.07
   },
-  "updated": "2026-04-14T10:15:08.384335+00:00"
+  "updated": "2026-04-14T10:19:49.345122+00:00"
 }
