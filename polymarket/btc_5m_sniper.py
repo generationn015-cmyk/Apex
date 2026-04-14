@@ -575,7 +575,7 @@ def run_sniper(live_mode: bool = False):
                 time.sleep(POLL_INTERVAL_SECS)
                 continue
 
-            candles_1m = fetch_1m_candles(30)
+            candles_1m = fetch_1m_candles(50)   # need >= 35 for full MACD(12,26,9)
 
             # 3. Poll with 2-second ticks, run strategy each poll
             best_signal = None

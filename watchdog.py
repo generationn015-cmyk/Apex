@@ -37,6 +37,9 @@ LIVE_FILE   = LOGS_DIR / ".go_live"      # created by dashboard Go Live button
 STATUS_FILE = LOGS_DIR / "watchdog_status.json"
 PID_FILE    = LOGS_DIR / "watchdog.pid"
 
+def _is_disabled(name: str) -> bool:
+    return (LOGS_DIR / f".disabled.{name}").exists()
+
 # Always use the APEX venv Python so dependencies (pandas etc.) are available
 _APEX_UV = ROOT / ".venv" / "bin" / "python3"
 _APEX_PY = str(_APEX_UV) if _APEX_UV.exists() else sys.executable
@@ -111,6 +114,11 @@ class ProcessManager:
         return cfg
 
     def start(self, name: str):
+        if _is_disabled(name):
+            if name not in self.procs or self.procs.get(name) is None:
+                print(f"[Watchdog] {name} is disabled (logs/.disabled.{name}) — skipping")
+            self.procs[name] = None
+            return None
         cfg      = self._cfg(name)
         env      = {**os.environ, **cfg.get("env_extra", {}), "PYTHONUNBUFFERED": "1"}
         log_path = LOGS_DIR / f"{name}.log"
@@ -140,6 +148,12 @@ class ProcessManager:
         self.procs[name] = None
 
     def check_and_restart(self, name: str):
+        if _is_disabled(name):
+            proc = self.procs.get(name)
+            if proc is not None and proc.poll() is None:
+                print(f"[Watchdog] {name} was disabled while running — stopping")
+                self.kill(name)
+            return
         proc = self.procs.get(name)
         if proc is None:
             self.start(name)

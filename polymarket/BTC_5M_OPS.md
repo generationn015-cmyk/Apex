@@ -51,6 +51,37 @@ kill $(pgrep -f /home/jefe/apex/polymarket/sniper.py)
 kill $(pgrep -f /home/jefe/apex/polymarket/copy_trader.py)
 ```
 
+## Enable / disable individual bots (per-bot kill switch)
+
+The watchdog checks `logs/.disabled.<bot_name>` on every cycle. If the flag
+file exists, the bot is skipped on startup and stopped if already running.
+This lets you run only the bots you trust without editing any code.
+
+```bash
+# Disable (bot stops within ~15s)
+touch /home/jefe/apex/logs/.disabled.polymarket_sniper
+touch /home/jefe/apex/logs/.disabled.copy_trader
+touch /home/jefe/apex/logs/.disabled.eth_5m_sniper
+touch /home/jefe/apex/logs/.disabled.btc_5m_sniper
+touch /home/jefe/apex/logs/.disabled.telegram_bot
+
+# Re-enable (bot starts on next watchdog tick, <15s)
+rm /home/jefe/apex/logs/.disabled.polymarket_sniper
+rm /home/jefe/apex/logs/.disabled.copy_trader
+
+# See what's currently disabled
+ls /home/jefe/apex/logs/.disabled.* 2>/dev/null
+```
+
+Valid bot names: `telegram_bot`, `polymarket_sniper`, `btc_5m_sniper`,
+`eth_5m_sniper`, `copy_trader`. The main `apex_bot` and `watchdog` itself
+cannot be disabled this way — stop the whole service instead.
+
+**Current default (as of this session)**: `polymarket_sniper` and
+`copy_trader` ship DISABLED. The general poly scanner finds no edges and
+the copy trader was bleeding money — both benched until revisited. BTC
+and ETH 5-min snipers run by default.
+
 ## Tail each bot's log
 
 ```bash

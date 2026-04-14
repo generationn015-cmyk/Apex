@@ -1,16 +1,55 @@
 {
-  "bankroll": 100.0,
-  "trades": [],
-  "windows_scanned": 0,
-  "windows_traded": 0,
+  "bankroll": 250.0,
+  "trades": [
+    {
+      "window_ts": 1776112200,
+      "question": "Ethereum Up or Down - April 13, 4:30PM-4:35PM ET",
+      "direction": "UP",
+      "bet_size": 4.0,
+      "edge": 0.0613,
+      "p_win": 0.9813,
+      "market_price": 0.92,
+      "confidence": 0.5,
+      "score": 5.0,
+      "indicators": {
+        "delta_pct": 0.10827,
+        "delta_weight": 7.0,
+        "tick_up_pct": 0.0,
+        "tick_move_pct": 0.0505,
+        "scores": {
+          "window_delta": 7.0,
+          "macd_histogram": 0.0,
+          "macd_acceleration": 0.0,
+          "macd_cross": 0.0,
+          "macd_zero_regime": 0.0,
+          "fast_macd_confirm": 0.0,
+          "macd_volume_flow": 0.0,
+          "tick_trend": -2.0
+        },
+        "total_score": 5.0,
+        "macd_confirmation": 1
+      },
+      "btc_price": 2256.01,
+      "start_price": 2253.57,
+      "secs_remaining": 5.1,
+      "order_id": "paper_1776112495356",
+      "mode": "PAPER",
+      "timestamp": "2026-04-13T20:34:55.356748+00:00",
+      "resolved": true,
+      "won": true,
+      "pnl": 0.35
+    }
+  ],
+  "windows_scanned": 3,
+  "windows_traded": 1,
   "stats": {
-    "total_trades": 0,
-    "resolved_trades": 0,
+    "total_trades": 1,
+    "resolved_trades": 1,
     "pending_trades": 0,
-    "wins": 0,
+    "wins": 1,
     "losses": 0,
-    "win_rate": 0.0,
-    "realized_pnl": 0.0
+    "win_rate": 100.0,
+    "realized_pnl": 0.35
   },
-  "updated": "2026-04-13T20:17:17.259432+00:00"
+  "updated": "2026-04-13T20:50:44.545647+00:00"
 }
