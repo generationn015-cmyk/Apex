@@ -1,5 +1,5 @@
 {
-  "bankroll": 337.74806856187297,
+  "bankroll": 324.238068561873,
   "trades": [
     {
       "window_ts": 1776112200,
@@ -1400,18 +1400,64 @@
       "resolved": true,
       "won": true,
       "pnl": 6.69
+    },
+    {
+      "window_ts": 1776150000,
+      "question": "Ethereum Up or Down - April 14, 3:00AM-3:05AM ET",
+      "direction": "UP",
+      "bet_size": 13.51,
+      "edge": 0.0644,
+      "p_win": 0.8644,
+      "market_price": 0.8,
+      "confidence": 1.0,
+      "score": 13.419,
+      "indicators": {
+        "delta_pct": 0.08628,
+        "delta_weight": 5.0,
+        "macd_hist": 0.0539,
+        "macd_line": 2.3166,
+        "macd_signal": 2.2627,
+        "macd_accel": 0.068841,
+        "macd_jerk": 0.034451,
+        "macd_cross": "BULLISH",
+        "macd_zero_regime": "ABOVE",
+        "fast_macd_hist": 0.113031,
+        "fast_macd_agrees": true,
+        "vol_ratio": 0,
+        "tick_up_pct": 100.0,
+        "tick_move_pct": 0.0442,
+        "scores": {
+          "window_delta": 5.0,
+          "macd_histogram": 0.34,
+          "macd_acceleration": 0.58,
+          "macd_cross": 2.5,
+          "macd_zero_regime": 1.5,
+          "fast_macd_confirm": 1.5,
+          "macd_volume_flow": 0.0,
+          "tick_trend": 2.0
+        },
+        "total_score": 13.42,
+        "macd_confirmation": 6
+      },
+      "btc_price": 2377.97,
+      "start_price": 2375.92,
+      "secs_remaining": 11.5,
+      "order_id": "paper_1776150288878",
+      "mode": "PAPER",
+      "timestamp": "2026-04-14T07:04:48.878249+00:00",
+      "resolved": false
     }
   ],
-  "windows_scanned": 73,
-  "windows_traded": 30,
+  "windows_scanned": 74,
+  "windows_traded": 31,
   "stats": {
-    "total_trades": 30,
+    "total_trades": 31,
     "resolved_trades": 30,
-    "pending_trades": 0,
+    "pending_trades": 1,
     "wins": 28,
     "losses": 2,
     "win_rate": 93.3,
     "realized_pnl": 88.1
   },
-  "updated": "2026-04-14T07:00:08.476807+00:00"
+  "updated": "2026-04-14T07:04:48.878365+00:00"
 }
