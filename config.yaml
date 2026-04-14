@@ -192,7 +192,7 @@ scoring:
   polymarket_arb_weight: 0.10  # Near-riskless arb — good when available
   funding_weight: 0.05         # Contrarian signal (different from delta_neutral)
   liquidation_weight: 0.05
-  min_score_to_trade: 0.45     # Slightly lower to ensure delta_neutral fires
+  min_score_to_trade: 0.15     # Fixed: old value (0.45) exceeded max possible momentum score (0.275), preventing all momentum/breakout signals from ever executing
 
 # ── Monitoring & Alerts ───────────────────────────────────
 monitoring:

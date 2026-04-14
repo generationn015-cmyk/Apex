@@ -164,7 +164,7 @@ scoring:
   funding_weight: 0.08
   liquidation_weight: 0.05
   polymarket_arb_weight: 0.05
-  min_score_to_trade: 0.42       # Lower threshold = more trades = more compounding
+  min_score_to_trade: 0.12       # Fixed: old value (0.42) exceeded max possible momentum score (0.325 at weight=0.30), preventing all momentum/breakout signals from executing
 
 # ── Monitoring ─────────────────────────────────────────────
 monitoring:
