@@ -81,6 +81,13 @@ def sync_to_github(token: str = "", remote: str = "origin") -> bool:
         elif dst.exists():
             staged.append(str(dst))   # keep existing file in git
 
+    # Always include index.html so Vercel ignoreCommand sees it in every commit.
+    # When unchanged, git diff HEAD^..HEAD -- index.html is empty → Vercel skips.
+    # When changed, it lands in the next data-sync commit → Vercel rebuilds.
+    index_html = ROOT / "index.html"
+    if index_html.exists():
+        staged.append(str(index_html))
+
     if not staged:
         print("  [DataSync] No data files to push yet")
         return False
