@@ -353,6 +353,65 @@ a { color: var(--gold); text-decoration: none; }
 }
 .mode-paper { color: var(--gold); border-color: var(--gold); background: var(--gold-dim); }
 .mode-live  { color: var(--blood); border-color: var(--blood); background: var(--blood-dim); animation: pulse 2s infinite; }
+.mode-badge { cursor: pointer; transition: opacity .15s; }
+.mode-badge:hover { opacity: .75; }
+
+/* ════════════════ LIVE TOGGLE MODAL ════════════════ */
+#liveModal {
+  display: none; position: fixed; inset: 0; z-index: 9000;
+  background: rgba(10,8,6,.82); backdrop-filter: blur(4px);
+  align-items: center; justify-content: center;
+}
+#liveModal.open { display: flex; }
+.modal-box {
+  background: var(--oxblood2);
+  border: 1px solid var(--gold);
+  padding: 36px 40px;
+  max-width: 520px; width: 90%;
+  position: relative;
+}
+.modal-box h3 {
+  font-family: 'Bodoni Moda', serif;
+  font-size: 18px; font-weight: 700;
+  color: var(--gold); letter-spacing: .12em;
+  text-transform: uppercase; margin-bottom: 20px;
+}
+.modal-close {
+  position: absolute; top: 14px; right: 18px;
+  background: none; border: none; color: var(--parchment2);
+  font-size: 20px; cursor: pointer; line-height: 1;
+}
+.modal-close:hover { color: var(--cream); }
+.modal-section { margin-bottom: 20px; }
+.modal-section p { color: var(--parchment); font-size: 12px; margin-bottom: 10px; line-height: 1.6; }
+.modal-cmd {
+  background: var(--ink); border: 1px solid var(--line2);
+  padding: 10px 14px; font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; color: var(--cream2); line-height: 1.6;
+  white-space: pre-wrap; word-break: break-all;
+  position: relative;
+}
+.copy-btn {
+  display: block; margin-top: 8px;
+  background: none; border: 1px solid var(--gold);
+  color: var(--gold); font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; letter-spacing: .15em; padding: 5px 14px;
+  cursor: pointer; transition: background .15s;
+}
+.copy-btn:hover { background: var(--gold-dim); }
+.copy-btn.copied { border-color: var(--money); color: var(--money); }
+.modal-status-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; letter-spacing: .2em; font-weight: 600;
+  margin-bottom: 18px; padding: 4px 12px;
+  border: 1px solid;
+}
+.modal-status-badge.live  { color: var(--blood); border-color: var(--blood); background: var(--blood-dim); }
+.modal-status-badge.paper { color: var(--gold);  border-color: var(--gold);  background: var(--gold-dim); }
+.modal-status-badge::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: currentColor; box-shadow: 0 0 8px currentColor;
+}
 
 /* ════════════════ TICKER TAPE ════════════════ */
 .ticker {
@@ -1064,7 +1123,7 @@ a { color: var(--gold); text-decoration: none; }
         <span id="tbStamp">—</span>
       </div>
       <div class="topbar-r">
-        <span class="mode-badge mode-paper" id="tbMode">Paper</span>
+        <span class="mode-badge mode-paper" id="tbMode" onclick="openLiveModal()" title="Click to toggle mode">Paper</span>
         <span class="topbar-sep">·</span>
         <span id="tbHealth">System Green</span>
       </div>
@@ -1634,6 +1693,22 @@ async function renderProcs() {
     </tr>`;
   }).join('');
   body.innerHTML = rows;
+
+  // Update mode badges from watchdog status
+  if (st && st.processes && st.processes.btc_5m_sniper) {
+    const btcMode = st.processes.btc_5m_sniper.mode || 'paper';
+    const isLive  = btcMode === 'live';
+    const tbMode  = document.getElementById('tbMode');
+    const sbMode  = document.getElementById('sbMode');
+    const btcBadge= document.getElementById('btcModeBadge');
+    if (tbMode) {
+      tbMode.textContent = isLive ? 'LIVE ⚡' : 'Paper';
+      tbMode.className   = 'mode-badge ' + (isLive ? 'mode-live' : 'mode-paper');
+    }
+    if (sbMode) { sbMode.textContent = isLive ? 'LIVE' : 'PAPER'; sbMode.className = 'v ' + (isLive ? 'r' : 'amb'); }
+    if (btcBadge) { btcBadge.textContent = isLive ? 'LIVE' : 'PAPER'; btcBadge.className = 'badge ' + (isLive ? 'live' : 'paper'); }
+    updateModalMode(isLive);
+  }
 }
 
 // ────── Ticker tape ──────
@@ -1736,6 +1811,69 @@ async function load() {
 
 load();
 setInterval(load, 20000);
+</script>
+
+<!-- Live / Paper toggle modal -->
+<div id="liveModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="document.getElementById('liveModal').classList.remove('open')">✕</button>
+    <h3>Mode Control</h3>
+    <div id="modalStatusBadge" class="modal-status-badge paper">PAPER</div>
+
+    <div class="modal-section" id="modalGoLive">
+      <p>BTC Sniper is currently in <strong>PAPER</strong> mode. To flip live, run on the server:</p>
+      <div class="modal-cmd">touch /home/jefe/apex/logs/.go_live
+kill $(pgrep -f btc_5m_sniper.py)</div>
+      <button class="copy-btn" onclick="copyCmd(this, 'touch /home/jefe/apex/logs/.go_live\nkill $(pgrep -f btc_5m_sniper.py)')">COPY COMMAND</button>
+    </div>
+
+    <div class="modal-section" id="modalGoPaper">
+      <p>BTC Sniper is currently <strong style="color:var(--blood)">LIVE</strong> — real capital at risk. To return to paper:</p>
+      <div class="modal-cmd">rm /home/jefe/apex/logs/.go_live
+kill $(pgrep -f btc_5m_sniper.py)</div>
+      <button class="copy-btn" onclick="copyCmd(this, 'rm /home/jefe/apex/logs/.go_live\nkill $(pgrep -f btc_5m_sniper.py)')">COPY KILL SWITCH</button>
+    </div>
+
+    <div class="modal-section">
+      <p style="color:var(--parchment2);font-size:11px">Watchdog respawns the sniper in ~5 seconds after kill. ETH remains in paper regardless of mode flag.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+function openLiveModal() {
+  document.getElementById('liveModal').classList.add('open');
+}
+document.getElementById('liveModal').addEventListener('click', function(e) {
+  if (e.target === this) this.classList.remove('open');
+});
+
+function copyCmd(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'COPIED ✓';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = btn.dataset.label || 'COPY COMMAND'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+// Update modal state based on watchdog status
+function updateModalMode(isLive) {
+  const badge  = document.getElementById('modalStatusBadge');
+  const toLive = document.getElementById('modalGoLive');
+  const toPaper= document.getElementById('modalGoPaper');
+  if (!badge) return;
+  if (isLive) {
+    badge.textContent = '● LIVE';
+    badge.className = 'modal-status-badge live';
+    toLive.style.display  = 'none';
+    toPaper.style.display = '';
+  } else {
+    badge.textContent = '● PAPER';
+    badge.className = 'modal-status-badge paper';
+    toLive.style.display  = '';
+    toPaper.style.display = 'none';
+  }
+}
 </script>
 </body>
 </html>

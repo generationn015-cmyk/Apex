@@ -114,8 +114,8 @@ class ProcessManager:
                 "cwd":       str(ROOT),
             }
         cfg = dict(_PROCESS_DEFS[name])
-        # Append --live to BTC/ETH 5-min snipers when in live mode
-        if name in ("btc_5m_sniper", "eth_5m_sniper") and self._apex_live:
+        # Append --live to BTC 5-min sniper only when in live mode (ETH stays paper)
+        if name in ("btc_5m_sniper",) and self._apex_live:
             cfg["cmd"] = cfg["cmd"] + ["--live"]
         return cfg
 
