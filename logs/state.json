@@ -1,17 +1,17 @@
 {
-  "updated_at": "2026-04-14T14:28:48.976092+00:00",
+  "updated_at": "2026-04-14T14:33:51.295027+00:00",
   "mode": "paper",
-  "cycle": 155,
+  "cycle": 156,
   "stats": {
-    "total_trades": 7,
+    "total_trades": 8,
     "closed": 6,
-    "open": 1,
+    "open": 2,
     "wins": 5,
     "losses": 1,
     "win_rate": 83.3,
     "total_pnl": 1.38,
-    "unrealized_pnl": 0.09,
-    "net_pnl": 1.47,
+    "unrealized_pnl": 0.05,
+    "net_pnl": 1.43,
     "by_asset": {
       "BTC/USDT": {
         "wins": 4,
@@ -26,7 +26,28 @@
     }
   },
   "last_signals": {
-    "ATLAS": [],
+    "ATLAS": [
+      {
+        "agent": "ATLAS",
+        "asset": "ETH/USDT",
+        "signal": "BUY",
+        "strength": 0.65,
+        "entry_price": 2396.36,
+        "stop_loss": 2367.699534,
+        "take_profit": 2439.350698,
+        "trade_id": "ATLAS_1776177230054",
+        "indicators": {
+          "sma10": 2379.917,
+          "sma50": 2262.575,
+          "adx": 50.0,
+          "atr": 19.1013,
+          "vol_ratio": 1.44,
+          "gap_pct": 5.186,
+          "fresh_cross": false,
+          "htf_aligned": true
+        }
+      }
+    ],
     "ORACLE": [],
     "SNIPER": [],
     "SENTINEL": []
