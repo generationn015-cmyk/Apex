@@ -1,11 +1,11 @@
 {
-  "updated_at": "2026-04-14T06:58:43.014740+00:00",
+  "updated_at": "2026-04-14T07:03:44.760277+00:00",
   "mode": "paper",
-  "cycle": 70,
+  "cycle": 71,
   "stats": {
-    "total_trades": 3,
+    "total_trades": 4,
     "closed": 3,
-    "open": 0,
+    "open": 1,
     "wins": 2,
     "losses": 1,
     "win_rate": 66.7,
@@ -24,6 +24,27 @@
     "ATLAS": [],
     "ORACLE": [],
     "SNIPER": [],
-    "SENTINEL": []
+    "SENTINEL": [
+      {
+        "agent": "SENTINEL",
+        "asset": "BTC/USDT",
+        "signal": "BUY",
+        "strength": 0.65,
+        "entry_price": 74609.52,
+        "stop_loss": 74003.690698,
+        "take_profit": 75518.263954,
+        "trade_id": "SENTINEL_1776150224081",
+        "indicators": {
+          "ema8": 74291.8738,
+          "ema21": 73470.8982,
+          "ema50": 72654.1191,
+          "adx": 47.9,
+          "squeeze_release": false,
+          "in_squeeze": false,
+          "slope8": 0.2934,
+          "dist_pct": 1.55
+        }
+      }
+    ]
   }
 }
