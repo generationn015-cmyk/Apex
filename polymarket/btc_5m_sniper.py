@@ -700,12 +700,34 @@ def _execute_trade(state, executor, market, bet, direction, token_id,
                    current_btc, start_price, secs_left, mode_tag,
                    window_ts, strategy_result):
     """Execute a trade and wait for resolution."""
-    print(f"\n  {'⚡' if mode_tag == 'LIVE' else '📋'} BTC-5M | {direction} | "
+    icon = '⚡' if mode_tag == 'LIVE' else '📋'
+    print(f"\n  {icon} BTC-5M | {direction} | "
           f"conf={strategy_result.confidence:.0%} | "
           f"edge={bet['edge']*100:.1f}% | ${bet['bet_size']:.2f} | "
           f"score={strategy_result.score:+.1f} | {secs_left:.0f}s left")
 
-    result = executor.buy(token_id, bet["bet_size"], bet["market_price"])
+    # Send Telegram signal alert for live mode
+    if mode_tag == 'LIVE':
+        _tg(
+            f"⚡ <b>BTC SIGNAL FIRING</b>\n"
+            f"Dir: <b>{direction}</b> | Conf: {strategy_result.confidence:.0%} | "
+            f"Edge: {bet['edge']*100:.1f}%\n"
+            f"Bet: <b>${bet['bet_size']:.2f}</b> @ {bet['market_price']:.2f}\n"
+            f"BTC: ${current_btc:,.0f} | Score: {strategy_result.score:+.1f}"
+        )
+
+    try:
+        result = executor.buy(token_id, bet["bet_size"], bet["market_price"])
+    except Exception as e:
+        err_str = str(e)
+        if '403' in err_str or 'geoblock' in err_str.lower() or 'region' in err_str.lower():
+            # Geo-blocked: fall back to paper for this trade so state is tracked
+            print(f"  [GEO-BLOCK] Live order blocked — recording as paper")
+            _tg(f"⚠️ <b>BTC GEO-BLOCK</b> — {direction} ${bet['bet_size']:.2f} blocked (server IP). Run bot on laptop with VPN.")
+            result = {"success": True, "orderID": f"blocked_{int(time.time()*1000)}", "status": "geo_blocked", "mode": "PAPER"}
+            mode_tag = "PAPER"
+        else:
+            raise
 
     trade = {
         "window_ts": window_ts,

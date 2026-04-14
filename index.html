@@ -1065,6 +1065,108 @@ a { color: var(--gold); text-decoration: none; }
   .pullquote { padding: 26px 22px 22px; }
   .pullquote p { font-size: 17px; }
 }
+/* ════════════════ COMMAND CENTER ════════════════ */
+.cmd-center {
+  background: linear-gradient(135deg, var(--oxblood2), var(--ink2));
+  border: 1px solid var(--line2);
+  padding: 28px 36px;
+  margin-bottom: 44px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 40px;
+  align-items: center;
+}
+.cmd-left {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border-right: 1px solid var(--line2);
+  padding-right: 40px;
+  min-width: 260px;
+}
+.cmd-label {
+  font-size: 9px;
+  letter-spacing: .32em;
+  color: var(--parchment2);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.cmd-mode-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.cmd-pulse {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 14px var(--gold);
+  flex-shrink: 0;
+}
+.cmd-pulse.live {
+  background: var(--blood);
+  box-shadow: 0 0 14px var(--blood);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+.cmd-mode-word {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  color: var(--gold);
+  line-height: 1;
+}
+.cmd-mode-word.live { color: var(--blood); }
+.cmd-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--gold-dim);
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .20em;
+  padding: 11px 24px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all .18s;
+  align-self: flex-start;
+}
+.cmd-toggle-btn:hover { background: var(--gold); color: var(--ink); }
+.cmd-toggle-btn.live {
+  background: var(--blood-dim);
+  border-color: var(--blood);
+  color: var(--blood);
+}
+.cmd-toggle-btn.live:hover { background: var(--blood); color: var(--ink); }
+.cmd-right {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 14px;
+}
+.cmd-stat {
+  padding: 14px 16px;
+  background: var(--ink);
+  border: 1px solid var(--line);
+}
+.cmd-stat-lbl {
+  font-size: 8px;
+  letter-spacing: .26em;
+  color: var(--parchment2);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+.cmd-stat-val {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--money);
+}
+.cmd-stat-val.warn { color: var(--gold); }
+.cmd-stat-val.dead { color: var(--blood); }
 </style>
 </head>
 <body>
@@ -1166,6 +1268,38 @@ a { color: var(--gold); text-decoration: none; }
             <div class="hr-cell"><div class="lbl">Total P/L</div><div class="val g" id="heroPnl">—</div></div>
           </div>
         </aside>
+      </section>
+
+      <!-- ═════════ COMMAND CENTER ═════════ -->
+      <section class="cmd-center" id="cmdCenter">
+        <div class="cmd-left">
+          <div class="cmd-label">BTC Sniper · Mode Control</div>
+          <div class="cmd-mode-row">
+            <div class="cmd-pulse" id="cmdPulse"></div>
+            <div class="cmd-mode-word" id="cmdModeWord">PAPER</div>
+          </div>
+          <button class="cmd-toggle-btn" id="cmdToggleBtn" onclick="openLiveModal()">
+            ⚡ TOGGLE LIVE / PAPER
+          </button>
+        </div>
+        <div class="cmd-right">
+          <div class="cmd-stat">
+            <div class="cmd-stat-lbl">BTC Mode</div>
+            <div class="cmd-stat-val warn" id="cmdBtcMode">PAPER</div>
+          </div>
+          <div class="cmd-stat">
+            <div class="cmd-stat-lbl">ETH Mode</div>
+            <div class="cmd-stat-val warn">PAPER</div>
+          </div>
+          <div class="cmd-stat">
+            <div class="cmd-stat-lbl">BTC P/L</div>
+            <div class="cmd-stat-val" id="cmdBtcPnl">—</div>
+          </div>
+          <div class="cmd-stat">
+            <div class="cmd-stat-lbl">ETH P/L</div>
+            <div class="cmd-stat-val" id="cmdEthPnl">—</div>
+          </div>
+        </div>
       </section>
 
       <!-- ═════════ PANE: BTC ═════════ -->
@@ -1712,7 +1846,22 @@ async function renderProcs() {
     if (sbMode) { sbMode.textContent = isLive ? 'LIVE' : 'PAPER'; sbMode.className = 'v ' + (isLive ? 'r' : 'amb'); }
     if (btcBadge) { btcBadge.textContent = isLive ? 'LIVE' : 'PAPER'; btcBadge.className = 'badge ' + (isLive ? 'live' : 'paper'); }
     updateModalMode(isLive);
+    updateCmdCenter(isLive);
   }
+}
+
+function updateCmdCenter(isLive) {
+  const pulse   = document.getElementById('cmdPulse');
+  const word    = document.getElementById('cmdModeWord');
+  const btn     = document.getElementById('cmdToggleBtn');
+  const btcMode = document.getElementById('cmdBtcMode');
+  if (pulse)   { pulse.className   = 'cmd-pulse'     + (isLive ? ' live' : ''); }
+  if (word)    { word.textContent  = isLive ? 'LIVE' : 'PAPER';
+                 word.className    = 'cmd-mode-word'  + (isLive ? ' live' : ''); }
+  if (btn)     { btn.textContent   = isLive ? '🔴 KILL SWITCH — GO PAPER' : '⚡ TOGGLE LIVE / PAPER';
+                 btn.className     = 'cmd-toggle-btn' + (isLive ? ' live' : ''); }
+  if (btcMode) { btcMode.textContent = isLive ? 'LIVE' : 'PAPER';
+                 btcMode.className   = 'cmd-stat-val' + (isLive ? ' dead' : ' warn'); }
 }
 
 // ────── Ticker tape ──────
@@ -1769,6 +1918,12 @@ async function load() {
   const totalR = (btc?.resolved || 0) + (eth?.resolved || 0);
   const blendedWR = totalR ? (totalW / totalR) * 100 : 0;
   document.getElementById('heroWR').textContent = totalR ? fmtPct(blendedWR) : '—';
+
+  // Command center P/L
+  const cmdBtcPnl = document.getElementById('cmdBtcPnl');
+  const cmdEthPnl = document.getElementById('cmdEthPnl');
+  if (cmdBtcPnl && btc) { cmdBtcPnl.textContent = fmtPnl(btc.pnl); cmdBtcPnl.style.color = btc.pnl >= 0 ? 'var(--money)' : 'var(--blood)'; }
+  if (cmdEthPnl && eth) { cmdEthPnl.textContent = fmtPnl(eth.pnl); cmdEthPnl.style.color = eth.pnl >= 0 ? 'var(--money)' : 'var(--blood)'; }
 
   // Sidebar status
   document.getElementById('sbWR').textContent       = totalR ? fmtPct(blendedWR) : '—';
