@@ -1,5 +1,5 @@
 {
-  "bankroll": 1010.9384086495553,
+  "bankroll": 1032.71379326494,
   "trades": [
     {
       "window_ts": 1775982300,
@@ -5439,18 +5439,65 @@
       "resolved": true,
       "won": true,
       "pnl": 10.01
+    },
+    {
+      "window_ts": 1776144300,
+      "question": "Bitcoin Up or Down - April 14, 1:25AM-1:30AM ET",
+      "direction": "UP",
+      "bet_size": 40.44,
+      "edge": 0.0753,
+      "p_win": 0.7253,
+      "market_price": 0.65,
+      "confidence": 0.8779,
+      "score": 8.779,
+      "indicators": {
+        "delta_pct": 0.03836,
+        "delta_weight": 5.0,
+        "macd_hist": 0.5154,
+        "macd_line": -8.5829,
+        "macd_signal": -9.0983,
+        "macd_accel": 2.223302,
+        "macd_jerk": 2.389543,
+        "macd_cross": "BULLISH",
+        "macd_zero_regime": "BELOW",
+        "fast_macd_hist": 3.193866,
+        "fast_macd_agrees": true,
+        "vol_ratio": 0.04,
+        "tick_up_pct": 50.0,
+        "scores": {
+          "window_delta": 5.0,
+          "macd_histogram": 0.1,
+          "macd_acceleration": 0.6,
+          "macd_cross": 2.5,
+          "macd_zero_regime": -0.92,
+          "fast_macd_confirm": 1.5,
+          "macd_volume_flow": 0.0,
+          "tick_trend": 0.0
+        },
+        "total_score": 8.78,
+        "macd_confirmation": 5
+      },
+      "btc_price": 74367.27,
+      "start_price": 74338.75,
+      "secs_remaining": 13.7,
+      "order_id": "paper_1776144586701",
+      "mode": "PAPER",
+      "timestamp": "2026-04-14T05:29:46.701665+00:00",
+      "resolved": true,
+      "won": true,
+      "pnl": 21.78
     }
   ],
-  "windows_scanned": 329,
-  "windows_traded": 137,
+  "windows_scanned": 330,
+  "windows_traded": 138,
   "stats": {
-    "total_trades": 137,
-    "resolved_trades": 137,
+    "total_trades": 138,
+    "resolved_trades": 138,
     "pending_trades": 0,
-    "wins": 125,
+    "wins": 126,
     "losses": 12,
-    "win_rate": 91.2,
-    "realized_pnl": 749.76
+    "win_rate": 91.3,
+    "realized_pnl": 771.54
   },
-  "updated": "2026-04-14T05:25:08.482173+00:00"
+  "updated": "2026-04-14T05:30:08.430530+00:00"
 }
