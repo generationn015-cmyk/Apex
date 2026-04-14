@@ -1,5 +1,5 @@
 {
-  "bankroll": 1481.801130601515,
+  "bankroll": 1422.531130601515,
   "trades": [
     {
       "window_ts": 1775982300,
@@ -7238,18 +7238,63 @@
       "resolved": true,
       "won": true,
       "pnl": 14.67
+    },
+    {
+      "window_ts": 1776164400,
+      "question": "Bitcoin Up or Down - April 14, 7:00AM-7:05AM ET",
+      "direction": "UP",
+      "bet_size": 59.27,
+      "edge": 0.0632,
+      "p_win": 0.9832,
+      "market_price": 0.92,
+      "confidence": 0.9035,
+      "score": 9.035,
+      "indicators": {
+        "delta_pct": 0.10412,
+        "delta_weight": 7.0,
+        "macd_hist": 9.4234,
+        "macd_line": -21.4061,
+        "macd_signal": -30.8295,
+        "macd_accel": 0.502064,
+        "macd_jerk": -0.562408,
+        "macd_cross": "NONE",
+        "macd_zero_regime": "BELOW",
+        "fast_macd_hist": 3.478764,
+        "fast_macd_agrees": true,
+        "vol_ratio": 0.17,
+        "tick_up_pct": 50.0,
+        "scores": {
+          "window_delta": 7.0,
+          "macd_histogram": 1.9,
+          "macd_acceleration": 0.14,
+          "macd_cross": 0.0,
+          "macd_zero_regime": -1.5,
+          "fast_macd_confirm": 1.5,
+          "macd_volume_flow": 0.0,
+          "tick_trend": 0.0
+        },
+        "total_score": 9.04,
+        "macd_confirmation": 4
+      },
+      "btc_price": 74392.48,
+      "start_price": 74315.1,
+      "secs_remaining": 8.0,
+      "order_id": "paper_1776164692736",
+      "mode": "PAPER",
+      "timestamp": "2026-04-14T11:04:52.736296+00:00",
+      "resolved": false
     }
   ],
-  "windows_scanned": 393,
-  "windows_traded": 175,
+  "windows_scanned": 397,
+  "windows_traded": 176,
   "stats": {
-    "total_trades": 175,
+    "total_trades": 176,
     "resolved_trades": 175,
-    "pending_trades": 0,
+    "pending_trades": 1,
     "wins": 160,
     "losses": 15,
     "win_rate": 91.4,
     "realized_pnl": 1220.64
   },
-  "updated": "2026-04-14T10:45:08.479076+00:00"
+  "updated": "2026-04-14T11:04:52.736969+00:00"
 }
