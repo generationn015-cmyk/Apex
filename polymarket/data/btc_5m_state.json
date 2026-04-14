@@ -1,5 +1,5 @@
 {
-  "bankroll": 968.3768701880169,
+  "bankroll": 989.236870188017,
   "trades": [
     {
       "window_ts": 1775982300,
@@ -5153,18 +5153,65 @@
       "resolved": true,
       "won": true,
       "pnl": 20.42
+    },
+    {
+      "window_ts": 1776142500,
+      "question": "Bitcoin Up or Down - April 14, 12:55AM-1:00AM ET",
+      "direction": "DOWN",
+      "bet_size": 38.74,
+      "edge": 0.1121,
+      "p_win": 0.7621,
+      "market_price": 0.65,
+      "confidence": 0.9244,
+      "score": -9.244,
+      "indicators": {
+        "delta_pct": -0.04202,
+        "delta_weight": 5.0,
+        "macd_hist": -5.5547,
+        "macd_line": -17.4325,
+        "macd_signal": -11.8778,
+        "macd_accel": -0.455611,
+        "macd_jerk": 0.850335,
+        "macd_cross": "NONE",
+        "macd_zero_regime": "BELOW",
+        "fast_macd_hist": -4.129131,
+        "fast_macd_agrees": true,
+        "vol_ratio": 0.95,
+        "tick_up_pct": 50.0,
+        "scores": {
+          "window_delta": -5.0,
+          "macd_histogram": -1.12,
+          "macd_acceleration": -0.12,
+          "macd_cross": 0.0,
+          "macd_zero_regime": -1.5,
+          "fast_macd_confirm": -1.5,
+          "macd_volume_flow": 0.0,
+          "tick_trend": 0.0
+        },
+        "total_score": -9.24,
+        "macd_confirmation": 4
+      },
+      "btc_price": 74358.54,
+      "start_price": 74389.8,
+      "secs_remaining": 11.6,
+      "order_id": "paper_1776142788814",
+      "mode": "PAPER",
+      "timestamp": "2026-04-14T04:59:48.814329+00:00",
+      "resolved": true,
+      "won": true,
+      "pnl": 20.86
     }
   ],
-  "windows_scanned": 323,
-  "windows_traded": 131,
+  "windows_scanned": 324,
+  "windows_traded": 132,
   "stats": {
-    "total_trades": 131,
-    "resolved_trades": 131,
+    "total_trades": 132,
+    "resolved_trades": 132,
     "pending_trades": 0,
-    "wins": 120,
+    "wins": 121,
     "losses": 11,
-    "win_rate": 91.6,
-    "realized_pnl": 707.2
+    "win_rate": 91.7,
+    "realized_pnl": 728.06
   },
-  "updated": "2026-04-14T04:55:08.522689+00:00"
+  "updated": "2026-04-14T05:00:08.401699+00:00"
 }
