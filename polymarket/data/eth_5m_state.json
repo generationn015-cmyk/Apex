@@ -1,5 +1,5 @@
 {
-  "bankroll": 489.4152552483215,
+  "bankroll": 498.41919685416093,
   "trades": [
     {
       "window_ts": 1776112200,
@@ -2774,18 +2774,65 @@
       "resolved": true,
       "won": true,
       "pnl": 1.7
+    },
+    {
+      "window_ts": 1776182100,
+      "question": "Ethereum Up or Down - April 14, 11:55AM-12:00PM ET",
+      "direction": "DOWN",
+      "bet_size": 19.58,
+      "edge": 0.0846,
+      "p_win": 0.7696,
+      "market_price": 0.685,
+      "confidence": 0.7666999999999999,
+      "score": -7.667,
+      "indicators": {
+        "delta_pct": -0.04305,
+        "delta_weight": 5.0,
+        "macd_hist": -0.7563,
+        "macd_line": 4.1081,
+        "macd_signal": 4.8644,
+        "macd_accel": -0.078961,
+        "macd_jerk": 0.030163,
+        "macd_cross": "NONE",
+        "macd_zero_regime": "ABOVE",
+        "fast_macd_hist": -0.399437,
+        "fast_macd_agrees": true,
+        "vol_ratio": 0.03,
+        "tick_up_pct": 50.0,
+        "scores": {
+          "window_delta": -5.0,
+          "macd_histogram": -2.0,
+          "macd_acceleration": -0.67,
+          "macd_cross": 0.0,
+          "macd_zero_regime": 1.5,
+          "fast_macd_confirm": -1.5,
+          "macd_volume_flow": 0.0,
+          "tick_trend": 0.0
+        },
+        "total_score": -7.67,
+        "macd_confirmation": 4
+      },
+      "btc_price": 2368.24,
+      "start_price": 2369.26,
+      "secs_remaining": 6.4,
+      "order_id": "paper_1776182394892",
+      "mode": "PAPER",
+      "timestamp": "2026-04-14T15:59:54.892861+00:00",
+      "resolved": true,
+      "won": true,
+      "pnl": 9.0
     }
   ],
-  "windows_scanned": 165,
-  "windows_traded": 59,
+  "windows_scanned": 166,
+  "windows_traded": 60,
   "stats": {
-    "total_trades": 59,
-    "resolved_trades": 59,
+    "total_trades": 60,
+    "resolved_trades": 60,
     "pending_trades": 0,
-    "wins": 56,
+    "wins": 57,
     "losses": 3,
-    "win_rate": 94.9,
-    "realized_pnl": 239.76
+    "win_rate": 95.0,
+    "realized_pnl": 248.76
   },
-  "updated": "2026-04-14T15:55:09.592659+00:00"
+  "updated": "2026-04-14T16:00:09.420282+00:00"
 }
