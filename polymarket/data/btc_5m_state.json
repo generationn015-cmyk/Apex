@@ -1,5 +1,5 @@
 {
-  "bankroll": 757.7146617512924,
+  "bankroll": 727.4046617512925,
   "trades": [
     {
       "window_ts": 1775982300,
@@ -4583,18 +4583,63 @@
       "resolved": true,
       "won": true,
       "pnl": 15.98
+    },
+    {
+      "window_ts": 1776137100,
+      "question": "Bitcoin Up or Down - April 13, 11:25PM-11:30PM ET",
+      "direction": "DOWN",
+      "bet_size": 30.31,
+      "edge": 0.0742,
+      "p_win": 0.7242,
+      "market_price": 0.65,
+      "confidence": 0.9692000000000001,
+      "score": -9.692,
+      "indicators": {
+        "delta_pct": -0.03449,
+        "delta_weight": 5.0,
+        "macd_hist": -5.5184,
+        "macd_line": -24.7385,
+        "macd_signal": -19.2201,
+        "macd_accel": -0.290538,
+        "macd_jerk": 0.869743,
+        "macd_cross": "NONE",
+        "macd_zero_regime": "BELOW",
+        "fast_macd_hist": -3.448427,
+        "fast_macd_agrees": true,
+        "vol_ratio": 1.33,
+        "tick_up_pct": 50.0,
+        "scores": {
+          "window_delta": -5.0,
+          "macd_histogram": -1.11,
+          "macd_acceleration": -0.08,
+          "macd_cross": 0.0,
+          "macd_zero_regime": -1.5,
+          "fast_macd_confirm": -1.5,
+          "macd_volume_flow": -0.5,
+          "tick_trend": 0.0
+        },
+        "total_score": -9.69,
+        "macd_confirmation": 5
+      },
+      "btc_price": 74276.55,
+      "start_price": 74302.18,
+      "secs_remaining": 11.2,
+      "order_id": "paper_1776137389258",
+      "mode": "PAPER",
+      "timestamp": "2026-04-14T03:29:49.258102+00:00",
+      "resolved": false
     }
   ],
-  "windows_scanned": 305,
-  "windows_traded": 119,
+  "windows_scanned": 306,
+  "windows_traded": 120,
   "stats": {
-    "total_trades": 119,
+    "total_trades": 120,
     "resolved_trades": 119,
-    "pending_trades": 0,
+    "pending_trades": 1,
     "wins": 108,
     "losses": 11,
     "win_rate": 90.8,
     "realized_pnl": 496.55
   },
-  "updated": "2026-04-14T03:25:09.860577+00:00"
+  "updated": "2026-04-14T03:29:49.258242+00:00"
 }
