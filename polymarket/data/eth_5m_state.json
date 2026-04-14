@@ -1,5 +1,5 @@
 {
-  "bankroll": 433.55204302576146,
+  "bankroll": 446.9211339348524,
   "trades": [
     {
       "window_ts": 1776112200,
@@ -2253,18 +2253,65 @@
       "resolved": true,
       "won": true,
       "pnl": 4.29
+    },
+    {
+      "window_ts": 1776171900,
+      "question": "Ethereum Up or Down - April 14, 9:05AM-9:10AM ET",
+      "direction": "UP",
+      "bet_size": 16.34,
+      "edge": 0.0678,
+      "p_win": 0.6178,
+      "market_price": 0.55,
+      "confidence": 0.5907,
+      "score": 5.907,
+      "indicators": {
+        "delta_pct": 0.01177,
+        "delta_weight": 3.0,
+        "macd_hist": 0.3993,
+        "macd_line": 1.678,
+        "macd_signal": 1.2787,
+        "macd_accel": -0.069749,
+        "macd_jerk": -0.014845,
+        "macd_cross": "NONE",
+        "macd_zero_regime": "ABOVE",
+        "fast_macd_hist": -0.097489,
+        "fast_macd_agrees": false,
+        "vol_ratio": 0.28,
+        "tick_up_pct": 50.0,
+        "scores": {
+          "window_delta": 3.0,
+          "macd_histogram": 2.0,
+          "macd_acceleration": -0.29,
+          "macd_cross": 0.0,
+          "macd_zero_regime": 1.5,
+          "fast_macd_confirm": -0.3,
+          "macd_volume_flow": 0.0,
+          "tick_trend": 0.0
+        },
+        "total_score": 5.91,
+        "macd_confirmation": 4
+      },
+      "btc_price": 2379.46,
+      "start_price": 2379.18,
+      "secs_remaining": 2.9,
+      "order_id": "paper_1776172197118",
+      "mode": "PAPER",
+      "timestamp": "2026-04-14T13:09:57.118254+00:00",
+      "resolved": true,
+      "won": true,
+      "pnl": 13.37
     }
   ],
-  "windows_scanned": 132,
-  "windows_traded": 48,
+  "windows_scanned": 136,
+  "windows_traded": 49,
   "stats": {
-    "total_trades": 48,
-    "resolved_trades": 48,
+    "total_trades": 49,
+    "resolved_trades": 49,
     "pending_trades": 0,
-    "wins": 46,
+    "wins": 47,
     "losses": 2,
-    "win_rate": 95.8,
-    "realized_pnl": 183.9
+    "win_rate": 95.9,
+    "realized_pnl": 197.27
   },
-  "updated": "2026-04-14T12:50:09.058714+00:00"
+  "updated": "2026-04-14T13:10:09.193513+00:00"
 }
