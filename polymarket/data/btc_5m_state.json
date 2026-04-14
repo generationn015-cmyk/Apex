@@ -1,5 +1,5 @@
 {
-  "bankroll": 1421.8843747486728,
+  "bankroll": 1436.1043747486726,
   "trades": [
     {
       "window_ts": 1775982300,
@@ -6858,18 +6858,66 @@
       "resolved": true,
       "won": true,
       "pnl": 14.08
+    },
+    {
+      "window_ts": 1776159900,
+      "question": "Bitcoin Up or Down - April 14, 5:45AM-5:50AM ET",
+      "direction": "DOWN",
+      "bet_size": 56.88,
+      "edge": 0.0569,
+      "p_win": 0.8569,
+      "market_price": 0.8,
+      "confidence": 1.0,
+      "score": -13.74,
+      "indicators": {
+        "delta_pct": -0.05511,
+        "delta_weight": 5.0,
+        "macd_hist": -18.0599,
+        "macd_line": -62.104,
+        "macd_signal": -44.0441,
+        "macd_accel": -0.893897,
+        "macd_jerk": -1.33836,
+        "macd_cross": "NONE",
+        "macd_zero_regime": "BELOW",
+        "fast_macd_hist": -5.386844,
+        "fast_macd_agrees": true,
+        "vol_ratio": 23.55,
+        "tick_up_pct": 0.0,
+        "tick_move_pct": 0.0512,
+        "scores": {
+          "window_delta": -5.0,
+          "macd_histogram": -2.0,
+          "macd_acceleration": -0.24,
+          "macd_cross": 0.0,
+          "macd_zero_regime": -1.5,
+          "fast_macd_confirm": -1.5,
+          "macd_volume_flow": -1.5,
+          "tick_trend": -2.0
+        },
+        "total_score": -13.74,
+        "macd_confirmation": 6
+      },
+      "btc_price": 74450.0,
+      "start_price": 74491.05,
+      "secs_remaining": 8.9,
+      "order_id": "paper_1776160191434",
+      "mode": "PAPER",
+      "timestamp": "2026-04-14T09:49:51.434855+00:00",
+      "resolved": true,
+      "won": true,
+      "pnl": 14.22
     }
   ],
-  "windows_scanned": 377,
-  "windows_traded": 167,
+  "windows_scanned": 382,
+  "windows_traded": 168,
   "stats": {
-    "total_trades": 167,
-    "resolved_trades": 167,
+    "total_trades": 168,
+    "resolved_trades": 168,
     "pending_trades": 0,
-    "wins": 153,
+    "wins": 154,
     "losses": 14,
-    "win_rate": 91.6,
-    "realized_pnl": 1160.72
+    "win_rate": 91.7,
+    "realized_pnl": 1174.94
   },
-  "updated": "2026-04-14T09:25:08.449755+00:00"
+  "updated": "2026-04-14T09:50:08.376675+00:00"
 }
