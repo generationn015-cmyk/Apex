@@ -1,5 +1,5 @@
 {
-  "bankroll": 1436.1043747486726,
+  "bankroll": 1450.4643747486725,
   "trades": [
     {
       "window_ts": 1775982300,
@@ -6906,18 +6906,65 @@
       "resolved": true,
       "won": true,
       "pnl": 14.22
+    },
+    {
+      "window_ts": 1776160500,
+      "question": "Bitcoin Up or Down - April 14, 5:55AM-6:00AM ET",
+      "direction": "UP",
+      "bet_size": 57.44,
+      "edge": 0.1113,
+      "p_win": 0.9113,
+      "market_price": 0.8,
+      "confidence": 0.7701,
+      "score": 7.701,
+      "indicators": {
+        "delta_pct": 0.0864,
+        "delta_weight": 5.0,
+        "macd_hist": 14.7072,
+        "macd_line": -43.0481,
+        "macd_signal": -57.7553,
+        "macd_accel": 2.610824,
+        "macd_jerk": -1.672769,
+        "macd_cross": "NONE",
+        "macd_zero_regime": "BELOW",
+        "fast_macd_hist": 13.242516,
+        "fast_macd_agrees": true,
+        "vol_ratio": 0.33,
+        "tick_up_pct": 50.0,
+        "scores": {
+          "window_delta": 5.0,
+          "macd_histogram": 2.0,
+          "macd_acceleration": 0.7,
+          "macd_cross": 0.0,
+          "macd_zero_regime": -1.5,
+          "fast_macd_confirm": 1.5,
+          "macd_volume_flow": 0.0,
+          "tick_trend": 0.0
+        },
+        "total_score": 7.7,
+        "macd_confirmation": 4
+      },
+      "btc_price": 74533.09,
+      "start_price": 74468.75,
+      "secs_remaining": 13.7,
+      "order_id": "paper_1776160786637",
+      "mode": "PAPER",
+      "timestamp": "2026-04-14T09:59:46.637731+00:00",
+      "resolved": true,
+      "won": true,
+      "pnl": 14.36
     }
   ],
-  "windows_scanned": 382,
-  "windows_traded": 168,
+  "windows_scanned": 384,
+  "windows_traded": 169,
   "stats": {
-    "total_trades": 168,
-    "resolved_trades": 168,
+    "total_trades": 169,
+    "resolved_trades": 169,
     "pending_trades": 0,
-    "wins": 154,
+    "wins": 155,
     "losses": 14,
     "win_rate": 91.7,
-    "realized_pnl": 1174.94
+    "realized_pnl": 1189.3
   },
-  "updated": "2026-04-14T09:50:08.376675+00:00"
+  "updated": "2026-04-14T10:00:08.442844+00:00"
 }
