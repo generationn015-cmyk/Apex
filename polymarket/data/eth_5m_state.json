@@ -1,5 +1,5 @@
 {
-  "bankroll": 341.12556856187297,
+  "bankroll": 327.475568561873,
   "trades": [
     {
       "window_ts": 1776112200,
@@ -1448,18 +1448,63 @@
       "resolved": true,
       "won": true,
       "pnl": 3.38
+    },
+    {
+      "window_ts": 1776150900,
+      "question": "Ethereum Up or Down - April 14, 3:15AM-3:20AM ET",
+      "direction": "DOWN",
+      "bet_size": 13.65,
+      "edge": 0.0866,
+      "p_win": 0.8866,
+      "market_price": 0.8,
+      "confidence": 0.7445999999999999,
+      "score": -7.446,
+      "indicators": {
+        "delta_pct": -0.09988,
+        "delta_weight": 5.0,
+        "macd_hist": -0.5114,
+        "macd_line": 2.0942,
+        "macd_signal": 2.6057,
+        "macd_accel": -0.053041,
+        "macd_jerk": 0.030161,
+        "macd_cross": "NONE",
+        "macd_zero_regime": "ABOVE",
+        "fast_macd_hist": -0.316263,
+        "fast_macd_agrees": true,
+        "vol_ratio": 0.06,
+        "tick_up_pct": 50.0,
+        "scores": {
+          "window_delta": -5.0,
+          "macd_histogram": -2.0,
+          "macd_acceleration": -0.45,
+          "macd_cross": 0.0,
+          "macd_zero_regime": 1.5,
+          "fast_macd_confirm": -1.5,
+          "macd_volume_flow": 0.0,
+          "tick_trend": 0.0
+        },
+        "total_score": -7.45,
+        "macd_confirmation": 4
+      },
+      "btc_price": 2380.48,
+      "start_price": 2382.86,
+      "secs_remaining": 12.8,
+      "order_id": "paper_1776151187527",
+      "mode": "PAPER",
+      "timestamp": "2026-04-14T07:19:47.527609+00:00",
+      "resolved": false
     }
   ],
-  "windows_scanned": 74,
-  "windows_traded": 31,
+  "windows_scanned": 77,
+  "windows_traded": 32,
   "stats": {
-    "total_trades": 31,
+    "total_trades": 32,
     "resolved_trades": 31,
-    "pending_trades": 0,
+    "pending_trades": 1,
     "wins": 29,
     "losses": 2,
     "win_rate": 93.5,
     "realized_pnl": 91.48
   },
-  "updated": "2026-04-14T07:05:08.420547+00:00"
+  "updated": "2026-04-14T07:19:47.527688+00:00"
 }
