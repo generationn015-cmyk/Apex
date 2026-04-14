@@ -1,22 +1,22 @@
 {
-  "updated_at": "2026-04-14T06:53:41.252337+00:00",
+  "updated_at": "2026-04-14T06:58:43.014740+00:00",
   "mode": "paper",
-  "cycle": 69,
+  "cycle": 70,
   "stats": {
     "total_trades": 3,
-    "closed": 2,
-    "open": 1,
-    "wins": 1,
+    "closed": 3,
+    "open": 0,
+    "wins": 2,
     "losses": 1,
-    "win_rate": 50.0,
-    "total_pnl": 0.2,
-    "unrealized_pnl": 0.28,
-    "net_pnl": 0.48,
+    "win_rate": 66.7,
+    "total_pnl": 0.5,
+    "unrealized_pnl": 0.0,
+    "net_pnl": 0.5,
     "by_asset": {
       "BTC/USDT": {
-        "wins": 1,
+        "wins": 2,
         "losses": 1,
-        "pnl": 0.19716958918859678
+        "pnl": 0.49674778731264535
       }
     }
   },
