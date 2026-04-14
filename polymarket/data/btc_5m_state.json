@@ -1,5 +1,5 @@
 {
-  "bankroll": 807.3588400729707,
+  "bankroll": 775.0688400729707,
   "trades": [
     {
       "window_ts": 1775982300,
@@ -4725,18 +4725,63 @@
       "resolved": true,
       "won": true,
       "pnl": 7.99
+    },
+    {
+      "window_ts": 1776138300,
+      "question": "Bitcoin Up or Down - April 13, 11:45PM-11:50PM ET",
+      "direction": "DOWN",
+      "bet_size": 32.29,
+      "edge": 0.0767,
+      "p_win": 0.8517,
+      "market_price": 0.775,
+      "confidence": 0.2621,
+      "score": -2.621,
+      "indicators": {
+        "delta_pct": -0.02834,
+        "delta_weight": 5.0,
+        "macd_hist": 6.7022,
+        "macd_line": 26.0071,
+        "macd_signal": 19.305,
+        "macd_accel": -1.279566,
+        "macd_jerk": 0.822515,
+        "macd_cross": "NONE",
+        "macd_zero_regime": "ABOVE",
+        "fast_macd_hist": -3.774916,
+        "fast_macd_agrees": false,
+        "vol_ratio": 0.02,
+        "tick_up_pct": 50.0,
+        "scores": {
+          "window_delta": -5.0,
+          "macd_histogram": 1.35,
+          "macd_acceleration": -0.17,
+          "macd_cross": 0.0,
+          "macd_zero_regime": 1.5,
+          "fast_macd_confirm": -0.3,
+          "macd_volume_flow": 0.0,
+          "tick_trend": 0.0
+        },
+        "total_score": -2.62,
+        "macd_confirmation": 4
+      },
+      "btc_price": 74428.42,
+      "start_price": 74449.52,
+      "secs_remaining": 2.5,
+      "order_id": "paper_1776138597548",
+      "mode": "PAPER",
+      "timestamp": "2026-04-14T03:49:57.548352+00:00",
+      "resolved": false
     }
   ],
-  "windows_scanned": 309,
-  "windows_traded": 122,
+  "windows_scanned": 310,
+  "windows_traded": 123,
   "stats": {
-    "total_trades": 122,
+    "total_trades": 123,
     "resolved_trades": 122,
-    "pending_trades": 0,
+    "pending_trades": 1,
     "wins": 111,
     "losses": 11,
     "win_rate": 91.0,
     "realized_pnl": 546.19
   },
-  "updated": "2026-04-14T03:45:08.781055+00:00"
+  "updated": "2026-04-14T03:49:57.548480+00:00"
 }
