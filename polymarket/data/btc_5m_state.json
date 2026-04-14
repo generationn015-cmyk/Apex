@@ -1,5 +1,5 @@
 {
-  "bankroll": 1501.8250436449932,
+  "bankroll": 1441.7550436449933,
   "trades": [
     {
       "window_ts": 1775982300,
@@ -7332,18 +7332,64 @@
       "resolved": true,
       "won": true,
       "pnl": 14.87
+    },
+    {
+      "window_ts": 1776165000,
+      "question": "Bitcoin Up or Down - April 14, 7:10AM-7:15AM ET",
+      "direction": "DOWN",
+      "bet_size": 60.07,
+      "edge": 0.0943,
+      "p_win": 0.8943,
+      "market_price": 0.8,
+      "confidence": 0.6809999999999999,
+      "score": -6.81,
+      "indicators": {
+        "delta_pct": -0.07532,
+        "delta_weight": 5.0,
+        "macd_hist": 7.5196,
+        "macd_line": -5.6542,
+        "macd_signal": -13.1738,
+        "macd_accel": -3.108025,
+        "macd_jerk": -3.185169,
+        "macd_cross": "NONE",
+        "macd_zero_regime": "BELOW",
+        "fast_macd_hist": -4.141855,
+        "fast_macd_agrees": false,
+        "vol_ratio": 0.77,
+        "tick_up_pct": 0.0,
+        "tick_move_pct": 0.0576,
+        "scores": {
+          "window_delta": -5.0,
+          "macd_histogram": 1.52,
+          "macd_acceleration": -0.42,
+          "macd_cross": 0.0,
+          "macd_zero_regime": -0.61,
+          "fast_macd_confirm": -0.3,
+          "macd_volume_flow": 0.0,
+          "tick_trend": -2.0
+        },
+        "total_score": -6.81,
+        "macd_confirmation": 5
+      },
+      "btc_price": 74388.42,
+      "start_price": 74444.49,
+      "secs_remaining": 12.1,
+      "order_id": "paper_1776165288341",
+      "mode": "PAPER",
+      "timestamp": "2026-04-14T11:14:48.341315+00:00",
+      "resolved": false
     }
   ],
-  "windows_scanned": 398,
-  "windows_traded": 177,
+  "windows_scanned": 399,
+  "windows_traded": 178,
   "stats": {
-    "total_trades": 177,
+    "total_trades": 178,
     "resolved_trades": 177,
-    "pending_trades": 0,
+    "pending_trades": 1,
     "wins": 162,
     "losses": 15,
     "win_rate": 91.5,
     "realized_pnl": 1240.66
   },
-  "updated": "2026-04-14T11:10:08.586658+00:00"
+  "updated": "2026-04-14T11:14:48.341670+00:00"
 }
