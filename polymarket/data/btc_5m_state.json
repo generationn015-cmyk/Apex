@@ -1,5 +1,5 @@
 {
-  "bankroll": 1791.9817751743335,
+  "bankroll": 1720.3017751743334,
   "trades": [
     {
       "window_ts": 1775982300,
@@ -8183,18 +8183,63 @@
       "resolved": true,
       "won": true,
       "pnl": 17.74
+    },
+    {
+      "window_ts": 1776179700,
+      "question": "Bitcoin Up or Down - April 14, 11:15AM-11:20AM ET",
+      "direction": "UP",
+      "bet_size": 71.68,
+      "edge": 0.0501,
+      "p_win": 0.9701,
+      "market_price": 0.92,
+      "confidence": 1.0,
+      "score": 10.742,
+      "indicators": {
+        "delta_pct": 0.10151,
+        "delta_weight": 7.0,
+        "macd_hist": 20.3857,
+        "macd_line": -139.3589,
+        "macd_signal": -159.7446,
+        "macd_accel": 6.514351,
+        "macd_jerk": -2.641462,
+        "macd_cross": "NONE",
+        "macd_zero_regime": "BELOW",
+        "fast_macd_hist": 24.621285,
+        "fast_macd_agrees": true,
+        "vol_ratio": 0.04,
+        "tick_up_pct": 50.0,
+        "scores": {
+          "window_delta": 7.0,
+          "macd_histogram": 2.0,
+          "macd_acceleration": 1.74,
+          "macd_cross": 0.0,
+          "macd_zero_regime": -1.5,
+          "fast_macd_confirm": 1.5,
+          "macd_volume_flow": 0.0,
+          "tick_trend": 0.0
+        },
+        "total_score": 10.74,
+        "macd_confirmation": 4
+      },
+      "btc_price": 74776.11,
+      "start_price": 74700.28,
+      "secs_remaining": 9.7,
+      "order_id": "paper_1776179990620",
+      "mode": "PAPER",
+      "timestamp": "2026-04-14T15:19:50.620806+00:00",
+      "resolved": false
     }
   ],
-  "windows_scanned": 432,
-  "windows_traded": 195,
+  "windows_scanned": 433,
+  "windows_traded": 196,
   "stats": {
-    "total_trades": 195,
+    "total_trades": 196,
     "resolved_trades": 195,
-    "pending_trades": 0,
+    "pending_trades": 1,
     "wins": 179,
     "losses": 16,
     "win_rate": 91.8,
     "realized_pnl": 1530.81
   },
-  "updated": "2026-04-14T15:15:08.302643+00:00"
+  "updated": "2026-04-14T15:19:50.621643+00:00"
 }
