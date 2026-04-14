@@ -316,7 +316,11 @@ def kelly_bet(p_win: float, market_price: float, bankroll: float) -> dict | None
     bet_size = min(frac * bankroll, bankroll * MAX_BET_PCT)
     bet_size = round(max(bet_size, 0.0), 2)
 
-    if bet_size < 0.50:  # minimum viable bet
+    # Polymarket minimum order = 5 shares; enforce minimum USDC value
+    MIN_ORDER_USDC = 5.0
+    if bet_size < MIN_ORDER_USDC:
+        bet_size = MIN_ORDER_USDC
+    if bet_size < 0.50:  # absolute floor
         return None
 
     return {
@@ -344,17 +348,22 @@ class LiveExecutor:
         self.client.set_api_creds(self.client.create_or_derive_api_creds())
 
     def buy(self, token_id: str, amount: float, price: float) -> dict:
-        from py_clob_client.clob_types import MarketOrderArgs, OrderType
+        from py_clob_client.clob_types import OrderArgs, OrderType
         from py_clob_client.order_builder.constants import BUY
 
-        order = MarketOrderArgs(
+        # Use limit order at market price to avoid order-book scan ("no match" error)
+        # Shares = USDC amount / price per share; min 5 shares per Polymarket rules
+        limit_price = round(min(price + 0.01, 0.97), 2)
+        size = round(max(amount / price, 5.0), 2)
+
+        order_args = OrderArgs(
             token_id=token_id,
-            amount=amount,
+            price=limit_price,
+            size=size,
             side=BUY,
-            order_type=OrderType.FOK,
         )
-        signed = self.client.create_market_order(order)
-        resp = self.client.post_order(signed, OrderType.FOK)
+        signed = self.client.create_order(order_args)
+        resp = self.client.post_order(signed, OrderType.GTC)
         return resp
 
 
