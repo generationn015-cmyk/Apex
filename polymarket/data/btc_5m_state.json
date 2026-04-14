@@ -1,5 +1,5 @@
 {
-  "bankroll": 1379.5610219058638,
+  "bankroll": 1325.6510219058637,
   "trades": [
     {
       "window_ts": 1775982300,
@@ -6432,18 +6432,63 @@
       "resolved": true,
       "won": true,
       "pnl": 13.66
+    },
+    {
+      "window_ts": 1776154500,
+      "question": "Bitcoin Up or Down - April 14, 4:15AM-4:20AM ET",
+      "direction": "DOWN",
+      "bet_size": 53.91,
+      "edge": 0.0547,
+      "p_win": 0.7047,
+      "market_price": 0.65,
+      "confidence": 0.6773,
+      "score": -6.773,
+      "indicators": {
+        "delta_pct": -0.02299,
+        "delta_weight": 5.0,
+        "macd_hist": -0.3876,
+        "macd_line": -1.2638,
+        "macd_signal": -0.8762,
+        "macd_accel": -0.218587,
+        "macd_jerk": 0.155628,
+        "macd_cross": "NONE",
+        "macd_zero_regime": "BELOW",
+        "fast_macd_hist": -0.79577,
+        "fast_macd_agrees": true,
+        "vol_ratio": 0.29,
+        "tick_up_pct": 50.0,
+        "scores": {
+          "window_delta": -5.0,
+          "macd_histogram": -0.08,
+          "macd_acceleration": -0.06,
+          "macd_cross": 0.0,
+          "macd_zero_regime": -0.14,
+          "fast_macd_confirm": -1.5,
+          "macd_volume_flow": 0.0,
+          "tick_trend": 0.0
+        },
+        "total_score": -6.77,
+        "macd_confirmation": 4
+      },
+      "btc_price": 74545.91,
+      "start_price": 74563.05,
+      "secs_remaining": 6.1,
+      "order_id": "paper_1776154794319",
+      "mode": "PAPER",
+      "timestamp": "2026-04-14T08:19:54.319678+00:00",
+      "resolved": false
     }
   ],
-  "windows_scanned": 363,
-  "windows_traded": 158,
+  "windows_scanned": 364,
+  "windows_traded": 159,
   "stats": {
-    "total_trades": 158,
+    "total_trades": 159,
     "resolved_trades": 158,
-    "pending_trades": 0,
+    "pending_trades": 1,
     "wins": 145,
     "losses": 13,
     "win_rate": 91.8,
     "realized_pnl": 1118.4
   },
-  "updated": "2026-04-14T08:15:08.385422+00:00"
+  "updated": "2026-04-14T08:19:54.319830+00:00"
 }
