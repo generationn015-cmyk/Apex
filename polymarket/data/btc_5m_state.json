@@ -1,5 +1,5 @@
 {
-  "bankroll": 748.8715848282154,
+  "bankroll": 718.9215848282154,
   "trades": [
     {
       "window_ts": 1775982300,
@@ -4393,18 +4393,64 @@
       "resolved": true,
       "won": true,
       "pnl": 7.41
+    },
+    {
+      "window_ts": 1776135900,
+      "question": "Bitcoin Up or Down - April 13, 11:05PM-11:10PM ET",
+      "direction": "UP",
+      "bet_size": 29.95,
+      "edge": 0.0937,
+      "p_win": 0.7437,
+      "market_price": 0.65,
+      "confidence": 1.0,
+      "score": 10.004,
+      "indicators": {
+        "delta_pct": 0.03495,
+        "delta_weight": 5.0,
+        "macd_hist": 8.7101,
+        "macd_line": -10.1709,
+        "macd_signal": -18.881,
+        "macd_accel": 3.133821,
+        "macd_jerk": 1.637297,
+        "macd_cross": "NONE",
+        "macd_zero_regime": "BELOW",
+        "fast_macd_hist": 9.365268,
+        "fast_macd_agrees": true,
+        "vol_ratio": 0.04,
+        "tick_up_pct": 100.0,
+        "tick_move_pct": 0.0484,
+        "scores": {
+          "window_delta": 5.0,
+          "macd_histogram": 1.76,
+          "macd_acceleration": 0.84,
+          "macd_cross": 0.0,
+          "macd_zero_regime": -1.09,
+          "fast_macd_confirm": 1.5,
+          "macd_volume_flow": 0.0,
+          "tick_trend": 2.0
+        },
+        "total_score": 10.0,
+        "macd_confirmation": 5
+      },
+      "btc_price": 74398.51,
+      "start_price": 74372.52,
+      "secs_remaining": 9.5,
+      "order_id": "paper_1776136191248",
+      "mode": "PAPER",
+      "timestamp": "2026-04-14T03:09:51.248396+00:00",
+      "resolved": false
     }
   ],
-  "windows_scanned": 299,
-  "windows_traded": 115,
+  "windows_scanned": 302,
+  "windows_traded": 116,
   "stats": {
-    "total_trades": 115,
+    "total_trades": 116,
     "resolved_trades": 115,
-    "pending_trades": 0,
+    "pending_trades": 1,
     "wins": 105,
     "losses": 10,
     "win_rate": 91.3,
     "realized_pnl": 487.7
   },
-  "updated": "2026-04-14T02:55:08.796815+00:00"
+  "updated": "2026-04-14T03:09:51.248601+00:00"
 }
