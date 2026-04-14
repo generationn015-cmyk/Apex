@@ -1,5 +1,5 @@
 {
-  "bankroll": 772.6485079051384,
+  "bankroll": 741.7385079051385,
   "trades": [
     {
       "window_ts": 1775982300,
@@ -4489,18 +4489,63 @@
       "resolved": true,
       "won": true,
       "pnl": 7.65
+    },
+    {
+      "window_ts": 1776136500,
+      "question": "Bitcoin Up or Down - April 13, 11:15PM-11:20PM ET",
+      "direction": "DOWN",
+      "bet_size": 30.91,
+      "edge": 0.1244,
+      "p_win": 0.7744,
+      "market_price": 0.65,
+      "confidence": 0.9492,
+      "score": -9.492,
+      "indicators": {
+        "delta_pct": -0.045,
+        "delta_weight": 5.0,
+        "macd_hist": -6.8627,
+        "macd_line": -7.0984,
+        "macd_signal": -0.2357,
+        "macd_accel": -1.272777,
+        "macd_jerk": 1.203878,
+        "macd_cross": "NONE",
+        "macd_zero_regime": "BELOW",
+        "fast_macd_hist": -7.567344,
+        "fast_macd_agrees": true,
+        "vol_ratio": 1.39,
+        "tick_up_pct": 50.0,
+        "scores": {
+          "window_delta": -5.0,
+          "macd_histogram": -1.39,
+          "macd_acceleration": -0.34,
+          "macd_cross": 0.0,
+          "macd_zero_regime": -0.76,
+          "fast_macd_confirm": -1.5,
+          "macd_volume_flow": -0.5,
+          "tick_trend": 0.0
+        },
+        "total_score": -9.49,
+        "macd_confirmation": 5
+      },
+      "btc_price": 74317.42,
+      "start_price": 74350.88,
+      "secs_remaining": 11.9,
+      "order_id": "paper_1776136788702",
+      "mode": "PAPER",
+      "timestamp": "2026-04-14T03:19:48.702052+00:00",
+      "resolved": false
     }
   ],
-  "windows_scanned": 303,
-  "windows_traded": 117,
+  "windows_scanned": 304,
+  "windows_traded": 118,
   "stats": {
-    "total_trades": 117,
+    "total_trades": 118,
     "resolved_trades": 117,
-    "pending_trades": 0,
+    "pending_trades": 1,
     "wins": 107,
     "losses": 10,
     "win_rate": 91.5,
     "realized_pnl": 511.48
   },
-  "updated": "2026-04-14T03:15:09.442022+00:00"
+  "updated": "2026-04-14T03:19:48.702296+00:00"
 }
