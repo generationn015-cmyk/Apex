@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-04-14T15:19:07.004077+00:00",
+  "updated_at": "2026-04-14T15:24:11.405571+00:00",
   "mode": "paper",
-  "cycle": 165,
+  "cycle": 166,
   "stats": {
     "total_trades": 10,
     "closed": 8,
@@ -10,8 +10,8 @@
     "losses": 3,
     "win_rate": 62.5,
     "total_pnl": 0.9,
-    "unrealized_pnl": -0.09,
-    "net_pnl": 0.8,
+    "unrealized_pnl": -0.11,
+    "net_pnl": 0.78,
     "by_asset": {
       "BTC/USDT": {
         "wins": 4,
@@ -32,27 +32,7 @@
   },
   "last_signals": {
     "ATLAS": [],
-    "ORACLE": [
-      {
-        "agent": "ORACLE",
-        "asset": "SOL/USDT",
-        "signal": "BUY",
-        "strength": 0.65,
-        "entry_price": 85.62,
-        "stop_loss": 84.58571,
-        "take_profit": 87.171434,
-        "trade_id": "ORACLE_1776179946010",
-        "indicators": {
-          "macd_line": 0.681722,
-          "macd_hist": 0.7819,
-          "rsi": 53.0,
-          "adx": 39.6,
-          "cross": "NONE",
-          "zero_line": "ABOVE",
-          "htf_aligned": true
-        }
-      }
-    ],
+    "ORACLE": [],
     "SNIPER": [],
     "SENTINEL": []
   }
