@@ -1,5 +1,5 @@
 {
-  "bankroll": 277.9622658862876,
+  "bankroll": 292.4372658862876,
   "trades": [
     {
       "window_ts": 1776112200,
@@ -593,19 +593,21 @@
       "order_id": "paper_1776136193917",
       "mode": "PAPER",
       "timestamp": "2026-04-14T03:09:53.917412+00:00",
-      "resolved": false
+      "resolved": true,
+      "won": true,
+      "pnl": 2.89
     }
   ],
   "windows_scanned": 27,
   "windows_traded": 13,
   "stats": {
     "total_trades": 13,
-    "resolved_trades": 12,
-    "pending_trades": 1,
-    "wins": 12,
+    "resolved_trades": 13,
+    "pending_trades": 0,
+    "wins": 13,
     "losses": 0,
     "win_rate": 100.0,
-    "realized_pnl": 39.89
+    "realized_pnl": 42.78
   },
-  "updated": "2026-04-14T03:09:53.917666+00:00"
+  "updated": "2026-04-14T03:10:08.933293+00:00"
 }
