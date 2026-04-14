@@ -5,17 +5,14 @@ ONE hourly digest. Clean commands. No spam.
 
 Commands:
   /status    — full system overview
-  /btc       — BTC 5-min sniper performance
-  /agents    — crypto agent breakdown
-  /poly      — polymarket scanner positions
-  /copy      — copy trader status
+  /btc       — BTC 5-min sniper stats
+  /eth       — ETH 5-min sniper stats
   /balance   — all bankrolls
   /report    — detailed performance report
-  /pause     — pause all trading
-  /resume    — resume trading
   /live      — switch to live mode
   /paper     — switch to paper mode
-  /msg <text> — relay message to terminal
+  /pause     — pause all trading
+  /resume    — resume trading
   /ping      — health check
   /help      — list all commands
 """
@@ -37,7 +34,7 @@ from configs.config import TELEGRAM_TOKEN, TELEGRAM_CHAT_ID, STATE_FILE, ANTHROP
 _ROOT = Path(__file__).parent.parent
 _LOGS = _ROOT / "logs"
 _POLY = _ROOT / "polymarket" / "data"
-_PAUSE_FILE = _LOGS / ".paused"
+_PAUSE_FILE  = _LOGS / ".paused"
 _DIGEST_FILE = _LOGS / ".last_digest"
 _DIGEST_INTERVAL = 3600  # 1 hour
 
@@ -81,215 +78,199 @@ def _is_paused() -> bool:
     return _PAUSE_FILE.exists()
 
 
-def _btc_stats(btc: dict | None) -> dict:
-    """Authoritative BTC stats. Prefers state['stats'] block, falls back to live compute."""
-    if not btc:
-        return {"total_trades": 0, "resolved_trades": 0, "pending_trades": 0,
-                "wins": 0, "losses": 0, "win_rate": 0.0, "realized_pnl": 0.0}
-    s = btc.get("stats")
+def _is_live() -> bool:
+    return (_LOGS / ".go_live").exists()
+
+
+def _sniper_stats(data: dict | None) -> dict:
+    """Parse stats block, fall back to live compute from trades list."""
+    empty = {"total_trades": 0, "resolved_trades": 0, "pending_trades": 0,
+             "wins": 0, "losses": 0, "win_rate": 0.0, "realized_pnl": 0.0}
+    if not data:
+        return empty
+    s = data.get("stats")
     if isinstance(s, dict) and "resolved_trades" in s:
         return s
-    trades = btc.get("trades", [])
+    trades   = data.get("trades", [])
     resolved = [t for t in trades if t.get("resolved")]
-    wins = sum(1 for t in resolved if t.get("won"))
+    wins     = sum(1 for t in resolved if t.get("won"))
     return {
-        "total_trades": len(trades),
+        "total_trades":    len(trades),
         "resolved_trades": len(resolved),
-        "pending_trades": len(trades) - len(resolved),
-        "wins": wins,
-        "losses": len(resolved) - wins,
-        "win_rate": round(wins / len(resolved) * 100, 1) if resolved else 0.0,
-        "realized_pnl": round(sum(t.get("pnl", 0) for t in resolved), 2),
+        "pending_trades":  len(trades) - len(resolved),
+        "wins":            wins,
+        "losses":          len(resolved) - wins,
+        "win_rate":        round(wins / len(resolved) * 100, 1) if resolved else 0.0,
+        "realized_pnl":    round(sum(t.get("pnl", 0) for t in resolved), 2),
     }
+
+
+def _bar(wins: int, losses: int, width: int = 10) -> str:
+    """Mini win/loss bar: ██████████ 8W 2L"""
+    total = wins + losses
+    if total == 0:
+        return "──────────"
+    filled = round(wins / total * width)
+    return "█" * filled + "░" * (width - filled)
+
+
+def _trend(trades: list, n: int = 5) -> str:
+    """Last N resolved trades as arrows: ↑↑↓↑↑"""
+    resolved = [t for t in trades if t.get("resolved")][-n:]
+    return "".join("↑" if t.get("won") else "↓" for t in resolved) or "—"
 
 
 # ── Commands ─────────────────────────────────────────────────────────────────
 
 def cmd_status() -> str:
-    lines = ["<b>APEX System Status</b>"]
-    paused = " [PAUSED]" if _is_paused() else ""
-    lines[0] += paused
+    mode = "🔴 LIVE" if _is_live() else "📋 PAPER"
+    paused = " · ⏸ PAUSED" if _is_paused() else ""
+    lines = [f"<b>APEX Status</b>  {mode}{paused}"]
 
-    # Processes
+    btc = _json(_POLY / "btc_5m_state.json")
+    eth = _json(_POLY / "eth_5m_state.json")
+
+    for label, data, sym in [("BTC", btc, "₿"), ("ETH", eth, "Ξ")]:
+        if data:
+            s = _sniper_stats(data)
+            wr = f"{s['win_rate']}%" if s['resolved_trades'] else "—"
+            pnl = s['realized_pnl']
+            sign = "+" if pnl >= 0 else ""
+            lines.append(
+                f"\n{sym} <b>{label} Sniper</b>  ${data['bankroll']:.2f}\n"
+                f"  {_bar(s['wins'], s['losses'])}  {s['wins']}W {s['losses']}L  {wr} WR\n"
+                f"  PnL {sign}${pnl:.2f}  ·  {s['resolved_trades']} trades"
+            )
+
+    # Watchdog process summary
     wdog = _json(_LOGS / "watchdog_status.json")
     if wdog:
         procs = wdog.get("processes", {})
-        for name, info in procs.items():
-            st = info.get("status", "?")
-            dot = "●" if st == "running" else "○"
-            lines.append(f"  {dot} {name}: {st}")
+        running = [n for n, i in procs.items() if i.get("status") == "running"]
+        lines.append(f"\n🟢 Running: {', '.join(running)}" if running else "\n⚫ No processes")
 
-    # Bankrolls
-    btc = _json(_POLY / "btc_5m_state.json")
-    copy = _json(_POLY / "copy_trader_state.json")
-    state = _json(STATE_FILE)
-
-    if btc:
-        s = _btc_stats(btc)
-        lines.append(f"\n<b>BTC Sniper</b>: ${btc['bankroll']:.2f}")
-        lines.append(f"  {s['wins']}W/{s['losses']}L | PnL: ${s['realized_pnl']:+.2f} | "
-                     f"{s['resolved_trades']}/{s['total_trades']} resolved")
-
-    if state:
-        s = state.get("stats", {})
-        lines.append(f"\n<b>Crypto Agents</b>: C{state.get('cycle',0)}")
-        unreal = s.get('unrealized_pnl', 0)
-        pnl_line = f"  {s.get('wins',0)}W/{s.get('losses',0)}L | PnL: ${s.get('total_pnl',0):+.2f}"
-        if unreal:
-            pnl_line += f" (open: ${unreal:+.2f})"
-        lines.append(pnl_line)
-
-    if copy:
-        cp = copy.get("positions", {})
-        lines.append(f"\n<b>Copy Trader</b>: ${copy.get('bankroll',0):.2f}")
-        lines.append(f"  {len(cp)} open | {copy.get('total_wallets_tracked',0)} wallets")
-
-    lines.append(f"\n{datetime.now(timezone.utc).strftime('%H:%M UTC')}")
+    lines.append(f"\n{datetime.now(DETROIT_TZ).strftime('%-I:%M %p ET')}")
     return "\n".join(lines)
 
 
 def cmd_btc() -> str:
-    btc = _json(_POLY / "btc_5m_state.json")
-    if not btc:
+    data = _json(_POLY / "btc_5m_state.json")
+    if not data:
         return "No BTC sniper data."
-    s = _btc_stats(btc)
+    s = _sniper_stats(data)
+    trades = data.get("trades", [])
+    wr = f"{s['win_rate']}%" if s['resolved_trades'] else "—"
+    pnl = s['realized_pnl']
+    sign = "+" if pnl >= 0 else ""
     lines = [
-        f"<b>BTC 5-Min Sniper</b>",
-        f"Bankroll: ${btc['bankroll']:.2f}",
-        f"Record: {s['wins']}W / {s['losses']}L ({s['win_rate']}%)",
-        f"PnL: ${s['realized_pnl']:+.2f}",
-        f"Trades: {s['resolved_trades']} resolved · {s['pending_trades']} pending · {s['total_trades']} total",
-        f"Scanned: {btc.get('windows_scanned',0)} windows",
+        f"<b>₿ BTC 5-Min Sniper</b>",
+        f"Bankroll   ${data['bankroll']:.2f}",
+        f"Record     {s['wins']}W / {s['losses']}L  ({wr})",
+        f"PnL        {sign}${pnl:.2f}",
+        f"Trades     {s['resolved_trades']} resolved · {s['pending_trades']} pending",
+        f"Windows    {data.get('windows_scanned', 0)} scanned",
+        f"Trend      {_trend(trades, 8)}",
+        "",
+        "<b>Last 3 trades:</b>",
     ]
-    resolved = [t for t in btc.get("trades", []) if t.get("resolved")]
+    resolved = [t for t in trades if t.get("resolved")]
     for t in reversed(resolved[-3:]):
-        emoji = "W" if t.get("won") else "L"
-        lines.append(f"  {t['direction']} {emoji} ${t.get('pnl',0):+.2f} | {t.get('edge',0)*100:.1f}% edge")
+        result = "✅" if t.get("won") else "❌"
+        lines.append(
+            f"  {result} {t['direction']}  ${t.get('pnl', 0):+.2f}"
+            f"  conf={int(t.get('confidence', 0)*100)}%"
+            f"  edge={t.get('edge', 0)*100:.1f}%"
+        )
     return "\n".join(lines)
 
 
-def cmd_agents() -> str:
-    state = _json(STATE_FILE)
-    if not state:
-        return "No agent data."
-    s = state.get("stats", {})
-    sigs = state.get("last_signals", {})
-    unreal = s.get('unrealized_pnl', 0)
-    pnl_str = f"${s.get('total_pnl',0):+.2f}"
-    if unreal:
-        pnl_str += f" (open: ${unreal:+.2f})"
+def cmd_eth() -> str:
+    data = _json(_POLY / "eth_5m_state.json")
+    if not data:
+        return "No ETH sniper data."
+    s = _sniper_stats(data)
+    trades = data.get("trades", [])
+    wr = f"{s['win_rate']}%" if s['resolved_trades'] else "—"
+    pnl = s['realized_pnl']
+    sign = "+" if pnl >= 0 else ""
     lines = [
-        f"<b>Crypto Agents</b> (C{state.get('cycle',0)} {state.get('mode','?').upper()})",
-        f"Trades: {s.get('total_trades',0)} ({s.get('open',0)} open)",
-        f"Record: {s.get('wins',0)}W / {s.get('losses',0)}L",
-        f"PnL: {pnl_str}",
+        f"<b>Ξ ETH 5-Min Sniper</b>",
+        f"Bankroll   ${data['bankroll']:.2f}",
+        f"Record     {s['wins']}W / {s['losses']}L  ({wr})",
+        f"PnL        {sign}${pnl:.2f}",
+        f"Trades     {s['resolved_trades']} resolved · {s['pending_trades']} pending",
+        f"Windows    {data.get('windows_scanned', 0)} scanned",
+        f"Trend      {_trend(trades, 8)}",
+        "",
+        "<b>Last 3 trades:</b>",
     ]
-    for agent, signals in sigs.items():
-        if signals:
-            for sig in signals[:1]:
-                d = "▲" if sig['signal'] == 'BUY' else "▼"
-                lines.append(f"\n{agent}: {d} {sig['signal']} {sig['asset']}")
-                lines.append(f"  str={sig['strength']:.2f} @ ${sig['entry_price']:,.2f}")
-        else:
-            lines.append(f"\n{agent}: watching")
-    return "\n".join(lines)
-
-
-def cmd_poly() -> str:
-    sniper = _json(_POLY / "sniper_state.json")
-    scan = _json(_POLY / "scan_results.json")
-    lines = ["<b>Polymarket Scanner</b>"]
-
-    if sniper:
-        pos = sniper.get("positions", {})
-        lines.append(f"Open: {len(pos)} | Bankroll: ${sniper.get('bankroll',0):.2f}")
-        for cid, p in list(pos.items())[:3]:
-            lines.append(f"  {p['direction']} {p['question'][:40]}...")
-
-    if scan and isinstance(scan, list):
-        top = [s for s in scan if s.get('edge', 0) > 0.01][:5]
-        if top:
-            lines.append(f"\nTop edges ({len(scan)} scanned):")
-            for s in top:
-                lines.append(f"  {s['edge']*100:.1f}% | {s['question'][:40]}")
-
-    return "\n".join(lines) if len(lines) > 1 else "No scanner data."
-
-
-def cmd_copy() -> str:
-    copy = _json(_POLY / "copy_trader_state.json")
-    if not copy:
-        return "Copy trader not running."
-    pos = copy.get("positions", {})
-    lines = [
-        f"<b>Copy Trader</b>",
-        f"Bankroll: ${copy.get('bankroll',0):.2f}",
-        f"Open: {len(pos)} positions",
-        f"Wallets: {copy.get('total_wallets_tracked',0)} tracked",
-    ]
-    for cid, p in list(pos.items())[:5]:
-        name = p.get("whale_name", p.get("whale_address", "")[:10])
-        lines.append(f"  {p['side']} ${p['bet_size']:.2f} | {p.get('title','')[:30]} | {name}")
+    resolved = [t for t in trades if t.get("resolved")]
+    for t in reversed(resolved[-3:]):
+        result = "✅" if t.get("won") else "❌"
+        lines.append(
+            f"  {result} {t['direction']}  ${t.get('pnl', 0):+.2f}"
+            f"  conf={int(t.get('confidence', 0)*100)}%"
+            f"  edge={t.get('edge', 0)*100:.1f}%"
+        )
     return "\n".join(lines)
 
 
 def cmd_balance() -> str:
-    btc = _json(_POLY / "btc_5m_state.json")
-    copy = _json(_POLY / "copy_trader_state.json")
-    sniper = _json(_POLY / "sniper_state.json")
+    btc  = _json(_POLY / "btc_5m_state.json")
+    eth  = _json(_POLY / "eth_5m_state.json")
     state = _json(STATE_FILE)
     lines = ["<b>Bankrolls</b>"]
+    total = 0.0
     if btc:
-        lines.append(f"BTC Sniper: ${btc['bankroll']:.2f}")
-    if copy:
-        lines.append(f"Copy Trader: ${copy.get('bankroll',0):.2f}")
-    if sniper:
-        lines.append(f"Poly Scanner: ${sniper.get('bankroll',0):.2f}")
+        lines.append(f"₿ BTC Sniper    ${btc['bankroll']:.2f}")
+        total += btc["bankroll"]
+    if eth:
+        lines.append(f"Ξ ETH Sniper    ${eth['bankroll']:.2f}")
+        total += eth["bankroll"]
     if state:
         pnl = state.get("stats", {}).get("total_pnl", 0)
-        lines.append(f"Crypto Agents PnL: ${pnl:+.2f}")
+        lines.append(f"📊 Crypto Agents  PnL ${pnl:+.2f}")
+    lines.append(f"\n<b>Total deployed  ${total:.2f}</b>")
     return "\n".join(lines)
 
 
 def cmd_report() -> str:
-    btc = _json(_POLY / "btc_5m_state.json")
+    btc   = _json(_POLY / "btc_5m_state.json")
+    eth   = _json(_POLY / "eth_5m_state.json")
     state = _json(STATE_FILE)
-    copy = _json(_POLY / "copy_trader_state.json")
-    lines = [f"<b>APEX Performance Report</b>",
-             f"{datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}"]
+    lines = [
+        f"<b>APEX Performance Report</b>",
+        f"{datetime.now(DETROIT_TZ).strftime('%Y-%m-%d %-I:%M %p ET')}",
+    ]
 
-    if btc:
-        s = _btc_stats(btc)
-        lines.append(f"\nBTC Sniper: ${btc['bankroll']:.2f}")
-        lines.append(f"  {s['wins']}W/{s['losses']}L | ${s['realized_pnl']:+.2f} | "
-                     f"{s['resolved_trades']}/{s['total_trades']} resolved")
-        resolved = [t for t in btc.get("trades", []) if t.get("resolved")]
-        for t in resolved:
-            w = "W" if t.get("won") else "L"
-            lines.append(f"  {t['direction']} {w} ${t.get('pnl',0):+.2f}")
+    for label, data, sym in [("BTC", btc, "₿"), ("ETH", eth, "Ξ")]:
+        if data:
+            s = _sniper_stats(data)
+            wr = f"{s['win_rate']}%" if s['resolved_trades'] else "—"
+            lines.append(f"\n{sym} <b>{label} Sniper</b>  ${data['bankroll']:.2f}")
+            lines.append(f"  {s['wins']}W/{s['losses']}L  {wr}  PnL ${s['realized_pnl']:+.2f}")
+            resolved = [t for t in data.get("trades", []) if t.get("resolved")]
+            for t in resolved[-5:]:
+                r = "✅" if t.get("won") else "❌"
+                lines.append(f"  {r} {t['direction']} ${t.get('pnl',0):+.2f}  {t.get('edge',0)*100:.1f}% edge")
 
     if state:
         s = state.get("stats", {})
-        lines.append(f"\nCrypto: {s.get('total_trades',0)} trades | ${s.get('total_pnl',0):+.2f}")
-
-    if copy:
-        h = copy.get("history", [])
-        resolved = [x for x in h if x.get("resolved")]
-        pnl = sum(x.get("pnl", 0) for x in resolved)
-        lines.append(f"\nCopy: {len(copy.get('positions',{}))} open | ${pnl:+.2f}")
+        lines.append(f"\n📊 <b>Crypto Agents</b>  {s.get('total_trades',0)} trades")
+        lines.append(f"  ${s.get('total_pnl',0):+.2f} PnL · {s.get('wins',0)}W/{s.get('losses',0)}L")
 
     return "\n".join(lines)
 
 
 def cmd_pause() -> str:
     _PAUSE_FILE.touch()
-    return "Trading PAUSED. /resume to restart."
+    return "⏸ Trading PAUSED. /resume to restart."
 
 
 def cmd_resume() -> str:
     if _PAUSE_FILE.exists():
         _PAUSE_FILE.unlink()
-    return "Trading RESUMED."
+    return "▶️ Trading RESUMED."
 
 
 def cmd_live() -> str:
@@ -300,14 +281,15 @@ def cmd_live() -> str:
         sys.path.insert(0, str(_ROOT / "polymarket"))
         from polyconfig import POLY_PRIVATE_KEY
         if not POLY_PRIVATE_KEY:
-            return ("Cannot go live: POLY_PRIVATE_KEY not set in polyconfig.py.\n"
-                    "Set your Polymarket wallet key first.")
+            return "Cannot go live: POLY_PRIVATE_KEY not set in polyconfig.py."
     except Exception:
         pass
     _LIVE_FLAG.touch()
-    return ("LIVE MODE ACTIVATED.\n"
-            "Watchdog will restart bots in live mode.\n"
-            "/paper to switch back to paper trading.")
+    return (
+        "🔴 <b>LIVE MODE ACTIVATED</b>\n"
+        "Watchdog restarts snipers in live mode within 15s.\n"
+        "/paper to revert."
+    )
 
 
 def cmd_paper() -> str:
@@ -315,116 +297,106 @@ def cmd_paper() -> str:
     if not _LIVE_FLAG.exists():
         return "Already in PAPER mode."
     _LIVE_FLAG.unlink()
-    return "PAPER MODE restored. Watchdog will restart bots in paper mode."
+    return "📋 PAPER MODE restored. Watchdog restarts snipers within 15s."
 
 
 def cmd_ping() -> str:
-    state = _json(STATE_FILE)
+    state   = _json(STATE_FILE)
     updated = state.get("updated_at", "?")[:19] if state else "?"
-    p = " PAUSED" if _is_paused() else ""
-    return f"PONG — {updated} UTC{p}"
-
-
-def cmd_msg(text: str = "") -> str:
-    """Relay a message to the terminal via a file that Claude Code can read."""
-    msg = text.strip()
-    if not msg:
-        return "Usage: /msg <your message>\nThis sends your message to the terminal."
-    relay_file = _LOGS / "telegram_relay.jsonl"
-    entry = json.dumps({
-        "text": msg,
-        "time": datetime.now(timezone.utc).isoformat(),
-        "read": False,
-    })
-    try:
-        with open(relay_file, "a") as f:
-            f.write(entry + "\n")
-    except Exception as e:
-        return f"Relay failed: {e}"
-    return f"Sent to terminal: {msg}"
+    p       = " · PAUSED" if _is_paused() else ""
+    mode    = " · LIVE" if _is_live() else " · PAPER"
+    return f"🏓 PONG — {updated} UTC{p}{mode}"
 
 
 def cmd_help() -> str:
     return (
-        "<b>APEX Commands</b>\n"
-        "/status  — system overview\n"
-        "/btc     — BTC 5-min sniper\n"
-        "/agents  — crypto agent breakdown\n"
-        "/poly    — polymarket scanner\n"
-        "/copy    — copy trader\n"
-        "/balance — all bankrolls\n"
-        "/report  — full performance\n"
-        "/pause   — pause trading\n"
-        "/resume  — resume trading\n"
-        "/live    — switch to live mode\n"
-        "/paper   — switch to paper mode\n"
-        "/msg     — relay message to terminal\n"
-        "/ping    — health check"
+        "<b>APEX Commands</b>\n\n"
+        "/status   — live system overview\n"
+        "/btc      — BTC 5-min sniper detail\n"
+        "/eth      — ETH 5-min sniper detail\n"
+        "/balance  — all bankrolls\n"
+        "/report   — full performance breakdown\n"
+        "/live     — switch to LIVE mode\n"
+        "/paper    — switch to PAPER mode\n"
+        "/pause    — pause all trading\n"
+        "/resume   — resume trading\n"
+        "/ping     — health check\n"
+        "/help     — this list"
     )
 
 
 COMMANDS = {
-    "/status": cmd_status, "/btc": cmd_btc, "/agents": cmd_agents,
-    "/poly": cmd_poly, "/copy": cmd_copy, "/balance": cmd_balance,
-    "/report": cmd_report, "/pause": cmd_pause, "/resume": cmd_resume,
-    "/live": cmd_live, "/paper": cmd_paper, "/ping": cmd_ping,
-    "/help": cmd_help, "ping": cmd_ping,
+    "/status": cmd_status,
+    "/btc":    cmd_btc,
+    "/eth":    cmd_eth,
+    "/balance": cmd_balance,
+    "/report": cmd_report,
+    "/pause":  cmd_pause,
+    "/resume": cmd_resume,
+    "/live":   cmd_live,
+    "/paper":  cmd_paper,
+    "/ping":   cmd_ping,
+    "/help":   cmd_help,
+    "ping":    cmd_ping,
 }
 
 
-# ── Hourly Digest ────────────────────────────────────────────────────────────
+# ── Hourly Digest ─────────────────────────────────────────────────────────────
 
 def _build_digest() -> str | None:
-    """Hourly debrief: bankroll, P&L, W/L for every active bot."""
-    from zoneinfo import ZoneInfo
-    det = ZoneInfo("America/Detroit")
-    btc = _json(_POLY / "btc_5m_state.json")
+    btc   = _json(_POLY / "btc_5m_state.json")
+    eth   = _json(_POLY / "eth_5m_state.json")
     state = _json(STATE_FILE)
-    copy = _json(_POLY / "copy_trader_state.json")
-    sniper = _json(_POLY / "sniper_state.json")
-    has_data = False
-    lines = ["<b>APEX Hourly Update</b>"]
 
-    if btc:
-        s = _btc_stats(btc)
-        lines.append(f"\n⚡ <b>BTC Sniper</b>: ${btc['bankroll']:.0f}")
-        lines.append(f"  {s['wins']}W/{s['losses']}L · ${s['realized_pnl']:+.0f} PnL · "
-                     f"{s['pending_trades']} pending · {s['total_trades']} total")
-        has_data = True
+    if not btc and not eth:
+        return None
+
+    mode   = "🔴 LIVE" if _is_live() else "📋 PAPER"
+    paused = "  ⏸ PAUSED" if _is_paused() else ""
+    now_et = datetime.now(DETROIT_TZ)
+    lines  = [f"<b>APEX  ·  {now_et.strftime('%-I:%M %p ET')}  ·  {mode}{paused}</b>"]
+
+    total_bankroll = 0.0
+    total_pnl      = 0.0
+
+    for label, data, sym in [("BTC", btc, "₿"), ("ETH", eth, "Ξ")]:
+        if not data:
+            continue
+        s  = _sniper_stats(data)
+        br = data["bankroll"]
+        pnl = s["realized_pnl"]
+        wr  = f"{s['win_rate']}%" if s["resolved_trades"] else "new"
+        sign = "+" if pnl >= 0 else ""
+        total_bankroll += br
+        total_pnl      += pnl
+
+        trades   = data.get("trades", [])
+        trend    = _trend(trades, 5)
+        bar      = _bar(s["wins"], s["losses"])
+
+        lines.append(
+            f"\n{sym} <b>{label}</b>  ${br:.2f}"
+            f"\n  {bar}  {s['wins']}W {s['losses']}L  {wr}"
+            f"\n  PnL {sign}${pnl:.2f}  ·  trend {trend}"
+        )
 
     if state:
-        s = state.get("stats", {})
-        total = s.get('total_trades', 0)
-        if total > 0 or s.get('open', 0) > 0:
-            lines.append(f"\n📊 <b>Crypto Agents</b>: {s.get('wins',0)}W/{s.get('losses',0)}L")
-            lines.append(f"  PnL ${s.get('total_pnl',0):+.0f} · {s.get('open',0)} open")
-            has_data = True
+        sp = state.get("stats", {})
+        agent_pnl = sp.get("total_pnl", 0)
+        if sp.get("total_trades", 0) > 0:
+            lines.append(
+                f"\n📊 <b>Agents</b>  {sp.get('wins',0)}W/{sp.get('losses',0)}L"
+                f"  ${agent_pnl:+.2f}"
+            )
+        total_pnl += agent_pnl
 
-    if sniper:
-        pos = sniper.get("positions", {})
-        hist = sniper.get("history", [])
-        lines.append(f"\n🎯 <b>Poly Sniper</b>: ${sniper.get('bankroll',0):.0f}")
-        lines.append(f"  {len(pos)} open · {len(hist)} resolved")
-        has_data = True
+    sign = "+" if total_pnl >= 0 else ""
+    lines.append(f"\n<b>Portfolio  ${total_bankroll:.2f}  ({sign}${total_pnl:.2f})</b>")
 
-    if copy:
-        pos = copy.get("positions", {})
-        hist = copy.get("history", [])
-        cpnl = sum(x.get("pnl", 0) for x in hist)
-        lines.append(f"\n🐋 <b>Copy Trader</b>: ${copy.get('bankroll',0):.0f}")
-        lines.append(f"  {len(pos)} open · {len(hist)} resolved · ${cpnl:+.0f} PnL")
-        has_data = True
-
-    if _is_paused():
-        lines.append("\n⚠ PAUSED")
-
-    now_det = datetime.now(det)
-    lines.append(f"\n{now_det.strftime('%-I:%M %p ET')}")
-    return "\n".join(lines) if has_data else None
+    return "\n".join(lines)
 
 
 def _should_digest() -> bool:
-    """Fire once per clock-hour in Detroit (America/Detroit) time."""
     now = datetime.now(DETROIT_TZ)
     try:
         if _DIGEST_FILE.exists():
@@ -436,15 +408,13 @@ def _should_digest() -> bool:
 
 
 def _mark_digest():
-    """Store current Detroit hour (0-23) so digest fires once per clock-hour."""
     try:
-        now = datetime.now(DETROIT_TZ)
-        _DIGEST_FILE.write_text(str(now.hour))
+        _DIGEST_FILE.write_text(str(datetime.now(DETROIT_TZ).hour))
     except Exception:
         pass
 
 
-# ── Claude AI (optional) ────────────────────────────────────────────────────
+# ── Claude AI (optional) ──────────────────────────────────────────────────────
 
 def _ai_reply(text: str) -> str:
     if not ANTHROPIC_API_KEY:
@@ -463,23 +433,23 @@ def _ai_reply(text: str) -> str:
         return f"AI error: {e}"
 
 
-# ── Heartbeat (backwards compat with main.py) ───────────────────────────────
+# ── Heartbeat (backwards compat) ──────────────────────────────────────────────
 
 async def send_heartbeat(report: dict):
     pass  # Handled by hourly digest
 
 
-# ── Main Loop ────────────────────────────────────────────────────────────────
+# ── Main Loop ─────────────────────────────────────────────────────────────────
 
 def run_bot():
-    print("[TG] Bot started. No startup message sent.")
+    print("[TG] Bot started.")
     last_id = None
 
     while True:
         updates = _poll(last_id)
         for update in updates:
             last_id = update["update_id"] + 1
-            msg = update.get("message", {})
+            msg     = update.get("message", {})
             if str(msg.get("chat", {}).get("id")) != str(TELEGRAM_CHAT_ID):
                 continue
 
@@ -489,32 +459,18 @@ def run_bot():
 
             first = text.split()[0]
             if first.startswith("/"):
-                cmd = first.split("@")[0].lower()
-                # /msg takes the rest of the message as argument
-                if cmd == "/msg":
-                    rest = text[len(first):].strip()
+                cmd     = first.split("@")[0].lower()
+                handler = COMMANDS.get(cmd)
+                if handler:
                     try:
-                        _send(cmd_msg(rest))
+                        _send(handler())
                     except Exception as e:
                         _send(f"Error: {e}")
                 else:
-                    handler = COMMANDS.get(cmd)
-                    if handler:
-                        try:
-                            _send(handler())
-                        except Exception as e:
-                            _send(f"Error: {e}")
-                    else:
-                        _send(f"Unknown: {cmd}\n/help for commands")
+                    _send(f"Unknown command: {cmd}\n/help for the list")
             else:
-                # Free-text messages also relay to terminal
-                try:
-                    cmd_msg(text)
-                except Exception:
-                    pass
                 _send(_ai_reply(text))
 
-        # Hourly digest — only notification the user gets unprompted
         if _should_digest():
             digest = _build_digest()
             if digest:

@@ -28,8 +28,9 @@ SYNC_MAP = {
     # APEX crypto bot
     ROOT  / "logs" / "state.json":           LOGS / "state.json",
     ROOT  / "logs" / "paper_trades.jsonl":   LOGS / "paper_trades.jsonl",
-    # Polymarket sniper + BTC 5-min (these stay in polymarket/data/ in git)
+    # Polymarket 5-min snipers + scanner (stay in polymarket/data/ in git)
     POLY_DATA / "btc_5m_state.json":         POLY_DATA / "btc_5m_state.json",
+    POLY_DATA / "eth_5m_state.json":         POLY_DATA / "eth_5m_state.json",
     POLY_DATA / "sniper_state.json":         POLY_DATA / "sniper_state.json",
     POLY_DATA / "copy_trader_state.json":    POLY_DATA / "copy_trader_state.json",
     POLY_DATA / "scan_results.json":         POLY_DATA / "scan_results.json",
