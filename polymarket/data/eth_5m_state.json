@@ -1,5 +1,5 @@
 {
-  "bankroll": 286.7872658862876,
+  "bankroll": 287.7846571906354,
   "trades": [
     {
       "window_ts": 1776112200,
@@ -690,18 +690,66 @@
       "resolved": true,
       "won": false,
       "pnl": -11.95
+    },
+    {
+      "window_ts": 1776136800,
+      "question": "Ethereum Up or Down - April 13, 11:20PM-11:25PM ET",
+      "direction": "DOWN",
+      "bet_size": 11.47,
+      "edge": 0.064,
+      "p_win": 0.984,
+      "market_price": 0.92,
+      "confidence": 1.0,
+      "score": -18.258,
+      "indicators": {
+        "delta_pct": -0.14445,
+        "delta_weight": 7.0,
+        "macd_hist": -0.1073,
+        "macd_line": -1.0352,
+        "macd_signal": -0.9279,
+        "macd_accel": -0.186412,
+        "macd_jerk": -0.230728,
+        "macd_cross": "BEARISH",
+        "macd_zero_regime": "BELOW",
+        "fast_macd_hist": -0.231948,
+        "fast_macd_agrees": true,
+        "vol_ratio": 1.62,
+        "tick_up_pct": 0.0,
+        "tick_move_pct": 0.1444,
+        "scores": {
+          "window_delta": -7.0,
+          "macd_histogram": -0.68,
+          "macd_acceleration": -1.58,
+          "macd_cross": -2.5,
+          "macd_zero_regime": -1.5,
+          "fast_macd_confirm": -1.5,
+          "macd_volume_flow": -1.5,
+          "tick_trend": -2.0
+        },
+        "total_score": -18.26,
+        "macd_confirmation": 7
+      },
+      "btc_price": 2364.2,
+      "start_price": 2367.62,
+      "secs_remaining": 8.5,
+      "order_id": "paper_1776137092316",
+      "mode": "PAPER",
+      "timestamp": "2026-04-14T03:24:52.316856+00:00",
+      "resolved": true,
+      "won": true,
+      "pnl": 1.0
     }
   ],
-  "windows_scanned": 29,
-  "windows_traded": 15,
+  "windows_scanned": 30,
+  "windows_traded": 16,
   "stats": {
-    "total_trades": 15,
-    "resolved_trades": 15,
+    "total_trades": 16,
+    "resolved_trades": 16,
     "pending_trades": 0,
-    "wins": 14,
+    "wins": 15,
     "losses": 1,
-    "win_rate": 93.3,
-    "realized_pnl": 37.13
+    "win_rate": 93.8,
+    "realized_pnl": 38.13
   },
-  "updated": "2026-04-14T03:20:11.767504+00:00"
+  "updated": "2026-04-14T03:25:09.756394+00:00"
 }
