@@ -88,7 +88,10 @@ LOCK_PATH = DATA_DIR / "eth_5m_sniper.pid"
 # ── Telegram ──────────────────────────────────────────────────────────────────
 
 def _tg(text: str):
-    """Send trade entry/exit notifications to Telegram."""
+    """Send trade entry/exit notifications to Telegram. Only fires in LIVE mode."""
+    # Paper-mode ETH is silent — user checks dashboard for paper activity
+    if not (Path(__file__).resolve().parent.parent / "logs" / ".go_live_eth").exists():
+        return
     import urllib.parse, urllib.request
     data = urllib.parse.urlencode({
         "chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "HTML",

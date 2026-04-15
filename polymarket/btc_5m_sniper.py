@@ -88,7 +88,10 @@ LOCK_PATH = DATA_DIR / "btc_5m_sniper.pid"
 # ── Telegram ──────────────────────────────────────────────────────────────────
 
 def _tg(text: str):
-    """Send trade entry/exit notifications to Telegram."""
+    """Send trade entry/exit notifications to Telegram. LIVE mode only."""
+    from pathlib import Path as _P
+    if not (_P(__file__).resolve().parent.parent / "logs" / ".go_live").exists():
+        return
     import urllib.parse, urllib.request
     data = urllib.parse.urlencode({
         "chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "HTML",
@@ -369,7 +372,7 @@ def kelly_bet(p_win: float, market_price: float, bankroll: float) -> dict | None
     market_price: cost per share (0-1)
     Returns: {direction, bet_size, edge, kelly_pct} or None
     """
-    if market_price <= 0.01 or market_price >= 0.99:
+    if market_price <= 0.01 or market_price >= 0.998:
         return None
 
     b = (1.0 / market_price) - 1.0  # odds ratio
@@ -467,8 +470,11 @@ class LiveExecutor:
         # 8c slippage buffer — winning-side tokens near resolution race
         # up 3-7c between the book snapshot and the FAK hit. 8c stays
         # well inside the 12-19%+ edges we fire on.
-        limit_price = min(round(limit_price + 0.08, 2), 0.99)
-        if limit_price < 0.01 or limit_price > 0.99:
+        # Cap at 0.998 (Polymarket max < 1.0). Edge gate in kelly_bet
+        # already rejects anything where p - ask < MIN_EDGE, so high
+        # limit prices here are still EV+ at the measured confidence.
+        limit_price = min(round(limit_price + 0.08, 3), 0.998)
+        if limit_price < 0.01 or limit_price >= 1.0:
             raise ValueError(f"Price {limit_price} out of tradeable range")
 
         target_spend = max(amount, 5.0)

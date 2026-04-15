@@ -422,6 +422,9 @@ def _build_digest() -> str | None:
     ]:
         if not data:
             continue
+        # Silence paper snipers in the digest — user checks dashboard for paper
+        if not is_live:
+            continue
         s   = _sniper_stats(data)
         br  = data.get("bankroll", 0.0)
         pnl = s["realized_pnl"]
