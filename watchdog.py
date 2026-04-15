@@ -33,7 +33,8 @@ sys.path.insert(0, str(ROOT))
 from configs.config import TELEGRAM_TOKEN, TELEGRAM_CHAT_ID, STATE_FILE, TRADING_MODE
 
 LOGS_DIR    = ROOT / "logs"
-LIVE_FILE   = LOGS_DIR / ".go_live"      # created by dashboard Go Live button
+LIVE_FILE     = LOGS_DIR / ".go_live"      # BTC live flag
+LIVE_FILE_ETH = LOGS_DIR / ".go_live_eth"  # ETH live flag (independent)
 STATUS_FILE = LOGS_DIR / "watchdog_status.json"
 PID_FILE    = LOGS_DIR / "watchdog.pid"
 
@@ -99,7 +100,8 @@ def _tg(text: str):
 
 class ProcessManager:
     def __init__(self):
-        self._apex_live    = LIVE_FILE.exists()   # current mode of running apex_bot
+        self._apex_live    = LIVE_FILE.exists()   # current mode of running apex_bot / btc sniper
+        self._eth_live     = LIVE_FILE_ETH.exists()  # current mode of running eth sniper
         all_names          = ["apex_bot"] + list(_PROCESS_DEFS.keys())
         self.procs: dict[str, subprocess.Popen | None] = {n: None for n in all_names}
         self.crash_count:  dict[str, int]   = {n: 0   for n in all_names}
@@ -114,8 +116,9 @@ class ProcessManager:
                 "cwd":       str(ROOT),
             }
         cfg = dict(_PROCESS_DEFS[name])
-        # Append --live to BTC 5-min sniper only when in live mode (ETH stays paper)
-        if name in ("btc_5m_sniper",) and self._apex_live:
+        if name == "btc_5m_sniper" and self._apex_live:
+            cfg["cmd"] = cfg["cmd"] + ["--live"]
+        if name == "eth_5m_sniper" and self._eth_live:
             cfg["cmd"] = cfg["cmd"] + ["--live"]
         return cfg
 
@@ -178,30 +181,28 @@ class ProcessManager:
         self.start(name)
 
     def check_live_toggle(self):
-        """Detect live/paper toggle and restart affected processes."""
-        want_live = LIVE_FILE.exists()
-        if want_live == self._apex_live:
-            return   # no change
+        """Detect live/paper toggle on BTC and ETH flags independently."""
+        want_btc = LIVE_FILE.exists()
+        want_eth = LIVE_FILE_ETH.exists()
 
-        mode_str = "LIVE" if want_live else "PAPER"
-        print(f"[Watchdog] Mode change detected → {mode_str}. Restarting affected processes...")
-        _tg(f"🔄 <b>APEX mode switching to {mode_str}</b>")
-        self._apex_live = want_live
+        if want_btc != self._apex_live:
+            mode_str = "LIVE" if want_btc else "PAPER"
+            print(f"[Watchdog] BTC mode change → {mode_str}. Restarting apex_bot + btc_5m_sniper...")
+            self._apex_live = want_btc
+            self.kill("apex_bot")
+            time.sleep(1)
+            self.start("apex_bot")
+            self.kill("btc_5m_sniper")
+            time.sleep(1)
+            self.start("btc_5m_sniper")
 
-        # Restart apex_bot (always affected)
-        self.kill("apex_bot")
-        time.sleep(1)
-        self.start("apex_bot")
-
-        # Restart any process with affects_live_toggle=True
-        for name, cfg in _PROCESS_DEFS.items():
-            if cfg.get("affects_live_toggle"):
-                self.kill(name)
-                time.sleep(1)
-                self.start(name)
-                print(f"[Watchdog] Restarted {name} in {mode_str} mode")
-
-        _tg(f"{'🔴' if want_live else '📋'} <b>APEX restarted in {mode_str} mode</b>")
+        if want_eth != self._eth_live:
+            mode_str = "LIVE" if want_eth else "PAPER"
+            print(f"[Watchdog] ETH mode change → {mode_str}. Restarting eth_5m_sniper...")
+            self._eth_live = want_eth
+            self.kill("eth_5m_sniper")
+            time.sleep(1)
+            self.start("eth_5m_sniper")
 
     def write_status(self):
         """Write process status to logs/watchdog_status.json for dashboard."""

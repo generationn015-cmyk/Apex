@@ -26,6 +26,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import time
 import urllib.parse
 import urllib.request
@@ -81,6 +82,7 @@ _HEADERS = {
 }
 
 STATE_PATH = DATA_DIR / "eth_5m_state.json"
+LOCK_PATH = DATA_DIR / "eth_5m_sniper.pid"
 
 
 # ── Telegram ──────────────────────────────────────────────────────────────────
@@ -131,6 +133,60 @@ def get_eth_price() -> float | None:
         except Exception:
             continue
     return None
+
+
+# ── Chainlink Proxy Price Feed ────────────────────────────────────────────────
+# Polymarket resolves "Ethereum Up or Down" using Chainlink ETH/USD Data Streams.
+# We approximate by querying the same exchanges Chainlink aggregates from.
+
+BINANCE_GLOBAL_PRICE_URL = "https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDT"
+COINGECKO_PRICE_URL = "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
+
+
+def get_chainlink_proxy_price() -> float | None:
+    """Approximate Chainlink ETH/USD by querying exchanges it aggregates."""
+    if not _HAS_REQUESTS:
+        return None
+    try:
+        r = _req.get(BINANCE_GLOBAL_PRICE_URL, timeout=3)
+        if r.status_code == 200:
+            return float(r.json()["price"])
+    except Exception:
+        pass
+    try:
+        r = _req.get(COINBASE_PRICE_URL, timeout=3)
+        if r.status_code == 200:
+            return float(r.json()["data"]["amount"])
+    except Exception:
+        pass
+    try:
+        r = _req.get(COINGECKO_PRICE_URL, timeout=3)
+        if r.status_code == 200:
+            return float(r.json()["ethereum"]["usd"])
+    except Exception:
+        pass
+    return None
+
+
+def get_multi_source_prices() -> dict:
+    """Fetch ETH price from all sources. Helps diagnose Binance US staleness."""
+    prices = {}
+    if _HAS_REQUESTS:
+        for name, url, parser in [
+            ("binance_us", BINANCE_US_PRICE_URL, lambda d: float(d["price"])),
+            ("binance_global", BINANCE_GLOBAL_PRICE_URL, lambda d: float(d["price"])),
+            ("coinbase", COINBASE_PRICE_URL, lambda d: float(d["data"]["amount"])),
+        ]:
+            try:
+                r = _req.get(url, timeout=3)
+                if r.status_code == 200:
+                    prices[name] = parser(r.json())
+            except Exception:
+                pass
+    if len(prices) >= 2:
+        vals = list(prices.values())
+        prices["spread"] = round(max(vals) - min(vals), 2)
+    return prices
 
 
 # ── 1-Minute Candle Feed ──────────────────────────────────────────────────────
@@ -451,12 +507,24 @@ class SniperState:
 def run_sniper(live_mode: bool = False):
     from polymarket.btc_strategy import analyze as run_strategy
 
+    # Prevent duplicate instances
+    if LOCK_PATH.exists():
+        try:
+            old_pid = int(LOCK_PATH.read_text().strip())
+            cmdline = Path(f"/proc/{old_pid}/cmdline").read_bytes().decode(errors="ignore")
+            if "eth_5m_sniper" in cmdline:
+                print(f"[ETH-5M] ERROR: Another instance already running (PID {old_pid})")
+                sys.exit(1)
+        except (ValueError, OSError, FileNotFoundError):
+            pass
+    LOCK_PATH.write_text(str(os.getpid()))
+
     state = SniperState()
     executor = _build_executor(live_mode)
     mode_tag = "LIVE" if live_mode else "PAPER"
 
     # Reset state on first live launch (don't carry paper trades into live)
-    if live_mode and state.trades and state.trades[0].get("mode") == "paper":
+    if live_mode and state.trades and state.trades[0].get("mode", "").lower() == "paper":
         print(f"[ETH-5M] Resetting state for LIVE mode (was paper with {len(state.trades)} trades)")
         state.bankroll = 50.0  # live bankroll
         state.trades = []
@@ -628,14 +696,14 @@ def run_sniper(live_mode: bool = False):
                     bet = kelly_bet(p_win, effective_price, state.bankroll)
                     if bet and bet["edge"] >= MIN_EDGE:
                         bet["direction"] = direction
-                        _execute_trade(
+                        if _execute_trade(
                             state, executor, market, bet, direction, token_id,
                             current_eth, start_price, secs_left, mode_tag,
                             window_ts, result,
-                        )
-                        last_traded_window = window_ts
-                        fired = True
-                        continue
+                        ):
+                            last_traded_window = window_ts
+                            fired = True
+                            continue
 
                 time.sleep(POLL_INTERVAL_SECS)
 
@@ -660,12 +728,12 @@ def run_sniper(live_mode: bool = False):
                 bet = kelly_bet(p_win, effective_price, state.bankroll)
                 if bet:
                     bet["direction"] = direction
-                    _execute_trade(
+                    if _execute_trade(
                         state, executor, market, bet, direction, token_id,
                         current_eth, start_price, secs_left, mode_tag,
                         window_ts, best_signal,
-                    )
-                    fired = True
+                    ):
+                        fired = True
 
             if not fired:
                 delta_pct = ((tick_buffer[-1] - start_price) / start_price * 100
@@ -679,6 +747,7 @@ def run_sniper(live_mode: bool = False):
         except KeyboardInterrupt:
             print(f"\n[ETH-5M] Stopped. {state.summary()}")
             state.save()
+            LOCK_PATH.unlink(missing_ok=True)
             break
         except Exception as e:
             print(f"[ETH-5M] Error: {e}")
@@ -689,39 +758,128 @@ def run_sniper(live_mode: bool = False):
 
 def _execute_trade(state, executor, market, bet, direction, token_id,
                    current_eth, start_price, secs_left, mode_tag,
-                   window_ts, strategy_result):
-    """Execute a trade and wait for resolution."""
-    print(f"\n  {'⚡' if mode_tag == 'LIVE' else '📋'} ETH-5M | {direction} | "
+                   window_ts, strategy_result) -> bool:
+    """Execute a trade and wait for resolution. Returns True if filled."""
+    icon = '⚡' if mode_tag == 'LIVE' else '📋'
+    print(f"\n  {icon} ETH-5M | {direction} | "
           f"conf={strategy_result.confidence:.0%} | "
           f"edge={bet['edge']*100:.1f}% | ${bet['bet_size']:.2f} | "
           f"score={strategy_result.score:+.1f} | {secs_left:.0f}s left")
 
-    result = executor.buy(token_id, bet["bet_size"], bet["market_price"])
+    # Log multi-source prices to see Binance US vs Chainlink divergence
+    mp = get_multi_source_prices()
+    if mp:
+        parts = [f"{k}=${v:,.2f}" for k, v in mp.items() if k != "spread"]
+        spread = mp.get("spread", 0)
+        spread_warn = " ⚠️ SPREAD" if spread > 1.0 else ""
+        print(f"  [PRICES] {' | '.join(parts)} | spread=${spread:.2f}{spread_warn}")
+        # Safety check: skip trade if price sources diverge too much
+        if spread > 2.0:
+            print(f"  ⚠️ Price divergence ${spread:.2f} > $2.00 — skipping (stale Binance US data)")
+            return False
+
+    try:
+        result = executor.buy(token_id, bet["bet_size"], bet["market_price"])
+    except Exception as e:
+        err_str = str(e)
+        if '403' in err_str or 'geoblock' in err_str.lower() or 'region' in err_str.lower():
+            print(f"  [GEO-BLOCK] Live order blocked — recording as paper")
+            result = {"success": True, "orderID": f"blocked_{int(time.time()*1000)}", "status": "geo_blocked", "mode": "PAPER"}
+            mode_tag = "PAPER"
+        elif 'no match' in err_str.lower():
+            print(f"  ⚠️ Order book too thin — no asks to fill ${bet['bet_size']:.2f}")
+            return False
+        else:
+            print(f"  ⚠️ Order failed: {err_str}")
+            return False
+
+    # Verify fill with retries (FAK can partially fill)
+    order_id = result.get("orderID", "")
+    fill_price = bet["market_price"]
+    fill_shares = 0.0
+    fill_cost = bet["bet_size"]
+    MIN_FILL_USDC = 1.0
+
+    if mode_tag == "LIVE" and order_id and not order_id.startswith("blocked_"):
+        fill_verified = False
+        for fill_attempt in range(3):
+            try:
+                time.sleep(1 * (fill_attempt + 1))
+                order_info = executor.client.get_order(order_id)
+                if order_info is None:
+                    print(f"  ⚠️ Fill check returned None (attempt {fill_attempt+1}/3)")
+                    continue
+                matched = float(order_info.get("size_matched", "0"))
+                if matched == 0:
+                    print(f"  ⚠️ Order NOT FILLED — skipping trade")
+                    return False
+                fill_shares = matched
+                fill_price = float(order_info.get("price", bet["market_price"]))
+                fill_cost = round(fill_shares * fill_price, 2)
+                if fill_cost < MIN_FILL_USDC:
+                    print(f"  ⚠️ Dust fill (${fill_cost:.2f}) — too small, skipping")
+                    return False
+                requested = bet["bet_size"]
+                pct = fill_cost / requested * 100 if requested > 0 else 0
+                print(f"  FILLED: {fill_shares} shares @ ${fill_price:.3f} = ${fill_cost:.2f} ({pct:.0f}% of ${requested:.2f})")
+                _tg(
+                    f"🎯 <b>ETH 5-Min ENTRY</b> · {direction}\n"
+                    f"{fill_shares:.2f} @ ${fill_price:.3f} = <b>${fill_cost:.2f}</b>\n"
+                    f"edge {bet['edge']*100:.1f}% · conf {strategy_result.confidence:.0%} · "
+                    f"ETH ${current_eth:,.0f}"
+                )
+                fill_verified = True
+                break
+            except Exception as e:
+                print(f"  ⚠️ Fill check error (attempt {fill_attempt+1}/3): {e}")
+        if not fill_verified:
+            try:
+                trades_resp = executor.client.get_trades()
+                if trades_resp:
+                    for poly_trade in (trades_resp if isinstance(trades_resp, list) else []):
+                        if poly_trade.get("taker_order_id") == order_id:
+                            fill_shares = float(poly_trade.get("size", "0"))
+                            fill_price = float(poly_trade.get("price", bet["market_price"]))
+                            fill_cost = round(fill_shares * fill_price, 2)
+                            print(f"  FILLED (from trade history): {fill_shares} shares @ ${fill_price:.3f} = ${fill_cost:.2f}")
+                            fill_verified = True
+                            break
+            except Exception as e:
+                print(f"  ⚠️ Trade history fallback failed: {e}")
+            if not fill_verified:
+                print(f"  ⚠️ Could not verify fill after 3 attempts — skipping trade")
+                return False
 
     trade = {
         "window_ts": window_ts,
         "question": market["question"],
         "direction": direction,
-        "bet_size": bet["bet_size"],
+        "bet_size": fill_cost,
         "edge": bet["edge"],
         "p_win": bet["p_win"],
-        "market_price": bet["market_price"],
+        "market_price": fill_price,
+        "fill_shares": fill_shares,
         "confidence": strategy_result.confidence,
         "score": strategy_result.score,
         "indicators": strategy_result.indicators,
-        "btc_price": current_eth,
+        "eth_price": current_eth,
         "start_price": start_price,
         "secs_remaining": round(secs_left, 1),
-        "order_id": result.get("orderID", ""),
+        "order_id": order_id,
         "mode": mode_tag,
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "resolved": False,
     }
     state.record_trade(trade)
 
-    # Entry notification silenced — only wins/losses are reported.
-    # Wait for resolution
-    _wait_and_resolve(state, trade, start_price, window_ts)
+    # Wait for resolution — use Polymarket/Chainlink oracle (authoritative)
+    condition_id = market.get("condition_id", "")
+    try:
+        _wait_and_resolve(state, trade, start_price, window_ts,
+                          executor=executor, condition_id=condition_id)
+    except Exception as e:
+        print(f"  ⚠️ Resolution error: {e} — trade recorded, will reconcile")
+    return True
 
 
 def _get_window_start_price(window_ts: int) -> float | None:
@@ -761,52 +919,107 @@ def _get_window_start_price(window_ts: int) -> float | None:
     return None
 
 
+def _query_polymarket_resolution(executor, condition_id: str,
+                                  max_attempts: int = 12,
+                                  poll_secs: float = 10) -> str | None:
+    """Poll Polymarket CLOB for actual market resolution (Chainlink oracle)."""
+    if not hasattr(executor, 'client'):
+        return None
+    for attempt in range(max_attempts):
+        try:
+            m = executor.client.get_market(condition_id)
+            if m and isinstance(m, dict) and m.get("closed"):
+                tokens = m.get("tokens", [])
+                for tok in tokens:
+                    if tok.get("winner"):
+                        return tok["outcome"]
+        except Exception as e:
+            if attempt == 0:
+                print(f"  [RESOLVE] CLOB query error: {e}")
+        if attempt < max_attempts - 1:
+            time.sleep(poll_secs)
+    return None
+
+
 def _wait_and_resolve(state: SniperState, trade: dict, start_price: float,
-                      window_ts: int):
-    """Wait for the current window to end, then check resolution."""
-    # Wait until window ends + small buffer for Chainlink settlement
+                      window_ts: int, executor=None, condition_id: str = ""):
+    """Wait for the current window to end, then check actual Polymarket resolution."""
     secs_left = _secs_remaining()
     if secs_left > 0:
         time.sleep(secs_left + 3)
 
-    # Fetch BTC price after settlement (the close of the 5-min candle)
-    time.sleep(5)  # extra buffer for oracle
+    # Fetch end prices from multiple sources for logging/diagnostics
+    time.sleep(5)
     end_price = get_eth_price()
     if end_price is None:
-        # Try Binance kline
         end_price = _get_window_start_price(window_ts + WINDOW_SECS)
 
-    if end_price is None:
-        print(f"[ETH-5M] Could not determine end price for resolution")
-        return
+    chainlink_px = get_chainlink_proxy_price()
+    binance_dir = "UP" if (end_price and end_price >= start_price) else "DOWN"
+    chain_dir = "N/A"
+    if chainlink_px:
+        chain_dir = "UP" if chainlink_px >= start_price else "DOWN"
+    spread = abs(end_price - chainlink_px) if (end_price and chainlink_px) else 0
+    print(f"  [RESOLVE PRICES] Binance US: ${end_price:,.2f} ({binance_dir}) | "
+          f"Chainlink proxy: ${chainlink_px:,.2f if chainlink_px else 0} ({chain_dir}) | "
+          f"spread: ${spread:,.2f}")
 
-    # Resolution: Up if end >= start, Down otherwise
-    went_up = end_price >= start_price
+    # --- Primary resolution: query Polymarket CLOB for Chainlink oracle result ---
+    oracle_winner = None
+    if executor and condition_id:
+        print(f"  [RESOLVE] Waiting for Chainlink oracle resolution...")
+        oracle_winner = _query_polymarket_resolution(executor, condition_id)
+
     bet_direction = trade["direction"]
-    won = (bet_direction == "UP" and went_up) or (bet_direction == "DOWN" and not went_up)
 
+    if oracle_winner:
+        went_up = (oracle_winner == "Up")
+        won = (bet_direction == "UP" and went_up) or (bet_direction == "DOWN" and not went_up)
+        resolution_source = "chainlink"
+    else:
+        if end_price is None:
+            print(f"[ETH-5M] Could not determine resolution — no oracle, no price")
+            return
+        went_up = end_price >= start_price
+        won = (bet_direction == "UP" and went_up) or (bet_direction == "DOWN" and not went_up)
+        resolution_source = "binance_fallback"
+        print(f"  ⚠️ Oracle unavailable — using Binance fallback (less reliable)")
+
+    # PnL: use actual fill data
+    shares = trade.get("fill_shares", 0)
     if won:
-        # Pay 1/price per share, receive $1 per share
-        payout = trade["bet_size"] / trade["market_price"]
-        pnl = payout - trade["bet_size"]
+        if shares > 0:
+            pnl = shares - trade["bet_size"]
+        else:
+            pnl = (trade["bet_size"] / trade["market_price"]) - trade["bet_size"]
     else:
         pnl = -trade["bet_size"]
 
+    trade["resolution_source"] = resolution_source
+    trade["oracle_winner"] = oracle_winner
     state.record_resolution(window_ts, won, pnl)
 
     emoji = "✅" if won else "❌"
     outcome = "UP" if went_up else "DOWN"
-    print(f"  {emoji} Resolved: {outcome} | Bet: {bet_direction} | "
-          f"PnL: ${pnl:+.2f} | End: ${end_price:,.2f}")
+    end_str = f"${end_price:,.2f}" if end_price else "N/A"
+    print(f"  {emoji} Resolved ({resolution_source}): {outcome} | Bet: {bet_direction} | "
+          f"PnL: ${pnl:+.2f} | End: {end_str}")
 
     s = state.compute_stats()
     _tg(
         f"{emoji} <b>ETH 5-Min {'WIN' if won else 'LOSS'} ${pnl:+.2f}</b>\n"
-        f"Bet {bet_direction} → {outcome}\n"
-        f"ETH ${start_price:,.0f} → ${end_price:,.0f}\n"
+        f"Bet {bet_direction} → {outcome} (oracle: {resolution_source})\n"
+        f"ETH ${start_price:,.0f} → {end_str}\n"
         f"Bank: ${state.bankroll:.0f} | {s['wins']}W/{s['losses']}L ({s['win_rate']}%) | "
         f"{s['resolved_trades']}/{s['total_trades']} resolved"
     )
+
+    if won:
+        try:
+            from polymarket.auto_redeemer import try_redeem
+            try_redeem()
+        except Exception as e:
+            print(f"  [REDEEM] Auto-redeem skipped: {e}")
 
 
 def _build_executor(live_mode: bool):

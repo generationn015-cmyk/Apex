@@ -300,6 +300,29 @@ def cmd_paper() -> str:
     return "📋 PAPER MODE restored. Watchdog restarts snipers within 15s."
 
 
+def cmd_eth_live() -> str:
+    flag = _LOGS / ".go_live_eth"
+    if flag.exists():
+        return "ETH already LIVE. /eth_paper to revert."
+    try:
+        sys.path.insert(0, str(_ROOT / "polymarket"))
+        from polyconfig import POLY_PRIVATE_KEY
+        if not POLY_PRIVATE_KEY:
+            return "Cannot go ETH live: POLY_PRIVATE_KEY not set."
+    except Exception:
+        pass
+    flag.touch()
+    return "🔴 <b>ETH LIVE MODE ACTIVATED</b>\nWatchdog restarts ETH sniper in ~15s.\n/eth_paper to revert."
+
+
+def cmd_eth_paper() -> str:
+    flag = _LOGS / ".go_live_eth"
+    if not flag.exists():
+        return "ETH already in PAPER mode."
+    flag.unlink()
+    return "📋 ETH PAPER MODE restored. Watchdog restarts ETH sniper within 15s."
+
+
 def cmd_ping() -> str:
     state   = _json(STATE_FILE)
     updated = state.get("updated_at", "?")[:19] if state else "?"
@@ -316,8 +339,10 @@ def cmd_help() -> str:
         "/eth      — ETH 5-min sniper detail\n"
         "/balance  — all bankrolls\n"
         "/report   — full performance breakdown\n"
-        "/live     — switch to LIVE mode\n"
-        "/paper    — switch to PAPER mode\n"
+        "/live     — BTC → LIVE\n"
+        "/paper    — BTC → PAPER\n"
+        "/eth_live  — ETH → LIVE\n"
+        "/eth_paper — ETH → PAPER\n"
         "/pause    — pause all trading\n"
         "/resume   — resume trading\n"
         "/ping     — health check\n"
@@ -335,6 +360,8 @@ COMMANDS = {
     "/resume": cmd_resume,
     "/live":   cmd_live,
     "/paper":  cmd_paper,
+    "/eth_live":  cmd_eth_live,
+    "/eth_paper": cmd_eth_paper,
     "/ping":   cmd_ping,
     "/help":   cmd_help,
     "ping":    cmd_ping,
@@ -343,55 +370,80 @@ COMMANDS = {
 
 # ── Hourly Digest ─────────────────────────────────────────────────────────────
 
+def _live_clob_balance() -> float | None:
+    """Query the live Polymarket CLOB collateral balance for the configured wallet."""
+    try:
+        sys.path.insert(0, str(_ROOT / "polymarket"))
+        from polyconfig import POLY_PRIVATE_KEY
+        if not POLY_PRIVATE_KEY:
+            return None
+        from py_clob_client.client import ClobClient
+        from py_clob_client.clob_types import BalanceAllowanceParams, AssetType
+        client = ClobClient("https://clob.polymarket.com", key=POLY_PRIVATE_KEY, chain_id=137)
+        client.set_api_creds(client.create_or_derive_api_creds())
+        resp = client.get_balance_allowance(
+            BalanceAllowanceParams(asset_type=AssetType.COLLATERAL)
+        )
+        return int(resp["balance"]) / 1e6
+    except Exception as e:
+        print(f"[TG] live CLOB balance failed: {e}")
+        return None
+
+
 def _build_digest() -> str | None:
-    btc   = _json(_POLY / "btc_5m_state.json")
-    eth   = _json(_POLY / "eth_5m_state.json")
-    state = _json(STATE_FILE)
+    btc = _json(_POLY / "btc_5m_state.json")
+    eth = _json(_POLY / "eth_5m_state.json")
 
     if not btc and not eth:
         return None
 
-    mode   = "🔴 LIVE" if _is_live() else "📋 PAPER"
-    paused = "  ⏸ PAUSED" if _is_paused() else ""
+    btc_live = (_LOGS / ".go_live").exists()
+    eth_live = (_LOGS / ".go_live_eth").exists()
+    paused   = _is_paused()
+
     now_et = datetime.now(DETROIT_TZ)
-    lines  = [f"<b>APEX  ·  {now_et.strftime('%-I:%M %p ET')}  ·  {mode}{paused}</b>"]
+    header_mode = "🔴 LIVE" if (btc_live or eth_live) else "📋 PAPER"
+    if paused:
+        header_mode += " · ⏸"
 
-    total_bankroll = 0.0
-    total_pnl      = 0.0
+    live_clob = _live_clob_balance()
 
-    for label, data, sym in [("BTC", btc, "₿"), ("ETH", eth, "Ξ")]:
+    lines = [
+        f"<b>⚡ APEX</b>  <code>{now_et.strftime('%-I:%M %p ET')}</code>  {header_mode}",
+        "━━━━━━━━━━━━━━━━━━━━",
+    ]
+
+    total_bank = 0.0
+    total_pnl  = 0.0
+
+    for label, data, sym, is_live in [
+        ("BTC", btc, "₿", btc_live),
+        ("ETH", eth, "Ξ", eth_live),
+    ]:
         if not data:
             continue
-        s  = _sniper_stats(data)
-        br = data["bankroll"]
+        s   = _sniper_stats(data)
+        br  = data.get("bankroll", 0.0)
         pnl = s["realized_pnl"]
-        wr  = f"{s['win_rate']}%" if s["resolved_trades"] else "new"
-        sign = "+" if pnl >= 0 else ""
-        total_bankroll += br
-        total_pnl      += pnl
+        wr  = f"{s['win_rate']:.0f}%" if s["resolved_trades"] else "—"
+        tag = "🔴 LIVE" if is_live else "📋 PAPER"
+        bar = _bar(s["wins"], s["losses"])
+        trend = _trend(data.get("trades", []), 5)
 
-        trades   = data.get("trades", [])
-        trend    = _trend(trades, 5)
-        bar      = _bar(s["wins"], s["losses"])
+        total_bank += br
+        total_pnl  += pnl
 
         lines.append(
-            f"\n{sym} <b>{label}</b>  ${br:.2f}"
-            f"\n  {bar}  {s['wins']}W {s['losses']}L  {wr}"
-            f"\n  PnL {sign}${pnl:.2f}  ·  trend {trend}"
+            f"\n{sym} <b>{label}</b> · <code>${br:.2f}</code> · {tag}\n"
+            f"   {bar}\n"
+            f"   {s['wins']}W · {s['losses']}L · {wr}  ·  PnL <b>{pnl:+.2f}</b>\n"
+            f"   last 5: {trend}"
         )
 
-    if state:
-        sp = state.get("stats", {})
-        agent_pnl = sp.get("total_pnl", 0)
-        if sp.get("total_trades", 0) > 0:
-            lines.append(
-                f"\n📊 <b>Agents</b>  {sp.get('wins',0)}W/{sp.get('losses',0)}L"
-                f"  ${agent_pnl:+.2f}"
-            )
-        total_pnl += agent_pnl
-
-    sign = "+" if total_pnl >= 0 else ""
-    lines.append(f"\n<b>Portfolio  ${total_bankroll:.2f}  ({sign}${total_pnl:.2f})</b>")
+    lines.append("\n━━━━━━━━━━━━━━━━━━━━")
+    if live_clob is not None:
+        lines.append(f"💰 <b>Live CLOB</b> <code>${live_clob:.2f}</code>")
+    lines.append(f"📦 <b>Portfolio</b> <code>${total_bank:.2f}</code>  ({total_pnl:+.2f})")
 
     return "\n".join(lines)
 

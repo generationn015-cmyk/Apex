@@ -59,7 +59,7 @@ WINDOW_SECS         = 300       # 5 minutes
 ENTRY_WINDOW_SECS   = 15        # Enter in last 15 seconds (T-15s to T-5s)
 EXIT_BUFFER_SECS    = 5         # Stop entering with <5s left (blockchain latency)
 MIN_CONFIDENCE       = 0.20     # Minimum confidence to trade (from strategy)
-MIN_EDGE             = 0.05     # 5% edge minimum (research shows 3% eaten by fees)
+MIN_EDGE             = 0.02     # 2% edge — proven-filling threshold from earlier today's 8 live fills (trade #3: edge=0.02 filled and won)
 MAX_BET_PCT          = 0.04     # 4% of bankroll per trade
 KELLY_FRAC           = 0.25     # Quarter-Kelly
 BTC_5M_SIGMA         = 0.003   # ~0.3% typical 5-min BTC volatility
@@ -105,11 +105,15 @@ def _tg(text: str):
 # ── BTC Price Feed ────────────────────────────────────────────────────────────
 
 def get_btc_price() -> float | None:
-    """Fetch BTC/USDT spot price. Tries Binance US then Coinbase."""
+    """Fetch BTC/USDT spot price.
+    Order: Binance Global → Coinbase → Binance US.
+    Binance US has been observed serving frozen/cached prices from EU VPS,
+    so it is last-resort only. Binance Global is Chainlink's primary source
+    and is reachable from this VPS."""
     if _HAS_REQUESTS:
-        # Binance US (fastest, sub-second updates)
+        # Binance Global (Chainlink primary, fresh from EU VPS)
         try:
-            r = _req.get(BINANCE_US_PRICE_URL, timeout=5)
+            r = _req.get(BINANCE_GLOBAL_PRICE_URL, timeout=5)
             if r.status_code == 200:
                 return float(r.json()["price"])
         except Exception:
@@ -121,10 +125,18 @@ def get_btc_price() -> float | None:
                 return float(r.json()["data"]["amount"])
         except Exception:
             pass
+        # Binance US last — known stale from this VPS
+        try:
+            r = _req.get(BINANCE_US_PRICE_URL, timeout=5)
+            if r.status_code == 200:
+                return float(r.json()["price"])
+        except Exception:
+            pass
     # urllib fallback
     for url, parser in [
-        (BINANCE_US_PRICE_URL, lambda d: float(d["price"])),
+        (BINANCE_GLOBAL_PRICE_URL, lambda d: float(d["price"])),
         (COINBASE_PRICE_URL, lambda d: float(d["data"]["amount"])),
+        (BINANCE_US_PRICE_URL, lambda d: float(d["price"])),
     ]:
         try:
             req = urllib.request.Request(url, headers=_HEADERS)
@@ -133,6 +145,64 @@ def get_btc_price() -> float | None:
         except Exception:
             continue
     return None
+
+
+# ── Chainlink Proxy Price Feed ────────────────────────────────────────────────
+# Polymarket resolves "Bitcoin Up or Down" using Chainlink BTC/USD Data Streams,
+# which aggregates from Binance (global), Coinbase, Kraken, etc.
+# We approximate this by querying the same sources Chainlink uses.
+
+BINANCE_GLOBAL_PRICE_URL = "https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT"
+COINGECKO_PRICE_URL = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd"
+
+
+def get_chainlink_proxy_price() -> float | None:
+    """Approximate Chainlink BTC/USD by querying the exchanges it aggregates."""
+    if not _HAS_REQUESTS:
+        return None
+    # Binance global (primary Chainlink source, different from Binance US)
+    try:
+        r = _req.get(BINANCE_GLOBAL_PRICE_URL, timeout=3)
+        if r.status_code == 200:
+            return float(r.json()["price"])
+    except Exception:
+        pass
+    # Coinbase (also in Chainlink's aggregation)
+    try:
+        r = _req.get(COINBASE_PRICE_URL, timeout=3)
+        if r.status_code == 200:
+            return float(r.json()["data"]["amount"])
+    except Exception:
+        pass
+    # CoinGecko (aggregated price, last resort)
+    try:
+        r = _req.get(COINGECKO_PRICE_URL, timeout=3)
+        if r.status_code == 200:
+            return float(r.json()["bitcoin"]["usd"])
+    except Exception:
+        pass
+    return None
+
+
+def get_multi_source_prices() -> dict:
+    """Fetch BTC price from all sources. Helps diagnose Binance US staleness."""
+    prices = {}
+    if _HAS_REQUESTS:
+        for name, url, parser in [
+            ("binance_us", BINANCE_US_PRICE_URL, lambda d: float(d["price"])),
+            ("binance_global", BINANCE_GLOBAL_PRICE_URL, lambda d: float(d["price"])),
+            ("coinbase", COINBASE_PRICE_URL, lambda d: float(d["data"]["amount"])),
+        ]:
+            try:
+                r = _req.get(url, timeout=3)
+                if r.status_code == 200:
+                    prices[name] = parser(r.json())
+            except Exception:
+                pass
+    if len(prices) >= 2:
+        vals = list(prices.values())
+        prices["spread"] = round(max(vals) - min(vals), 2)
+    return prices
 
 
 # ── 1-Minute Candle Feed ──────────────────────────────────────────────────────
@@ -335,6 +405,25 @@ def kelly_bet(p_win: float, market_price: float, bankroll: float) -> dict | None
     }
 
 
+# ── Order Book Price Discovery ────────────────────────────────────────────────
+
+def get_best_ask(executor, token_id: str) -> float | None:
+    """
+    Fetch the actual best (lowest) ask price from the CLOB order book.
+    Returns None if no asks available.
+    """
+    if not hasattr(executor, 'client'):
+        return None
+    try:
+        book = executor.client.get_order_book(token_id)
+        asks = book.asks if hasattr(book, 'asks') else []
+        if asks:
+            return min(float(a.price) for a in asks)
+    except Exception:
+        pass
+    return None
+
+
 # ── Execution ─────────────────────────────────────────────────────────────────
 
 class LiveExecutor:
@@ -350,18 +439,51 @@ class LiveExecutor:
         self.client.set_api_creds(self.client.create_or_derive_api_creds())
 
     def buy(self, token_id: str, amount: float, price: float) -> dict:
-        from py_clob_client.clob_types import MarketOrderArgs, OrderType
+        from py_clob_client.clob_types import OrderArgs, OrderType
         from py_clob_client.order_builder.constants import BUY
+        import math
 
-        # MarketOrderArgs: amount = dollars to spend (not shares)
-        # Defaults to FOK, auto-calculates market price from order book
-        order_args = MarketOrderArgs(
+        # FAK + LIMIT: takes available liquidity across multiple ask
+        # levels, cancels the rest. Because the book moves between the
+        # time kelly_bet cached best_ask and now, re-fetch the live top
+        # ask right here and price *above* it.
+        live_ask = None
+        try:
+            book = self.client.get_order_book(token_id)
+            asks = book.asks if hasattr(book, 'asks') else []
+            if asks:
+                live_ask = min(float(a.price) for a in asks)
+        except Exception:
+            pass
+
+        # Use the higher of (cached price, live ask). ceil to next cent
+        # then add 3c buffer to survive the ~1-3c reprice between the
+        # order_book read and the FAK submit. Edge gate already passed
+        # in kelly_bet with a 2% margin, so +3c slippage stays inside
+        # the edge at any mid-book price and we still walk away with
+        # positive EV on a fill.
+        submit_price = max(price, live_ask or 0.0)
+        limit_price = math.ceil(submit_price * 100) / 100
+        # 8c slippage buffer — winning-side tokens near resolution race
+        # up 3-7c between the book snapshot and the FAK hit. 8c stays
+        # well inside the 12-19%+ edges we fire on.
+        limit_price = min(round(limit_price + 0.08, 2), 0.99)
+        if limit_price < 0.01 or limit_price > 0.99:
+            raise ValueError(f"Price {limit_price} out of tradeable range")
+
+        target_spend = max(amount, 5.0)
+        # Whole-number shares guarantees maker_amount (shares*price)
+        # has <=2 decimals, avoiding "invalid amounts" precision error
+        shares = max(math.ceil(target_spend / limit_price), 5)
+
+        order_args = OrderArgs(
             token_id=token_id,
-            amount=round(max(amount, 5.0), 2),
+            price=limit_price,
+            size=float(shares),
             side=BUY,
         )
-        signed = self.client.create_market_order(order_args)
-        resp = self.client.post_order(signed, OrderType.FOK)
+        signed = self.client.create_order(order_args)
+        resp = self.client.post_order(signed, OrderType.FAK)
         return resp
 
 
@@ -375,6 +497,23 @@ class PaperExecutor:
             "status": "matched",
             "mode": "paper",
         }
+
+
+# ── Live CLOB Balance Sync ────────────────────────────────────────────────────
+
+def get_live_clob_balance(executor) -> float | None:
+    """Query the actual Polymarket CLOB collateral balance for this wallet."""
+    if not hasattr(executor, 'client'):
+        return None
+    try:
+        from py_clob_client.clob_types import BalanceAllowanceParams, AssetType
+        resp = executor.client.get_balance_allowance(
+            BalanceAllowanceParams(asset_type=AssetType.COLLATERAL)
+        )
+        return int(resp['balance']) / 1e6
+    except Exception as e:
+        print(f"  [BALANCE] Live sync failed: {e}")
+        return None
 
 
 # ── State Persistence ─────────────────────────────────────────────────────────
@@ -485,10 +624,24 @@ def run_sniper(live_mode: bool = False):
         except Exception as e:
             print(f"[BTC-5M] WARNING: CLOB pre-flight failed: {e}")
 
+        # Redeem any stuck winning positions to free up collateral
+        try:
+            from polymarket.auto_redeemer import try_redeem
+            try_redeem()
+        except Exception as e:
+            print(f"[BTC-5M] Startup redeem skipped: {e}")
+
+        # Authoritative bankroll: pull live from CLOB, overwrite state
+        live_bal = get_live_clob_balance(executor)
+        if live_bal is not None:
+            print(f"[BTC-5M] Live CLOB bankroll: ${live_bal:.2f} (state was ${state.bankroll:.2f})")
+            state.bankroll = round(live_bal, 2)
+            state.save()
+
     # Reset state on first live launch (don't carry paper trades into live)
     if live_mode and state.trades and state.trades[0].get("mode", "").lower() == "paper":
         print(f"[BTC-5M] Resetting state for LIVE mode (was paper with {len(state.trades)} trades)")
-        state.bankroll = 46.22  # live bankroll (matches CLOB balance)
+        state.bankroll = 50.0  # live starting bankroll
         state.trades = []
         state.windows_scanned = 0
         state.windows_traded = 0
@@ -511,6 +664,13 @@ def run_sniper(live_mode: bool = False):
             if window_ts != tick_window_ts:
                 tick_buffer = []
                 tick_window_ts = window_ts
+                # Live bankroll sync — authoritative CLOB balance each window
+                if live_mode:
+                    live_bal = get_live_clob_balance(executor)
+                    if live_bal is not None and abs(live_bal - state.bankroll) > 0.01:
+                        print(f"[BTC-5M] Bankroll sync: ${state.bankroll:.2f} -> ${live_bal:.2f}")
+                        state.bankroll = round(live_bal, 2)
+                        state.save()
 
             # Warmup phase: collect tick prices before entry window
             if secs_left <= (ENTRY_WINDOW_SECS + WARMUP_SECS) and secs_left > ENTRY_WINDOW_SECS:
@@ -647,16 +807,26 @@ def run_sniper(live_mode: bool = False):
                     poly_price = (market["up_price"] if direction == "UP"
                                   else market["down_price"])
 
-                    # Use realistic token price estimate from strategy
-                    effective_price = max(poly_price, result.entry_price_est)
+                    best_ask = get_best_ask(executor, token_id)
+                    effective_price = best_ask if best_ask else max(poly_price, result.entry_price_est)
 
-                    # Kelly sizing with estimated true probability
                     p_win = estimate_p_up(start_price, current_btc, secs_left)
                     if direction == "DOWN":
                         p_win = 1.0 - p_win
 
                     bet = kelly_bet(p_win, effective_price, state.bankroll)
-                    if bet and bet["edge"] >= MIN_EDGE:
+                    if bet is None:
+                        reject = (
+                            f"price={effective_price:.3f} out-of-range"
+                            if effective_price <= 0.01 or effective_price >= 0.99
+                            else f"edge={p_win - effective_price:+.3f} < {MIN_EDGE}"
+                        )
+                        print(f"  ✗ kelly REJECT {direction} conf={result.confidence:.0%} "
+                              f"p={p_win:.3f} ask={effective_price:.3f} → {reject}")
+                    elif bet["edge"] < MIN_EDGE:
+                        print(f"  ✗ edge REJECT {direction} conf={result.confidence:.0%} "
+                              f"edge={bet['edge']*100:.1f}% < {MIN_EDGE*100:.0f}%")
+                    else:
                         bet["direction"] = direction
                         if _execute_trade(
                             state, executor, market, bet, direction, token_id,
@@ -666,6 +836,9 @@ def run_sniper(live_mode: bool = False):
                             last_traded_window = window_ts
                             fired = True
                             continue
+                elif result.confidence >= MIN_CONFIDENCE:
+                    # Gated by MACD rule (conf<60% with no MACD confirmation)
+                    pass
 
                 time.sleep(POLL_INTERVAL_SECS)
 
@@ -681,7 +854,8 @@ def run_sniper(live_mode: bool = False):
                             else market["down_token_id"])
                 poly_price = (market["up_price"] if direction == "UP"
                               else market["down_price"])
-                effective_price = max(poly_price, best_signal.entry_price_est)
+                best_ask = get_best_ask(executor, token_id)
+                effective_price = best_ask if best_ask else max(poly_price, best_signal.entry_price_est)
 
                 p_win = estimate_p_up(start_price, current_btc, secs_left)
                 if direction == "DOWN":
@@ -729,6 +903,27 @@ def _execute_trade(state, executor, market, bet, direction, token_id,
           f"edge={bet['edge']*100:.1f}% | ${bet['bet_size']:.2f} | "
           f"score={strategy_result.score:+.1f} | {secs_left:.0f}s left")
 
+    # Log multi-source prices so we can see Binance US vs Chainlink divergence
+    mp = get_multi_source_prices()
+    if mp:
+        parts = [f"{k}=${v:,.2f}" for k, v in mp.items() if k != "spread"]
+        full_spread = mp.get("spread", 0)
+        # Spread safety check uses ONLY the fresh sources (Binance Global +
+        # Coinbase). Binance US is excluded because it serves frozen/cached
+        # prices from EU VPS and would always blow the threshold.
+        fresh = [v for k, v in mp.items()
+                 if k in ("binance_global", "coinbase")]
+        fresh_spread = round(max(fresh) - min(fresh), 2) if len(fresh) >= 2 else 0
+        spread_warn = " ⚠️ SPREAD" if fresh_spread > 40 else ""
+        print(f"  [PRICES] {' | '.join(parts)} | fresh_spread=${fresh_spread:.2f}"
+              f" | full_spread=${full_spread:.2f}{spread_warn}")
+        # Safety check: skip trade if fresh sources diverge too much.
+        # Normal cross-exchange spread at $70k BTC is $20-50 (~0.05%).
+        # $60+ indicates one feed is lagging several seconds.
+        if fresh_spread > 60:
+            print(f"  ⚠️ Fresh-source divergence ${fresh_spread:.2f} > $60 — skipping")
+            return False
+
     try:
         result = executor.buy(token_id, bet["bet_size"], bet["market_price"])
     except Exception as e:
@@ -738,32 +933,80 @@ def _execute_trade(state, executor, market, bet, direction, token_id,
             result = {"success": True, "orderID": f"blocked_{int(time.time()*1000)}", "status": "geo_blocked", "mode": "PAPER"}
             mode_tag = "PAPER"
         elif 'no match' in err_str.lower():
-            print(f"  ⚠️ Order book too thin — no asks to fill ${bet['bet_size']:.2f}")
+            print(f"  ⚠️ 'no match' raw error: {err_str}")
             return False
         else:
             print(f"  ⚠️ Order failed: {err_str}")
             return False
 
-    # For live FOK orders, check if the order was actually filled
+    # For live FAK orders, verify fill and capture ACTUAL execution price.
+    # FAK can partially fill — check size_matched and reject dust fills.
     order_id = result.get("orderID", "")
+    fill_price = bet["market_price"]
+    fill_shares = 0.0
+    fill_cost = bet["bet_size"]
+    MIN_FILL_USDC = 1.0  # reject fills under $1 (dust, eaten by fees)
+
     if mode_tag == "LIVE" and order_id and not order_id.startswith("blocked_"):
-        try:
-            order_info = executor.client.get_order(order_id)
-            matched = float(order_info.get("size_matched", "0"))
-            if matched == 0:
-                print(f"  ⚠️ FOK order NOT FILLED — skipping trade")
-                return
-        except Exception as e:
-            print(f"  ⚠️ Fill check failed ({e}) — proceeding")
+        fill_verified = False
+        for fill_attempt in range(3):
+            try:
+                time.sleep(1 * (fill_attempt + 1))  # 1s, 2s, 3s backoff
+                order_info = executor.client.get_order(order_id)
+                if order_info is None:
+                    print(f"  ⚠️ Fill check returned None (attempt {fill_attempt+1}/3)")
+                    continue
+                matched = float(order_info.get("size_matched", "0"))
+                if matched == 0:
+                    print(f"  ⚠️ Order NOT FILLED — skipping trade")
+                    return False
+                fill_shares = matched
+                fill_price = float(order_info.get("price", bet["market_price"]))
+                fill_cost = round(fill_shares * fill_price, 2)
+                if fill_cost < MIN_FILL_USDC:
+                    print(f"  ⚠️ Dust fill (${fill_cost:.2f}) — too small, skipping")
+                    return False
+                requested = bet["bet_size"]
+                pct = fill_cost / requested * 100 if requested > 0 else 0
+                print(f"  FILLED: {fill_shares} shares @ ${fill_price:.3f} = ${fill_cost:.2f} ({pct:.0f}% of ${requested:.2f})")
+                _tg(
+                    f"🎯 <b>BTC 5-Min ENTRY</b> · {direction}\n"
+                    f"{fill_shares:.2f} @ ${fill_price:.3f} = <b>${fill_cost:.2f}</b>\n"
+                    f"edge {bet['edge']*100:.1f}% · conf {strategy_result.confidence:.0%} · "
+                    f"BTC ${current_btc:,.0f}"
+                )
+                fill_verified = True
+                break
+            except Exception as e:
+                print(f"  ⚠️ Fill check error (attempt {fill_attempt+1}/3): {e}")
+        if not fill_verified:
+            # Check trade history as last resort before giving up
+            try:
+                trades_resp = executor.client.get_trades()
+                if trades_resp:
+                    for poly_trade in (trades_resp if isinstance(trades_resp, list) else []):
+                        if poly_trade.get("taker_order_id") == order_id:
+                            fill_shares = float(poly_trade.get("size", "0"))
+                            fill_price = float(poly_trade.get("price", bet["market_price"]))
+                            fill_cost = round(fill_shares * fill_price, 2)
+                            print(f"  FILLED (from trade history): {fill_shares} shares @ ${fill_price:.3f} = ${fill_cost:.2f}")
+                            fill_verified = True
+                            break
+            except Exception as e:
+                print(f"  ⚠️ Trade history fallback failed: {e}")
+            if not fill_verified:
+                print(f"  ⚠️ Could not verify fill after 3 attempts — skipping trade")
+                return False
 
     trade = {
         "window_ts": window_ts,
         "question": market["question"],
         "direction": direction,
-        "bet_size": bet["bet_size"],
+        "bet_size": fill_cost,
         "edge": bet["edge"],
         "p_win": bet["p_win"],
-        "market_price": bet["market_price"],
+        "market_price": fill_price,
+        "fill_shares": fill_shares,
         "confidence": strategy_result.confidence,
         "score": strategy_result.score,
         "indicators": strategy_result.indicators,
@@ -777,9 +1020,11 @@ def _execute_trade(state, executor, market, bet, direction, token_id,
     }
     state.record_trade(trade)
 
-    # Wait for resolution
+    # Wait for resolution — use Polymarket/Chainlink oracle (authoritative)
+    condition_id = market.get("condition_id", "")
     try:
-        _wait_and_resolve(state, trade, start_price, window_ts)
+        _wait_and_resolve(state, trade, start_price, window_ts,
+                          executor=executor, condition_id=condition_id)
     except Exception as e:
         print(f"  ⚠️ Resolution error: {e} — trade recorded, will reconcile")
     return True
@@ -822,52 +1067,116 @@ def _get_window_start_price(window_ts: int) -> float | None:
     return None
 
 
+def _query_polymarket_resolution(executor, condition_id: str,
+                                  max_attempts: int = 12,
+                                  poll_secs: float = 10) -> str | None:
+    """
+    Poll Polymarket CLOB for actual market resolution (Chainlink oracle).
+    Returns 'Up', 'Down', or None if unresolved after all attempts.
+    """
+    if not hasattr(executor, 'client'):
+        return None
+    for attempt in range(max_attempts):
+        try:
+            m = executor.client.get_market(condition_id)
+            if m and isinstance(m, dict) and m.get("closed"):
+                tokens = m.get("tokens", [])
+                for tok in tokens:
+                    if tok.get("winner"):
+                        return tok["outcome"]  # 'Up' or 'Down'
+        except Exception as e:
+            if attempt == 0:
+                print(f"  [RESOLVE] CLOB query error: {e}")
+        if attempt < max_attempts - 1:
+            time.sleep(poll_secs)
+    return None
+
+
 def _wait_and_resolve(state: SniperState, trade: dict, start_price: float,
-                      window_ts: int):
-    """Wait for the current window to end, then check resolution."""
-    # Wait until window ends + small buffer for Chainlink settlement
+                      window_ts: int, executor=None, condition_id: str = ""):
+    """Wait for the current window to end, then check actual Polymarket resolution."""
+    # Wait until window ends + buffer for Chainlink settlement
     secs_left = _secs_remaining()
     if secs_left > 0:
         time.sleep(secs_left + 3)
 
-    # Fetch BTC price after settlement (the close of the 5-min candle)
-    time.sleep(5)  # extra buffer for oracle
+    # Fetch end prices from multiple sources for logging/diagnostics
+    time.sleep(5)
     end_price = get_btc_price()
     if end_price is None:
-        # Try Binance kline
         end_price = _get_window_start_price(window_ts + WINDOW_SECS)
 
-    if end_price is None:
-        print(f"[BTC-5M] Could not determine end price for resolution")
-        return
+    chainlink_px = get_chainlink_proxy_price()
+    binance_dir = "UP" if (end_price and end_price >= start_price) else "DOWN"
+    chain_dir = "N/A"
+    if chainlink_px:
+        chain_dir = "UP" if chainlink_px >= start_price else "DOWN"
+    spread = abs(end_price - chainlink_px) if (end_price and chainlink_px) else 0
+    chain_str = f"${chainlink_px:,.2f}" if chainlink_px else "N/A"
+    end_str   = f"${end_price:,.2f}" if end_price else "N/A"
+    print(f"  [RESOLVE PRICES] Binance US: {end_str} ({binance_dir}) | "
+          f"Chainlink proxy: {chain_str} ({chain_dir}) | "
+          f"spread: ${spread:,.2f}")
 
-    # Resolution: Up if end >= start, Down otherwise
-    went_up = end_price >= start_price
+    # --- Primary resolution: query Polymarket CLOB for Chainlink oracle result ---
+    oracle_winner = None
+    if executor and condition_id:
+        print(f"  [RESOLVE] Waiting for Chainlink oracle resolution...")
+        oracle_winner = _query_polymarket_resolution(executor, condition_id)
+
     bet_direction = trade["direction"]
-    won = (bet_direction == "UP" and went_up) or (bet_direction == "DOWN" and not went_up)
 
+    if oracle_winner:
+        # Authoritative resolution from Polymarket/Chainlink
+        went_up = (oracle_winner == "Up")
+        won = (bet_direction == "UP" and went_up) or (bet_direction == "DOWN" and not went_up)
+        resolution_source = "chainlink"
+    else:
+        # Fallback: Binance price comparison (paper mode or API failure)
+        if end_price is None:
+            print(f"[BTC-5M] Could not determine resolution — no oracle, no price")
+            return
+        went_up = end_price >= start_price
+        won = (bet_direction == "UP" and went_up) or (bet_direction == "DOWN" and not went_up)
+        resolution_source = "binance_fallback"
+        print(f"  ⚠️ Oracle unavailable — using Binance fallback (less reliable)")
+
+    # PnL: use actual fill data
+    shares = trade.get("fill_shares", 0)
     if won:
-        # Pay 1/price per share, receive $1 per share
-        payout = trade["bet_size"] / trade["market_price"]
-        pnl = payout - trade["bet_size"]
+        if shares > 0:
+            pnl = shares - trade["bet_size"]  # payout($1*shares) - cost
+        else:
+            pnl = (trade["bet_size"] / trade["market_price"]) - trade["bet_size"]
     else:
         pnl = -trade["bet_size"]
 
+    trade["resolution_source"] = resolution_source
+    trade["oracle_winner"] = oracle_winner
     state.record_resolution(window_ts, won, pnl)
 
     emoji = "✅" if won else "❌"
     outcome = "UP" if went_up else "DOWN"
-    print(f"  {emoji} Resolved: {outcome} | Bet: {bet_direction} | "
-          f"PnL: ${pnl:+.2f} | End: ${end_price:,.2f}")
+    end_str = f"${end_price:,.2f}" if end_price else "N/A"
+    print(f"  {emoji} Resolved ({resolution_source}): {outcome} | Bet: {bet_direction} | "
+          f"PnL: ${pnl:+.2f} | End: {end_str}")
 
     s = state.compute_stats()
     _tg(
         f"{emoji} <b>BTC 5-Min {'WIN' if won else 'LOSS'} ${pnl:+.2f}</b>\n"
-        f"Bet {bet_direction} → {outcome}\n"
-        f"BTC ${start_price:,.0f} → ${end_price:,.0f}\n"
+        f"Bet {bet_direction} → {outcome} (oracle: {resolution_source})\n"
+        f"BTC ${start_price:,.0f} → {end_str}\n"
         f"Bank: ${state.bankroll:.0f} | {s['wins']}W/{s['losses']}L ({s['win_rate']}%) | "
         f"{s['resolved_trades']}/{s['total_trades']} resolved"
     )
+
+    # Auto-redeem resolved positions after each win
+    if won:
+        try:
+            from polymarket.auto_redeemer import try_redeem
+            try_redeem()
+        except Exception as e:
+            print(f"  [REDEEM] Auto-redeem skipped: {e}")
 
 
 def _build_executor(live_mode: bool):

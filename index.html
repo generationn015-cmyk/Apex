@@ -1244,7 +1244,7 @@ a { color: var(--gold); text-decoration: none; }
           <div class="kicker">Stratton Apex Capital</div>
           <h1>The Wolf <em>is out.</em></h1>
           <div class="sub">
-            BTC Sniper is <em>live</em>. ETH holds paper. <em>Ninety-plus percent</em> on the windows that closed.
+            BTC Sniper is <em>live</em>. ETH runs on its own tab. <em>Ninety-plus percent</em> on the windows that closed.
           </div>
           <div class="quote">
             The easiest way to make money is to create something of such value that everybody wants, and to go out and give and create that value. The more value you create, the more money you will have.
@@ -1263,9 +1263,9 @@ a { color: var(--gold); text-decoration: none; }
           </div>
           <div class="hero-r-grid">
             <div class="hr-cell"><div class="lbl">BTC Bankroll</div><div class="val g" id="heroBtcBank">—</div></div>
-            <div class="hr-cell"><div class="lbl">ETH Bankroll</div><div class="val c" id="heroEthBank">—</div></div>
-            <div class="hr-cell"><div class="lbl">Blended WR</div><div class="val gl" id="heroWR">—</div></div>
-            <div class="hr-cell"><div class="lbl">Total P/L</div><div class="val g" id="heroPnl">—</div></div>
+            <div class="hr-cell"><div class="lbl">BTC Win Rate</div><div class="val gl" id="heroWR">—</div></div>
+            <div class="hr-cell"><div class="lbl">BTC P/L</div><div class="val g" id="heroPnl">—</div></div>
+            <div class="hr-cell"><div class="lbl">Live CLOB</div><div class="val g" id="heroClob">—</div></div>
           </div>
         </aside>
       </section>
@@ -1288,16 +1288,16 @@ a { color: var(--gold); text-decoration: none; }
             <div class="cmd-stat-val warn" id="cmdBtcMode">PAPER</div>
           </div>
           <div class="cmd-stat">
-            <div class="cmd-stat-lbl">ETH Mode</div>
-            <div class="cmd-stat-val warn">PAPER</div>
-          </div>
-          <div class="cmd-stat">
             <div class="cmd-stat-lbl">BTC P/L</div>
             <div class="cmd-stat-val" id="cmdBtcPnl">—</div>
           </div>
           <div class="cmd-stat">
-            <div class="cmd-stat-lbl">ETH P/L</div>
-            <div class="cmd-stat-val" id="cmdEthPnl">—</div>
+            <div class="cmd-stat-lbl">BTC Trades</div>
+            <div class="cmd-stat-val" id="cmdBtcCount">—</div>
+          </div>
+          <div class="cmd-stat">
+            <div class="cmd-stat-lbl">BTC Win Rate</div>
+            <div class="cmd-stat-val" id="cmdBtcWr">—</div>
           </div>
         </div>
       </section>
@@ -1365,6 +1365,9 @@ a { color: var(--gold); text-decoration: none; }
               <span class="badge paper" id="ethModeBadge">PAPER</span>
               <span class="badge">5-MIN WINDOWS</span>
               <span class="badge">QUARTER-KELLY</span>
+            </div>
+            <div style="margin-top:10px;">
+              <button id="ethModeControlBtn" onclick="openEthLiveModal()" style="background:transparent;border:1px solid var(--cyn);color:var(--cyn);font-family:inherit;font-size:11px;font-weight:600;letter-spacing:.12em;padding:6px 16px;cursor:pointer;text-transform:uppercase;">⚡ ETH MODE CONTROL</button>
             </div>
           </div>
         </div>
@@ -1458,7 +1461,7 @@ a { color: var(--gold); text-decoration: none; }
 // STRATTON // APEX · Trading Floor · JS
 // Live state fetched from GitHub raw; refreshed every 20s.
 // ═══════════════════════════════════════════════════════════════════
-const GH_BASE = 'https://raw.githubusercontent.com/generationn015-cmyk/Apex/master';
+const GH_BASE = '';  // relative paths → served from Vercel deployment bundle
 
 // ────── Tabs ──────
 document.querySelectorAll('.sb-tab').forEach(tab => {
@@ -1489,7 +1492,7 @@ document.querySelectorAll('.sb-tab').forEach(tab => {
 
 // ────── Fetch ──────
 async function fetchJSON(path) {
-  const url = `${GH_BASE}/${path}?t=${Date.now()}`;
+  const url = `/${path}?t=${Date.now()}`;
   try {
     const r = await fetch(url, { cache: 'no-store' });
     if (!r.ok) return null;
@@ -1848,6 +1851,14 @@ async function renderProcs() {
     updateModalMode(isLive);
     updateCmdCenter(isLive);
   }
+
+  if (st && st.processes && st.processes.eth_5m_sniper) {
+    const ethMode = st.processes.eth_5m_sniper.mode || 'paper';
+    const ethLive = ethMode === 'live';
+    const ethBadge = document.getElementById('ethModeBadge');
+    if (ethBadge) { ethBadge.textContent = ethLive ? 'LIVE' : 'PAPER'; ethBadge.className = 'badge ' + (ethLive ? 'live' : 'paper'); }
+    updateEthModalMode(ethLive);
+  }
 }
 
 function updateCmdCenter(isLive) {
@@ -1878,14 +1889,6 @@ function renderTicker(btc, eth) {
       items.push(`<span><span class="muted">W/L</span> ${btc.wins}·${btc.losses}</span>`);
     }
     items.push(`<span class="divider">◆</span>`);
-    if (eth) {
-      items.push(`<span class="lab">Ethereum</span>`);
-      items.push(`<span><span class="muted">BANK</span> <span class="cyn">${fmt$(eth.bankroll)}</span></span>`);
-      items.push(`<span><span class="muted">P/L</span> <span class="${eth.pnl >= 0 ? 'pos' : 'neg'}">${fmtPnl(eth.pnl)}</span></span>`);
-      items.push(`<span><span class="muted">WR</span> <span class="gld">${fmtPct(eth.wr)}</span></span>`);
-      items.push(`<span><span class="muted">W/L</span> ${eth.wins}·${eth.losses}</span>`);
-    }
-    items.push(`<span class="divider">◆</span>`);
     items.push(`<span class="lab">Belfort says</span>`);
     items.push(`<span class="gld">"ACT AS IF"</span>`);
     items.push(`<span class="divider">◆</span>`);
@@ -1907,26 +1910,28 @@ async function load() {
   const btc = computeStats(btcState);
   const eth = computeStats(ethState);
 
-  // Hero
+  // Hero — BTC only (ETH lives on its own tab)
   document.getElementById('heroBtcBank').textContent = btc ? fmt$(btc.bankroll) : '—';
-  document.getElementById('heroEthBank').textContent = eth ? fmt$(eth.bankroll) : '—';
-  const totalPnl  = (btc?.pnl || 0) + (eth?.pnl || 0);
   const heroPnlEl = document.getElementById('heroPnl');
-  heroPnlEl.textContent = fmtPnl(totalPnl);
-  heroPnlEl.className   = 'val ' + (totalPnl >= 0 ? 'g' : 'r');
-  const totalW = (btc?.wins || 0)     + (eth?.wins || 0);
-  const totalR = (btc?.resolved || 0) + (eth?.resolved || 0);
-  const blendedWR = totalR ? (totalW / totalR) * 100 : 0;
-  document.getElementById('heroWR').textContent = totalR ? fmtPct(blendedWR) : '—';
+  heroPnlEl.textContent = btc ? fmtPnl(btc.pnl) : '—';
+  heroPnlEl.className   = 'val ' + ((btc?.pnl || 0) >= 0 ? 'g' : 'r');
+  const btcW  = btc?.wins || 0;
+  const btcR  = btc?.resolved || 0;
+  const btcWR = btcR ? (btcW / btcR) * 100 : 0;
+  document.getElementById('heroWR').textContent = btcR ? fmtPct(btcWR) : '—';
+  const heroClob = document.getElementById('heroClob');
+  if (heroClob) heroClob.textContent = btc ? fmt$(btc.bankroll) : '—';
 
-  // Command center P/L
-  const cmdBtcPnl = document.getElementById('cmdBtcPnl');
-  const cmdEthPnl = document.getElementById('cmdEthPnl');
-  if (cmdBtcPnl && btc) { cmdBtcPnl.textContent = fmtPnl(btc.pnl); cmdBtcPnl.style.color = btc.pnl >= 0 ? 'var(--money)' : 'var(--blood)'; }
-  if (cmdEthPnl && eth) { cmdEthPnl.textContent = fmtPnl(eth.pnl); cmdEthPnl.style.color = eth.pnl >= 0 ? 'var(--money)' : 'var(--blood)'; }
+  // Command center — BTC only
+  const cmdBtcPnl   = document.getElementById('cmdBtcPnl');
+  const cmdBtcCount = document.getElementById('cmdBtcCount');
+  const cmdBtcWr    = document.getElementById('cmdBtcWr');
+  if (cmdBtcPnl && btc)   { cmdBtcPnl.textContent = fmtPnl(btc.pnl); cmdBtcPnl.style.color = btc.pnl >= 0 ? 'var(--money)' : 'var(--blood)'; }
+  if (cmdBtcCount && btc) { cmdBtcCount.textContent = `${btcR}/${btc.total || 0}`; }
+  if (cmdBtcWr)           { cmdBtcWr.textContent = btcR ? fmtPct(btcWR) : '—'; }
 
-  // Sidebar status
-  document.getElementById('sbWR').textContent       = totalR ? fmtPct(blendedWR) : '—';
+  // Sidebar status (BTC-only)
+  document.getElementById('sbWR').textContent       = btcR ? fmtPct(btcWR) : '—';
   document.getElementById('sbLastSync').textContent = 'now';
 
   // Stats rows
@@ -2008,11 +2013,42 @@ setInterval(load, 20000);
   </div>
 </div>
 
+<!-- ETH Live / Paper toggle modal -->
+<div id="ethLiveModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="document.getElementById('ethLiveModal').classList.remove('open')">&#10005;</button>
+    <h3>ETH Mode Control</h3>
+    <div id="ethModalStatusBadge" class="modal-status-badge paper">PAPER</div>
+
+    <div class="modal-section" id="ethModalGoLive">
+      <p>ETH Sniper is in <strong>PAPER</strong> mode. Tap below to go live via Telegram:</p>
+      <a href="https://t.me/ChiefofStaff2027Bot?text=/eth_live" target="_blank" rel="noopener"
+         class="copy-btn" style="display:inline-block;text-align:center;text-decoration:none;background:var(--money);color:var(--ink);margin-top:8px;">ETH GO LIVE</a>
+    </div>
+
+    <div class="modal-section" id="ethModalGoPaper">
+      <p>ETH Sniper is <strong style="color:var(--blood)">LIVE</strong> — real capital at risk:</p>
+      <a href="https://t.me/ChiefofStaff2027Bot?text=/eth_paper" target="_blank" rel="noopener"
+         class="copy-btn" style="display:inline-block;text-align:center;text-decoration:none;background:var(--blood);color:var(--cream);margin-top:8px;">ETH KILL SWITCH — GO PAPER</a>
+    </div>
+
+    <div class="modal-section">
+      <p style="color:var(--parchment2);font-size:11px;margin-top:10px">Independent from BTC. Watchdog restarts ETH sniper within 15s.</p>
+    </div>
+  </div>
+</div>
+
 <script>
 function openLiveModal() {
   document.getElementById('liveModal').classList.add('open');
 }
+function openEthLiveModal() {
+  document.getElementById('ethLiveModal').classList.add('open');
+}
 document.getElementById('liveModal').addEventListener('click', function(e) {
+  if (e.target === this) this.classList.remove('open');
+});
+document.getElementById('ethLiveModal').addEventListener('click', function(e) {
   if (e.target === this) this.classList.remove('open');
 });
 
@@ -2021,6 +2057,24 @@ function updateModalMode(isLive) {
   const badge  = document.getElementById('modalStatusBadge');
   const toLive = document.getElementById('modalGoLive');
   const toPaper= document.getElementById('modalGoPaper');
+  if (!badge) return;
+  if (isLive) {
+    badge.textContent = 'LIVE';
+    badge.className = 'modal-status-badge live';
+    toLive.style.display  = 'none';
+    toPaper.style.display = '';
+  } else {
+    badge.textContent = 'PAPER';
+    badge.className = 'modal-status-badge paper';
+    toLive.style.display  = '';
+    toPaper.style.display = 'none';
+  }
+}
+
+function updateEthModalMode(isLive) {
+  const badge   = document.getElementById('ethModalStatusBadge');
+  const toLive  = document.getElementById('ethModalGoLive');
+  const toPaper = document.getElementById('ethModalGoPaper');
   if (!badge) return;
   if (isLive) {
     badge.textContent = 'LIVE';
