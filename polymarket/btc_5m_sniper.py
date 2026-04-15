@@ -25,6 +25,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import math
 import time
 import urllib.parse
@@ -81,6 +82,7 @@ _HEADERS = {
 }
 
 STATE_PATH = DATA_DIR / "btc_5m_state.json"
+LOCK_PATH = DATA_DIR / "btc_5m_sniper.pid"
 
 
 # ── Telegram ──────────────────────────────────────────────────────────────────
@@ -348,22 +350,18 @@ class LiveExecutor:
         self.client.set_api_creds(self.client.create_or_derive_api_creds())
 
     def buy(self, token_id: str, amount: float, price: float) -> dict:
-        from py_clob_client.clob_types import OrderArgs, OrderType
+        from py_clob_client.clob_types import MarketOrderArgs, OrderType
         from py_clob_client.order_builder.constants import BUY
 
-        # Use limit order at market price to avoid order-book scan ("no match" error)
-        # Shares = USDC amount / price per share; min 5 shares per Polymarket rules
-        limit_price = round(min(price + 0.01, 0.97), 2)
-        size = round(max(amount / price, 5.0), 2)
-
-        order_args = OrderArgs(
+        # MarketOrderArgs: amount = dollars to spend (not shares)
+        # Defaults to FOK, auto-calculates market price from order book
+        order_args = MarketOrderArgs(
             token_id=token_id,
-            price=limit_price,
-            size=size,
+            amount=round(max(amount, 5.0), 2),
             side=BUY,
         )
-        signed = self.client.create_order(order_args)
-        resp = self.client.post_order(signed, OrderType.GTC)
+        signed = self.client.create_market_order(order_args)
+        resp = self.client.post_order(signed, OrderType.FOK)
         return resp
 
 
@@ -460,14 +458,37 @@ class SniperState:
 def run_sniper(live_mode: bool = False):
     from polymarket.btc_strategy import analyze as run_strategy
 
+    # Prevent duplicate instances
+    if LOCK_PATH.exists():
+        try:
+            old_pid = int(LOCK_PATH.read_text().strip())
+            cmdline = Path(f"/proc/{old_pid}/cmdline").read_bytes().decode(errors="ignore")
+            if "btc_5m_sniper" in cmdline:
+                print(f"[BTC-5M] ERROR: Another instance already running (PID {old_pid})")
+                sys.exit(1)
+        except (ValueError, OSError, FileNotFoundError):
+            pass
+    LOCK_PATH.write_text(str(os.getpid()))
+
     state = SniperState()
     executor = _build_executor(live_mode)
     mode_tag = "LIVE" if live_mode else "PAPER"
 
+    # Pre-flight: verify CLOB connectivity in live mode
+    if live_mode:
+        try:
+            open_orders = executor.client.get_orders()
+            n = len(open_orders) if isinstance(open_orders, list) else 0
+            if n > 0:
+                print(f"[BTC-5M] WARNING: {n} open orders on CLOB — cancel stale orders")
+            print(f"[BTC-5M] CLOB API connected | PID {os.getpid()}")
+        except Exception as e:
+            print(f"[BTC-5M] WARNING: CLOB pre-flight failed: {e}")
+
     # Reset state on first live launch (don't carry paper trades into live)
-    if live_mode and state.trades and state.trades[0].get("mode") == "paper":
+    if live_mode and state.trades and state.trades[0].get("mode", "").lower() == "paper":
         print(f"[BTC-5M] Resetting state for LIVE mode (was paper with {len(state.trades)} trades)")
-        state.bankroll = 50.0  # live bankroll
+        state.bankroll = 46.22  # live bankroll (matches CLOB balance)
         state.trades = []
         state.windows_scanned = 0
         state.windows_traded = 0
@@ -637,14 +658,14 @@ def run_sniper(live_mode: bool = False):
                     bet = kelly_bet(p_win, effective_price, state.bankroll)
                     if bet and bet["edge"] >= MIN_EDGE:
                         bet["direction"] = direction
-                        _execute_trade(
+                        if _execute_trade(
                             state, executor, market, bet, direction, token_id,
                             current_btc, start_price, secs_left, mode_tag,
                             window_ts, result,
-                        )
-                        last_traded_window = window_ts
-                        fired = True
-                        continue
+                        ):
+                            last_traded_window = window_ts
+                            fired = True
+                            continue
 
                 time.sleep(POLL_INTERVAL_SECS)
 
@@ -669,12 +690,12 @@ def run_sniper(live_mode: bool = False):
                 bet = kelly_bet(p_win, effective_price, state.bankroll)
                 if bet:
                     bet["direction"] = direction
-                    _execute_trade(
+                    if _execute_trade(
                         state, executor, market, bet, direction, token_id,
                         current_btc, start_price, secs_left, mode_tag,
                         window_ts, best_signal,
-                    )
-                    fired = True
+                    ):
+                        fired = True
 
             if not fired:
                 delta_pct = ((tick_buffer[-1] - start_price) / start_price * 100
@@ -688,46 +709,52 @@ def run_sniper(live_mode: bool = False):
         except KeyboardInterrupt:
             print(f"\n[BTC-5M] Stopped. {state.summary()}")
             state.save()
+            LOCK_PATH.unlink(missing_ok=True)
             break
         except Exception as e:
             print(f"[BTC-5M] Error: {e}")
             import traceback
             traceback.print_exc()
+            last_traded_window = window_ts  # prevent retry storm
             time.sleep(CYCLE_SLEEP_SECS)
 
 
 def _execute_trade(state, executor, market, bet, direction, token_id,
                    current_btc, start_price, secs_left, mode_tag,
-                   window_ts, strategy_result):
-    """Execute a trade and wait for resolution."""
+                   window_ts, strategy_result) -> bool:
+    """Execute a trade and wait for resolution. Returns True if filled."""
     icon = '⚡' if mode_tag == 'LIVE' else '📋'
     print(f"\n  {icon} BTC-5M | {direction} | "
           f"conf={strategy_result.confidence:.0%} | "
           f"edge={bet['edge']*100:.1f}% | ${bet['bet_size']:.2f} | "
           f"score={strategy_result.score:+.1f} | {secs_left:.0f}s left")
 
-    # Send Telegram signal alert for live mode
-    if mode_tag == 'LIVE':
-        _tg(
-            f"⚡ <b>BTC SIGNAL FIRING</b>\n"
-            f"Dir: <b>{direction}</b> | Conf: {strategy_result.confidence:.0%} | "
-            f"Edge: {bet['edge']*100:.1f}%\n"
-            f"Bet: <b>${bet['bet_size']:.2f}</b> @ {bet['market_price']:.2f}\n"
-            f"BTC: ${current_btc:,.0f} | Score: {strategy_result.score:+.1f}"
-        )
-
     try:
         result = executor.buy(token_id, bet["bet_size"], bet["market_price"])
     except Exception as e:
         err_str = str(e)
         if '403' in err_str or 'geoblock' in err_str.lower() or 'region' in err_str.lower():
-            # Geo-blocked: fall back to paper for this trade so state is tracked
             print(f"  [GEO-BLOCK] Live order blocked — recording as paper")
-            _tg(f"⚠️ <b>BTC GEO-BLOCK</b> — {direction} ${bet['bet_size']:.2f} blocked (server IP). Run bot on laptop with VPN.")
             result = {"success": True, "orderID": f"blocked_{int(time.time()*1000)}", "status": "geo_blocked", "mode": "PAPER"}
             mode_tag = "PAPER"
+        elif 'no match' in err_str.lower():
+            print(f"  ⚠️ Order book too thin — no asks to fill ${bet['bet_size']:.2f}")
+            return False
         else:
-            raise
+            print(f"  ⚠️ Order failed: {err_str}")
+            return False
+
+    # For live FOK orders, check if the order was actually filled
+    order_id = result.get("orderID", "")
+    if mode_tag == "LIVE" and order_id and not order_id.startswith("blocked_"):
+        try:
+            order_info = executor.client.get_order(order_id)
+            matched = float(order_info.get("size_matched", "0"))
+            if matched == 0:
+                print(f"  ⚠️ FOK order NOT FILLED — skipping trade")
+                return
+        except Exception as e:
+            print(f"  ⚠️ Fill check failed ({e}) — proceeding")
 
     trade = {
         "window_ts": window_ts,
@@ -743,16 +770,19 @@ def _execute_trade(state, executor, market, bet, direction, token_id,
         "btc_price": current_btc,
         "start_price": start_price,
         "secs_remaining": round(secs_left, 1),
-        "order_id": result.get("orderID", ""),
+        "order_id": order_id,
         "mode": mode_tag,
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "resolved": False,
     }
     state.record_trade(trade)
 
-    # Entry notification silenced — only wins/losses are reported.
     # Wait for resolution
-    _wait_and_resolve(state, trade, start_price, window_ts)
+    try:
+        _wait_and_resolve(state, trade, start_price, window_ts)
+    except Exception as e:
+        print(f"  ⚠️ Resolution error: {e} — trade recorded, will reconcile")
+    return True
 
 
 def _get_window_start_price(window_ts: int) -> float | None:

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- v5.1 · live-toggle · 2026-04-14 -->
+<!-- v5.2 · telegram-bridge · 2026-04-15 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -1975,26 +1975,35 @@ setInterval(load, 20000);
 <!-- Live / Paper toggle modal -->
 <div id="liveModal">
   <div class="modal-box">
-    <button class="modal-close" onclick="document.getElementById('liveModal').classList.remove('open')">✕</button>
+    <button class="modal-close" onclick="document.getElementById('liveModal').classList.remove('open')">&#10005;</button>
     <h3>Mode Control</h3>
     <div id="modalStatusBadge" class="modal-status-badge paper">PAPER</div>
 
     <div class="modal-section" id="modalGoLive">
-      <p>BTC Sniper is currently in <strong>PAPER</strong> mode. To flip live, run on your machine:</p>
-      <div class="modal-cmd">touch ~/Apex/logs/.go_live
-kill $(pgrep -f btc_5m_sniper.py)</div>
-      <button class="copy-btn" onclick="copyCmd(this, 'touch ~/Apex/logs/.go_live\nkill $(pgrep -f btc_5m_sniper.py)')">COPY COMMAND</button>
+      <p>BTC Sniper is in <strong>PAPER</strong> mode. Tap below to go live via Telegram:</p>
+      <a href="https://t.me/ChiefofStaff2027Bot?text=/live" target="_blank" rel="noopener"
+         class="copy-btn" style="display:inline-block;text-align:center;text-decoration:none;background:var(--money);color:var(--ink);margin-top:8px;">GO LIVE</a>
     </div>
 
     <div class="modal-section" id="modalGoPaper">
-      <p>BTC Sniper is currently <strong style="color:var(--blood)">LIVE</strong> — real capital at risk. To return to paper:</p>
-      <div class="modal-cmd">rm ~/Apex/logs/.go_live
-kill $(pgrep -f btc_5m_sniper.py)</div>
-      <button class="copy-btn" onclick="copyCmd(this, 'rm ~/Apex/logs/.go_live\nkill $(pgrep -f btc_5m_sniper.py)')">COPY KILL SWITCH</button>
+      <p>BTC Sniper is <strong style="color:var(--blood)">LIVE</strong> — real capital at risk:</p>
+      <a href="https://t.me/ChiefofStaff2027Bot?text=/paper" target="_blank" rel="noopener"
+         class="copy-btn" style="display:inline-block;text-align:center;text-decoration:none;background:var(--blood);color:var(--cream);margin-top:8px;">KILL SWITCH — GO PAPER</a>
+    </div>
+
+    <div class="modal-section" style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+      <a href="https://t.me/ChiefofStaff2027Bot?text=/status" target="_blank" rel="noopener"
+         style="font-size:10px;padding:5px 12px;border:1px solid var(--line2);color:var(--parchment);text-decoration:none;letter-spacing:.1em;font-family:inherit;text-transform:uppercase;">STATUS</a>
+      <a href="https://t.me/ChiefofStaff2027Bot?text=/btc" target="_blank" rel="noopener"
+         style="font-size:10px;padding:5px 12px;border:1px solid var(--line2);color:var(--parchment);text-decoration:none;letter-spacing:.1em;font-family:inherit;text-transform:uppercase;">BTC STATS</a>
+      <a href="https://t.me/ChiefofStaff2027Bot?text=/pause" target="_blank" rel="noopener"
+         style="font-size:10px;padding:5px 12px;border:1px solid var(--line2);color:var(--parchment);text-decoration:none;letter-spacing:.1em;font-family:inherit;text-transform:uppercase;">PAUSE</a>
+      <a href="https://t.me/ChiefofStaff2027Bot?text=/resume" target="_blank" rel="noopener"
+         style="font-size:10px;padding:5px 12px;border:1px solid var(--line2);color:var(--parchment);text-decoration:none;letter-spacing:.1em;font-family:inherit;text-transform:uppercase;">RESUME</a>
     </div>
 
     <div class="modal-section">
-      <p style="color:var(--parchment2);font-size:11px">Watchdog respawns the sniper in ~5 seconds after kill. ETH remains in paper regardless of mode flag.</p>
+      <p style="color:var(--parchment2);font-size:11px;margin-top:10px">Opens Telegram with the command pre-typed. Tap Send. Watchdog applies the change within 15s.</p>
     </div>
   </div>
 </div>
@@ -2007,14 +2016,6 @@ document.getElementById('liveModal').addEventListener('click', function(e) {
   if (e.target === this) this.classList.remove('open');
 });
 
-function copyCmd(btn, text) {
-  navigator.clipboard.writeText(text).then(() => {
-    btn.textContent = 'COPIED ✓';
-    btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = btn.dataset.label || 'COPY COMMAND'; btn.classList.remove('copied'); }, 2000);
-  });
-}
-
 // Update modal state based on watchdog status
 function updateModalMode(isLive) {
   const badge  = document.getElementById('modalStatusBadge');
@@ -2022,12 +2023,12 @@ function updateModalMode(isLive) {
   const toPaper= document.getElementById('modalGoPaper');
   if (!badge) return;
   if (isLive) {
-    badge.textContent = '● LIVE';
+    badge.textContent = 'LIVE';
     badge.className = 'modal-status-badge live';
     toLive.style.display  = 'none';
     toPaper.style.display = '';
   } else {
-    badge.textContent = '● PAPER';
+    badge.textContent = 'PAPER';
     badge.className = 'modal-status-badge paper';
     toLive.style.display  = '';
     toPaper.style.display = 'none';

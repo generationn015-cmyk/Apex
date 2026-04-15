@@ -1,13 +1,13 @@
 {
-  "updated_at": "2026-04-14T22:00:00.000000+00:00",
+  "updated_at": "2026-04-15T06:23:08.795290+00:00",
   "processes": {
     "btc_5m_sniper": {
       "status": "running",
       "pid": 0,
-      "mode": "paper"
+      "mode": "live"
     },
     "eth_5m_sniper": {
-      "status": "running",
+      "status": "stopped",
       "pid": 0,
       "mode": "paper"
     }
