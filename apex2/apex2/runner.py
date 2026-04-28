@@ -171,16 +171,27 @@ def portfolio(
 @app.command()
 def paper(
     config: str = typer.Option("configs/default.yaml", "--config", "-c"),
-    strategy: str = typer.Option(..., "--strategy", "-s"),
+    strategy: str = typer.Option("", "--strategy", "-s",
+                                  help="Single strategy name. If empty, runs every enabled strategy."),
     poll_seconds: int = typer.Option(60, "--poll"),
 ):
-    """Run a strategy in paper-trading mode against Alpaca paper."""
+    """Run paper trading against Alpaca paper. With no --strategy, runs all enabled strategies."""
     cfg = load_config(config)
     if cfg.mode == "live":
         console.print("[red]Refusing to paper-run with mode=live in config.[/red]")
         raise typer.Exit(1)
     _setup_logging(cfg.monitoring.log_level, cfg.monitoring.log_file)
-    asyncio.run(_paper_loop(cfg, strategy, poll_seconds))
+
+    if strategy:
+        names = [strategy]
+    else:
+        names = [n for n in ("rsi2_meanrev", "donchian_trend", "etf_momentum")
+                 if getattr(cfg.strategies, n).enabled]
+    if not names:
+        console.print("[red]No enabled strategies in config.[/red]")
+        raise typer.Exit(1)
+    console.print(f"[cyan]paper trading: {', '.join(names)}[/cyan]")
+    asyncio.run(_paper_loop(cfg, names, poll_seconds))
 
 
 @app.command()
@@ -201,31 +212,39 @@ def live(
         raise typer.Exit(1)
     _setup_logging(cfg.monitoring.log_level, cfg.monitoring.log_file)
     cfg.brokers.alpaca.paper = False
-    asyncio.run(_paper_loop(cfg, strategy, 60))
+    asyncio.run(_paper_loop(cfg, [strategy], 60))
 
 
-async def _paper_loop(cfg: Config, strategy_name: str, poll_seconds: int):
+async def _paper_loop(cfg: Config, strategy_names: list[str], poll_seconds: int):
     broker = AlpacaBroker(cfg.brokers.alpaca)
     await broker.connect()
+    if broker._trading is None:
+        console.print(
+            "[red]Alpaca client failed to initialize.[/red] Check ALPACA_API_KEY/ALPACA_API_SECRET in .env."
+        )
+        return
     router = ExecutionRouter(broker, dry_run=False)
     risk = RiskManager(cfg.capital)
 
-    strat_cfg = getattr(cfg.strategies, strategy_name)
-    ctx = StrategyContext(
-        params=strat_cfg.params,
-        risk_pct_per_trade=cfg.capital.risk_per_trade_pct,
-        max_position_pct=cfg.capital.max_position_pct,
-    )
-    strat = build_strategy(strategy_name, ctx)
+    strategies = []
+    universe: set[str] = set()
+    for name in strategy_names:
+        sc = getattr(cfg.strategies, name)
+        ctx = StrategyContext(
+            params=sc.params,
+            risk_pct_per_trade=cfg.capital.risk_per_trade_pct,
+            max_position_pct=cfg.capital.max_position_pct / max(len(strategy_names), 1),
+        )
+        strategies.append((name, build_strategy(name, ctx), sc))
+        universe.update(sc.params.get("universe", []))
+        bench = sc.params.get("benchmark")
+        if bench:
+            universe.add(bench)
+    universe = sorted(universe)
 
     src = DataSource(cfg.data, cfg.brokers.alpaca)
-    universe = list(strat_cfg.params.get("universe", []))
-    bench = strat_cfg.params.get("benchmark", "SPY")
-    if bench and bench not in universe:
-        universe.append(bench)
-
     log = logging.getLogger("apex2.runner")
-    log.info("paper loop started: strategy=%s universe=%s", strategy_name, universe)
+    log.info("paper loop started: strategies=%s universe=%s", strategy_names, universe)
 
     starting_equity = (await broker.get_account()).equity
     daily_anchor = datetime.utcnow().date()
@@ -271,7 +290,12 @@ async def _paper_loop(cfg: Config, strategy_name: str, poll_seconds: int):
                 },
             )
             ts = max(df.index.max() for df in bars.values())
-            orders = strat.on_bar(bt_state, ts, bars) or []
+            orders = []
+            for name, strat, _ in strategies:
+                try:
+                    orders.extend(strat.on_bar(bt_state, ts, bars) or [])
+                except Exception as e:
+                    log.error("strategy %s raised: %s", name, e)
 
             open_symbols = {p.symbol for p in positions if p.qty != 0}
             daily_pnl = account.equity - daily_start_equity
