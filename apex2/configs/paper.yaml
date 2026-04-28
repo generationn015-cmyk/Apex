@@ -1,0 +1,68 @@
+# Apex v2 — paper trading config
+# Connects to Alpaca paper account; simulates orders with realistic fills.
+# No real money at risk. This is what we run for the 5-7 day validation window.
+
+mode: paper
+
+capital:
+  starting_balance_usd: 100000.0      # Alpaca paper accounts start at $100k
+  risk_per_trade_pct: 0.5             # Match planned live risk
+  max_daily_loss_pct: 3.0
+  max_open_positions: 3                # Two strategies, allow some overlap
+  max_position_pct: 20.0
+  kelly_fraction: 0.10
+
+brokers:
+  alpaca:
+    enabled: true
+    paper: true
+    api_key: ${ALPACA_API_KEY:}
+    api_secret: ${ALPACA_API_SECRET:}
+  ibkr:
+    enabled: false
+  crypto:
+    enabled: false
+
+data:
+  cache_dir: data/cache
+  primary_source: alpaca
+  fallback_source: yfinance
+
+backtest:
+  initial_cash: 100000.0
+  slippage_bps: 2.0
+  fill_model: next_open
+
+strategies:
+  rsi2_meanrev:
+    name: rsi2_meanrev
+    enabled: true
+    params:
+      universe: [SPY, QQQ, IWM, XLK, XLF, XLE, XLV, XLY]
+      rsi_period: 2
+      rsi_oversold: 10
+      rsi_exit: 70
+      regime_sma: 200
+      atr_period: 14
+      atr_stop_mult: 2.5
+      max_hold_bars: 10
+  donchian_trend:
+    name: donchian_trend
+    enabled: true
+    params:
+      universe: [SPY, QQQ, TLT, GLD, USO, UUP]
+      entry_lookback: 55
+      exit_lookback: 20
+      atr_period: 20
+      atr_risk_mult: 2.0
+  etf_momentum:
+    name: etf_momentum
+    enabled: false                      # disqualified by backtest
+
+monitoring:
+  log_level: INFO
+  log_file: logs/apex2_paper.log
+  db_file: data/apex2_paper.db
+  telegram_enabled: false
+  telegram_bot_token: ${TELEGRAM_BOT_TOKEN:}
+  telegram_chat_id: ${TELEGRAM_CHAT_ID:}
