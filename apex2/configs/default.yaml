@@ -1,0 +1,85 @@
+# Apex v2 — default config
+# Copy to configs/local.yaml and override secrets there.
+
+mode: paper          # backtest | paper | live
+
+capital:
+  starting_balance_usd: 10000.0
+  risk_per_trade_pct: 1.0
+  max_daily_loss_pct: 3.0
+  max_open_positions: 5
+  max_position_pct: 25.0
+  kelly_fraction: 0.25
+
+brokers:
+  alpaca:
+    enabled: true
+    paper: true
+    api_key: ${ALPACA_API_KEY:}
+    api_secret: ${ALPACA_API_SECRET:}
+  ibkr:
+    enabled: false
+    host: 127.0.0.1
+    port: 7497
+    client_id: 1
+  crypto:
+    enabled: false
+    exchange_id: coinbase
+    api_key: ${COINBASE_API_KEY:}
+    api_secret: ${COINBASE_API_SECRET:}
+    sandbox: true
+
+data:
+  cache_dir: data/cache
+  parquet_compression: snappy
+  primary_source: alpaca
+  fallback_source: yfinance
+
+backtest:
+  commission_per_share: 0.0
+  commission_per_trade: 0.0
+  slippage_bps: 2.0
+  fill_model: next_open
+  initial_cash: 10000.0
+
+strategies:
+  etf_momentum:
+    name: etf_momentum
+    enabled: true
+    params:
+      universe: [SPY, QQQ, IWM, DIA, EFA, EEM, TLT, GLD, XLK, XLF, XLE, XLV, XLY]
+      lookback_days: 126
+      skip_days: 21
+      top_n: 3
+      rebalance_days: 21
+      abs_momentum_filter: true
+      benchmark: SPY
+  rsi2_meanrev:
+    name: rsi2_meanrev
+    enabled: true
+    params:
+      universe: [SPY, QQQ, IWM, XLK, XLF, XLE, XLV, XLY]
+      rsi_period: 2
+      rsi_oversold: 10
+      rsi_exit: 70
+      regime_sma: 200
+      atr_period: 14
+      atr_stop_mult: 2.5
+      max_hold_bars: 10
+  donchian_trend:
+    name: donchian_trend
+    enabled: true
+    params:
+      universe: [SPY, QQQ, TLT, GLD, USO, UUP]
+      entry_lookback: 55
+      exit_lookback: 20
+      atr_period: 20
+      atr_risk_mult: 2.0
+
+monitoring:
+  log_level: INFO
+  log_file: logs/apex2.log
+  db_file: data/apex2.db
+  telegram_enabled: false
+  telegram_bot_token: ${TELEGRAM_BOT_TOKEN:}
+  telegram_chat_id: ${TELEGRAM_CHAT_ID:}
