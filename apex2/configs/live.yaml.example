@@ -1,0 +1,72 @@
+# Apex v2 — LIVE configuration template
+# Copy to live.yaml, fill in keys, then run:
+#   python -m apex2.runner live -c configs/live.yaml -s rsi2_meanrev \
+#       --i-have-validated-this-strategy-for-90-days
+#
+# *** NEVER commit live.yaml ***
+
+mode: live
+
+capital:
+  starting_balance_usd: 500.0          # Hard cap for first 30 days live
+  risk_per_trade_pct: 0.5              # Half a percent per trade — conservative
+  max_daily_loss_pct: 3.0              # Kill switch
+  max_open_positions: 1                # ONE position at a time first 30 days
+  max_position_pct: 20.0
+  kelly_fraction: 0.10                 # Very conservative Kelly multiplier
+
+brokers:
+  alpaca:
+    enabled: true
+    paper: false                        # LIVE money — be sure
+    api_key: ${ALPACA_LIVE_API_KEY:}
+    api_secret: ${ALPACA_LIVE_API_SECRET:}
+  ibkr:
+    enabled: false
+  crypto:
+    enabled: false
+
+data:
+  cache_dir: data/cache
+  primary_source: alpaca
+  fallback_source: yfinance
+
+backtest:
+  initial_cash: 500.0
+  slippage_bps: 2.0
+  fill_model: next_open
+
+strategies:
+  # Same params as backtest config — DO NOT TUNE for live before validation.
+  rsi2_meanrev:
+    name: rsi2_meanrev
+    enabled: true
+    params:
+      universe: [SPY, QQQ, IWM, XLK, XLF, XLE, XLV, XLY]
+      rsi_period: 2
+      rsi_oversold: 10
+      rsi_exit: 70
+      regime_sma: 200
+      atr_period: 14
+      atr_stop_mult: 2.5
+      max_hold_bars: 10
+  donchian_trend:
+    name: donchian_trend
+    enabled: false                      # Start with one. Add Donchian after 14 days clean.
+    params:
+      universe: [SPY, QQQ, TLT, GLD, USO, UUP]
+      entry_lookback: 55
+      exit_lookback: 20
+      atr_period: 20
+      atr_risk_mult: 2.0
+  etf_momentum:
+    name: etf_momentum
+    enabled: false                      # Disqualified by backtest
+
+monitoring:
+  log_level: INFO
+  log_file: logs/apex2_live.log
+  db_file: data/apex2_live.db
+  telegram_enabled: false               # Wire up if you want fill alerts
+  telegram_bot_token: ${TELEGRAM_BOT_TOKEN:}
+  telegram_chat_id: ${TELEGRAM_CHAT_ID:}

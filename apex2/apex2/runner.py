@@ -18,6 +18,7 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
+from .backtest.analyzers import AnalyzerSuite
 from .backtest.engine import BacktestEngine
 from .backtest.metrics import compute_metrics
 from .brokers.alpaca import AlpacaBroker
@@ -99,6 +100,72 @@ def backtest(
 
     metrics = compute_metrics(state.equity_curve, state.fills)
     _print_metrics(strategy, metrics, cfg.capital.starting_balance_usd, state.equity_curve)
+    extras = AnalyzerSuite.default().run(state.equity_curve, state.fills)
+    _print_analyzers(extras)
+
+
+@app.command()
+def portfolio(
+    config: str = typer.Option("configs/default.yaml", "--config", "-c"),
+    strategies: str = typer.Option("rsi2_meanrev,donchian_trend", "--strategies"),
+    years: int = typer.Option(5, "--years", "-y"),
+    end: str | None = typer.Option(None, "--end"),
+):
+    """Backtest multiple strategies sharing one capital pool. Reports combined metrics."""
+    cfg = load_config(config)
+    _setup_logging(cfg.monitoring.log_level, cfg.monitoring.log_file)
+
+    end_dt = datetime.fromisoformat(end) if end else datetime.utcnow()
+    start_dt = end_dt - timedelta(days=int(years * 365.25))
+
+    names = [s.strip() for s in strategies.split(",") if s.strip()]
+    universe: set[str] = set()
+    for n in names:
+        sc = getattr(cfg.strategies, n)
+        universe.update(sc.params.get("universe", []))
+        bench = sc.params.get("benchmark")
+        if bench:
+            universe.add(bench)
+
+    src = DataSource(cfg.data, cfg.brokers.alpaca if cfg.brokers.alpaca.enabled else None)
+    bars = {}
+    for sym in sorted(universe):
+        try:
+            df = src.get_bars(sym, start_dt.date(), end_dt.date(), timeframe="1d")
+            if not df.empty:
+                bars[sym] = df
+        except Exception as e:
+            console.print(f"[yellow]Skip {sym}: {e}[/yellow]")
+    if not bars:
+        console.print("[red]No data fetched.[/red]")
+        raise typer.Exit(1)
+
+    # Build combined strategy that delegates to each sub-strategy.
+    sub_strategies = []
+    capital_per = cfg.capital.starting_balance_usd / len(names)
+    for n in names:
+        sc = getattr(cfg.strategies, n)
+        ctx = StrategyContext(
+            params=sc.params,
+            risk_pct_per_trade=cfg.capital.risk_per_trade_pct,
+            max_position_pct=cfg.capital.max_position_pct / max(len(names), 1),
+        )
+        sub_strategies.append(build_strategy(n, ctx))
+
+    def combined(state, ts, b):
+        out = []
+        for s in sub_strategies:
+            out.extend(s.on_bar(state, ts, b) or [])
+        return out
+
+    bt_cfg = cfg.backtest
+    bt_cfg.initial_cash = cfg.capital.starting_balance_usd
+    state = BacktestEngine(bt_cfg).run(bars, combined, start=start_dt, end=end_dt)
+    metrics = compute_metrics(state.equity_curve, state.fills)
+    _print_metrics(f"portfolio[{','.join(names)}]", metrics, cfg.capital.starting_balance_usd, state.equity_curve)
+    extras = AnalyzerSuite.default().run(state.equity_curve, state.fills)
+    _print_analyzers(extras)
+    console.print(f"[green]Used {capital_per:.0f}/strategy capital allocation across {len(names)} strategies[/green]")
 
 
 @app.command()
@@ -232,6 +299,19 @@ async def _paper_loop(cfg: Config, strategy_name: str, poll_seconds: int):
             await asyncio.sleep(poll_seconds)
     finally:
         await broker.disconnect()
+
+
+def _print_analyzers(extras: dict) -> None:
+    if not extras:
+        return
+    table = Table(title="Analyzers", show_header=True)
+    table.add_column("Analyzer")
+    table.add_column("Result")
+    for name, value in extras.items():
+        if isinstance(value, dict):
+            value = ", ".join(f"{k}={v}" for k, v in value.items())
+        table.add_row(name, str(value))
+    console.print(table)
 
 
 def _print_metrics(strategy: str, m, starting_cash: float, equity_curve) -> None:

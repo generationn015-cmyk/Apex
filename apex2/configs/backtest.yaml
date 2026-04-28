@@ -1,0 +1,72 @@
+# Apex v2 — backtest-only config
+# Uses yfinance (no broker creds needed) and a realistic 10k starting balance.
+
+mode: backtest
+
+capital:
+  starting_balance_usd: 10000.0
+  risk_per_trade_pct: 1.0
+  max_daily_loss_pct: 3.0
+  max_open_positions: 5
+  max_position_pct: 25.0
+  kelly_fraction: 0.25
+
+brokers:
+  alpaca:
+    enabled: false
+    paper: true
+  ibkr:
+    enabled: false
+  crypto:
+    enabled: false
+
+data:
+  cache_dir: data/cache
+  parquet_compression: snappy
+  primary_source: yfinance
+  fallback_source: none
+
+backtest:
+  commission_per_share: 0.0          # Alpaca is free
+  commission_per_trade: 0.0
+  slippage_bps: 2.0                  # Conservative; Alpaca paper showed 1-3 bps on liquid ETFs
+  fill_model: next_open
+  initial_cash: 10000.0
+
+strategies:
+  etf_momentum:
+    name: etf_momentum
+    enabled: true
+    params:
+      universe: [SPY, QQQ, IWM, DIA, EFA, EEM, TLT, GLD, XLK, XLF, XLE, XLV, XLY]
+      lookback_days: 126
+      skip_days: 21
+      top_n: 3
+      rebalance_days: 21
+      abs_momentum_filter: true
+      benchmark: SPY
+  rsi2_meanrev:
+    name: rsi2_meanrev
+    enabled: true
+    params:
+      universe: [SPY, QQQ, IWM, XLK, XLF, XLE, XLV, XLY]
+      rsi_period: 2
+      rsi_oversold: 10
+      rsi_exit: 70
+      regime_sma: 200
+      atr_period: 14
+      atr_stop_mult: 2.5
+      max_hold_bars: 10
+  donchian_trend:
+    name: donchian_trend
+    enabled: true
+    params:
+      universe: [SPY, QQQ, TLT, GLD, USO, UUP]
+      entry_lookback: 55
+      exit_lookback: 20
+      atr_period: 20
+      atr_risk_mult: 2.0
+
+monitoring:
+  log_level: WARNING
+  log_file: logs/apex2_backtest.log
