@@ -49,7 +49,7 @@ def check_account(key: str, secret: str) -> None:
     print(f"  account: {acct.account_number}  status: {acct.status}")
     print(f"  cash: ${float(acct.cash):,.2f}   equity: ${float(acct.equity):,.2f}")
     print(f"  buying power: ${float(acct.buying_power):,.2f}")
-    if str(acct.status).upper() != "ACTIVE":
+    if "ACTIVE" not in str(acct.status).upper():
         print(_yellow(f"⚠ account status is {acct.status}; trading may be restricted"))
 
 

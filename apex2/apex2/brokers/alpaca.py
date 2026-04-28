@@ -112,7 +112,7 @@ class AlpacaBroker(BaseBroker):
                                              StopOrderRequest)
 
         alp_side = AlpSide.BUY if side == OrderSide.BUY else AlpSide.SELL
-        tif = TimeInForce(time_in_force.upper())
+        tif = TimeInForce(time_in_force.lower())
 
         if order_type == OrderType.MARKET:
             req = MarketOrderRequest(symbol=symbol, qty=qty, side=alp_side, time_in_force=tif)
