@@ -106,6 +106,40 @@ class StrategiesConfig(BaseModel):
             "atr_risk_mult": 2.0,
         },
     )
+    pairs_trading: StrategyConfig = StrategyConfig(
+        name="pairs_trading",
+        params={
+            "pairs": [["XLF", "KRE"], ["XLK", "SOXX"], ["IWM", "IJR"]],
+            "lookback_days": 60,
+            "zscore_window": 30,
+            "entry_z": 2.0,
+            "exit_z": 0.5,
+            "stop_z": 4.0,
+        },
+    )
+    bond_equity_rotation: StrategyConfig = StrategyConfig(
+        name="bond_equity_rotation",
+        params={
+            "equity_ticker": "SPY",
+            "bond_ticker": "TLT",
+            "slope_sma_days": 21,
+            "enter_equity_threshold": 0.20,
+            "enter_bond_threshold": -0.20,
+        },
+    )
+    defensive_momentum: StrategyConfig = StrategyConfig(
+        name="defensive_momentum",
+        params={
+            "universe": ["USMV", "SPLV", "XLV", "XLP", "XLU", "VIG", "QUAL", "MTUM"],
+            "benchmark": "SPY",
+            "regime_sma": 200,
+            "momentum_lookback": 252,
+            "momentum_skip": 21,
+            "vol_window": 60,
+            "top_k": 3,
+            "rebalance_days": 21,
+        },
+    )
 
 
 class MonitoringConfig(BaseModel):

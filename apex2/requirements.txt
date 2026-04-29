@@ -1,5 +1,6 @@
 pydantic>=2.6
 PyYAML>=6.0
+optuna>=3.5
 python-dotenv>=1.0
 pandas>=2.2
 numpy>=1.26

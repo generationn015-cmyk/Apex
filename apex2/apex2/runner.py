@@ -21,6 +21,7 @@ from rich.table import Table
 from .backtest.analyzers import AnalyzerSuite
 from .backtest.engine import BacktestEngine
 from .backtest.metrics import compute_metrics
+from .backtest.monte_carlo import monte_carlo_resample
 from .brokers.alpaca import AlpacaBroker
 from .config.loader import load_config
 from .config.models import Config
@@ -28,7 +29,7 @@ from .data.source import DataSource
 from .execution.router import ExecutionRouter, ExecRequest
 from .risk.manager import GateInput, RiskManager
 from .strategies.base import StrategyContext
-from .strategies.registry import build as build_strategy
+from .strategies.registry import build as build_strategy, universe_for
 
 app = typer.Typer(add_completion=False)
 console = Console()
@@ -65,10 +66,7 @@ def backtest(
         console.print(f"[yellow]Strategy {strategy} is disabled in config[/yellow]")
         raise typer.Exit(1)
 
-    universe = list(strat_cfg.params.get("universe", []))
-    bench = strat_cfg.params.get("benchmark", "SPY")
-    if bench and bench not in universe:
-        universe.append(bench)
+    universe = universe_for(strategy, strat_cfg.params)
     if not universe:
         console.print(f"[red]Strategy {strategy} has empty universe[/red]")
         raise typer.Exit(1)
@@ -102,6 +100,13 @@ def backtest(
     _print_metrics(strategy, metrics, cfg.capital.starting_balance_usd, state.equity_curve)
     extras = AnalyzerSuite.default().run(state.equity_curve, state.fills)
     _print_analyzers(extras)
+    mc = monte_carlo_resample(state.fills, n_simulations=3000)
+    if mc.n_trades > 0:
+        console.print(
+            f"[cyan]Monte Carlo ({mc.n_simulations} resamples, {mc.n_trades} trades): "
+            f"return p05/p50/p95 = {mc.final_return_pct['p05']}/{mc.final_return_pct['p50']}/{mc.final_return_pct['p95']}%   "
+            f"max-DD p05/p50/p95 = {mc.max_dd_pct['p05']}/{mc.max_dd_pct['p50']}/{mc.max_dd_pct['p95']}%[/cyan]"
+        )
 
 
 @app.command()
@@ -122,10 +127,7 @@ def portfolio(
     universe: set[str] = set()
     for n in names:
         sc = getattr(cfg.strategies, n)
-        universe.update(sc.params.get("universe", []))
-        bench = sc.params.get("benchmark")
-        if bench:
-            universe.add(bench)
+        universe.update(universe_for(n, sc.params))
 
     src = DataSource(cfg.data, cfg.brokers.alpaca if cfg.brokers.alpaca.enabled else None)
     bars = {}
@@ -236,10 +238,7 @@ async def _paper_loop(cfg: Config, strategy_names: list[str], poll_seconds: int)
             max_position_pct=cfg.capital.max_position_pct / max(len(strategy_names), 1),
         )
         strategies.append((name, build_strategy(name, ctx), sc))
-        universe.update(sc.params.get("universe", []))
-        bench = sc.params.get("benchmark")
-        if bench:
-            universe.add(bench)
+        universe.update(universe_for(name, sc.params))
     universe = sorted(universe)
 
     src = DataSource(cfg.data, cfg.brokers.alpaca)
