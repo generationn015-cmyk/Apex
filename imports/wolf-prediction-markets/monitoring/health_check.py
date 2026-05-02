@@ -1,0 +1,159 @@
+"""
+Wolf Trading Bot — Health Check & Dead Man's Switch
+Heartbeat every 30 min. CRITICAL alert if Wolf goes silent.
+Monitors: Binance feed, Polymarket API, Kalshi API, daily P&L.
+"""
+import asyncio
+import time
+import logging
+import requests
+import config
+from alerts.telegram_alerts import send_alert, alert_system_down
+from journal.trade_logger import TradeLogger
+
+logger = logging.getLogger("wolf.health")
+
+class HealthCheck:
+    _STARTUP_GRACE_SEC = 30  # Don't flag feeds as down during first 30s
+
+    def __init__(self, trade_logger: TradeLogger):
+        self.journal = trade_logger
+        self._start_time = time.time()
+        self._last_heartbeat: float = 0
+        self._running = False
+        self._task = None
+        # Feed state tracking — alert on transition, not on every check
+        # Default False = no alert until feed is confirmed working
+        self._feed_state: dict[str, bool] = {
+            "binance": False,
+            "polymarket": False,
+        }
+
+    async def start(self):
+        self._running = True
+        self._task = asyncio.create_task(self._heartbeat_loop())
+        logger.info("Health check started")
+
+    async def stop(self):
+        self._running = False
+        if self._task:
+            self._task.cancel()
+
+    async def _heartbeat_loop(self):
+        # Wait for feeds to fully initialize before first health check
+        await asyncio.sleep(25)
+        while self._running:
+            try:
+                await self._run_check()
+                self._last_heartbeat = time.time()
+                await asyncio.sleep(config.HEARTBEAT_INTERVAL_SEC)
+            except asyncio.CancelledError:
+                break
+            except Exception as e:
+                logger.error(f"Health check error: {e}")
+                alert_system_down("health_check", str(e))
+                await asyncio.sleep(60)
+
+    async def _run_check(self):
+        results = {}
+
+        # Binance feed check — REST always works on this VPS
+        # Just verify the API responds; internal price state is handled by the feed itself
+        try:
+            import requests as _req
+            r = _req.get("https://api.binance.us/api/v3/ticker/price",
+                         params={"symbol": "BTCUSDT"}, timeout=5)
+            results["binance_ok"] = r.ok
+        except Exception:
+            results["binance_ok"] = False
+
+        # Polymarket API check
+        try:
+            resp = requests.get(
+                "https://gamma-api.polymarket.com/markets",
+                params={"limit": 1},
+                timeout=10
+            )
+            results["polymarket_ok"] = resp.ok
+        except Exception as e:
+            results["polymarket_ok"] = False
+            send_alert(f"Polymarket API unreachable: {e}", "WARNING", system=True)
+
+        # Kalshi API check
+        try:
+            resp = requests.get(
+                f"{config.KALSHI_BASE_URL}/exchange/status",
+                timeout=10
+            )
+            results["kalshi_ok"] = resp.ok
+        except Exception as e:
+            results["kalshi_ok"] = False
+            # Kalshi failure is non-critical in Phase 1
+
+        # Capital deployment check — alert if overdeployed
+        try:
+            import sqlite3 as _sq
+            _conn = _sq.connect(config.DB_PATH, timeout=5)
+            _deployed = _conn.execute(
+                "SELECT COALESCE(SUM(size),0) FROM paper_trades WHERE resolved=0 AND COALESCE(void,0)=0 AND simulated=0"
+            ).fetchone()[0]
+            _open = _conn.execute(
+                "SELECT COUNT(*) FROM paper_trades WHERE resolved=0 AND COALESCE(void,0)=0 AND simulated=0"
+            ).fetchone()[0]
+            _conn.close()
+            _balance = config.PAPER_STARTING_CAPITAL
+            if _deployed > _balance:
+                _send(f"🚨 OVERDEPLOYED: ${_deployed:.2f} on ${_balance:.2f} balance ({_open} positions)")
+                logger.critical(f"OVERDEPLOYED: ${_deployed:.2f} > ${_balance:.2f}")
+        except Exception:
+            pass
+
+        # Log health
+        stats = self.journal.get_stats()
+        health_record = {
+            "timestamp": time.time(),
+            "status": "ok" if all([results.get("binance_ok"), results.get("polymarket_ok")]) else "degraded",
+            **results,
+            "notes": f"Paper trades: {stats['paper']['total']} | Win rate: {stats['paper']['win_rate']:.1%}",
+        }
+        self.journal.log_health(health_record)
+
+        # ── Feed-down / feed-recovery alerts (transition only, not every check) ──
+        # Binance: initial state False — only alerts after feed was confirmed working once
+        from alerts.telegram_alerts import _send
+        feed_checks = {
+            "binance": results.get("binance_ok", False),
+            "polymarket": results.get("polymarket_ok", False),
+        }
+        for feed, is_ok in feed_checks.items():
+            was_ok = self._feed_state.get(feed, False)  # Default False = no alert on startup
+            if was_ok and not is_ok:
+                # Feed just went DOWN (was working, now broken)
+                affected = "latency_arb, ta_signal" if feed == "binance" else feed
+                _send(
+                    f"⚠️ <b>{feed.upper()} feed down</b>\n"
+                    f"Paused: {affected}\n"
+                    f"Still running: all other strategies"
+                )
+                logger.critical(f"FEED DOWN: {feed}")
+            elif not was_ok and is_ok:
+                # Feed recovered — log only, no Telegram spam
+                self._feed_state[feed] = True
+                logger.info(f"Feed recovered: {feed}")
+            self._feed_state[feed] = is_ok
+
+        import config as _hc_cfg
+        _p = stats['paper']
+        _bal = _hc_cfg.PAPER_STARTING_CAPITAL + _p['pnl']
+        _mode = "PAPER" if _hc_cfg.PAPER_MODE else "LIVE"
+        status_msg = (
+            f"🐺 Wolf Heartbeat — {_mode}\n"
+            f"─────────────────────\n"
+            f"📊 Trades: {_p['total']} | WR: {_p['win_rate']:.1%}\n"
+            f"💰 P&L: ${_p['pnl']:+.2f} | Balance: ${_bal:,.2f}\n"
+            f"📡 Poly: {'✅' if results.get('polymarket_ok') else '❌'} | "
+            f"Binance: {'✅' if results.get('binance_ok') else '❌'} | "
+            f"Kalshi: {'✅' if results.get('kalshi_ok') else '❌'}"
+        )
+        send_alert(status_msg, "INFO", system=True)
+        logger.info(f"Health check complete: {results}")

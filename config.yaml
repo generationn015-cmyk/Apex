@@ -29,6 +29,18 @@ leverage:
 
 # ── Active Venues ─────────────────────────────────────────
 venues:
+  alpaca:
+    # US stocks/ETFs paper trading. Keep paper=true until explicitly approved.
+    enabled: false
+    paper: true
+    api_key: ""                  # Set APCA_API_KEY_ID in .env
+    api_secret: ""               # Set APCA_API_SECRET_KEY in .env
+    feed: "iex"                  # Free stock data feed
+    default_pairs:
+      - "SPY"
+      - "AAPL"
+      - "MSFT"
+
   toobit:
     # ⚠️  BLOCKED FOR US RESIDENTS — Cayman Islands registered, no FinCEN license
     # Non-US users: set enabled: true and add API keys to .env

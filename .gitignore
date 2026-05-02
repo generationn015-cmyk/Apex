@@ -12,12 +12,22 @@ env/
 data/apex.db
 data/apex.db-shm
 data/apex.db-wal
+data/paper_journal.csv
+data/history/
 logs/
 *.log
+runtime/
 
 # Secrets — NEVER commit these
 .env
 config.local.yaml
+
+# Imported repo runtime artifacts
+imports/**/.guardian_cooldown.json
+imports/**/analytics/last_report.json
+imports/**/backtest_results/
+imports/**/data/backup_*/
+imports/**/learning_state.json
 
 # OS
 .DS_Store

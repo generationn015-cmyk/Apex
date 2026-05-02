@@ -1,0 +1,288 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+/* Wolf Trading Mission Control - Dark Trading Theme */
+:root {
+  --background: oklch(0.12 0.01 250);
+  --foreground: oklch(0.95 0 0);
+  --card: oklch(0.16 0.01 250);
+  --card-foreground: oklch(0.95 0 0);
+  --popover: oklch(0.18 0.01 250);
+  --popover-foreground: oklch(0.95 0 0);
+  --primary: oklch(0.65 0.2 145);
+  --primary-foreground: oklch(0.12 0 0);
+  --secondary: oklch(0.22 0.01 250);
+  --secondary-foreground: oklch(0.85 0 0);
+  --muted: oklch(0.2 0.01 250);
+  --muted-foreground: oklch(0.6 0 0);
+  --accent: oklch(0.55 0.18 280);
+  --accent-foreground: oklch(0.95 0 0);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.95 0 0);
+  --border: oklch(0.28 0.01 250);
+  --input: oklch(0.22 0.01 250);
+  --ring: oklch(0.65 0.2 145);
+  /* Trading specific colors */
+  --chart-1: oklch(0.65 0.2 145);
+  --chart-2: oklch(0.55 0.22 25);
+  --chart-3: oklch(0.6 0.18 280);
+  --chart-4: oklch(0.75 0.18 85);
+  --chart-5: oklch(0.55 0.15 200);
+  --success: oklch(0.65 0.2 145);
+  --warning: oklch(0.75 0.18 85);
+  --radius: 0.5rem;
+  --sidebar: oklch(0.1 0.01 250);
+  --sidebar-foreground: oklch(0.9 0 0);
+  --sidebar-primary: oklch(0.65 0.2 145);
+  --sidebar-primary-foreground: oklch(0.12 0 0);
+  --sidebar-accent: oklch(0.18 0.01 250);
+  --sidebar-accent-foreground: oklch(0.9 0 0);
+  --sidebar-border: oklch(0.25 0.01 250);
+  --sidebar-ring: oklch(0.65 0.2 145);
+}
+
+.dark {
+  --background: oklch(0.12 0.01 250);
+  --foreground: oklch(0.95 0 0);
+  --card: oklch(0.16 0.01 250);
+  --card-foreground: oklch(0.95 0 0);
+  --popover: oklch(0.18 0.01 250);
+  --popover-foreground: oklch(0.95 0 0);
+  --primary: oklch(0.65 0.2 145);
+  --primary-foreground: oklch(0.12 0 0);
+  --secondary: oklch(0.22 0.01 250);
+  --secondary-foreground: oklch(0.85 0 0);
+  --muted: oklch(0.2 0.01 250);
+  --muted-foreground: oklch(0.6 0 0);
+  --accent: oklch(0.55 0.18 280);
+  --accent-foreground: oklch(0.95 0 0);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.95 0 0);
+  --border: oklch(0.28 0.01 250);
+  --input: oklch(0.22 0.01 250);
+  --ring: oklch(0.65 0.2 145);
+  --chart-1: oklch(0.65 0.2 145);
+  --chart-2: oklch(0.55 0.22 25);
+  --chart-3: oklch(0.6 0.18 280);
+  --chart-4: oklch(0.75 0.18 85);
+  --chart-5: oklch(0.55 0.15 200);
+  --success: oklch(0.65 0.2 145);
+  --warning: oklch(0.75 0.18 85);
+  --sidebar: oklch(0.1 0.01 250);
+  --sidebar-foreground: oklch(0.9 0 0);
+  --sidebar-primary: oklch(0.65 0.2 145);
+  --sidebar-primary-foreground: oklch(0.12 0 0);
+  --sidebar-accent: oklch(0.18 0.01 250);
+  --sidebar-accent-foreground: oklch(0.9 0 0);
+  --sidebar-border: oklch(0.25 0.01 250);
+  --sidebar-ring: oklch(0.65 0.2 145);
+}
+
+@theme inline {
+  --font-sans: 'Geist', 'Geist Fallback', system-ui, sans-serif;
+  --font-mono: 'Geist Mono', 'Geist Mono Fallback', monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom scrollbar for trading dashboard */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: oklch(0.15 0.01 250);
+}
+
+::-webkit-scrollbar-thumb {
+  background: oklch(0.3 0.01 250);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.4 0.01 250);
+}
+
+/* Pulse animation for status indicators */
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 oklch(0.65 0.2 145 / 0.4);
+  }
+  50% {
+    opacity: 0.8;
+    box-shadow: 0 0 0 4px oklch(0.65 0.2 145 / 0);
+  }
+}
+
+.status-pulse {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Confetti animation */
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-10vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.animate-confetti {
+  animation: confetti-fall 3s ease-out forwards;
+}
+
+/* Win celebration glow */
+@keyframes win-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px oklch(0.65 0.2 145 / 0.3), 0 0 15px oklch(0.65 0.2 145 / 0.2);
+  }
+  50% {
+    box-shadow: 0 0 10px oklch(0.65 0.2 145 / 0.5), 0 0 30px oklch(0.65 0.2 145 / 0.3);
+  }
+}
+
+.win-glow {
+  animation: win-glow 1.5s ease-in-out infinite;
+}
+
+/* Gold shimmer for legendary items */
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.gold-shimmer {
+  background: linear-gradient(
+    90deg,
+    oklch(0.75 0.18 85) 0%,
+    oklch(0.85 0.15 80) 50%,
+    oklch(0.75 0.18 85) 100%
+  );
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* ── Mobile / Safe areas ─────────────────────────────────────────────────── */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .pb-safe-bottom {
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+}
+
+/* Ensure scrollable areas don't get hidden behind bottom nav on mobile */
+@media (max-width: 1023px) {
+  html, body {
+    overscroll-behavior: none;
+  }
+}
+
+/* Mobile hunt log — tighter table cells */
+@media (max-width: 640px) {
+  .wolf-table-cell {
+    padding: 6px 8px;
+  }
+}
+
+/* ── Mobile Native Feel ──────────────────────────────────────────────────────── */
+
+/* Smooth tab transitions */
+@media (max-width: 1023px) {
+  html, body {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Remove tap highlight */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Mobile card enter animation */
+  .mobile-fade-in {
+    animation: mobileFadeIn 0.2s ease-out both;
+  }
+
+  @keyframes mobileFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Smooth main content transition on tab change */
+  main > div:first-child > div {
+    animation: mobileFadeIn 0.18s ease-out both;
+  }
+}
+
+/* Safe area for iPhone home bar */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .pb-safe-bottom {
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+  nav[class*="fixed bottom"] {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Scrollbar hide on mobile */
+@media (max-width: 1023px) {
+  ::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; }
+}

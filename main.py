@@ -31,6 +31,7 @@ import yaml
 from dotenv import load_dotenv
 
 from data.store import TradeStore
+from exchanges.alpaca import AlpacaExchange
 from exchanges.toobit import ToobitExchange
 from exchanges.hyperliquid import HyperliquidExchange
 from exchanges.lighter import LighterExchange
@@ -78,6 +79,10 @@ def _inject_env(config: dict) -> None:
         "POLYMARKET_API_SECRET": ("polymarket", "api_secret"),
         "POLYMARKET_PASSPHRASE": ("polymarket", "passphrase"),
         "POLYMARKET_PRIVATE_KEY": ("polymarket", "wallet_private_key"),
+        "APCA_API_KEY_ID": ("alpaca", "api_key"),
+        "APCA_API_SECRET_KEY": ("alpaca", "api_secret"),
+        "ALPACA_API_KEY": ("alpaca", "api_key"),
+        "ALPACA_API_SECRET": ("alpaca", "api_secret"),
         "TELEGRAM_BOT_TOKEN": (None, None),  # handled separately
         "TELEGRAM_CHAT_ID": (None, None),
     }
@@ -479,6 +484,7 @@ class ApexBot:
     async def _connect_exchanges(self) -> None:
         venues = self.config.get("venues", {})
         exchange_classes = {
+            "alpaca": AlpacaExchange,
             "toobit": ToobitExchange,
             "hyperliquid": HyperliquidExchange,
             "lighter": LighterExchange,

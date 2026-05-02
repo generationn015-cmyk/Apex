@@ -1,0 +1,240 @@
+"""
+Wolf Trading Bot — Value Bet Strategy
+
+Finds markets where the outcome is highly probable based on price.
+Key insight: Always enters from the LOW PRICE side (≤ 0.50) for
+positive Kelly sizing. High-conviction markets near resolution.
+
+Logic:
+- YES price < 0.15 → outcome is very likely NO → BUY NO (price ~0.85-0.91)
+- YES price > 0.85 → outcome is very likely YES → BUY YES (price ~0.85-0.91)
+
+Wait — for Kelly to work we need ENTRY price < 0.50.
+So: rephrase all trades as the underdog entry:
+  - YES=0.09 → BUY YES (entry=0.09, payout=~$1, confident it resolves YES)
+    NO — this is the low-confidence side.
+
+Actually the insight is:
+  YES=0.09 means NO=0.91 and the market says NO is 91% likely.
+  If WE agree NO is ~91% likely, BUY NO at 0.91 → but Kelly hates that.
+  
+  The ONLY way to get positive Kelly is if we believe probability > market price.
+  At YES=0.09 → if we believe true prob of YES is <9% → buy NO at 0.91 is wrong entry.
+  → Instead: buy YES at 0.09 if we believe true prob of YES is >9%.
+
+REAL STRATEGY:
+Markets priced 0.05–0.20 often have real residual probability.
+Sports/news markets where crowd has over-corrected.
+Buy the underdog at 0.10–0.20 with tight sizing.
+
+Also: mid-range markets (0.35–0.65) with clear momentum signals.
+"""
+import os
+import time
+import logging
+import json as _json
+import requests
+import config
+from datetime import datetime, timezone, timedelta
+from learning_engine import learning
+from market_priority import fetch_prioritized_markets, get_expiry_summary
+
+logger = logging.getLogger("wolf.strategy.value_bet")
+
+# Target: buy the underpriced side — entry price must be low enough for Kelly
+MAX_ENTRY_PRICE   = 0.30   # Only buy at ≤ 0.30 → Kelly works
+MIN_ENTRY_PRICE   = 0.03   # Too cheap = no liquidity
+MIN_VOLUME        = 50_000  # Match risk gate — $50K min (same as config.MIN_MARKET_VOLUME)
+POLY_FEE          = 0.01   # 1% taker fee
+MIN_EDGE          = 0.04   # 4 cents net edge required
+COOLDOWN          = 300    # 5 min per market — allow re-entry as prices move
+MIN_CONFIDENCE    = 0.70   # override config — be more selective here
+ENABLED = False   # DISABLED: 21% WR in paper, 983 simulated losses in backtest — broken strategy
+
+
+class ValueBetStrategy:
+    def __init__(self):
+        self._cache: list[dict] = []
+        self._cache_ts: float = 0.0
+        self._fired: dict[str, float] = self._load_open_market_ids()
+
+    def _load_open_market_ids(self) -> dict:
+        """Seed dedup with currently-open value_bet market_ids to prevent re-entry on restart."""
+        try:
+            import sqlite3
+            if not os.path.exists(config.DB_PATH):
+                return {}
+            with sqlite3.connect(config.DB_PATH) as conn:
+                rows = conn.execute(
+                    "SELECT market_id FROM paper_trades "
+                    "WHERE strategy='value_bet' AND resolved=0 AND void=0"
+                ).fetchall()
+            fired = {r[0]: time.time() for r in rows}
+            if fired:
+                logger.info(f"Value_bet dedup seeded: {len(fired)} open markets protected from re-entry")
+            return fired
+        except Exception:
+            return {}
+
+    def _get_markets(self) -> list[dict]:
+        """Fetch markets sorted by expiry urgency (today first, then day-by-day)."""
+        now = time.time()
+        if now - self._cache_ts < 90 and self._cache:
+            return self._cache
+        try:
+            import config as _cfg
+            max_days = 2 if _cfg.PAPER_MODE else 365
+
+            markets = fetch_prioritized_markets(
+                limit=500,
+                min_liquidity=0,
+                min_volume=MIN_VOLUME,
+                max_days=max_days,
+                require_two_sided=True,
+            )
+            if not isinstance(markets, list):
+                return self._cache
+
+            # Add ID field for dedup
+            for m in markets:
+                m["_id"] = m.get("conditionId") or m.get("id", "")
+
+            self._cache = markets
+            self._cache_ts = now
+        except Exception as e:
+            logger.warning(f"ValueBet market fetch: {e}")
+        return self._cache
+
+    def _score_market(self, yes: float, no: float, vol: float) -> tuple:
+        """
+        Returns (side, entry_price, confidence, reason) or (None,None,None,None).
+        
+        Only returns signals where entry_price < 0.30 for positive Kelly.
+        Looks for:
+        1. YES price is very low (0.03-0.20) but market is active → underdog YES bet
+        2. NO price is very low (0.03-0.20) but market is active → underdog NO bet
+        """
+        # Case 1: YES is the underdog — price 0.03-0.25
+        # This means the market says ~75-97% chance of NO.
+        # We bet YES only if the underdog has better real odds than the market shows.
+        # Signal: large volume at low YES price = active market, not abandoned
+        if MIN_ENTRY_PRICE <= yes <= 0.28 and vol >= 5_000:  # Widened from 0.25 — mid-range disabled
+            # The market has significant volume and prices YES very low
+            # Contrarian bet: Yes has residual value the crowd ignores
+            # Real edge: yes at 0.10 on a $300k market = high liquidity = real signal
+            confidence = 0.70 + min(0.12, (vol / 500_000) * 0.12)
+            edge = (1.0 - yes) * confidence - yes * (1 - confidence) - POLY_FEE
+            if edge >= MIN_EDGE and confidence >= MIN_CONFIDENCE:
+                return "YES", yes, round(confidence, 3), f"Underdog YES@{yes:.3f} vol=${vol:,.0f}"
+
+        # Case 2: NO is the underdog — YES price is very high (0.75-0.97)
+        # NO price = 1 - YES = 0.03-0.25
+        elif yes >= 0.75 and no <= 0.25 and vol >= 5_000:
+            confidence = 0.70 + min(0.12, (vol / 500_000) * 0.12)
+            edge = (1.0 - no) * confidence - no * (1 - confidence) - POLY_FEE
+            if edge >= MIN_EDGE and confidence >= MIN_CONFIDENCE:
+                return "NO", no, round(confidence, 3), f"Underdog NO@{no:.3f} (YES={yes:.3f}) vol=${vol:,.0f}"
+
+        # Cases 3 & 4: Mid-range (0.28-0.72) — DISABLED based on performance data.
+        # Last 10 trades: every mid-range play was a loss. Only underdogs (<0.25) are profitable.
+        # Re-enable once rolling WR >= 65% and we have 30+ mid-range samples.
+        # elif 0.28 <= yes <= 0.42 ...  PAUSED
+        # elif 0.58 <= yes <= 0.72 ...  PAUSED
+
+        # Case 5 (BOND): Near-certainty bet — YES ≥ 0.92 or NO ≤ 0.08
+        # High-probability end-state bets: market is near resolution, collect the spread
+        elif yes >= 0.92 and vol >= 20_000:
+            confidence = 0.82 + min(0.10, (vol / 2_000_000) * 0.10)
+            edge = (1.0 - yes) * confidence - yes * (1 - confidence) - POLY_FEE
+            if edge >= MIN_EDGE and confidence >= MIN_CONFIDENCE:
+                return "YES", yes, round(confidence, 3), f"Bond YES@{yes:.3f} near-certainty vol=${vol:,.0f}"
+
+        elif no <= 0.08 and yes >= 0.92 and vol >= 20_000:
+            pass  # covered above
+
+        elif yes <= 0.08 and vol >= 20_000:
+            # Near-certain NO (YES very unlikely)
+            no_px = round(1.0 - yes, 3)
+            confidence = 0.82 + min(0.10, (vol / 2_000_000) * 0.10)
+            edge = (1.0 - no_px) * confidence - no_px * (1 - confidence) - POLY_FEE
+            if edge >= MIN_EDGE and confidence >= MIN_CONFIDENCE:
+                return "NO", no_px, round(confidence, 3), f"Bond NO@{no_px:.3f} near-certainty vol=${vol:,.0f}"
+
+        return None, None, None, None
+
+    async def scan(self) -> list[dict]:
+        if not ENABLED:
+            return []
+        # Check if learning engine has paused this strategy due to WR collapse
+        if learning.is_strategy_paused("value_bet"):
+            logger.debug("[VALUE_BET] Strategy paused by learning engine — skipping scan")
+            return []
+
+        signals = []
+        now = time.time()
+        markets = self._get_markets()
+
+        # Track event families already signaled this cycle — one signal per underlying event
+        # Prevents: holding Harvey YES@5yr + YES@10yr + YES@20yr simultaneously
+        _event_families: set[str] = set()
+
+        for market in markets:
+            mid = market["_id"]
+            if not mid or now - self._fired.get(mid, 0) < COOLDOWN:
+                continue
+
+            yes = market["_yes_price"]
+            no  = market["_no_price"]
+            vol = market["_volume"]
+
+            if learning.is_bad_price(yes):
+                continue
+
+            side, entry, confidence, reason = self._score_market(yes, no, vol)
+
+            if side and entry and confidence and confidence >= config.MIN_CONFIDENCE:
+                self._fired[mid] = now
+                q = (market.get("question") or market.get("title") or "")
+                
+                # One position per event family (first 35 chars of question = event fingerprint)
+                event_key = q[:35].strip().lower()
+                if event_key in _event_families:
+                    continue  # Already have a signal on this underlying event
+                _event_families.add(event_key)
+                
+                _vb_slug = market.get("slug", "")
+                if _vb_slug and mid:
+                    try:
+                        from market_resolver import register_slug
+                        register_slug(mid, _vb_slug)
+                    except Exception:
+                        pass
+                signals.append({
+                    "strategy":    "value_bet",
+                    "venue":       "polymarket",
+                    "market_id":   mid,
+                    "side":        side,
+                    "entry_price": entry,
+                    "confidence":  confidence,
+                    "edge":        round((1.0 - entry) * confidence - entry * (1 - confidence) - POLY_FEE, 3),
+                    "volume":      vol,
+                    "days_to_expiry": market.get("_days_to_expiry", 0),
+                    "market_end": market.get("_end_ts", 0),
+                    "timestamp":   now,
+                    "slug":        _vb_slug,
+                    "reason":      f"ValueBet: {reason} | {q[:40]}",
+                })
+                logger.debug(f"📈 ValueBet: {reason} | {q[:40]}")
+
+            if len(signals) >= 3:
+                break
+
+        # Prioritize short-duration markets aggressively — need fast resolutions for data
+        def _dur_priority(s):
+            d = s.get("days_to_expiry", 999)
+            if d <= 1:   return 0   # resolves today/tomorrow — top priority
+            elif d <= 3: return 1   # resolves this week
+            elif d <= 7: return 3   # max allowed in paper mode
+            else:        return 10  # deprioritize
+        signals.sort(key=_dur_priority)
+        return signals

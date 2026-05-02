@@ -4,6 +4,7 @@ websockets>=12.0
 asyncio-throttle
 
 # Exchange SDKs
+alpaca-py>=0.43.0
 ccxt>=4.3.0                     # Toobit + 100+ other exchanges (async support)
 hyperliquid-python-sdk>=0.9.0
 lighter-sdk
