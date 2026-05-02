@@ -35,6 +35,12 @@ STATE_DIR = ROOT / "runtime"
 JOURNAL_PATH = ROOT / "data" / "paper_journal.csv"
 HEARTBEAT_HISTORY_PATH = STATE_DIR / "dashboard_heartbeat_history.json"
 MAX_HEARTBEAT_HISTORY = 50
+MAX_ACCOUNT_EXPOSURE_PCT = 0.20
+MAX_NEW_BUY_EXPOSURE_PCT = 0.12
+MAX_DAILY_LOSS = 300.0
+MAX_OPEN_LOSS = 300.0
+MIN_BUYING_POWER_AFTER_TRADE = 1_000.0
+TOP_SIGNAL_REPORT_PATH = STATE_DIR / "top_signal_report.json"
 
 
 @dataclass(frozen=True)
@@ -53,6 +59,10 @@ class RunnerResult:
     position_qty: float
     latest_price: float
     dry_run: bool
+    exposure_pct: float = 0.0
+    day_pl: float = 0.0
+    unrealized_pl: float = 0.0
+    risk_flags: tuple[str, ...] = ()
 
     @property
     def alerts(self) -> list[str]:
@@ -63,6 +73,7 @@ class RunnerResult:
             flags.append("equity-unavailable")
         if self.position_qty < 0:
             flags.append("short-position")
+        flags.extend(self.risk_flags)
         return flags
 
 
@@ -90,6 +101,30 @@ def decide_signal(
     if latest > sma20 > sma50:
         return Decision("buy", "uptrend")
     return Decision("hold", "no_edge")
+
+
+def evaluate_risk(
+    equity: float,
+    buying_power: float,
+    market_value: float,
+    day_pl: float,
+    unrealized_pl: float,
+    pending_buy_notional: float = 0.0,
+) -> list[str]:
+    flags: list[str] = []
+    exposure_pct = abs(market_value) / equity if equity else 1.0
+    projected_exposure_pct = (abs(market_value) + max(pending_buy_notional, 0.0)) / equity if equity else 1.0
+    if exposure_pct > MAX_ACCOUNT_EXPOSURE_PCT:
+        flags.append("exposure-over-20pct")
+    if pending_buy_notional > 0 and projected_exposure_pct > MAX_NEW_BUY_EXPOSURE_PCT:
+        flags.append("new-buy-exposure-over-12pct")
+    if day_pl <= -MAX_DAILY_LOSS:
+        flags.append("daily-loss-over-300")
+    if unrealized_pl <= -MAX_OPEN_LOSS:
+        flags.append("open-loss-over-300")
+    if pending_buy_notional > 0 and buying_power - pending_buy_notional < MIN_BUYING_POWER_AFTER_TRADE:
+        flags.append("buying-power-buffer-low")
+    return flags
 
 
 def load_env() -> dict[str, str]:
@@ -223,12 +258,29 @@ def run_once(symbol: str, max_notional: float, dry_run: bool) -> RunnerResult:
     has_position = position is not None and float(position.qty) > 0
     entry_price = float(position.avg_entry_price) if has_position else 0.0
     latest = _position_price(position) if position is not None else (bars[-1]["close"] if bars else 0.0)
+    equity = float(account.portfolio_value)
+    buying_power = float(account.buying_power)
+    last_equity = float(getattr(account, "last_equity", 0) or 0)
+    day_pl = equity - last_equity if last_equity else 0.0
+    market_value = abs(float(getattr(position, "market_value", 0) or 0))
+    unrealized_pl = float(getattr(position, "unrealized_pl", 0) or 0)
     decision = decide_signal(
         bars,
         has_position=has_position,
         entry_price=entry_price,
         latest_price=latest,
     )
+    pending_buy_notional = min(max_notional, buying_power) if decision.action == "buy" and not has_position else 0.0
+    risk_flags = evaluate_risk(
+        equity=equity,
+        buying_power=buying_power,
+        market_value=market_value,
+        day_pl=day_pl,
+        unrealized_pl=unrealized_pl,
+        pending_buy_notional=pending_buy_notional,
+    )
+    if decision.action == "buy" and risk_flags:
+        decision = Decision("hold", "risk_block:" + ",".join(risk_flags))
 
     logging.info(
         "symbol=%s action=%s reason=%s market_open=%s equity=%s buying_power=%s position=%s latest=%.2f",
@@ -236,8 +288,8 @@ def run_once(symbol: str, max_notional: float, dry_run: bool) -> RunnerResult:
         decision.action,
         decision.reason,
         clock.is_open,
-        account.portfolio_value,
-        account.buying_power,
+        equity,
+        buying_power,
         getattr(position, "qty", 0),
         latest,
     )
@@ -247,8 +299,8 @@ def run_once(symbol: str, max_notional: float, dry_run: bool) -> RunnerResult:
         action=decision.action,
         reason=decision.reason,
         market_open=bool(clock.is_open),
-        equity=float(account.portfolio_value),
-        buying_power=float(account.buying_power),
+        equity=equity,
+        buying_power=buying_power,
         position_qty=float(getattr(position, "qty", 0) or 0),
         latest_price=latest,
         dry_run=dry_run,
@@ -258,11 +310,15 @@ def run_once(symbol: str, max_notional: float, dry_run: bool) -> RunnerResult:
         symbol=symbol,
         decision=decision,
         market_open=bool(clock.is_open),
-        equity=float(account.portfolio_value),
-        buying_power=float(account.buying_power),
+        equity=equity,
+        buying_power=buying_power,
         position_qty=float(getattr(position, "qty", 0) or 0),
         latest_price=latest,
         dry_run=dry_run,
+        exposure_pct=market_value / equity if equity else 0.0,
+        day_pl=day_pl,
+        unrealized_pl=unrealized_pl,
+        risk_flags=tuple(risk_flags),
     )
 
     if dry_run:
@@ -308,9 +364,18 @@ def publish_dashboard_heartbeat(env: dict[str, str], result: RunnerResult) -> No
         "latest_price": result.latest_price,
         "dry_run": result.dry_run,
         "alerts": result.alerts,
+        "risk": {
+            "exposure_pct": result.exposure_pct,
+            "day_pl": result.day_pl,
+            "unrealized_pl": result.unrealized_pl,
+            "flags": list(result.risk_flags),
+            "max_account_exposure_pct": MAX_ACCOUNT_EXPOSURE_PCT,
+            "max_new_buy_exposure_pct": MAX_NEW_BUY_EXPOSURE_PCT,
+        },
+        "signals": load_top_signal_summary(),
     }
     history = save_dashboard_heartbeat_history(heartbeat)
-    payload = json.dumps({**heartbeat, "history": history[-12:]}).encode("utf-8")
+    payload = json.dumps({**heartbeat, "history": [compact_heartbeat(item) for item in history[-12:]]}).encode("utf-8")
     request = Request(
         url,
         data=payload,
@@ -340,6 +405,52 @@ def save_dashboard_heartbeat_history(heartbeat: dict) -> list[dict]:
     history = history[-MAX_HEARTBEAT_HISTORY:]
     HEARTBEAT_HISTORY_PATH.write_text(json.dumps(history, indent=2), encoding="utf-8")
     return history
+
+
+def compact_heartbeat(heartbeat: dict) -> dict:
+    return {
+        "timestamp": heartbeat.get("timestamp"),
+        "symbol": heartbeat.get("symbol"),
+        "decision": heartbeat.get("decision"),
+        "reason": heartbeat.get("reason"),
+        "market_open": heartbeat.get("market_open"),
+        "equity": heartbeat.get("equity"),
+        "buying_power": heartbeat.get("buying_power"),
+        "position_qty": heartbeat.get("position_qty"),
+        "latest_price": heartbeat.get("latest_price"),
+        "dry_run": heartbeat.get("dry_run"),
+        "alerts": heartbeat.get("alerts") or [],
+    }
+
+
+def load_top_signal_summary() -> dict:
+    if not TOP_SIGNAL_REPORT_PATH.exists():
+        return {}
+    try:
+        payload = json.loads(TOP_SIGNAL_REPORT_PATH.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+    rows = payload.get("signals") or []
+    actionable = [row for row in rows if row.get("actionable")]
+    return {
+        "generated_at": payload.get("generated_at"),
+        "actionable_count": len(actionable),
+        "top": [
+            {
+                "symbol": row.get("symbol"),
+                "decision": row.get("decision"),
+                "reason": row.get("reason"),
+                "actionable": bool(row.get("actionable")),
+                "score": row.get("score"),
+                "latest_price": row.get("latest_price"),
+                "recent_3y": {
+                    "total_return_pct": (row.get("recent_3y") or {}).get("total_return_pct"),
+                    "max_drawdown_pct": (row.get("recent_3y") or {}).get("max_drawdown_pct"),
+                },
+            }
+            for row in rows[:5]
+        ],
+    }
 
 
 def _position_price(position) -> float:

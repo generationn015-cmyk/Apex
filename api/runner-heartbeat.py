@@ -54,6 +54,8 @@ def _read_heartbeat():
         "latest_price": heartbeat.get("latest_price"),
         "dry_run": heartbeat.get("dry_run"),
         "alerts": heartbeat.get("alerts") or [],
+        "risk": heartbeat.get("risk") or {},
+        "signals": heartbeat.get("signals") or {},
         "history": stored[-MAX_HISTORY:] if isinstance(stored, list) else [heartbeat],
         "last_seen": timestamp,
         "note": "Best-effort Vercel relay from the local Windows watchdog.",
@@ -106,6 +108,8 @@ class handler(BaseHTTPRequestHandler):
             "latest_price": payload.get("latest_price"),
             "dry_run": payload.get("dry_run"),
             "alerts": payload.get("alerts") or [],
+            "risk": payload.get("risk") or {},
+            "signals": payload.get("signals") or {},
             "mode": "paper",
         }
         history = []

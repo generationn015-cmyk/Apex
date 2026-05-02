@@ -34,7 +34,7 @@ h1{font-family:"Bodoni Moda",serif;font-size:clamp(44px,8vw,102px);line-height:.
 .side-grid,.cards{display:grid;gap:12px}.side-grid{grid-template-columns:1fr 1fr}.cards{grid-template-columns:repeat(4,minmax(0,1fr));margin:18px 0}.mini,.card{border:1px solid var(--soft);padding:14px;min-width:0}.card{min-height:122px;position:relative;overflow:hidden}.label{color:var(--muted);font-size:10px;letter-spacing:.2em;text-transform:uppercase}.value{margin-top:12px;font-family:"Bodoni Moda",serif;font-size:clamp(30px,4vw,42px);line-height:1;font-weight:800;overflow-wrap:anywhere}.caption{margin-top:10px;color:var(--muted2);font-size:11px;line-height:1.5}
 .layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(320px,.65fr);gap:16px}.panel{padding:18px;overflow:hidden}.panel+.panel{margin-top:16px}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:14px}
 h2{font-family:"Bodoni Moda",serif;color:var(--gold);font-size:26px;line-height:1}.panel-note{color:var(--muted2);font-size:10px;letter-spacing:.14em;text-transform:uppercase;text-align:right}
-.chart{width:100%;height:220px;border:1px solid var(--soft);background:rgba(7,5,3,.36)}.metric-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.metric{border:1px solid var(--soft);padding:12px}.metric .v{margin-top:8px;font-size:17px;font-weight:700;overflow-wrap:anywhere}.metric.wide{grid-column:1/-1}
+.chart{width:100%;height:220px;border:1px solid var(--soft);background:rgba(7,5,3,.36)}.chart.small{height:150px;margin-bottom:12px}.metric-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.metric{border:1px solid var(--soft);padding:12px}.metric .v{margin-top:8px;font-size:17px;font-weight:700;overflow-wrap:anywhere}.metric.wide{grid-column:1/-1}
 .table-wrap{width:100%;overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:12px;min-width:720px}th,td{padding:12px 10px;border-bottom:1px solid rgba(59,42,23,.72);text-align:left;vertical-align:middle}th{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.16em;font-weight:600}td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
 .account-table{min-width:0}.account-table td:last-child{text-align:right;color:var(--cream);font-weight:700}.symbol{display:inline-flex;min-width:48px;justify-content:center;border:1px solid var(--line);color:var(--gold2);padding:4px 8px;font-weight:700}.empty{border:1px dashed var(--line);color:var(--muted);padding:22px;line-height:1.6}
 .mobile-list{display:none}.list-card{border:1px solid var(--soft);padding:14px;margin-bottom:10px;background:rgba(7,5,3,.34)}.list-row{display:flex;justify-content:space-between;gap:14px;padding:7px 0;border-bottom:1px solid rgba(59,42,23,.45)}.list-row:last-child{border-bottom:0}.list-row span:first-child{color:var(--muted);font-size:10px;letter-spacing:.14em;text-transform:uppercase}.list-row span:last-child{text-align:right;overflow-wrap:anywhere}
@@ -117,7 +117,13 @@ h2{font-family:"Bodoni Moda",serif;color:var(--gold);font-size:26px;line-height:
 
       <section class="panel">
         <div class="panel-head"><h2>Relay History</h2><div class="panel-note">Last cycles</div></div>
+        <canvas class="chart small" id="runnerChart"></canvas>
         <div id="runnerHistory"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head"><h2>Top Signals</h2><div class="panel-note" id="signalState">Backtests</div></div>
+        <div id="topSignals"></div>
       </section>
 
       <section class="panel">
@@ -125,8 +131,9 @@ h2{font-family:"Bodoni Moda",serif;color:var(--gold);font-size:26px;line-height:
         <table class="account-table">
           <tbody>
             <tr><th>Mode</th><td>Paper only</td></tr>
-            <tr><th>Max exposure</th><td>25%</td></tr>
-            <tr><th>Loss watch</th><td>$500</td></tr>
+            <tr><th>Max exposure</th><td>20%</td></tr>
+            <tr><th>New-buy cap</th><td>12%</td></tr>
+            <tr><th>Loss watch</th><td>$300</td></tr>
             <tr><th>Stop runner</th><td><code>scripts\stop_alpaca_paper_watchdog.ps1</code></td></tr>
             <tr><th>Strategy gate</th><td>Backtest pass required</td></tr>
           </tbody>
@@ -236,6 +243,39 @@ function drawEquityChart(history) {
   $("curveNote").textContent = `${values.length} points`;
 }
 
+function drawRunnerChart(rows) {
+  const canvas = $("runnerChart");
+  const ctx = canvas.getContext("2d");
+  const rect = canvas.getBoundingClientRect();
+  const ratio = window.devicePixelRatio || 1;
+  canvas.width = Math.floor(rect.width * ratio);
+  canvas.height = Math.floor(rect.height * ratio);
+  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+  const w = rect.width, h = rect.height;
+  ctx.clearRect(0, 0, w, h);
+  ctx.strokeStyle = "rgba(212,175,55,.18)";
+  ctx.lineWidth = 1;
+  for (let i = 1; i < 3; i++) { const y = (h / 3) * i; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+  const values = (rows || []).map((item) => Number(item.equity)).filter(Number.isFinite);
+  if (values.length < 2) {
+    ctx.fillStyle = "#a49367";
+    ctx.font = "12px IBM Plex Mono";
+    ctx.fillText("Runner equity history waiting.", 14, 28);
+    return;
+  }
+  const min = Math.min(...values), max = Math.max(...values);
+  const span = Math.max(max - min, 1);
+  ctx.beginPath();
+  values.forEach((value, i) => {
+    const x = (w - 20) * (i / (values.length - 1)) + 10;
+    const y = h - 16 - ((value - min) / span) * (h - 32);
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.strokeStyle = "#2ecc71";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+}
+
 function desktopPositions(rows) {
   return `<div class="table-wrap desktop-table"><table><thead><tr><th>Symbol</th><th>Side</th><th class="num">Qty</th><th class="num">Entry</th><th class="num">Current</th><th class="num">Value</th><th class="num">P/L</th><th class="num">P/L %</th></tr></thead><tbody>${rows.map((p) => {
     const pl = Number(p.unrealized_pl);
@@ -266,6 +306,14 @@ function renderOrders(rows) {
 function renderRunnerHistory(rows) {
   const list = (rows || []).slice(-6).reverse();
   $("runnerHistory").innerHTML = list.length ? `<div class="mobile-list" style="display:block">${list.map((item) => `<div class="list-card"><div class="list-row"><span>Time</span><span>${dateTime(item.timestamp)}</span></div><div class="list-row"><span>Decision</span><span>${item.decision || "--"} / ${item.reason || "--"}</span></div><div class="list-row"><span>Symbol</span><span class="gold">${item.symbol || "--"}</span></div><div class="list-row"><span>Equity</span><span>${money(item.equity)}</span></div><div class="list-row"><span>Qty / Price</span><span>${item.position_qty ?? "--"} @ ${money(item.latest_price)}</span></div></div>`).join("")}</div>` : '<div class="empty">Waiting for runner telemetry.</div>';
+}
+
+function renderTopSignals(signalPayload) {
+  const rows = signalPayload?.top || [];
+  const actionable = Number(signalPayload?.actionable_count || 0);
+  $("signalState").textContent = actionable ? `${actionable} actionable` : "Watching";
+  $("signalState").className = actionable ? "panel-note green" : "panel-note";
+  $("topSignals").innerHTML = rows.length ? `<div class="mobile-list" style="display:block">${rows.map((item) => `<div class="list-card"><div class="list-row"><span>Symbol</span><span class="gold">${item.symbol || "--"}</span></div><div class="list-row"><span>Signal</span><span class="${item.actionable ? "green" : ""}">${item.actionable ? "ACTIONABLE" : "wait"}</span></div><div class="list-row"><span>Decision</span><span>${item.decision || "--"} / ${item.reason || "--"}</span></div><div class="list-row"><span>Score</span><span>${item.score ?? "--"}</span></div><div class="list-row"><span>3Y</span><span>${item.recent_3y?.total_return_pct ?? "--"}% / DD ${item.recent_3y?.max_drawdown_pct ?? "--"}%</span></div></div>`).join("")}</div>` : '<div class="empty">Run top-signal backtests to populate.</div>';
 }
 
 async function loadStatus() {
@@ -323,7 +371,9 @@ async function loadStatus() {
     renderPositions(data.positions || []);
     renderOrders(data.orders || []);
     renderRunnerHistory(data.runner?.history || []);
+    renderTopSignals(data.runner?.signals || {});
     drawEquityChart(data.portfolio_history);
+    drawRunnerChart(data.runner?.history || []);
     $("statusLine").className = "health";
     $("statusLine").innerHTML = '<span class="dot"></span><span>Live paper data connected</span>';
     $("tokenGate").classList.remove("show");
