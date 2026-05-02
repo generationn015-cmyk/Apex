@@ -4,6 +4,7 @@ from tempfile import TemporaryDirectory
 
 from scripts.alpaca_paper_runner import Decision, RunnerResult, append_journal, decide_signal, evaluate_risk
 from scripts.apex_alerts import build_notifications, evaluate_alerts
+from scripts.backtest_top_signals import passes_multi_year_gate
 from scripts.backtest_spy_strategy import run_backtest
 from scripts.backtest_binance_strategy import bars_from_binance_rows
 from scripts.download_binance_klines import binance_monthly_kline_url
@@ -181,6 +182,23 @@ class AlpacaPaperStrategyTests(unittest.TestCase):
 
         self.assertTrue(passes_gate(good))
         self.assertFalse(passes_gate(bad))
+
+    def test_top_signal_gate_requires_full_5y_and_3y(self):
+        good = {
+            "profit_factor": 2.1,
+            "max_drawdown_pct": 9.0,
+            "closed_trades": 4,
+            "total_return_pct": 12.0,
+        }
+        bad = {
+            "profit_factor": 0.8,
+            "max_drawdown_pct": 4.0,
+            "closed_trades": 4,
+            "total_return_pct": 12.0,
+        }
+
+        self.assertTrue(passes_multi_year_gate({"full": good, "recent_5y": good, "recent_3y": good}))
+        self.assertFalse(passes_multi_year_gate({"full": good, "recent_5y": bad, "recent_3y": good}))
 
 
 if __name__ == "__main__":
