@@ -123,8 +123,7 @@ class handler(BaseHTTPRequestHandler):
         incoming_history = payload.get("history")
         if isinstance(incoming_history, list):
             history.extend([item for item in incoming_history if isinstance(item, dict)])
-        else:
-            history.append(heartbeat)
+        history.append(heartbeat)
         by_timestamp = {}
         for item in history:
             timestamp = item.get("timestamp")
