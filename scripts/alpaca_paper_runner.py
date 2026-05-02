@@ -12,12 +12,14 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 import logging
 import os
 import time
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from urllib.request import Request, urlopen
 
 from alpaca.data.historical import StockHistoricalDataClient
 from alpaca.data.requests import StockBarsRequest
@@ -253,6 +255,35 @@ def write_heartbeat(symbol: str) -> None:
     )
 
 
+def publish_dashboard_heartbeat(env: dict[str, str], symbol: str, decision: Decision) -> None:
+    url = env.get("APEX_DASHBOARD_HEARTBEAT_URL", "").strip()
+    token = env.get("APEX_HEARTBEAT_TOKEN", "").strip() or env.get("APEX_DASHBOARD_TOKEN", "").strip()
+    if not url or not token:
+        return
+    payload = json.dumps(
+        {
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "symbol": symbol,
+            "decision": decision.action,
+            "reason": decision.reason,
+        }
+    ).encode("utf-8")
+    request = Request(
+        url,
+        data=payload,
+        headers={
+            "Content-Type": "application/json",
+            "X-Apex-Heartbeat-Token": token,
+        },
+        method="POST",
+    )
+    try:
+        with urlopen(request, timeout=8):
+            logging.info("published dashboard heartbeat")
+    except Exception as exc:
+        logging.warning("dashboard heartbeat publish failed: %s", exc)
+
+
 def _position_price(position) -> float:
     for attr in ("current_price", "market_value"):
         value = getattr(position, attr, None)
@@ -278,9 +309,11 @@ def main() -> None:
     logging.info("Apex Alpaca paper runner starting symbol=%s dry_run=%s", args.symbol, args.dry_run)
 
     while True:
+        env = load_env()
         try:
-            run_once(args.symbol, args.max_notional, args.dry_run)
+            decision = run_once(args.symbol, args.max_notional, args.dry_run)
             write_heartbeat(args.symbol)
+            publish_dashboard_heartbeat(env, args.symbol, decision)
         except Exception as exc:
             logging.exception("runner cycle failed: %s", exc)
         if args.once:
