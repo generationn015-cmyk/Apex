@@ -1,5 +1,6 @@
 import json
 import os
+import tempfile
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler
 from urllib.parse import urlencode
@@ -7,6 +8,11 @@ from urllib.request import Request, urlopen
 
 
 PAPER_ENDPOINT = "https://paper-api.alpaca.markets"
+HEARTBEAT_PATH = os.path.join(tempfile.gettempdir(), "apex_runner_heartbeat.json")
+
+
+def _dashboard_token():
+    return os.getenv("APEX_DASHBOARD_TOKEN") or os.getenv("DASHBOARD_ACCESS_TOKEN")
 
 
 def _headers():
@@ -43,6 +49,48 @@ def _optional_get(path, params=None, fallback=None):
         return _get(path, params)
     except Exception:
         return fallback
+
+
+def _runner_heartbeat():
+    if not os.path.exists(HEARTBEAT_PATH):
+        return {
+            "status": "external-watchdog",
+            "visible_from_vercel": False,
+            "stale": True,
+            "note": "Waiting for the local watchdog heartbeat relay.",
+        }
+    try:
+        with open(HEARTBEAT_PATH, "r", encoding="utf-8") as f:
+            heartbeat = json.load(f)
+        timestamp = heartbeat.get("timestamp")
+        age_seconds = None
+        stale = True
+        if timestamp:
+            age_seconds = int(
+                (
+                    datetime.now(timezone.utc)
+                    - datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
+                ).total_seconds()
+            )
+            stale = age_seconds > 600
+        return {
+            "status": "relay-visible",
+            "visible_from_vercel": True,
+            "stale": stale,
+            "age_seconds": age_seconds,
+            "symbol": heartbeat.get("symbol"),
+            "latest_decision": heartbeat.get("decision"),
+            "latest_reason": heartbeat.get("reason"),
+            "last_seen": timestamp,
+            "note": "Best-effort Vercel relay from the local Windows watchdog.",
+        }
+    except Exception:
+        return {
+            "status": "relay-unreadable",
+            "visible_from_vercel": False,
+            "stale": True,
+            "note": "Heartbeat relay file exists but could not be parsed.",
+        }
 
 
 def _status_payload():
@@ -142,9 +190,7 @@ def _status_payload():
             "next_close": clock.get("next_close"),
         },
         "runner": {
-            "status": "external-watchdog",
-            "visible_from_vercel": False,
-            "note": "Local Windows watchdog heartbeat is not readable from Vercel; this card verifies broker/API freshness.",
+            **_runner_heartbeat(),
         },
         "portfolio_history": history,
         "positions": clean_positions,
@@ -163,7 +209,27 @@ class handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def _authorized(self):
+        expected = _dashboard_token()
+        if not expected:
+            return True
+        provided = self.headers.get("X-Apex-Dashboard-Token", "")
+        return provided == expected
+
     def do_GET(self):
+        if not self._authorized():
+            self._send(
+                401,
+                {
+                    "mode": "paper",
+                    "source": "alpaca-paper-api",
+                    "error": "Dashboard token required.",
+                    "requires_token": True,
+                    "positions": [],
+                    "orders": [],
+                },
+            )
+            return
         try:
             self._send(200, _status_payload())
         except Exception as exc:
