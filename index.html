@@ -4,179 +4,567 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<title>APEX Trading HQ · Paper Dashboard</title>
+<title>APEX Trading HQ | Paper Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,600;6..96,800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --ink:#080604; --panel:#140d08; --panel2:#1e130c; --line:#382817;
-  --gold:#d4af37; --gold2:#f4d06f; --cream:#f4ecd8; --muted:#9b8b61;
-  --green:#2ecc71; --red:#e63946; --blue:#7dd3fc;
+  --ink: #070503;
+  --panel: #120c07;
+  --panel-2: #1d130c;
+  --line: #3b2a17;
+  --line-soft: rgba(212, 175, 55, .16);
+  --gold: #d4af37;
+  --gold-bright: #f4d06f;
+  --cream: #f5ecd8;
+  --muted: #a49367;
+  --muted-2: #6f6242;
+  --green: #2ecc71;
+  --red: #e63946;
+  --blue: #7dd3fc;
+  --shadow: 0 18px 60px rgba(0, 0, 0, .35);
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{
-  min-height:100vh;background:
-  radial-gradient(ellipse at 15% 5%,rgba(212,175,55,.12),transparent 42%),
-  linear-gradient(180deg,#120b06 0%,#050302 100%);
-  color:var(--cream);font-family:"IBM Plex Mono",monospace;padding:28px;
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--ink); }
+body {
+  min-height: 100vh;
+  color: var(--cream);
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  background:
+    radial-gradient(ellipse at 12% 0%, rgba(212, 175, 55, .14), transparent 42%),
+    radial-gradient(ellipse at 86% 16%, rgba(125, 211, 252, .07), transparent 38%),
+    linear-gradient(180deg, #140d07 0%, #050302 100%);
+  padding: 20px;
 }
-.shell{max-width:1320px;margin:0 auto}
-.top{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;border-bottom:1px solid var(--line);padding-bottom:24px}
-.kicker{color:var(--gold);letter-spacing:.32em;text-transform:uppercase;font-size:11px;margin-bottom:12px}
-h1{font-family:"Bodoni Moda",serif;font-size:clamp(44px,7vw,92px);line-height:.88;letter-spacing:-.04em}
-h1 em{color:var(--gold);font-style:normal}
-.sub{color:var(--muted);font-size:13px;margin-top:18px;max-width:720px;line-height:1.7}
-.badge{border:1px solid var(--gold);color:var(--gold2);padding:9px 14px;text-transform:uppercase;letter-spacing:.22em;font-size:11px;background:rgba(212,175,55,.08)}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:28px 0}
-.card{background:linear-gradient(180deg,rgba(30,19,12,.92),rgba(12,8,5,.92));border:1px solid var(--line);padding:20px;min-height:120px;position:relative}
-.card:before{content:"";position:absolute;top:-1px;left:-1px;width:18px;height:18px;border-top:1px solid var(--gold);border-left:1px solid var(--gold)}
-.lbl{color:var(--muted);font-size:10px;letter-spacing:.22em;text-transform:uppercase;margin-bottom:12px}
-.val{font-family:"Bodoni Moda",serif;font-size:38px;font-weight:800;line-height:1;color:var(--cream)}
-.val.small{font-size:25px;font-family:"IBM Plex Mono",monospace;font-weight:700}
-.green{color:var(--green)} .red{color:var(--red)} .gold{color:var(--gold)} .blue{color:var(--blue)}
-.split{display:grid;grid-template-columns:1.25fr .75fr;gap:16px}
-.panel{background:rgba(12,8,5,.82);border:1px solid var(--line);padding:20px}
-.panel h2{font-family:"Bodoni Moda",serif;color:var(--gold);font-size:25px;margin-bottom:16px}
-table{width:100%;border-collapse:collapse;font-size:12px}
-th,td{padding:12px 10px;border-bottom:1px solid rgba(56,40,23,.8);text-align:left}
-th{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.16em}
-td.num,th.num{text-align:right}
-.status-line{display:flex;gap:16px;align-items:center;flex-wrap:wrap;color:var(--muted);font-size:11px;letter-spacing:.12em;text-transform:uppercase;margin-top:18px}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green);display:inline-block}
-.warn .dot{background:var(--red);box-shadow:0 0 12px var(--red)}
-.empty{color:var(--muted);padding:22px;border:1px dashed var(--line)}
-.footer{margin-top:20px;color:var(--muted);font-size:11px;line-height:1.8}
-@media(max-width:900px){body{padding:16px}.top,.split{display:block}.grid{grid-template-columns:1fr 1fr}.badge{display:inline-block;margin-top:18px}.panel{margin-top:16px}}
-@media(max-width:560px){.grid{grid-template-columns:1fr}h1{font-size:48px}}
+button, input, select, textarea { font: inherit; }
+.shell { width: min(1380px, 100%); margin: 0 auto; }
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0 18px;
+  background: linear-gradient(180deg, rgba(7, 5, 3, .98), rgba(7, 5, 3, .82) 70%, transparent);
+  backdrop-filter: blur(10px);
+}
+.brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.mark {
+  width: 42px; height: 42px;
+  display: grid; place-items: center;
+  border: 1px solid var(--gold);
+  color: var(--gold-bright);
+  font-family: "Bodoni Moda", serif;
+  font-size: 24px; font-weight: 800;
+  background: rgba(212, 175, 55, .08);
+}
+.brand-title { min-width: 0; }
+.brand-title strong {
+  display: block;
+  color: var(--cream);
+  font-size: 14px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.brand-title span {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.health {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid var(--line);
+  background: rgba(18, 12, 7, .86);
+  color: var(--muted);
+  padding: 10px 12px;
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 12px var(--green);
+  flex: 0 0 auto;
+}
+.health.warn .dot { background: var(--red); box-shadow: 0 0 12px var(--red); }
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, .8fr);
+  gap: 18px;
+  align-items: stretch;
+  margin-top: 6px;
+}
+.hero-main, .hero-side, .card, .panel {
+  background: linear-gradient(180deg, rgba(29, 19, 12, .92), rgba(10, 7, 4, .92));
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+.hero-main { padding: clamp(22px, 4vw, 42px); min-height: 300px; display: flex; flex-direction: column; justify-content: space-between; }
+.eyebrow {
+  color: var(--gold);
+  font-size: 10px;
+  letter-spacing: .32em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+h1 {
+  font-family: "Bodoni Moda", serif;
+  font-size: clamp(44px, 8vw, 102px);
+  line-height: .86;
+  letter-spacing: -.04em;
+  max-width: 880px;
+}
+h1 span { color: var(--gold); }
+.sub {
+  max-width: 760px;
+  margin-top: 20px;
+  color: var(--muted);
+  line-height: 1.7;
+  font-size: 13px;
+}
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 28px;
+}
+.pill {
+  border: 1px solid var(--line);
+  background: rgba(212, 175, 55, .06);
+  color: var(--muted);
+  padding: 8px 10px;
+  font-size: 10px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.pill strong { color: var(--cream); font-weight: 700; }
+.hero-side { padding: 22px; display: flex; flex-direction: column; justify-content: space-between; gap: 18px; }
+.side-label {
+  color: var(--muted-2);
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+.side-value {
+  margin-top: 8px;
+  font-family: "Bodoni Moda", serif;
+  font-size: clamp(38px, 6vw, 64px);
+  line-height: .95;
+  color: var(--gold-bright);
+  overflow-wrap: anywhere;
+}
+.side-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.mini {
+  border: 1px solid var(--line-soft);
+  padding: 12px;
+  min-width: 0;
+}
+.mini .v {
+  margin-top: 7px;
+  color: var(--cream);
+  font-size: 16px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 18px 0;
+}
+.card {
+  min-height: 124px;
+  padding: 18px;
+  position: relative;
+  overflow: hidden;
+}
+.card:before {
+  content: "";
+  position: absolute;
+  left: -1px; top: -1px;
+  width: 18px; height: 18px;
+  border-left: 1px solid var(--gold);
+  border-top: 1px solid var(--gold);
+}
+.label {
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+.value {
+  margin-top: 13px;
+  font-family: "Bodoni Moda", serif;
+  font-size: clamp(30px, 4vw, 42px);
+  line-height: 1;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+.caption { margin-top: 10px; color: var(--muted-2); font-size: 11px; line-height: 1.5; }
+.green { color: var(--green) !important; }
+.red { color: var(--red) !important; }
+.gold { color: var(--gold) !important; }
+.blue { color: var(--blue) !important; }
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(310px, .65fr);
+  gap: 16px;
+}
+.panel { padding: 18px; overflow: hidden; }
+.panel + .panel { margin-top: 16px; }
+.panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+h2 {
+  font-family: "Bodoni Moda", serif;
+  color: var(--gold);
+  font-size: 26px;
+  line-height: 1;
+}
+.panel-note {
+  color: var(--muted-2);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  text-align: right;
+}
+.table-wrap { width: 100%; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 720px; }
+th, td { padding: 12px 10px; border-bottom: 1px solid rgba(59, 42, 23, .72); text-align: left; vertical-align: middle; }
+th {
+  color: var(--muted);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .16em;
+  font-weight: 600;
+}
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.account-table { min-width: 0; }
+.account-table td:last-child { text-align: right; color: var(--cream); font-weight: 700; }
+.symbol {
+  display: inline-flex;
+  min-width: 48px;
+  justify-content: center;
+  border: 1px solid var(--line);
+  color: var(--gold-bright);
+  padding: 4px 8px;
+  font-weight: 700;
+}
+.empty {
+  border: 1px dashed var(--line);
+  color: var(--muted);
+  padding: 22px;
+  line-height: 1.6;
+}
+.mobile-list { display: none; }
+.list-card {
+  border: 1px solid var(--line-soft);
+  padding: 14px;
+  margin-bottom: 10px;
+  background: rgba(7, 5, 3, .34);
+}
+.list-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(59, 42, 23, .45);
+}
+.list-row:last-child { border-bottom: 0; }
+.list-row span:first-child { color: var(--muted); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; }
+.list-row span:last-child { text-align: right; overflow-wrap: anywhere; }
+.footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin: 18px 0 4px;
+  color: var(--muted-2);
+  font-size: 11px;
+  line-height: 1.7;
+}
+code { color: var(--gold); }
+@media (max-width: 1080px) {
+  .hero, .layout { grid-template-columns: 1fr; }
+  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hero-main { min-height: 260px; }
+}
+@media (max-width: 720px) {
+  body { padding: 12px; }
+  .topbar { align-items: stretch; flex-direction: column; padding-top: 8px; }
+  .health { justify-content: center; width: 100%; line-height: 1.5; text-align: center; }
+  .brand-title strong { font-size: 12px; white-space: normal; }
+  .brand-title span { white-space: normal; }
+  .hero-main, .hero-side, .panel, .card { box-shadow: none; }
+  .hero-main { padding: 22px; }
+  h1 { font-size: 48px; }
+  .cards, .side-grid { grid-template-columns: 1fr; }
+  .cards { gap: 10px; }
+  .card { min-height: 104px; }
+  .panel-head { align-items: flex-start; flex-direction: column; }
+  .panel-note { text-align: left; }
+  .desktop-table { display: none; }
+  .mobile-list { display: block; }
+  .account-table { font-size: 11px; }
+  .footer { display: block; }
+}
 </style>
 </head>
 <body>
 <main class="shell">
-  <section class="top">
+  <header class="topbar">
+    <div class="brand">
+      <div class="mark">A</div>
+      <div class="brand-title">
+        <strong>Apex Trading HQ</strong>
+        <span>Alpaca paper operations</span>
+      </div>
+    </div>
+    <div class="health" id="statusLine"><span class="dot"></span><span>Connecting to paper account</span></div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-main">
+      <div>
+        <div class="eyebrow">Read-only trading dashboard</div>
+        <h1>Paper account, <span>live data.</span></h1>
+        <p class="sub">A clean mobile and desktop view of the Alpaca paper account. No legacy crypto data, no Telegram controls, no live-trading buttons.</p>
+      </div>
+      <div class="hero-meta">
+        <div class="pill">Mode <strong>Paper</strong></div>
+        <div class="pill">Broker <strong>Alpaca</strong></div>
+        <div class="pill">Refresh <strong>20s</strong></div>
+      </div>
+    </div>
+    <aside class="hero-side">
+      <div>
+        <div class="side-label">Portfolio value</div>
+        <div class="side-value" id="heroPortfolio">--</div>
+      </div>
+      <div class="side-grid">
+        <div class="mini"><div class="label">Market</div><div class="v" id="marketOpenMini">--</div></div>
+        <div class="mini"><div class="label">Status</div><div class="v" id="acctStatusMini">--</div></div>
+      </div>
+    </aside>
+  </section>
+
+  <section class="cards" aria-label="Account summary">
+    <div class="card">
+      <div class="label">Cash</div>
+      <div class="value" id="cash">--</div>
+      <div class="caption">Available cash balance.</div>
+    </div>
+    <div class="card">
+      <div class="label">Buying power</div>
+      <div class="value" id="buyingPower">--</div>
+      <div class="caption">Paper account capacity.</div>
+    </div>
+    <div class="card">
+      <div class="label">Unrealized P/L</div>
+      <div class="value" id="unrealizedPl">--</div>
+      <div class="caption">Open-position paper P/L.</div>
+    </div>
+    <div class="card">
+      <div class="label">Day P/L</div>
+      <div class="value" id="dayPl">--</div>
+      <div class="caption">Equity change since prior close.</div>
+    </div>
+  </section>
+
+  <section class="layout">
     <div>
-      <div class="kicker">APEX Trading HQ</div>
-      <h1>Paper Trading <em>Floor</em></h1>
-      <p class="sub">Live read-only view of the Alpaca paper account. No old BTC/ETH Polymarket data. No live-trading controls. This dashboard is for monitoring the paper operation only.</p>
-      <div class="status-line" id="statusLine"><span class="dot"></span><span>Connecting to Alpaca paper API</span></div>
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Open Positions</h2>
+          <div class="panel-note" id="positionCount">Loading</div>
+        </div>
+        <div id="positions"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Recent Paper Orders</h2>
+          <div class="panel-note">Latest 10</div>
+        </div>
+        <div id="orders"></div>
+      </section>
     </div>
-    <div class="badge">Paper Only</div>
+
+    <aside>
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Account</h2>
+          <div class="panel-note">Paper only</div>
+        </div>
+        <table class="account-table">
+          <tbody>
+            <tr><th>Status</th><td id="acctStatus">--</td></tr>
+            <tr><th>Trading blocked</th><td id="blocked">--</td></tr>
+            <tr><th>Market open</th><td id="marketOpen">--</td></tr>
+            <tr><th>Next open</th><td id="nextOpen">--</td></tr>
+            <tr><th>Data source</th><td id="source">--</td></tr>
+          </tbody>
+        </table>
+      </section>
+    </aside>
   </section>
 
-  <section class="grid">
-    <div class="card"><div class="lbl">Portfolio Value</div><div class="val" id="portfolioValue">--</div></div>
-    <div class="card"><div class="lbl">Cash</div><div class="val" id="cash">--</div></div>
-    <div class="card"><div class="lbl">Buying Power</div><div class="val" id="buyingPower">--</div></div>
-    <div class="card"><div class="lbl">Unrealized P/L</div><div class="val" id="unrealizedPl">--</div></div>
-  </section>
-
-  <section class="split">
-    <div class="panel">
-      <h2>Open Positions</h2>
-      <div id="positions"></div>
-    </div>
-    <div class="panel">
-      <h2>Paper Account</h2>
-      <table>
-        <tbody>
-          <tr><th>Status</th><td class="num" id="acctStatus">--</td></tr>
-          <tr><th>Market Open</th><td class="num" id="marketOpen">--</td></tr>
-          <tr><th>Next Open</th><td class="num" id="nextOpen">--</td></tr>
-          <tr><th>Day P/L</th><td class="num" id="dayPl">--</td></tr>
-          <tr><th>Blocked</th><td class="num" id="blocked">--</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <section class="panel" style="margin-top:16px">
-    <h2>Recent Paper Orders</h2>
-    <div id="orders"></div>
-  </section>
-
-  <div class="footer">
-    <div>Refreshes every 20 seconds from <code>/api/alpaca-status</code>.</div>
+  <footer class="footer">
+    <div>API: <code>/api/alpaca-status</code></div>
     <div>Last updated: <span id="lastUpdated">--</span></div>
-  </div>
+  </footer>
 </main>
+
 <script>
-const money = (v) => {
-  const n = Number(v);
-  return Number.isFinite(n) ? n.toLocaleString("en-US", {style:"currency", currency:"USD"}) : "--";
+const $ = (id) => document.getElementById(id);
+const money = (value) => {
+  const number = Number(value);
+  return Number.isFinite(number)
+    ? number.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 2 })
+    : "--";
 };
-const pct = (v) => {
-  const n = Number(v);
-  return Number.isFinite(n) ? `${(n * 100).toFixed(2)}%` : "--";
+const percent = (value) => {
+  const number = Number(value);
+  return Number.isFinite(number) ? `${(number * 100).toFixed(2)}%` : "--";
 };
-const shortDate = (v) => v ? new Date(v).toLocaleString() : "--";
+const dateTime = (value) => value ? new Date(value).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "--";
 const colorize = (el, value) => {
-  const n = Number(value);
-  el.classList.remove("green","red","gold");
-  if (Number.isFinite(n)) el.classList.add(n >= 0 ? "green" : "red");
+  const number = Number(value);
+  el.classList.remove("green", "red", "gold", "blue");
+  if (Number.isFinite(number)) el.classList.add(number >= 0 ? "green" : "red");
 };
 
-function renderPositions(rows) {
-  if (!rows || !rows.length) {
-    positions.innerHTML = '<div class="empty">No open paper positions.</div>';
-    return;
-  }
-  positions.innerHTML = `<table><thead><tr>
+function renderDesktopPositions(rows) {
+  return `<div class="table-wrap desktop-table"><table><thead><tr>
     <th>Symbol</th><th>Side</th><th class="num">Qty</th><th class="num">Entry</th>
     <th class="num">Current</th><th class="num">Value</th><th class="num">P/L</th><th class="num">P/L %</th>
-  </tr></thead><tbody>${rows.map(p => {
+  </tr></thead><tbody>${rows.map((p) => {
     const pl = Number(p.unrealized_pl);
     return `<tr>
-      <td class="gold">${p.symbol || "--"}</td><td>${p.side || "--"}</td><td class="num">${p.qty || "--"}</td>
-      <td class="num">${money(p.avg_entry_price)}</td><td class="num">${money(p.current_price)}</td>
-      <td class="num">${money(p.market_value)}</td><td class="num ${pl >= 0 ? "green" : "red"}">${money(pl)}</td>
-      <td class="num">${pct(p.unrealized_plpc)}</td>
+      <td><span class="symbol">${p.symbol || "--"}</span></td>
+      <td>${p.side || "--"}</td>
+      <td class="num">${p.qty || "--"}</td>
+      <td class="num">${money(p.avg_entry_price)}</td>
+      <td class="num">${money(p.current_price)}</td>
+      <td class="num">${money(p.market_value)}</td>
+      <td class="num ${pl >= 0 ? "green" : "red"}">${money(pl)}</td>
+      <td class="num">${percent(p.unrealized_plpc)}</td>
     </tr>`;
-  }).join("")}</tbody></table>`;
+  }).join("")}</tbody></table></div>`;
+}
+
+function renderMobilePositions(rows) {
+  return `<div class="mobile-list">${rows.map((p) => {
+    const pl = Number(p.unrealized_pl);
+    return `<div class="list-card">
+      <div class="list-row"><span>Symbol</span><span class="gold">${p.symbol || "--"}</span></div>
+      <div class="list-row"><span>Qty / Side</span><span>${p.qty || "--"} ${p.side || ""}</span></div>
+      <div class="list-row"><span>Entry</span><span>${money(p.avg_entry_price)}</span></div>
+      <div class="list-row"><span>Current</span><span>${money(p.current_price)}</span></div>
+      <div class="list-row"><span>Value</span><span>${money(p.market_value)}</span></div>
+      <div class="list-row"><span>P/L</span><span class="${pl >= 0 ? "green" : "red"}">${money(pl)} (${percent(p.unrealized_plpc)})</span></div>
+    </div>`;
+  }).join("")}</div>`;
+}
+
+function renderPositions(rows) {
+  $("positionCount").textContent = `${rows.length} open`;
+  if (!rows.length) {
+    $("positions").innerHTML = '<div class="empty">No open paper positions.</div>';
+    return;
+  }
+  $("positions").innerHTML = renderDesktopPositions(rows) + renderMobilePositions(rows);
+}
+
+function renderDesktopOrders(rows) {
+  return `<div class="table-wrap desktop-table"><table><thead><tr>
+    <th>Submitted</th><th>Symbol</th><th>Side</th><th>Type</th>
+    <th class="num">Qty</th><th class="num">Filled</th><th class="num">Avg Price</th><th>Status</th>
+  </tr></thead><tbody>${rows.map((o) => `<tr>
+    <td>${dateTime(o.submitted_at)}</td>
+    <td><span class="symbol">${o.symbol || "--"}</span></td>
+    <td>${o.side || "--"}</td>
+    <td>${o.type || "--"}</td>
+    <td class="num">${o.qty || "--"}</td>
+    <td class="num">${o.filled_qty || "0"}</td>
+    <td class="num">${money(o.filled_avg_price)}</td>
+    <td>${o.status || "--"}</td>
+  </tr>`).join("")}</tbody></table></div>`;
+}
+
+function renderMobileOrders(rows) {
+  return `<div class="mobile-list">${rows.map((o) => `<div class="list-card">
+    <div class="list-row"><span>Submitted</span><span>${dateTime(o.submitted_at)}</span></div>
+    <div class="list-row"><span>Symbol</span><span class="gold">${o.symbol || "--"}</span></div>
+    <div class="list-row"><span>Side / Type</span><span>${o.side || "--"} ${o.type || ""}</span></div>
+    <div class="list-row"><span>Qty</span><span>${o.filled_qty || "0"} / ${o.qty || "--"}</span></div>
+    <div class="list-row"><span>Avg Price</span><span>${money(o.filled_avg_price)}</span></div>
+    <div class="list-row"><span>Status</span><span>${o.status || "--"}</span></div>
+  </div>`).join("")}</div>`;
 }
 
 function renderOrders(rows) {
-  if (!rows || !rows.length) {
-    orders.innerHTML = '<div class="empty">No recent paper orders.</div>';
+  if (!rows.length) {
+    $("orders").innerHTML = '<div class="empty">No recent paper orders.</div>';
     return;
   }
-  orders.innerHTML = `<table><thead><tr>
-    <th>Submitted</th><th>Symbol</th><th>Side</th><th>Type</th>
-    <th class="num">Qty</th><th class="num">Filled</th><th class="num">Avg Price</th><th>Status</th>
-  </tr></thead><tbody>${rows.map(o => `<tr>
-    <td>${shortDate(o.submitted_at)}</td><td class="gold">${o.symbol || "--"}</td><td>${o.side || "--"}</td><td>${o.type || "--"}</td>
-    <td class="num">${o.qty || "--"}</td><td class="num">${o.filled_qty || "0"}</td>
-    <td class="num">${money(o.filled_avg_price)}</td><td>${o.status || "--"}</td>
-  </tr>`).join("")}</tbody></table>`;
+  $("orders").innerHTML = renderDesktopOrders(rows) + renderMobileOrders(rows);
 }
 
 async function loadStatus() {
   try {
-    const res = await fetch(`/api/alpaca-status?ts=${Date.now()}`, {cache:"no-store"});
-    const data = await res.json();
-    if (!res.ok || data.error) throw new Error(data.error || "Alpaca status unavailable");
-    const a = data.account || {};
-    portfolioValue.textContent = money(a.portfolio_value);
-    cash.textContent = money(a.cash);
-    buyingPower.textContent = money(a.buying_power);
-    unrealizedPl.textContent = money(a.unrealized_pl);
-    colorize(unrealizedPl, a.unrealized_pl);
-    dayPl.textContent = money(a.day_pl);
-    colorize(dayPl, a.day_pl);
-    acctStatus.textContent = a.status || "--";
-    blocked.textContent = (a.trading_blocked || a.account_blocked) ? "YES" : "NO";
-    marketOpen.textContent = data.clock?.is_open ? "YES" : "NO";
-    nextOpen.textContent = shortDate(data.clock?.next_open);
-    renderPositions(data.positions);
-    renderOrders(data.orders);
-    statusLine.className = "status-line";
-    statusLine.innerHTML = '<span class="dot"></span><span>Live Alpaca paper data connected</span>';
-    lastUpdated.textContent = new Date().toLocaleString();
-  } catch (err) {
-    statusLine.className = "status-line warn";
-    statusLine.innerHTML = `<span class="dot"></span><span>${err.message}</span>`;
-    lastUpdated.textContent = new Date().toLocaleString();
+    const response = await fetch(`/api/alpaca-status?ts=${Date.now()}`, { cache: "no-store" });
+    const data = await response.json();
+    if (!response.ok || data.error) throw new Error(data.error || "Alpaca status unavailable");
+
+    const account = data.account || {};
+    $("heroPortfolio").textContent = money(account.portfolio_value);
+    $("cash").textContent = money(account.cash);
+    $("buyingPower").textContent = money(account.buying_power);
+    $("unrealizedPl").textContent = money(account.unrealized_pl);
+    $("dayPl").textContent = money(account.day_pl);
+    colorize($("unrealizedPl"), account.unrealized_pl);
+    colorize($("dayPl"), account.day_pl);
+
+    $("acctStatus").textContent = account.status || "--";
+    $("acctStatusMini").textContent = account.status || "--";
+    $("blocked").textContent = (account.trading_blocked || account.account_blocked) ? "YES" : "NO";
+    $("marketOpen").textContent = data.clock?.is_open ? "YES" : "NO";
+    $("marketOpenMini").textContent = data.clock?.is_open ? "OPEN" : "CLOSED";
+    $("nextOpen").textContent = dateTime(data.clock?.next_open);
+    $("source").textContent = data.source || "--";
+
+    renderPositions(data.positions || []);
+    renderOrders(data.orders || []);
+    $("statusLine").className = "health";
+    $("statusLine").innerHTML = '<span class="dot"></span><span>Live paper data connected</span>';
+    $("lastUpdated").textContent = new Date().toLocaleString();
+  } catch (error) {
+    $("statusLine").className = "health warn";
+    $("statusLine").innerHTML = `<span class="dot"></span><span>${error.message}</span>`;
+    $("lastUpdated").textContent = new Date().toLocaleString();
   }
 }
+
 loadStatus();
 setInterval(loadStatus, 20000);
 </script>
