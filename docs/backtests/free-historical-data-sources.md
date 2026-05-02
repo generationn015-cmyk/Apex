@@ -20,3 +20,9 @@ Generated: 2026-05-02
 ## Apex Rule
 
 Signals are not actionable unless they pass full-history, 5Y, and 3Y gates with the same paper-runner decision logic.
+
+## Current Scan Commands
+
+- Equities: `python scripts\rank_equity_strategies.py --start 20160101`
+- Top equity signals: `python scripts\backtest_top_signals.py --limit 25 --start 20160101 --activate-top`
+- Crypto: `python scripts\backtest_binance_multi_year.py --limit 3 --start-month 2023-01`

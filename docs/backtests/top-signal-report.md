@@ -1,6 +1,6 @@
 # Apex Top Signal Backtest
 
-Generated: 2026-05-02T17:33:14.324744+00:00
+Generated: 2026-05-02T19:47:04.929464+00:00
 
 | Rank | Symbol | Actionable | Decision | Score | Full Return % | 5Y Return % | 5Y DD % | 3Y Return % | 3Y DD % | 1Y Return % |
 |---:|---|---:|---|---:|---:|---:|---:|---:|---:|---:|
