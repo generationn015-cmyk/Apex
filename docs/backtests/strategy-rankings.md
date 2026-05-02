@@ -1,6 +1,6 @@
 # Apex Strategy Ranking
 
-Generated: 2026-05-02T15:44:43.039284+00:00
+Generated: 2026-05-02T16:11:49.578143+00:00
 
 | Rank | Symbol | Pass | Score | Return % | Max DD % | Profit Factor | Closed Trades |
 |---:|---|---:|---:|---:|---:|---:|---:|

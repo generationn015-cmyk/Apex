@@ -9,6 +9,9 @@ from urllib.request import Request, urlopen
 
 PAPER_ENDPOINT = "https://paper-api.alpaca.markets"
 HEARTBEAT_PATH = os.path.join(tempfile.gettempdir(), "apex_runner_heartbeat.json")
+MAX_ACCOUNT_EXPOSURE_PCT = 0.20
+MAX_DAILY_LOSS = 300.0
+MAX_OPEN_LOSS = 300.0
 
 
 def _dashboard_token():
@@ -65,7 +68,8 @@ def _runner_heartbeat():
         }
     try:
         with open(HEARTBEAT_PATH, "r", encoding="utf-8") as f:
-            heartbeat = json.load(f)
+            stored = json.load(f)
+        heartbeat = stored[-1] if isinstance(stored, list) and stored else stored
         timestamp = heartbeat.get("timestamp")
         age_seconds = None
         stale = True
@@ -156,12 +160,12 @@ def _status_payload():
     risk_flags = []
     if account.get("trading_blocked") or account.get("account_blocked"):
         risk_flags.append("account-blocked")
-    if exposure_pct > 0.25:
-        risk_flags.append("exposure-over-25pct")
-    if day_pl < -500:
-        risk_flags.append("daily-loss-watch")
-    if unrealized_total < -500:
-        risk_flags.append("open-loss-watch")
+    if exposure_pct > MAX_ACCOUNT_EXPOSURE_PCT:
+        risk_flags.append("exposure-over-20pct")
+    if day_pl <= -MAX_DAILY_LOSS:
+        risk_flags.append("daily-loss-over-300")
+    if unrealized_total <= -MAX_OPEN_LOSS:
+        risk_flags.append("open-loss-over-300")
 
     generated_at = datetime.now(timezone.utc).isoformat()
 
@@ -184,7 +188,9 @@ def _status_payload():
         "risk": {
             "flags": risk_flags,
             "open_positions": len(clean_positions),
-            "max_target_exposure_pct": 0.25,
+            "max_target_exposure_pct": MAX_ACCOUNT_EXPOSURE_PCT,
+            "max_daily_loss": MAX_DAILY_LOSS,
+            "max_open_loss": MAX_OPEN_LOSS,
             "paper_only": True,
         },
         "clock": {
