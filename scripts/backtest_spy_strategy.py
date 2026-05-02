@@ -11,6 +11,7 @@ import csv
 import io
 import json
 import math
+import os
 import sys
 import urllib.request
 from datetime import UTC, datetime, time as dt_time
@@ -84,11 +85,65 @@ def fetch_yahoo_chart_daily(symbol: str, start: str, end: str) -> list[dict]:
     return bars
 
 
-def fetch_free_equity_daily(symbol: str, start: str, end: str) -> tuple[str, list[dict]]:
-    bars = fetch_stooq_daily(symbol, start, end)
-    if bars:
-        return "stooq", bars
-    return "yahoo-chart", fetch_yahoo_chart_daily(symbol, start, end)
+def fetch_alpha_vantage_daily(symbol: str, start: str, end: str) -> list[dict]:
+    api_key = os.getenv("ALPHA_VANTAGE_API_KEY", "").strip()
+    if not api_key:
+        return []
+    url = (
+        "https://www.alphavantage.co/query"
+        f"?function=TIME_SERIES_DAILY_ADJUSTED&symbol={symbol}&outputsize=full&apikey={api_key}"
+    )
+    request = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    with urllib.request.urlopen(request, timeout=30) as response:
+        payload = json.loads(response.read().decode("utf-8"))
+    series = payload.get("Time Series (Daily)") or {}
+    start_date = datetime.strptime(start, "%Y%m%d").date()
+    end_date = datetime.strptime(end, "%Y%m%d").date()
+    bars: list[dict] = []
+    for day, row in sorted(series.items()):
+        current = datetime.strptime(day, "%Y-%m-%d").date()
+        if current < start_date or current > end_date:
+            continue
+        bars.append(
+            {
+                "timestamp": day,
+                "open": float(row["1. open"]),
+                "high": float(row["2. high"]),
+                "low": float(row["3. low"]),
+                "close": float(row["5. adjusted close"]),
+                "volume": float(row["6. volume"]),
+            }
+        )
+    return bars
+
+
+def _dedupe_sorted_bars(bars: list[dict]) -> list[dict]:
+    by_date = {bar["timestamp"]: bar for bar in bars if bar.get("timestamp")}
+    return [by_date[key] for key in sorted(by_date)]
+
+
+def fetch_free_equity_daily(
+    symbol: str,
+    start: str,
+    end: str,
+    sources: tuple[str, ...] = ("stooq", "yahoo-chart", "alpha-vantage"),
+) -> tuple[str, list[dict]]:
+    fetchers = {
+        "stooq": fetch_stooq_daily,
+        "yahoo-chart": fetch_yahoo_chart_daily,
+        "alpha-vantage": fetch_alpha_vantage_daily,
+    }
+    errors: list[str] = []
+    for source in sources:
+        try:
+            bars = fetchers[source](symbol, start, end)
+        except Exception as exc:  # noqa: BLE001 - data sources are best-effort research inputs.
+            errors.append(f"{source}:{exc.__class__.__name__}")
+            continue
+        if bars:
+            return source, _dedupe_sorted_bars(bars)
+    error_note = ",".join(errors) if errors else "no-data"
+    return f"unavailable:{error_note}", []
 
 
 def run_backtest(

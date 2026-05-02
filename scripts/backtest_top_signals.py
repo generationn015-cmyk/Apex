@@ -13,6 +13,7 @@ if str(ROOT) not in sys.path:
 
 from scripts.alpaca_paper_runner import decide_signal
 from scripts.backtest_spy_strategy import fetch_free_equity_daily, run_backtest
+from scripts.equity_universe import default_equity_symbols
 from scripts.rank_equity_strategies import score
 from scripts.run_equity_backtest_report import passes_gate
 
@@ -33,11 +34,13 @@ WINDOWS = {
 
 def load_ranked_symbols(limit: int) -> list[str]:
     if not RANKINGS_PATH.exists():
-        return ["NVDA", "META", "GOOGL", "AAPL", "MSFT"][:limit]
+        return default_equity_symbols(limit)
     payload = json.loads(RANKINGS_PATH.read_text(encoding="utf-8"))
     rows = payload.get("ranked") or []
     symbols = [row["symbol"] for row in rows if row.get("pass") and row.get("symbol")]
-    return symbols[:limit]
+    if symbols:
+        return symbols[:limit]
+    return [row["symbol"] for row in rows if row.get("symbol")][:limit] or default_equity_symbols(limit)
 
 
 def run_window_backtests(bars: list[dict]) -> dict[str, dict]:

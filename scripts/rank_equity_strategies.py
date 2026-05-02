@@ -12,6 +12,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scripts.run_equity_backtest_report import passes_gate, run_symbols
+from scripts.equity_universe import default_equity_symbols
 
 
 def score(row: dict) -> float:
@@ -50,13 +51,16 @@ def write_outputs(rows: list[dict], json_path: Path, md_path: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--symbols", default="SPY,QQQ,AAPL,MSFT,NVDA,TSLA,META,GOOGL")
+    parser.add_argument("--symbols", default="")
+    parser.add_argument("--limit", type=int, default=0)
     parser.add_argument("--start", default="20160101")
     parser.add_argument("--output-json", default=str(ROOT / "runtime" / "strategy_rankings.json"))
     parser.add_argument("--output-md", default=str(ROOT / "docs" / "backtests" / "strategy-rankings.md"))
     args = parser.parse_args()
 
     symbols = [symbol.strip().upper() for symbol in args.symbols.split(",") if symbol.strip()]
+    if not symbols:
+        symbols = default_equity_symbols(args.limit)
     rows = run_symbols(symbols, args.start, datetime.now(UTC).strftime("%Y%m%d"))
     write_outputs(rows, Path(args.output_json), Path(args.output_md))
     print(args.output_md)
