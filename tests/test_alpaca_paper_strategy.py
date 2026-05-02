@@ -5,7 +5,9 @@ from tempfile import TemporaryDirectory
 from scripts.alpaca_paper_runner import Decision, RunnerResult, append_journal, decide_signal, evaluate_risk
 from scripts.apex_alerts import build_notifications, evaluate_alerts
 from scripts.backtest_top_signals import passes_multi_year_gate
+from scripts.backtest_spy_strategy import _dedupe_sorted_bars
 from scripts.backtest_spy_strategy import run_backtest
+from scripts.equity_universe import default_equity_symbols
 from scripts.backtest_binance_strategy import bars_from_binance_rows
 from scripts.download_binance_klines import binance_monthly_kline_url
 from scripts.run_equity_backtest_report import passes_gate
@@ -199,6 +201,25 @@ class AlpacaPaperStrategyTests(unittest.TestCase):
 
         self.assertTrue(passes_multi_year_gate({"full": good, "recent_5y": good, "recent_3y": good}))
         self.assertFalse(passes_multi_year_gate({"full": good, "recent_5y": bad, "recent_3y": good}))
+
+    def test_free_data_bars_are_deduped_and_sorted(self):
+        bars = _dedupe_sorted_bars(
+            [
+                {"timestamp": "2026-01-02", "close": 102.0},
+                {"timestamp": "2026-01-01", "close": 100.0},
+                {"timestamp": "2026-01-02", "close": 103.0},
+            ]
+        )
+
+        self.assertEqual([bar["timestamp"] for bar in bars], ["2026-01-01", "2026-01-02"])
+        self.assertEqual(bars[-1]["close"], 103.0)
+
+    def test_default_equity_universe_is_broader_than_initial_scan(self):
+        symbols = default_equity_symbols()
+
+        self.assertGreaterEqual(len(symbols), 50)
+        self.assertIn("SPY", symbols)
+        self.assertIn("NVDA", symbols)
 
 
 if __name__ == "__main__":
