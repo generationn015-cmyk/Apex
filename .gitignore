@@ -20,6 +20,7 @@ runtime/
 
 # Secrets — NEVER commit these
 .env
+.vercel/
 config.local.yaml
 
 # Imported repo runtime artifacts

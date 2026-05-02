@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "framework": null,
+  "buildCommand": "",
+  "outputDirectory": ".",
+  "installCommand": "echo skip",
+  "routes": [
+    { "src": "/api/alpaca-status", "dest": "/api/alpaca-status.py" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ],
+  "git": {
+    "deploymentEnabled": {
+      "master": true,
+      "main": false
+    }
+  }
+}

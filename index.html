@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>APEX Trading HQ · Paper Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,600;6..96,800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#080604; --panel:#140d08; --panel2:#1e130c; --line:#382817;
+  --gold:#d4af37; --gold2:#f4d06f; --cream:#f4ecd8; --muted:#9b8b61;
+  --green:#2ecc71; --red:#e63946; --blue:#7dd3fc;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  min-height:100vh;background:
+  radial-gradient(ellipse at 15% 5%,rgba(212,175,55,.12),transparent 42%),
+  linear-gradient(180deg,#120b06 0%,#050302 100%);
+  color:var(--cream);font-family:"IBM Plex Mono",monospace;padding:28px;
+}
+.shell{max-width:1320px;margin:0 auto}
+.top{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;border-bottom:1px solid var(--line);padding-bottom:24px}
+.kicker{color:var(--gold);letter-spacing:.32em;text-transform:uppercase;font-size:11px;margin-bottom:12px}
+h1{font-family:"Bodoni Moda",serif;font-size:clamp(44px,7vw,92px);line-height:.88;letter-spacing:-.04em}
+h1 em{color:var(--gold);font-style:normal}
+.sub{color:var(--muted);font-size:13px;margin-top:18px;max-width:720px;line-height:1.7}
+.badge{border:1px solid var(--gold);color:var(--gold2);padding:9px 14px;text-transform:uppercase;letter-spacing:.22em;font-size:11px;background:rgba(212,175,55,.08)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:28px 0}
+.card{background:linear-gradient(180deg,rgba(30,19,12,.92),rgba(12,8,5,.92));border:1px solid var(--line);padding:20px;min-height:120px;position:relative}
+.card:before{content:"";position:absolute;top:-1px;left:-1px;width:18px;height:18px;border-top:1px solid var(--gold);border-left:1px solid var(--gold)}
+.lbl{color:var(--muted);font-size:10px;letter-spacing:.22em;text-transform:uppercase;margin-bottom:12px}
+.val{font-family:"Bodoni Moda",serif;font-size:38px;font-weight:800;line-height:1;color:var(--cream)}
+.val.small{font-size:25px;font-family:"IBM Plex Mono",monospace;font-weight:700}
+.green{color:var(--green)} .red{color:var(--red)} .gold{color:var(--gold)} .blue{color:var(--blue)}
+.split{display:grid;grid-template-columns:1.25fr .75fr;gap:16px}
+.panel{background:rgba(12,8,5,.82);border:1px solid var(--line);padding:20px}
+.panel h2{font-family:"Bodoni Moda",serif;color:var(--gold);font-size:25px;margin-bottom:16px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{padding:12px 10px;border-bottom:1px solid rgba(56,40,23,.8);text-align:left}
+th{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.16em}
+td.num,th.num{text-align:right}
+.status-line{display:flex;gap:16px;align-items:center;flex-wrap:wrap;color:var(--muted);font-size:11px;letter-spacing:.12em;text-transform:uppercase;margin-top:18px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green);display:inline-block}
+.warn .dot{background:var(--red);box-shadow:0 0 12px var(--red)}
+.empty{color:var(--muted);padding:22px;border:1px dashed var(--line)}
+.footer{margin-top:20px;color:var(--muted);font-size:11px;line-height:1.8}
+@media(max-width:900px){body{padding:16px}.top,.split{display:block}.grid{grid-template-columns:1fr 1fr}.badge{display:inline-block;margin-top:18px}.panel{margin-top:16px}}
+@media(max-width:560px){.grid{grid-template-columns:1fr}h1{font-size:48px}}
+</style>
+</head>
+<body>
+<main class="shell">
+  <section class="top">
+    <div>
+      <div class="kicker">APEX Trading HQ</div>
+      <h1>Paper Trading <em>Floor</em></h1>
+      <p class="sub">Live read-only view of the Alpaca paper account. No old BTC/ETH Polymarket data. No live-trading controls. This dashboard is for monitoring the paper operation only.</p>
+      <div class="status-line" id="statusLine"><span class="dot"></span><span>Connecting to Alpaca paper API</span></div>
+    </div>
+    <div class="badge">Paper Only</div>
+  </section>
+
+  <section class="grid">
+    <div class="card"><div class="lbl">Portfolio Value</div><div class="val" id="portfolioValue">--</div></div>
+    <div class="card"><div class="lbl">Cash</div><div class="val" id="cash">--</div></div>
+    <div class="card"><div class="lbl">Buying Power</div><div class="val" id="buyingPower">--</div></div>
+    <div class="card"><div class="lbl">Unrealized P/L</div><div class="val" id="unrealizedPl">--</div></div>
+  </section>
+
+  <section class="split">
+    <div class="panel">
+      <h2>Open Positions</h2>
+      <div id="positions"></div>
+    </div>
+    <div class="panel">
+      <h2>Paper Account</h2>
+      <table>
+        <tbody>
+          <tr><th>Status</th><td class="num" id="acctStatus">--</td></tr>
+          <tr><th>Market Open</th><td class="num" id="marketOpen">--</td></tr>
+          <tr><th>Next Open</th><td class="num" id="nextOpen">--</td></tr>
+          <tr><th>Day P/L</th><td class="num" id="dayPl">--</td></tr>
+          <tr><th>Blocked</th><td class="num" id="blocked">--</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel" style="margin-top:16px">
+    <h2>Recent Paper Orders</h2>
+    <div id="orders"></div>
+  </section>
+
+  <div class="footer">
+    <div>Refreshes every 20 seconds from <code>/api/alpaca-status</code>.</div>
+    <div>Last updated: <span id="lastUpdated">--</span></div>
+  </div>
+</main>
+<script>
+const money = (v) => {
+  const n = Number(v);
+  return Number.isFinite(n) ? n.toLocaleString("en-US", {style:"currency", currency:"USD"}) : "--";
+};
+const pct = (v) => {
+  const n = Number(v);
+  return Number.isFinite(n) ? `${(n * 100).toFixed(2)}%` : "--";
+};
+const shortDate = (v) => v ? new Date(v).toLocaleString() : "--";
+const colorize = (el, value) => {
+  const n = Number(value);
+  el.classList.remove("green","red","gold");
+  if (Number.isFinite(n)) el.classList.add(n >= 0 ? "green" : "red");
+};
+
+function renderPositions(rows) {
+  if (!rows || !rows.length) {
+    positions.innerHTML = '<div class="empty">No open paper positions.</div>';
+    return;
+  }
+  positions.innerHTML = `<table><thead><tr>
+    <th>Symbol</th><th>Side</th><th class="num">Qty</th><th class="num">Entry</th>
+    <th class="num">Current</th><th class="num">Value</th><th class="num">P/L</th><th class="num">P/L %</th>
+  </tr></thead><tbody>${rows.map(p => {
+    const pl = Number(p.unrealized_pl);
+    return `<tr>
+      <td class="gold">${p.symbol || "--"}</td><td>${p.side || "--"}</td><td class="num">${p.qty || "--"}</td>
+      <td class="num">${money(p.avg_entry_price)}</td><td class="num">${money(p.current_price)}</td>
+      <td class="num">${money(p.market_value)}</td><td class="num ${pl >= 0 ? "green" : "red"}">${money(pl)}</td>
+      <td class="num">${pct(p.unrealized_plpc)}</td>
+    </tr>`;
+  }).join("")}</tbody></table>`;
+}
+
+function renderOrders(rows) {
+  if (!rows || !rows.length) {
+    orders.innerHTML = '<div class="empty">No recent paper orders.</div>';
+    return;
+  }
+  orders.innerHTML = `<table><thead><tr>
+    <th>Submitted</th><th>Symbol</th><th>Side</th><th>Type</th>
+    <th class="num">Qty</th><th class="num">Filled</th><th class="num">Avg Price</th><th>Status</th>
+  </tr></thead><tbody>${rows.map(o => `<tr>
+    <td>${shortDate(o.submitted_at)}</td><td class="gold">${o.symbol || "--"}</td><td>${o.side || "--"}</td><td>${o.type || "--"}</td>
+    <td class="num">${o.qty || "--"}</td><td class="num">${o.filled_qty || "0"}</td>
+    <td class="num">${money(o.filled_avg_price)}</td><td>${o.status || "--"}</td>
+  </tr>`).join("")}</tbody></table>`;
+}
+
+async function loadStatus() {
+  try {
+    const res = await fetch(`/api/alpaca-status?ts=${Date.now()}`, {cache:"no-store"});
+    const data = await res.json();
+    if (!res.ok || data.error) throw new Error(data.error || "Alpaca status unavailable");
+    const a = data.account || {};
+    portfolioValue.textContent = money(a.portfolio_value);
+    cash.textContent = money(a.cash);
+    buyingPower.textContent = money(a.buying_power);
+    unrealizedPl.textContent = money(a.unrealized_pl);
+    colorize(unrealizedPl, a.unrealized_pl);
+    dayPl.textContent = money(a.day_pl);
+    colorize(dayPl, a.day_pl);
+    acctStatus.textContent = a.status || "--";
+    blocked.textContent = (a.trading_blocked || a.account_blocked) ? "YES" : "NO";
+    marketOpen.textContent = data.clock?.is_open ? "YES" : "NO";
+    nextOpen.textContent = shortDate(data.clock?.next_open);
+    renderPositions(data.positions);
+    renderOrders(data.orders);
+    statusLine.className = "status-line";
+    statusLine.innerHTML = '<span class="dot"></span><span>Live Alpaca paper data connected</span>';
+    lastUpdated.textContent = new Date().toLocaleString();
+  } catch (err) {
+    statusLine.className = "status-line warn";
+    statusLine.innerHTML = `<span class="dot"></span><span>${err.message}</span>`;
+    lastUpdated.textContent = new Date().toLocaleString();
+  }
+}
+loadStatus();
+setInterval(loadStatus, 20000);
+</script>
+</body>
+</html>
