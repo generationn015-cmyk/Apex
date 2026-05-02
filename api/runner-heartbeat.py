@@ -3,10 +3,13 @@ import os
 import tempfile
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
 
 
 HEARTBEAT_PATH = os.path.join(tempfile.gettempdir(), "apex_runner_heartbeat.json")
 MAX_HISTORY = 12
+PAPER_ENDPOINT = "https://paper-api.alpaca.markets"
 
 
 def _heartbeat_token():
@@ -17,16 +20,85 @@ def _dashboard_token():
     return os.getenv("APEX_DASHBOARD_TOKEN") or os.getenv("DASHBOARD_ACCESS_TOKEN")
 
 
-def _read_heartbeat():
-    if not os.path.exists(HEARTBEAT_PATH):
+def _alpaca_headers():
+    key = os.getenv("APCA_API_KEY_ID") or os.getenv("ALPACA_API_KEY")
+    secret = os.getenv("APCA_API_SECRET_KEY") or os.getenv("ALPACA_API_SECRET")
+    if not key or not secret:
+        return None
+    return {
+        "APCA-API-KEY-ID": key,
+        "APCA-API-SECRET-KEY": secret,
+        "Accept": "application/json",
+    }
+
+
+def _alpaca_get(path, params=None):
+    headers = _alpaca_headers()
+    if not headers:
+        raise RuntimeError("Alpaca paper credentials are not configured.")
+    query = f"?{urlencode(params)}" if params else ""
+    request = Request(f"{PAPER_ENDPOINT}{path}{query}", headers=headers, method="GET")
+    with urlopen(request, timeout=12) as response:
+        return json.loads(response.read().decode("utf-8"))
+
+
+def _safe_float(value):
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def _fallback_heartbeat():
+    try:
+        account = _alpaca_get("/v2/account")
+        positions = _alpaca_get("/v2/positions")
+        clock = _alpaca_get("/v2/clock")
+    except Exception as exc:  # noqa: BLE001 - health fallback should degrade cleanly.
         return {
             "status": "external-watchdog",
             "visible_from_vercel": False,
             "stale": True,
-            "note": "Waiting for the local watchdog heartbeat relay.",
+            "error": "heartbeat relay unavailable",
+            "note": f"Waiting for local relay; Alpaca fallback unavailable: {exc.__class__.__name__}.",
         }
-    with open(HEARTBEAT_PATH, "r", encoding="utf-8") as f:
-        stored = json.load(f)
+
+    symbol = "SPY"
+    position = next((item for item in positions if item.get("symbol") == symbol), positions[0] if positions else {})
+    qty = _safe_float(position.get("qty"))
+    current_price = _safe_float(position.get("current_price"))
+    equity = _safe_float(account.get("portfolio_value") or account.get("equity"))
+    buying_power = _safe_float(account.get("buying_power"))
+    market_value = abs(_safe_float(position.get("market_value")))
+    unrealized_pl = _safe_float(position.get("unrealized_pl"))
+    exposure_pct = market_value / equity if equity else 0.0
+    latest_decision = "hold"
+    latest_reason = "position_protected" if qty > 0 else "no_relay_no_position"
+    timestamp = datetime.now(timezone.utc).isoformat()
+    heartbeat = {
+        "timestamp": timestamp,
+        "symbol": position.get("symbol") or symbol,
+        "decision": latest_decision,
+        "reason": latest_reason,
+        "market_open": clock.get("is_open"),
+        "equity": equity,
+        "buying_power": buying_power,
+        "position_qty": qty,
+        "latest_price": current_price,
+        "dry_run": False,
+        "alerts": [],
+        "risk": {
+            "exposure_pct": exposure_pct,
+            "unrealized_pl": unrealized_pl,
+            "flags": [],
+            "source": "alpaca-paper-fallback",
+        },
+        "signals": {"actionable_count": 0, "top": []},
+    }
+    return _format_heartbeat([heartbeat], "alpaca-paper-fallback", "Derived from Alpaca paper account because Vercel temp relay was empty.")
+
+
+def _format_heartbeat(stored, status="relay-visible", note="Best-effort Vercel relay from the local Windows watchdog."):
     heartbeat = stored[-1] if isinstance(stored, list) and stored else stored
     timestamp = heartbeat.get("timestamp")
     age_seconds = None
@@ -40,7 +112,7 @@ def _read_heartbeat():
         )
         stale = age_seconds > 600
     return {
-        "status": "relay-visible",
+        "status": status,
         "visible_from_vercel": True,
         "stale": stale,
         "age_seconds": age_seconds,
@@ -58,8 +130,16 @@ def _read_heartbeat():
         "signals": heartbeat.get("signals") or {},
         "history": stored[-MAX_HISTORY:] if isinstance(stored, list) else [heartbeat],
         "last_seen": timestamp,
-        "note": "Best-effort Vercel relay from the local Windows watchdog.",
+        "note": note,
     }
+
+
+def _read_heartbeat():
+    if not os.path.exists(HEARTBEAT_PATH):
+        return _fallback_heartbeat()
+    with open(HEARTBEAT_PATH, "r", encoding="utf-8") as f:
+        stored = json.load(f)
+    return _format_heartbeat(stored)
 
 
 class handler(BaseHTTPRequestHandler):

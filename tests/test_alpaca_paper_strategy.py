@@ -1,4 +1,5 @@
 import unittest
+import importlib.util
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -11,6 +12,15 @@ from scripts.equity_universe import default_equity_symbols
 from scripts.backtest_binance_strategy import bars_from_binance_rows
 from scripts.download_binance_klines import binance_monthly_kline_url
 from scripts.run_equity_backtest_report import passes_gate
+
+
+ROOT = Path(__file__).resolve().parents[1]
+RUNNER_HEARTBEAT_SPEC = importlib.util.spec_from_file_location(
+    "runner_heartbeat_api",
+    ROOT / "api" / "runner-heartbeat.py",
+)
+runner_heartbeat_api = importlib.util.module_from_spec(RUNNER_HEARTBEAT_SPEC)
+RUNNER_HEARTBEAT_SPEC.loader.exec_module(runner_heartbeat_api)
 
 
 class AlpacaPaperStrategyTests(unittest.TestCase):
@@ -220,6 +230,33 @@ class AlpacaPaperStrategyTests(unittest.TestCase):
         self.assertGreaterEqual(len(symbols), 50)
         self.assertIn("SPY", symbols)
         self.assertIn("NVDA", symbols)
+
+    def test_runner_heartbeat_fallback_uses_alpaca_snapshot(self):
+        calls = {
+            "/v2/account": {"portfolio_value": "100000", "buying_power": "90000"},
+            "/v2/positions": [
+                {
+                    "symbol": "SPY",
+                    "qty": "13",
+                    "current_price": "720.65",
+                    "market_value": "9368.45",
+                    "unrealized_pl": "113.24",
+                }
+            ],
+            "/v2/clock": {"is_open": False},
+        }
+        original_get = runner_heartbeat_api._alpaca_get
+        runner_heartbeat_api._alpaca_get = lambda path, params=None: calls[path]
+        try:
+            payload = runner_heartbeat_api._fallback_heartbeat()
+        finally:
+            runner_heartbeat_api._alpaca_get = original_get
+
+        self.assertEqual(payload["status"], "alpaca-paper-fallback")
+        self.assertEqual(payload["latest_decision"], "hold")
+        self.assertEqual(payload["latest_reason"], "position_protected")
+        self.assertEqual(payload["position_qty"], 13.0)
+        self.assertFalse(payload["stale"])
 
 
 if __name__ == "__main__":
