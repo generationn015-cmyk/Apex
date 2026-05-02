@@ -1,0 +1,5 @@
+*
+!index.html
+!vercel.json
+!api/
+!api/alpaca-status.py
