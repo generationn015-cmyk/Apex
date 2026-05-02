@@ -252,6 +252,10 @@ async function loadStatus() {
       return;
     }
     if (!response.ok || data.error) throw new Error(data.error || "Alpaca status unavailable");
+    try {
+      const runnerResponse = await fetch(`/api/runner-heartbeat?ts=${Date.now()}`, {cache:"no-store", headers});
+      if (runnerResponse.ok) data.runner = await runnerResponse.json();
+    } catch (_) {}
     const account = data.account || {};
     $("heroPortfolio").textContent = money(account.portfolio_value);
     $("cash").textContent = money(account.cash);
