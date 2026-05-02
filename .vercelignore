@@ -3,3 +3,4 @@
 !vercel.json
 !api/
 !api/alpaca-status.py
+!api/runner-heartbeat.py
