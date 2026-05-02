@@ -1,5 +1,6 @@
 import unittest
 import importlib.util
+from datetime import UTC, datetime
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -10,6 +11,8 @@ from scripts.backtest_spy_strategy import _dedupe_sorted_bars
 from scripts.backtest_spy_strategy import run_backtest
 from scripts.equity_universe import default_equity_symbols
 from scripts.backtest_binance_strategy import bars_from_binance_rows
+from scripts.backtest_binance_multi_year import latest_complete_month, month_range
+from scripts.crypto_universe import default_crypto_symbols
 from scripts.download_binance_klines import binance_monthly_kline_url
 from scripts.run_equity_backtest_report import passes_gate
 
@@ -177,6 +180,19 @@ class AlpacaPaperStrategyTests(unittest.TestCase):
 
         self.assertEqual(bars[0]["close"], 42050.0)
         self.assertEqual(bars[0]["volume"], 12.5)
+
+    def test_binance_multi_year_month_range_is_inclusive(self):
+        self.assertEqual(month_range("2024-11", "2025-02"), ["2024-11", "2024-12", "2025-01", "2025-02"])
+
+    def test_latest_complete_month_steps_back_from_current_month(self):
+        self.assertEqual(latest_complete_month(datetime(2026, 5, 2, tzinfo=UTC)), "2026-04")
+
+    def test_default_crypto_universe_contains_core_pairs(self):
+        symbols = default_crypto_symbols()
+
+        self.assertIn("BTCUSDT", symbols)
+        self.assertIn("ETHUSDT", symbols)
+        self.assertGreaterEqual(len(symbols), 5)
 
     def test_strategy_gate_requires_profit_factor_and_drawdown(self):
         good = {
