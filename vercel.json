@@ -6,7 +6,7 @@
   "installCommand": "echo skip",
   "routes": [
     { "src": "/api/alpaca-status", "dest": "/api/alpaca-status.py" },
-    { "src": "/api/runner-heartbeat", "dest": "/api/runner-heartbeat.py" },
+    { "src": "/api/runner-heartbeat", "dest": "/api/alpaca-status.py" },
     { "src": "/(.*)", "dest": "/index.html" }
   ],
   "git": {

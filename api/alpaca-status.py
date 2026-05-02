@@ -15,6 +15,10 @@ def _dashboard_token():
     return os.getenv("APEX_DASHBOARD_TOKEN") or os.getenv("DASHBOARD_ACCESS_TOKEN")
 
 
+def _heartbeat_token():
+    return os.getenv("APEX_HEARTBEAT_TOKEN") or _dashboard_token()
+
+
 def _headers():
     key = os.getenv("APCA_API_KEY_ID") or os.getenv("ALPACA_API_KEY")
     secret = os.getenv("APCA_API_SECRET_KEY") or os.getenv("ALPACA_API_SECRET")
@@ -216,6 +220,12 @@ class handler(BaseHTTPRequestHandler):
         provided = self.headers.get("X-Apex-Dashboard-Token", "")
         return provided == expected
 
+    def _heartbeat_authorized(self):
+        expected = _heartbeat_token()
+        if not expected:
+            return False
+        return self.headers.get("X-Apex-Heartbeat-Token", "") == expected
+
     def do_GET(self):
         if not self._authorized():
             self._send(
@@ -243,3 +253,28 @@ class handler(BaseHTTPRequestHandler):
                     "orders": [],
                 },
             )
+
+    def do_POST(self):
+        if not self.path.startswith("/api/runner-heartbeat"):
+            self._send(404, {"ok": False, "error": "not found"})
+            return
+        if not self._heartbeat_authorized():
+            self._send(401, {"ok": False, "error": "heartbeat token required"})
+            return
+        length = int(self.headers.get("Content-Length", "0") or 0)
+        raw = self.rfile.read(min(length, 8192))
+        try:
+            payload = json.loads(raw.decode("utf-8")) if raw else {}
+        except json.JSONDecodeError:
+            self._send(400, {"ok": False, "error": "invalid json"})
+            return
+        heartbeat = {
+            "timestamp": payload.get("timestamp") or datetime.now(timezone.utc).isoformat(),
+            "symbol": payload.get("symbol"),
+            "decision": payload.get("decision"),
+            "reason": payload.get("reason"),
+            "mode": "paper",
+        }
+        with open(HEARTBEAT_PATH, "w", encoding="utf-8") as f:
+            json.dump(heartbeat, f)
+        self._send(200, {"ok": True, "stored_at": datetime.now(timezone.utc).isoformat()})
