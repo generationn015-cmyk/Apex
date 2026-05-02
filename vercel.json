@@ -13,6 +13,5 @@
       "master": true,
       "main": false
     }
-  },
-  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- index.html vercel.json api/alpaca-status.py"
+  }
 }
