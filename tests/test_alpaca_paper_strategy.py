@@ -3,6 +3,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 from scripts.alpaca_paper_runner import Decision, RunnerResult, append_journal, decide_signal
+from scripts.apex_alerts import evaluate_alerts
 from scripts.backtest_spy_strategy import run_backtest
 from scripts.backtest_binance_strategy import bars_from_binance_rows
 from scripts.download_binance_klines import binance_monthly_kline_url
@@ -90,6 +91,9 @@ class AlpacaPaperStrategyTests(unittest.TestCase):
         )
 
         self.assertEqual(result.alerts, ["dry-run"])
+
+    def test_alerts_flag_missing_heartbeat(self):
+        self.assertEqual(evaluate_alerts({}), ["equity-unavailable", "missing-heartbeat"])
 
     def test_backtest_returns_basic_metrics(self):
         bars = []

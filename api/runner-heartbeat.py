@@ -116,7 +116,17 @@ class handler(BaseHTTPRequestHandler):
                 history = stored if isinstance(stored, list) else [stored]
             except Exception:
                 history = []
-        history.append(heartbeat)
+        incoming_history = payload.get("history")
+        if isinstance(incoming_history, list):
+            history.extend([item for item in incoming_history if isinstance(item, dict)])
+        else:
+            history.append(heartbeat)
+        by_timestamp = {}
+        for item in history:
+            timestamp = item.get("timestamp")
+            if timestamp:
+                by_timestamp[timestamp] = item
+        history = [by_timestamp[key] for key in sorted(by_timestamp.keys())]
         with open(HEARTBEAT_PATH, "w", encoding="utf-8") as f:
             json.dump(history[-MAX_HISTORY:], f)
         self._send(200, {"ok": True, "stored_at": datetime.now(timezone.utc).isoformat()})

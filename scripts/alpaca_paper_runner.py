@@ -33,6 +33,8 @@ ROOT = Path(__file__).resolve().parents[1]
 LOG_DIR = ROOT / "logs"
 STATE_DIR = ROOT / "runtime"
 JOURNAL_PATH = ROOT / "data" / "paper_journal.csv"
+HEARTBEAT_HISTORY_PATH = STATE_DIR / "dashboard_heartbeat_history.json"
+MAX_HEARTBEAT_HISTORY = 50
 
 
 @dataclass(frozen=True)
@@ -294,21 +296,21 @@ def publish_dashboard_heartbeat(env: dict[str, str], result: RunnerResult) -> No
     token = env.get("APEX_HEARTBEAT_TOKEN", "").strip() or env.get("APEX_DASHBOARD_TOKEN", "").strip()
     if not url or not token:
         return
-    payload = json.dumps(
-        {
-            "timestamp": datetime.now(timezone.utc).isoformat(),
-            "symbol": result.symbol,
-            "decision": result.decision.action,
-            "reason": result.decision.reason,
-            "market_open": result.market_open,
-            "equity": result.equity,
-            "buying_power": result.buying_power,
-            "position_qty": result.position_qty,
-            "latest_price": result.latest_price,
-            "dry_run": result.dry_run,
-            "alerts": result.alerts,
-        }
-    ).encode("utf-8")
+    heartbeat = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "symbol": result.symbol,
+        "decision": result.decision.action,
+        "reason": result.decision.reason,
+        "market_open": result.market_open,
+        "equity": result.equity,
+        "buying_power": result.buying_power,
+        "position_qty": result.position_qty,
+        "latest_price": result.latest_price,
+        "dry_run": result.dry_run,
+        "alerts": result.alerts,
+    }
+    history = save_dashboard_heartbeat_history(heartbeat)
+    payload = json.dumps({**heartbeat, "history": history[-12:]}).encode("utf-8")
     request = Request(
         url,
         data=payload,
@@ -323,6 +325,21 @@ def publish_dashboard_heartbeat(env: dict[str, str], result: RunnerResult) -> No
             logging.info("published dashboard heartbeat")
     except Exception as exc:
         logging.warning("dashboard heartbeat publish failed: %s", exc)
+
+
+def save_dashboard_heartbeat_history(heartbeat: dict) -> list[dict]:
+    STATE_DIR.mkdir(exist_ok=True)
+    history: list[dict] = []
+    if HEARTBEAT_HISTORY_PATH.exists():
+        try:
+            loaded = json.loads(HEARTBEAT_HISTORY_PATH.read_text(encoding="utf-8"))
+            history = loaded if isinstance(loaded, list) else []
+        except json.JSONDecodeError:
+            history = []
+    history.append(heartbeat)
+    history = history[-MAX_HEARTBEAT_HISTORY:]
+    HEARTBEAT_HISTORY_PATH.write_text(json.dumps(history, indent=2), encoding="utf-8")
+    return history
 
 
 def _position_price(position) -> float:

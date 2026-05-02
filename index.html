@@ -120,6 +120,19 @@ h2{font-family:"Bodoni Moda",serif;color:var(--gold);font-size:26px;line-height:
       </section>
 
       <section class="panel">
+        <div class="panel-head"><h2>Ops Controls</h2><div class="panel-note">Read-only</div></div>
+        <table class="account-table">
+          <tbody>
+            <tr><th>Mode</th><td>Paper only</td></tr>
+            <tr><th>Max exposure</th><td>25%</td></tr>
+            <tr><th>Loss watch</th><td>$500</td></tr>
+            <tr><th>Stop runner</th><td><code>scripts\stop_alpaca_paper_watchdog.ps1</code></td></tr>
+            <tr><th>Strategy gate</th><td>Backtest pass required</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="panel">
         <div class="panel-head"><h2>Risk</h2><div class="panel-note" id="riskState">Checking</div></div>
         <div class="metric-grid">
           <div class="metric"><div class="label">Day P/L</div><div class="v" id="dayPl">--</div></div>
