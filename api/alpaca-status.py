@@ -1,5 +1,6 @@
 import json
 import os
+from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
@@ -37,6 +38,13 @@ def _safe_float(value):
         return 0.0
 
 
+def _optional_get(path, params=None, fallback=None):
+    try:
+        return _get(path, params)
+    except Exception:
+        return fallback
+
+
 def _status_payload():
     account = _get("/v2/account")
     positions = _get("/v2/positions")
@@ -45,6 +53,11 @@ def _status_payload():
         {"status": "all", "limit": 10, "direction": "desc", "nested": "false"},
     )
     clock = _get("/v2/clock")
+    history = _optional_get(
+        "/v2/account/portfolio/history",
+        {"period": "1M", "timeframe": "1D", "intraday_reporting": "market_hours"},
+        {"timestamp": [], "equity": [], "profit_loss": [], "profit_loss_pct": []},
+    )
 
     equity = _safe_float(account.get("equity") or account.get("portfolio_value"))
     last_equity = _safe_float(account.get("last_equity"))
@@ -52,9 +65,12 @@ def _status_payload():
 
     clean_positions = []
     unrealized_total = 0.0
+    market_value_total = 0.0
     for item in positions:
         pl = _safe_float(item.get("unrealized_pl"))
+        market_value = abs(_safe_float(item.get("market_value")))
         unrealized_total += pl
+        market_value_total += market_value
         clean_positions.append(
             {
                 "symbol": item.get("symbol"),
@@ -84,9 +100,23 @@ def _status_payload():
             }
         )
 
+    exposure_pct = (market_value_total / equity) if equity else 0.0
+    risk_flags = []
+    if account.get("trading_blocked") or account.get("account_blocked"):
+        risk_flags.append("account-blocked")
+    if exposure_pct > 0.25:
+        risk_flags.append("exposure-over-25pct")
+    if day_pl < -500:
+        risk_flags.append("daily-loss-watch")
+    if unrealized_total < -500:
+        risk_flags.append("open-loss-watch")
+
+    generated_at = datetime.now(timezone.utc).isoformat()
+
     return {
         "mode": "paper",
         "source": "alpaca-paper-api",
+        "generated_at": generated_at,
         "account": {
             "status": account.get("status"),
             "trading_blocked": account.get("trading_blocked"),
@@ -96,6 +126,14 @@ def _status_payload():
             "cash": account.get("cash"),
             "day_pl": round(day_pl, 2),
             "unrealized_pl": round(unrealized_total, 2),
+            "market_value": round(market_value_total, 2),
+            "exposure_pct": round(exposure_pct, 4),
+        },
+        "risk": {
+            "flags": risk_flags,
+            "open_positions": len(clean_positions),
+            "max_target_exposure_pct": 0.25,
+            "paper_only": True,
         },
         "clock": {
             "is_open": clock.get("is_open"),
@@ -103,6 +141,12 @@ def _status_payload():
             "next_open": clock.get("next_open"),
             "next_close": clock.get("next_close"),
         },
+        "runner": {
+            "status": "external-watchdog",
+            "visible_from_vercel": False,
+            "note": "Local Windows watchdog heartbeat is not readable from Vercel; this card verifies broker/API freshness.",
+        },
+        "portfolio_history": history,
         "positions": clean_positions,
         "orders": clean_orders,
     }
