@@ -108,7 +108,15 @@ h2{font-family:"Bodoni Moda",serif;color:var(--gold);font-size:26px;line-height:
           <div class="metric wide"><div class="label">Latest Decision</div><div class="v" id="latestDecision">--</div></div>
           <div class="metric"><div class="label">Heartbeat Age</div><div class="v" id="heartbeatAge">--</div></div>
           <div class="metric"><div class="label">Runner Symbol</div><div class="v" id="runnerSymbol">--</div></div>
+          <div class="metric"><div class="label">Runner Equity</div><div class="v" id="runnerEquity">--</div></div>
+          <div class="metric"><div class="label">Runner Price</div><div class="v" id="runnerPrice">--</div></div>
+          <div class="metric wide"><div class="label">Runner Alerts</div><div class="v" id="runnerAlerts">--</div></div>
         </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head"><h2>Relay History</h2><div class="panel-note">Last cycles</div></div>
+        <div id="runnerHistory"></div>
       </section>
 
       <section class="panel">
@@ -241,6 +249,11 @@ function renderOrders(rows) {
   $("orders").innerHTML = rows.length ? desktopOrders(rows) + mobileOrders(rows) : '<div class="empty">No recent paper orders.</div>';
 }
 
+function renderRunnerHistory(rows) {
+  const list = (rows || []).slice(-6).reverse();
+  $("runnerHistory").innerHTML = list.length ? `<div class="mobile-list" style="display:block">${list.map((item) => `<div class="list-card"><div class="list-row"><span>Time</span><span>${dateTime(item.timestamp)}</span></div><div class="list-row"><span>Decision</span><span>${item.decision || "--"} / ${item.reason || "--"}</span></div><div class="list-row"><span>Symbol</span><span class="gold">${item.symbol || "--"}</span></div><div class="list-row"><span>Equity</span><span>${money(item.equity)}</span></div><div class="list-row"><span>Qty / Price</span><span>${item.position_qty ?? "--"} @ ${money(item.latest_price)}</span></div></div>`).join("")}</div>` : '<div class="empty">Waiting for runner telemetry.</div>';
+}
+
 async function loadStatus() {
   try {
     const token = getToken();
@@ -284,12 +297,18 @@ async function loadStatus() {
     $("heartbeatAge").textContent = ageText(data.runner?.age_seconds);
     $("heartbeatAge").className = data.runner?.stale ? "v red" : "v green";
     $("runnerSymbol").textContent = data.runner?.symbol || "--";
+    $("runnerEquity").textContent = money(data.runner?.equity);
+    $("runnerPrice").textContent = money(data.runner?.latest_price);
+    const runnerAlerts = data.runner?.alerts || [];
+    $("runnerAlerts").textContent = runnerAlerts.length ? runnerAlerts.join(", ") : "Clear";
+    $("runnerAlerts").className = runnerAlerts.length ? "v red" : "v green";
     $("openPositions").textContent = data.risk?.open_positions ?? "--";
     const flags = data.risk?.flags || [];
     $("riskState").textContent = flags.length ? flags.join(", ") : "Clear";
     $("riskState").className = flags.length ? "panel-note red" : "panel-note green";
     renderPositions(data.positions || []);
     renderOrders(data.orders || []);
+    renderRunnerHistory(data.runner?.history || []);
     drawEquityChart(data.portfolio_history);
     $("statusLine").className = "health";
     $("statusLine").innerHTML = '<span class="dot"></span><span>Live paper data connected</span>';
