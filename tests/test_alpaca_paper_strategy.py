@@ -2,7 +2,7 @@ import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from scripts.alpaca_paper_runner import append_journal, decide_signal
+from scripts.alpaca_paper_runner import Decision, RunnerResult, append_journal, decide_signal
 from scripts.backtest_spy_strategy import run_backtest
 from scripts.backtest_binance_strategy import bars_from_binance_rows
 from scripts.download_binance_klines import binance_monthly_kline_url
@@ -76,6 +76,20 @@ class AlpacaPaperStrategyTests(unittest.TestCase):
             self.assertEqual(len(lines), 2)
             self.assertIn("timestamp,symbol,action", lines[0])
             self.assertIn("SPY,hold,position_protected", lines[1])
+
+    def test_runner_result_flags_dry_run_without_trade_logic_change(self):
+        result = RunnerResult(
+            symbol="SPY",
+            decision=Decision("hold", "position_protected"),
+            market_open=False,
+            equity=100_000.0,
+            buying_power=190_000.0,
+            position_qty=13.0,
+            latest_price=720.65,
+            dry_run=True,
+        )
+
+        self.assertEqual(result.alerts, ["dry-run"])
 
     def test_backtest_returns_basic_metrics(self):
         bars = []

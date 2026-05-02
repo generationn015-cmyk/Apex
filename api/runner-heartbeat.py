@@ -6,6 +6,7 @@ from http.server import BaseHTTPRequestHandler
 
 
 HEARTBEAT_PATH = os.path.join(tempfile.gettempdir(), "apex_runner_heartbeat.json")
+MAX_HISTORY = 12
 
 
 def _heartbeat_token():
@@ -25,7 +26,8 @@ def _read_heartbeat():
             "note": "Waiting for the local watchdog heartbeat relay.",
         }
     with open(HEARTBEAT_PATH, "r", encoding="utf-8") as f:
-        heartbeat = json.load(f)
+        stored = json.load(f)
+    heartbeat = stored[-1] if isinstance(stored, list) and stored else stored
     timestamp = heartbeat.get("timestamp")
     age_seconds = None
     stale = True
@@ -45,6 +47,14 @@ def _read_heartbeat():
         "symbol": heartbeat.get("symbol"),
         "latest_decision": heartbeat.get("decision"),
         "latest_reason": heartbeat.get("reason"),
+        "market_open": heartbeat.get("market_open"),
+        "equity": heartbeat.get("equity"),
+        "buying_power": heartbeat.get("buying_power"),
+        "position_qty": heartbeat.get("position_qty"),
+        "latest_price": heartbeat.get("latest_price"),
+        "dry_run": heartbeat.get("dry_run"),
+        "alerts": heartbeat.get("alerts") or [],
+        "history": stored[-MAX_HISTORY:] if isinstance(stored, list) else [heartbeat],
         "last_seen": timestamp,
         "note": "Best-effort Vercel relay from the local Windows watchdog.",
     }
@@ -89,10 +99,26 @@ class handler(BaseHTTPRequestHandler):
             "symbol": payload.get("symbol"),
             "decision": payload.get("decision"),
             "reason": payload.get("reason"),
+            "market_open": payload.get("market_open"),
+            "equity": payload.get("equity"),
+            "buying_power": payload.get("buying_power"),
+            "position_qty": payload.get("position_qty"),
+            "latest_price": payload.get("latest_price"),
+            "dry_run": payload.get("dry_run"),
+            "alerts": payload.get("alerts") or [],
             "mode": "paper",
         }
+        history = []
+        if os.path.exists(HEARTBEAT_PATH):
+            try:
+                with open(HEARTBEAT_PATH, "r", encoding="utf-8") as f:
+                    stored = json.load(f)
+                history = stored if isinstance(stored, list) else [stored]
+            except Exception:
+                history = []
+        history.append(heartbeat)
         with open(HEARTBEAT_PATH, "w", encoding="utf-8") as f:
-            json.dump(heartbeat, f)
+            json.dump(history[-MAX_HISTORY:], f)
         self._send(200, {"ok": True, "stored_at": datetime.now(timezone.utc).isoformat()})
 
     def do_GET(self):

@@ -41,6 +41,29 @@ class Decision:
     reason: str
 
 
+@dataclass(frozen=True)
+class RunnerResult:
+    symbol: str
+    decision: Decision
+    market_open: bool
+    equity: float
+    buying_power: float
+    position_qty: float
+    latest_price: float
+    dry_run: bool
+
+    @property
+    def alerts(self) -> list[str]:
+        flags = []
+        if self.dry_run:
+            flags.append("dry-run")
+        if self.equity <= 0:
+            flags.append("equity-unavailable")
+        if self.position_qty < 0:
+            flags.append("short-position")
+        return flags
+
+
 def decide_signal(
     bars: list[dict],
     has_position: bool,
@@ -187,7 +210,7 @@ def append_journal(
         )
 
 
-def run_once(symbol: str, max_notional: float, dry_run: bool) -> Decision:
+def run_once(symbol: str, max_notional: float, dry_run: bool) -> RunnerResult:
     env = load_env()
     trading, data = get_clients(env)
     account = trading.get_account()
@@ -229,10 +252,21 @@ def run_once(symbol: str, max_notional: float, dry_run: bool) -> Decision:
         dry_run=dry_run,
     )
 
+    result = RunnerResult(
+        symbol=symbol,
+        decision=decision,
+        market_open=bool(clock.is_open),
+        equity=float(account.portfolio_value),
+        buying_power=float(account.buying_power),
+        position_qty=float(getattr(position, "qty", 0) or 0),
+        latest_price=latest,
+        dry_run=dry_run,
+    )
+
     if dry_run:
-        return decision
+        return result
     if not clock.is_open:
-        return decision
+        return result
 
     if decision.action == "buy" and not has_position:
         qty = max(1, int(max_notional // latest))
@@ -244,7 +278,7 @@ def run_once(symbol: str, max_notional: float, dry_run: bool) -> Decision:
             submit_market_order(trading, symbol, OrderSide.SELL, qty)
             logging.info("submitted SELL %s qty=%d", symbol, qty)
 
-    return decision
+    return result
 
 
 def write_heartbeat(symbol: str) -> None:
@@ -255,7 +289,7 @@ def write_heartbeat(symbol: str) -> None:
     )
 
 
-def publish_dashboard_heartbeat(env: dict[str, str], symbol: str, decision: Decision) -> None:
+def publish_dashboard_heartbeat(env: dict[str, str], result: RunnerResult) -> None:
     url = env.get("APEX_DASHBOARD_HEARTBEAT_URL", "").strip()
     token = env.get("APEX_HEARTBEAT_TOKEN", "").strip() or env.get("APEX_DASHBOARD_TOKEN", "").strip()
     if not url or not token:
@@ -263,9 +297,16 @@ def publish_dashboard_heartbeat(env: dict[str, str], symbol: str, decision: Deci
     payload = json.dumps(
         {
             "timestamp": datetime.now(timezone.utc).isoformat(),
-            "symbol": symbol,
-            "decision": decision.action,
-            "reason": decision.reason,
+            "symbol": result.symbol,
+            "decision": result.decision.action,
+            "reason": result.decision.reason,
+            "market_open": result.market_open,
+            "equity": result.equity,
+            "buying_power": result.buying_power,
+            "position_qty": result.position_qty,
+            "latest_price": result.latest_price,
+            "dry_run": result.dry_run,
+            "alerts": result.alerts,
         }
     ).encode("utf-8")
     request = Request(
@@ -311,9 +352,9 @@ def main() -> None:
     while True:
         env = load_env()
         try:
-            decision = run_once(args.symbol, args.max_notional, args.dry_run)
+            result = run_once(args.symbol, args.max_notional, args.dry_run)
             write_heartbeat(args.symbol)
-            publish_dashboard_heartbeat(env, args.symbol, decision)
+            publish_dashboard_heartbeat(env, result)
         except Exception as exc:
             logging.exception("runner cycle failed: %s", exc)
         if args.once:
