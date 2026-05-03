@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.alpaca_paper_runner import decide_signal
+from scripts.alpaca_paper_runner import Decision, decide_signal
 
 
 def fetch_stooq_daily(symbol: str, start: str, end: str) -> list[dict]:
@@ -150,17 +150,21 @@ def run_backtest(
     bars: list[dict],
     initial_cash: float = 10_000.0,
     max_notional: float = 5_000.0,
+    periods_per_year: int = 252,
 ) -> dict:
     cash = initial_cash
     qty = 0
     entry = 0.0
     trades: list[dict] = []
     equity_curve: list[float] = []
+    invested_periods = 0
+    closes: list[float] = []
 
-    for index, bar in enumerate(bars):
+    for bar in bars:
         price = float(bar["close"])
-        history = bars[: index + 1]
-        decision = decide_signal(history, has_position=qty > 0, entry_price=entry, latest_price=price)
+        if price > 0:
+            closes.append(price)
+        decision = _decide_from_closes(closes, has_position=qty > 0, entry_price=entry, latest_price=price)
 
         if decision.action == "buy" and qty == 0 and price > 0:
             qty = max(1, int(min(max_notional, cash) // price))
@@ -174,6 +178,8 @@ def run_backtest(
             qty = 0
             entry = 0.0
 
+        if qty > 0:
+            invested_periods += 1
         equity_curve.append(cash + qty * price)
 
     final_price = float(bars[-1]["close"]) if bars else 0.0
@@ -184,6 +190,7 @@ def run_backtest(
     wins = [p for p in closed_trades if p > 0]
     losses = [p for p in closed_trades if p <= 0]
     profit_factor = sum(wins) / abs(sum(losses)) if losses and sum(losses) != 0 else math.inf
+    risk = _risk_adjusted_metrics(equity_curve, bars, initial_cash, max_drawdown, periods_per_year)
 
     return {
         "bars": len(bars),
@@ -196,6 +203,11 @@ def run_backtest(
         "closed_trades": len(closed_trades),
         "win_rate_pct": round(len(wins) / len(closed_trades) * 100, 2) if closed_trades else 0.0,
         "profit_factor": round(profit_factor, 2) if math.isfinite(profit_factor) else "inf",
+        "cagr_pct": risk["cagr_pct"],
+        "sharpe": risk["sharpe"],
+        "sortino": risk["sortino"],
+        "calmar": risk["calmar"],
+        "exposure_pct": round(invested_periods / len(bars) * 100, 2) if bars else 0.0,
         "open_qty": qty,
     }
 
@@ -212,6 +224,31 @@ def _closed_trade_pnls(trades: list[dict]) -> list[float]:
     return pnls
 
 
+def _decide_from_closes(
+    closes: list[float],
+    has_position: bool,
+    entry_price: float,
+    latest_price: float,
+) -> Decision:
+    if len(closes) < 50:
+        return decide_signal([{"close": close} for close in closes], has_position, entry_price, latest_price)
+
+    latest = float(latest_price or closes[-1])
+    sma20 = sum(closes[-20:]) / 20
+    sma50 = sum(closes[-50:]) / 50
+
+    if has_position:
+        if entry_price > 0 and latest <= entry_price * 0.98:
+            return Decision("sell", "stop_2pct")
+        if latest < sma20 and sma20 < sma50:
+            return Decision("sell", "trend_break")
+        return Decision("hold", "position_protected")
+
+    if latest > sma20 > sma50:
+        return Decision("buy", "uptrend")
+    return Decision("hold", "no_edge")
+
+
 def _max_drawdown_pct(equity: list[float]) -> float:
     peak = 0.0
     max_dd = 0.0
@@ -220,6 +257,75 @@ def _max_drawdown_pct(equity: list[float]) -> float:
         if peak:
             max_dd = max(max_dd, (peak - value) / peak * 100)
     return max_dd
+
+
+def _risk_adjusted_metrics(
+    equity: list[float],
+    bars: list[dict],
+    initial_cash: float,
+    max_drawdown_pct: float,
+    periods_per_year: int,
+) -> dict:
+    if not equity or initial_cash <= 0:
+        return {"cagr_pct": 0.0, "sharpe": 0.0, "sortino": 0.0, "calmar": 0.0}
+
+    years = _backtest_years(bars, len(equity), periods_per_year)
+    final_equity = equity[-1]
+    cagr = (final_equity / initial_cash) ** (1 / years) - 1 if years > 0 and final_equity > 0 else 0.0
+
+    returns: list[float] = []
+    previous = initial_cash
+    for value in equity:
+        if previous > 0:
+            returns.append((value / previous) - 1)
+        previous = value
+
+    sharpe = _annualized_sharpe(returns, periods_per_year)
+    downside = [value for value in returns if value < 0]
+    sortino = _annualized_sharpe(returns, periods_per_year, downside)
+    calmar = cagr / (max_drawdown_pct / 100) if max_drawdown_pct > 0 else 0.0
+    return {
+        "cagr_pct": round(cagr * 100, 2),
+        "sharpe": round(sharpe, 2),
+        "sortino": round(sortino, 2),
+        "calmar": round(calmar, 2),
+    }
+
+
+def _backtest_years(bars: list[dict], periods: int, periods_per_year: int) -> float:
+    first = _parse_timestamp(bars[0].get("timestamp")) if bars else None
+    last = _parse_timestamp(bars[-1].get("timestamp")) if bars else None
+    if first and last and last > first:
+        return max((last - first).days / 365.25, 1 / periods_per_year)
+    return max(periods / periods_per_year, 1 / periods_per_year)
+
+
+def _parse_timestamp(value: object) -> datetime | None:
+    if not value:
+        return None
+    text = str(value).replace("Z", "+00:00")
+    try:
+        return datetime.fromisoformat(text)
+    except ValueError:
+        try:
+            return datetime.strptime(text[:10], "%Y-%m-%d").replace(tzinfo=UTC)
+        except ValueError:
+            return None
+
+
+def _annualized_sharpe(
+    returns: list[float],
+    periods_per_year: int,
+    denominator_returns: list[float] | None = None,
+) -> float:
+    sample = returns[1:] if len(returns) > 1 else returns
+    denominator_sample = denominator_returns if denominator_returns is not None else sample
+    if len(sample) < 2 or len(denominator_sample) < 2:
+        return 0.0
+    average = sum(sample) / len(sample)
+    variance = sum((value - average) ** 2 for value in denominator_sample) / (len(denominator_sample) - 1)
+    deviation = math.sqrt(variance)
+    return (average / deviation) * math.sqrt(periods_per_year) if deviation > 0 else 0.0
 
 
 def main() -> None:

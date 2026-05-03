@@ -20,6 +20,8 @@ def score(row: dict) -> float:
     return (
         float(row.get("total_return_pct") or 0)
         + profit_factor * 10
+        + float(row.get("sharpe") or 0) * 12
+        + float(row.get("calmar") or 0) * 8
         - float(row.get("max_drawdown_pct") or 0) * 1.5
         + int(row.get("closed_trades") or 0) * 0.5
     )
@@ -38,12 +40,12 @@ def write_outputs(rows: list[dict], json_path: Path, md_path: Path) -> None:
         "",
         f"Generated: {datetime.now(UTC).isoformat()}",
         "",
-        "| Rank | Symbol | Pass | Score | Return % | Max DD % | Profit Factor | Closed Trades |",
-        "|---:|---|---:|---:|---:|---:|---:|---:|",
+        "| Rank | Symbol | Pass | Score | Return % | CAGR % | Sharpe | Calmar | Max DD % | Profit Factor | Closed Trades |",
+        "|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
     ]
     for index, row in enumerate(ranked, 1):
         lines.append(
-            f"| {index} | {row['symbol']} | {'yes' if row['pass'] else 'no'} | {row['score']} | {row['total_return_pct']} | {row['max_drawdown_pct']} | {row['profit_factor']} | {row['closed_trades']} |"
+            f"| {index} | {row['symbol']} | {'yes' if row['pass'] else 'no'} | {row['score']} | {row['total_return_pct']} | {row['cagr_pct']} | {row['sharpe']} | {row['calmar']} | {row['max_drawdown_pct']} | {row['profit_factor']} | {row['closed_trades']} |"
         )
     lines.extend(["", "Paper rule: only candidates passing the gate can be considered for runner changes."])
     md_path.write_text("\n".join(lines), encoding="utf-8")

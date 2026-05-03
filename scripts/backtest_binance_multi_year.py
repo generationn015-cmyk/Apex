@@ -60,7 +60,7 @@ def analyze_symbol(symbol: str, interval: str, months: list[str], market: str) -
         except Exception:
             failed_months.append(month)
     bars = sorted(bars, key=lambda bar: bar.get("timestamp", ""))
-    metrics = run_backtest(bars, initial_cash=10_000.0, max_notional=5_000.0)
+    metrics = run_backtest(bars, initial_cash=10_000.0, max_notional=5_000.0, periods_per_year=365 * 24)
     row = {
         "symbol": symbol,
         "source": "binance-vision",
@@ -100,17 +100,20 @@ def write_outputs(rows: list[dict], start_month: str, end_month: str) -> None:
         f"Window: {start_month} through {end_month}",
         "Source: Binance Vision public monthly klines",
         "",
-        "| Rank | Symbol | Pass | Score | Return % | Max DD % | Profit Factor | Closed Trades | Months Loaded |",
-        "|---:|---|---:|---:|---:|---:|---:|---:|---:|",
+        "| Rank | Symbol | Pass | Score | Return % | CAGR % | Sharpe | Calmar | Max DD % | Profit Factor | Closed Trades | Months Loaded |",
+        "|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
     ]
     for index, row in enumerate(ranked, 1):
         lines.append(
-            "| {rank} | {symbol} | {passed} | {score} | {ret} | {dd} | {pf} | {closed} | {months} |".format(
+            "| {rank} | {symbol} | {passed} | {score} | {ret} | {cagr} | {sharpe} | {calmar} | {dd} | {pf} | {closed} | {months} |".format(
                 rank=index,
                 symbol=row["symbol"],
                 passed="yes" if row["pass"] else "no",
                 score=row["score"],
                 ret=row["total_return_pct"],
+                cagr=row["cagr_pct"],
+                sharpe=row["sharpe"],
+                calmar=row["calmar"],
                 dd=row["max_drawdown_pct"],
                 pf=row["profit_factor"],
                 closed=row["closed_trades"],

@@ -44,7 +44,7 @@ def backtest_binance_month(symbol: str, interval: str, month: str, market: str) 
     output_dir = ROOT / "data" / "history" / "binance"
     csv_path = download_month(symbol=symbol, interval=interval, month=month, market=market, output_dir=output_dir)
     bars = load_binance_csv(csv_path)
-    metrics = run_backtest(bars, initial_cash=10_000.0, max_notional=5_000.0)
+    metrics = run_backtest(bars, initial_cash=10_000.0, max_notional=5_000.0, periods_per_year=365 * 24)
     return csv_path, metrics
 
 

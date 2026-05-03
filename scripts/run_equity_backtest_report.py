@@ -22,6 +22,8 @@ def passes_gate(metrics: dict) -> bool:
         and float(metrics.get("max_drawdown_pct", 999.0)) <= 20.0
         and int(metrics.get("closed_trades", 0)) >= 3
         and float(metrics.get("total_return_pct", -999.0)) > 0
+        and float(metrics.get("sharpe", -999.0)) > 0
+        and float(metrics.get("calmar", -999.0)) > 0
     )
 
 
@@ -41,16 +43,19 @@ def write_report(rows: list[dict], path: Path) -> None:
         "",
         f"Generated: {datetime.now(UTC).isoformat()}",
         "",
-        "| Symbol | Source | Pass | Return % | Max DD % | Profit Factor | Closed Trades | Win Rate % |",
-        "|---|---|---:|---:|---:|---:|---:|---:|",
+        "| Symbol | Source | Pass | Return % | CAGR % | Sharpe | Calmar | Max DD % | Profit Factor | Closed Trades | Win Rate % |",
+        "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
     ]
     for row in rows:
         lines.append(
-            "| {symbol} | {source} | {passed} | {ret} | {dd} | {pf} | {closed} | {wr} |".format(
+            "| {symbol} | {source} | {passed} | {ret} | {cagr} | {sharpe} | {calmar} | {dd} | {pf} | {closed} | {wr} |".format(
                 symbol=row["symbol"],
                 source=row["source"],
                 passed="yes" if row["pass"] else "no",
                 ret=row["total_return_pct"],
+                cagr=row["cagr_pct"],
+                sharpe=row["sharpe"],
+                calmar=row["calmar"],
                 dd=row["max_drawdown_pct"],
                 pf=row["profit_factor"],
                 closed=row["closed_trades"],
@@ -60,7 +65,7 @@ def write_report(rows: list[dict], path: Path) -> None:
     lines.extend(
         [
             "",
-            "Gate: profit factor >= 1.5, max drawdown <= 20%, at least 3 closed trades, positive return.",
+            "Gate: profit factor >= 1.5, max drawdown <= 20%, at least 3 closed trades, positive return, positive Sharpe and Calmar.",
             "",
         ]
     )

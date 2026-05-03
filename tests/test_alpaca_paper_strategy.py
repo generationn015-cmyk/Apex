@@ -155,6 +155,10 @@ class AlpacaPaperStrategyTests(unittest.TestCase):
         self.assertIn("final_equity", metrics)
         self.assertIn("total_return_pct", metrics)
         self.assertIn("trades", metrics)
+        self.assertIn("sharpe", metrics)
+        self.assertIn("sortino", metrics)
+        self.assertIn("calmar", metrics)
+        self.assertGreater(metrics["exposure_pct"], 0)
 
     def test_binance_monthly_kline_url_uses_official_vision_path(self):
         url = binance_monthly_kline_url("BTCUSDT", "1h", "2024-01", market="spot")
@@ -200,12 +204,16 @@ class AlpacaPaperStrategyTests(unittest.TestCase):
             "max_drawdown_pct": 9.0,
             "closed_trades": 4,
             "total_return_pct": 12.0,
+            "sharpe": 0.5,
+            "calmar": 1.0,
         }
         bad = {
             "profit_factor": 0.8,
             "max_drawdown_pct": 4.0,
             "closed_trades": 4,
             "total_return_pct": 12.0,
+            "sharpe": 0.5,
+            "calmar": 1.0,
         }
 
         self.assertTrue(passes_gate(good))
@@ -217,12 +225,16 @@ class AlpacaPaperStrategyTests(unittest.TestCase):
             "max_drawdown_pct": 9.0,
             "closed_trades": 4,
             "total_return_pct": 12.0,
+            "sharpe": 0.5,
+            "calmar": 1.0,
         }
         bad = {
             "profit_factor": 0.8,
             "max_drawdown_pct": 4.0,
             "closed_trades": 4,
             "total_return_pct": 12.0,
+            "sharpe": 0.5,
+            "calmar": 1.0,
         }
 
         self.assertTrue(passes_multi_year_gate({"full": good, "recent_5y": good, "recent_3y": good}))
