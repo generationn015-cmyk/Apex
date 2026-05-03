@@ -443,9 +443,16 @@ def load_top_signal_summary() -> dict:
                 "actionable": bool(row.get("actionable")),
                 "score": row.get("score"),
                 "latest_price": row.get("latest_price"),
+                "full": {
+                    "sharpe": (row.get("full") or {}).get("sharpe"),
+                    "calmar": (row.get("full") or {}).get("calmar"),
+                    "cagr_pct": (row.get("full") or {}).get("cagr_pct"),
+                },
                 "recent_3y": {
                     "total_return_pct": (row.get("recent_3y") or {}).get("total_return_pct"),
                     "max_drawdown_pct": (row.get("recent_3y") or {}).get("max_drawdown_pct"),
+                    "sharpe": (row.get("recent_3y") or {}).get("sharpe"),
+                    "calmar": (row.get("recent_3y") or {}).get("calmar"),
                 },
             }
             for row in rows[:5]
