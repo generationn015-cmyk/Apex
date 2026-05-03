@@ -1,6 +1,6 @@
 # Apex Crypto Signal Backtest
 
-Generated: 2026-05-02T19:45:08.629350+00:00
+Generated: 2026-05-03T15:56:20.383051+00:00
 Window: 2023-01 through 2026-04
 Source: Binance Vision public monthly klines
 
