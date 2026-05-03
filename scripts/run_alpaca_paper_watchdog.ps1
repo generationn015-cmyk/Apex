@@ -9,17 +9,48 @@ $PidFile = Join-Path $Runtime "alpaca_paper_watchdog.pid"
 $StopFile = Join-Path $Runtime "alpaca_paper_watchdog.stop"
 $LogFile = Join-Path $Logs "alpaca_paper_watchdog.log"
 
+Set-Location $Root
+"$(Get-Date -Format o) watchdog started pid=$PID" | Add-Content -LiteralPath $LogFile
+
+function Resolve-PythonCommand {
+  $candidates = @()
+
+  $candidates += (Join-Path $Root ".venv\\Scripts\\python.exe")
+  $candidates += (Join-Path $Root "venv\\Scripts\\python.exe")
+  $candidates += (Join-Path $Root "env\\Scripts\\python.exe")
+
+  foreach ($path in $candidates) {
+    if ($path -and (Test-Path -LiteralPath $path)) {
+      return @{ FilePath = $path; Args = @() }
+    }
+  }
+
+  $cmd = Get-Command -Name "python" -ErrorAction SilentlyContinue
+  if ($cmd) { return @{ FilePath = $cmd.Source; Args = @() } }
+
+  $cmd = Get-Command -Name "python3" -ErrorAction SilentlyContinue
+  if ($cmd) { return @{ FilePath = $cmd.Source; Args = @() } }
+
+  $cmd = Get-Command -Name "py" -ErrorAction SilentlyContinue
+  if ($cmd) { return @{ FilePath = $cmd.Source; Args = @("-3") } }
+
+  return $null
+}
+
+$Python = Resolve-PythonCommand
+if (-not $Python) {
+  "$(Get-Date -Format o) watchdog abort: python interpreter not found (tried .venv/venv/env + python/python3/py)" | Add-Content -LiteralPath $LogFile
+  exit 127
+}
+
 Set-Content -LiteralPath $PidFile -Value $PID
 if (Test-Path $StopFile) {
   Remove-Item -LiteralPath $StopFile -Force
 }
 
-Set-Location $Root
-"$(Get-Date -Format o) watchdog started pid=$PID" | Add-Content -LiteralPath $LogFile
-
 while (-not (Test-Path $StopFile)) {
   "$(Get-Date -Format o) runner cycle start" | Add-Content -LiteralPath $LogFile
-  python "scripts\alpaca_paper_runner.py" --once
+  & $Python.FilePath @($Python.Args + @("scripts\\alpaca_paper_runner.py", "--once"))
   $exitCode = $LASTEXITCODE
   "$(Get-Date -Format o) runner exited code=$exitCode; next cycle in 300s" | Add-Content -LiteralPath $LogFile
   $slept = 0
