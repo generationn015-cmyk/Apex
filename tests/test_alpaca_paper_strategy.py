@@ -15,6 +15,7 @@ from scripts.backtest_binance_multi_year import latest_complete_month, month_ran
 from scripts.crypto_universe import default_crypto_symbols
 from scripts.download_binance_klines import binance_monthly_kline_url
 from scripts.run_equity_backtest_report import passes_gate
+from scripts.walk_forward_backtest import passes_walk_forward, summarize_windows
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -285,6 +286,32 @@ class AlpacaPaperStrategyTests(unittest.TestCase):
         self.assertEqual(payload["latest_reason"], "position_protected")
         self.assertEqual(payload["position_qty"], 13.0)
         self.assertFalse(payload["stale"])
+
+    def test_walk_forward_summary_requires_consistent_windows(self):
+        good_window = {
+            "pass": True,
+            "total_return_pct": 4.0,
+            "max_drawdown_pct": 6.0,
+            "sharpe": 0.6,
+            "calmar": 0.7,
+            "profit_factor": 2.0,
+            "closed_trades": 4,
+        }
+        bad_window = {
+            "pass": False,
+            "total_return_pct": -1.0,
+            "max_drawdown_pct": 5.0,
+            "sharpe": -0.1,
+            "calmar": -0.1,
+            "profit_factor": 0.8,
+            "closed_trades": 3,
+        }
+
+        summary = summarize_windows([good_window, good_window, bad_window])
+
+        self.assertEqual(summary["window_count"], 3)
+        self.assertGreaterEqual(summary["positive_rate_pct"], 60.0)
+        self.assertTrue(passes_walk_forward(summary))
 
 
 if __name__ == "__main__":
