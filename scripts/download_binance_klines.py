@@ -26,6 +26,8 @@ def download_month(symbol: str, interval: str, month: str, market: str, output_d
     url = binance_monthly_kline_url(symbol, interval, month, market)
     output_dir.mkdir(parents=True, exist_ok=True)
     out_path = output_dir / f"{symbol.upper()}-{interval}-{month}.csv"
+    if out_path.exists() and out_path.stat().st_size > 0:
+        return out_path
     with urllib.request.urlopen(url, timeout=60) as response:
         payload = response.read()
     with zipfile.ZipFile(io.BytesIO(payload)) as archive:

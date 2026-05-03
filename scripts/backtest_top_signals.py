@@ -117,12 +117,12 @@ def write_outputs(rows: list[dict]) -> None:
         "",
         f"Generated: {generated_at}",
         "",
-        "| Rank | Symbol | Actionable | Decision | Score | Full Return % | 5Y Return % | 5Y DD % | 3Y Return % | 3Y DD % | 1Y Return % |",
-        "|---:|---|---:|---|---:|---:|---:|---:|---:|---:|---:|",
+        "| Rank | Symbol | Actionable | Decision | Score | Full Return % | Full Sharpe | 5Y Return % | 5Y Calmar | 5Y DD % | 3Y Return % | 3Y DD % | 1Y Return % |",
+        "|---:|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
     ]
     for index, row in enumerate(ranked, 1):
         lines.append(
-            "| {rank} | {symbol} | {actionable} | {decision}/{reason} | {score} | {full_ret} | {five_year_ret} | {five_year_dd} | {three_year_ret} | {three_year_dd} | {one_year_ret} |".format(
+            "| {rank} | {symbol} | {actionable} | {decision}/{reason} | {score} | {full_ret} | {full_sharpe} | {five_year_ret} | {five_year_calmar} | {five_year_dd} | {three_year_ret} | {three_year_dd} | {one_year_ret} |".format(
                 rank=index,
                 symbol=row["symbol"],
                 actionable="yes" if row["actionable"] else "no",
@@ -130,7 +130,9 @@ def write_outputs(rows: list[dict]) -> None:
                 reason=row["reason"],
                 score=row["score"],
                 full_ret=row["full"]["total_return_pct"],
+                full_sharpe=row["full"]["sharpe"],
                 five_year_ret=row["recent_5y"]["total_return_pct"],
+                five_year_calmar=row["recent_5y"]["calmar"],
                 five_year_dd=row["recent_5y"]["max_drawdown_pct"],
                 three_year_ret=row["recent_3y"]["total_return_pct"],
                 three_year_dd=row["recent_3y"]["max_drawdown_pct"],
