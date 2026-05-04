@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from collections import defaultdict
 from datetime import UTC, datetime
@@ -12,10 +13,12 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scripts.backtest_spy_strategy import fetch_free_equity_daily, run_backtest
+from scripts.equity_universe import default_equity_symbols
 from scripts.run_equity_backtest_report import passes_gate
 
 
 OUTPUT_DIR = ROOT / "docs" / "backtests" / "tearsheets"
+RANKINGS_PATH = ROOT / "runtime" / "strategy_rankings.json"
 
 
 def monthly_returns(equity_curve: list[dict]) -> list[dict]:
@@ -112,20 +115,72 @@ def write_tearsheet(symbol: str, source: str, metrics: dict, output: Path) -> No
     output.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def load_ranked_symbols(limit: int) -> list[str]:
+    if RANKINGS_PATH.exists():
+        payload = json.loads(RANKINGS_PATH.read_text(encoding="utf-8"))
+        ranked = [row.get("symbol") for row in payload.get("ranked", []) if row.get("symbol")]
+        if ranked:
+            return [str(symbol).upper() for symbol in ranked[:limit]]
+    return default_equity_symbols(limit)
+
+
+def write_index(rows: list[dict], output_dir: Path) -> Path:
+    generated_at = datetime.now(UTC).isoformat()
+    index_path = output_dir / "index.md"
+    lines = [
+        "# Apex Backtest Tear Sheets",
+        "",
+        f"Generated: {generated_at}",
+        "",
+        "| Symbol | Gate | Return % | Sharpe | Calmar | Max DD % | File |",
+        "|---|---:|---:|---:|---:|---:|---|",
+    ]
+    for row in rows:
+        filename = f"{row['symbol'].lower()}-tearsheet.md"
+        lines.append(
+            "| {symbol} | {gate} | {ret} | {sharpe} | {calmar} | {dd} | [{filename}]({filename}) |".format(
+                symbol=row["symbol"],
+                gate="yes" if passes_gate(row["metrics"]) else "no",
+                ret=row["metrics"]["total_return_pct"],
+                sharpe=row["metrics"]["sharpe"],
+                calmar=row["metrics"]["calmar"],
+                dd=row["metrics"]["max_drawdown_pct"],
+                filename=filename,
+            )
+        )
+    lines.extend(["", "Research-only tear sheets. They do not approve symbol changes or live trading."])
+    index_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return index_path
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--symbol", default="SPY")
+    parser.add_argument("--symbols", default="")
+    parser.add_argument("--limit", type=int, default=1)
     parser.add_argument("--start", default="20160101")
     parser.add_argument("--end", default=datetime.now(UTC).strftime("%Y%m%d"))
     parser.add_argument("--output", default="")
     args = parser.parse_args()
 
-    symbol = args.symbol.upper()
-    source, bars = fetch_free_equity_daily(symbol, args.start, args.end)
-    metrics = run_backtest(bars, include_details=True)
-    output = Path(args.output) if args.output else OUTPUT_DIR / f"{symbol.lower()}-tearsheet.md"
-    write_tearsheet(symbol, source, metrics, output)
-    print(output)
+    if args.symbols:
+        symbols = [symbol.strip().upper() for symbol in args.symbols.split(",") if symbol.strip()]
+    elif args.limit > 1:
+        symbols = load_ranked_symbols(args.limit)
+    else:
+        symbols = [args.symbol.upper()]
+
+    output_dir = Path(args.output) if args.output and len(symbols) > 1 else OUTPUT_DIR
+    rows = []
+    for symbol in symbols[: args.limit]:
+        source, bars = fetch_free_equity_daily(symbol, args.start, args.end)
+        metrics = run_backtest(bars, include_details=True)
+        output = Path(args.output) if args.output and len(symbols) == 1 else output_dir / f"{symbol.lower()}-tearsheet.md"
+        write_tearsheet(symbol, source, metrics, output)
+        rows.append({"symbol": symbol, "source": source, "metrics": metrics, "output": output})
+        print(output)
+    if len(rows) > 1:
+        print(write_index(rows, output_dir))
 
 
 if __name__ == "__main__":
