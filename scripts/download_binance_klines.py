@@ -3,10 +3,13 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import io
+import json
 import sys
 import urllib.request
 import zipfile
+from datetime import UTC, datetime
 from pathlib import Path
 
 
@@ -27,6 +30,7 @@ def download_month(symbol: str, interval: str, month: str, market: str, output_d
     output_dir.mkdir(parents=True, exist_ok=True)
     out_path = output_dir / f"{symbol.upper()}-{interval}-{month}.csv"
     if out_path.exists() and out_path.stat().st_size > 0:
+        ensure_metadata(out_path, symbol, interval, month, market, url, source="cache")
         return out_path
     with urllib.request.urlopen(url, timeout=60) as response:
         payload = response.read()
@@ -55,7 +59,51 @@ def download_month(symbol: str, interval: str, month: str, market: str, output_d
             ]
         )
         writer.writerows(rows)
+    ensure_metadata(out_path, symbol, interval, month, market, url, source="download")
     return out_path
+
+
+def ensure_metadata(path: Path, symbol: str, interval: str, month: str, market: str, url: str, source: str) -> Path:
+    meta_path = metadata_path(path)
+    row_count, first_open_time, last_open_time = csv_profile(path)
+    payload = {
+        "source": "binance-vision",
+        "cache_source": source,
+        "market": market,
+        "symbol": symbol.upper(),
+        "interval": interval,
+        "month": month,
+        "url": url,
+        "path": str(path),
+        "row_count": row_count,
+        "first_open_time": first_open_time,
+        "last_open_time": last_open_time,
+        "downloaded_or_checked_at": datetime.now(UTC).isoformat(),
+        "sha256": sha256_file(path),
+        "warnings": [] if row_count > 0 else ["empty-csv"],
+    }
+    meta_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    return meta_path
+
+
+def metadata_path(path: Path) -> Path:
+    return path.with_suffix(path.suffix + ".meta.json")
+
+
+def csv_profile(path: Path) -> tuple[int, str, str]:
+    with path.open("r", newline="", encoding="utf-8") as f:
+        rows = list(csv.DictReader(f))
+    if not rows:
+        return 0, "", ""
+    return len(rows), rows[0].get("open_time", ""), rows[-1].get("open_time", "")
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as f:
+        for chunk in iter(lambda: f.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def _market_path(market: str) -> str:

@@ -14,6 +14,8 @@ from scripts.backtest_binance_strategy import bars_from_binance_rows
 from scripts.backtest_binance_multi_year import latest_complete_month, month_range
 from scripts.crypto_universe import default_crypto_symbols
 from scripts.download_binance_klines import binance_monthly_kline_url
+from scripts.download_binance_klines import ensure_metadata
+from scripts.generate_backtest_tearsheet import monthly_returns
 from scripts.run_equity_backtest_report import passes_gate
 from scripts.walk_forward_backtest import passes_walk_forward, summarize_windows
 
@@ -161,6 +163,15 @@ class AlpacaPaperStrategyTests(unittest.TestCase):
         self.assertIn("calmar", metrics)
         self.assertGreater(metrics["exposure_pct"], 0)
 
+    def test_backtest_can_return_tearsheet_details(self):
+        bars = [{"timestamp": f"2026-01-{i + 1:02d}", "close": 100.0 + i} for i in range(70)]
+
+        metrics = run_backtest(bars, initial_cash=10_000.0, max_notional=1_000.0, include_details=True)
+
+        self.assertIn("equity_curve", metrics)
+        self.assertIn("trades_detail", metrics)
+        self.assertEqual(len(metrics["equity_curve"]), len(bars))
+
     def test_binance_monthly_kline_url_uses_official_vision_path(self):
         url = binance_monthly_kline_url("BTCUSDT", "1h", "2024-01", market="spot")
 
@@ -185,6 +196,33 @@ class AlpacaPaperStrategyTests(unittest.TestCase):
 
         self.assertEqual(bars[0]["close"], 42050.0)
         self.assertEqual(bars[0]["volume"], 12.5)
+
+    def test_binance_cache_metadata_sidecar_is_written(self):
+        with TemporaryDirectory() as tmp:
+            path = Path(tmp) / "BTCUSDT-1h-2024-01.csv"
+            path.write_text(
+                "open_time,open,high,low,close,volume,close_time,quote_volume,trade_count,taker_buy_base,taker_buy_quote,ignore\n"
+                "1704067200000,1,2,1,2,10,1704070799999,20,1,5,10,0\n",
+                encoding="utf-8",
+            )
+
+            meta_path = ensure_metadata(path, "BTCUSDT", "1h", "2024-01", "spot", "https://example.test", "cache")
+
+            self.assertTrue(meta_path.exists())
+            self.assertIn('"row_count": 1', meta_path.read_text(encoding="utf-8"))
+
+    def test_monthly_returns_summarize_tearsheet_curve(self):
+        rows = monthly_returns(
+            [
+                {"timestamp": "2026-01-01", "equity": 100.0},
+                {"timestamp": "2026-01-31", "equity": 110.0},
+                {"timestamp": "2026-02-01", "equity": 110.0},
+                {"timestamp": "2026-02-28", "equity": 99.0},
+            ]
+        )
+
+        self.assertEqual(rows[0], {"month": "2026-01", "return_pct": 10.0})
+        self.assertEqual(rows[1], {"month": "2026-02", "return_pct": -10.0})
 
     def test_binance_multi_year_month_range_is_inclusive(self):
         self.assertEqual(month_range("2024-11", "2025-02"), ["2024-11", "2024-12", "2025-01", "2025-02"])
