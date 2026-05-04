@@ -61,14 +61,23 @@ def analyze_symbol(symbol: str, start: str, end: str) -> dict:
     windows = run_window_backtests(bars)
     full = windows["full"]
     latest_price = float(bars[-1]["close"]) if bars else 0.0
-    current = decide_signal(
+    strategy_state = decide_signal(
         bars,
         has_position=bool(full.get("open_qty")),
         entry_price=latest_price,
         latest_price=latest_price,
     )
+    flat_entry = decide_signal(
+        bars,
+        has_position=False,
+        entry_price=0,
+        latest_price=latest_price,
+    )
     gate_pass = passes_multi_year_gate(windows)
-    actionable = gate_pass and current.action == "buy" and latest_price > 0
+    actionable = gate_pass and latest_price > 0 and (
+        flat_entry.action == "buy" or strategy_state.reason == "position_protected"
+    )
+    current = flat_entry if flat_entry.action == "buy" else strategy_state
     row = {
         "symbol": symbol,
         "source": source,

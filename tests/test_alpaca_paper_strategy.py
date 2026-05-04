@@ -4,7 +4,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from scripts.alpaca_paper_runner import Decision, RunnerResult, append_journal, decide_signal, evaluate_risk
+from scripts.alpaca_paper_runner import Decision, RunnerResult, append_journal, decide_signal, evaluate_risk, parse_symbols
 from scripts.apex_alerts import build_notifications, evaluate_alerts
 from scripts.backtest_top_signals import passes_multi_year_gate
 from scripts.backtest_spy_strategy import _dedupe_sorted_bars
@@ -140,13 +140,29 @@ class AlpacaPaperStrategyTests(unittest.TestCase):
         flags = evaluate_risk(
             equity=100_000,
             buying_power=50_000,
-            market_value=11_500,
+            market_value=44_000,
+            day_pl=0,
+            unrealized_pl=0,
+            pending_buy_notional=2_000,
+        )
+
+        self.assertEqual(flags, ["projected-exposure-over-45pct"])
+
+    def test_risk_allows_measured_multi_symbol_scale(self):
+        flags = evaluate_risk(
+            equity=100_000,
+            buying_power=50_000,
+            market_value=10_000,
             day_pl=0,
             unrealized_pl=0,
             pending_buy_notional=5_000,
+            open_position_count=1,
         )
 
-        self.assertEqual(flags, ["new-buy-exposure-over-12pct"])
+        self.assertEqual(flags, [])
+
+    def test_parse_symbols_dedupes_watchlist(self):
+        self.assertEqual(parse_symbols("spy, NVDA,spy, qqq"), ["SPY", "NVDA", "QQQ"])
 
     def test_backtest_returns_basic_metrics(self):
         bars = []

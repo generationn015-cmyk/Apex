@@ -1,10 +1,10 @@
 """
 Persistent Alpaca paper runner for Apex.
 
-Conservative default:
+Paper-mode default:
 - Paper account only
-- SPY only
-- No pyramiding
+- Ranked multi-symbol watchlist
+- No pyramiding per symbol
 - Buy only when trend is up and no position exists
 - Sell only on stop or trend break
 """
@@ -35,8 +35,10 @@ STATE_DIR = ROOT / "runtime"
 JOURNAL_PATH = ROOT / "data" / "paper_journal.csv"
 HEARTBEAT_HISTORY_PATH = STATE_DIR / "dashboard_heartbeat_history.json"
 MAX_HEARTBEAT_HISTORY = 50
-MAX_ACCOUNT_EXPOSURE_PCT = 0.20
-MAX_NEW_BUY_EXPOSURE_PCT = 0.12
+DEFAULT_SYMBOLS = ("SPY", "GOOG", "AAPL", "QQQ", "MS", "XLK")
+MAX_ACCOUNT_EXPOSURE_PCT = 0.45
+MAX_NEW_BUY_EXPOSURE_PCT = 0.05
+MAX_OPEN_POSITIONS = 6
 MAX_DAILY_LOSS = 300.0
 MAX_OPEN_LOSS = 300.0
 MIN_BUYING_POWER_AFTER_TRADE = 1_000.0
@@ -110,14 +112,20 @@ def evaluate_risk(
     day_pl: float,
     unrealized_pl: float,
     pending_buy_notional: float = 0.0,
+    open_position_count: int = 0,
 ) -> list[str]:
     flags: list[str] = []
     exposure_pct = abs(market_value) / equity if equity else 1.0
     projected_exposure_pct = (abs(market_value) + max(pending_buy_notional, 0.0)) / equity if equity else 1.0
+    pending_exposure_pct = max(pending_buy_notional, 0.0) / equity if equity else 1.0
     if exposure_pct > MAX_ACCOUNT_EXPOSURE_PCT:
-        flags.append("exposure-over-20pct")
-    if pending_buy_notional > 0 and projected_exposure_pct > MAX_NEW_BUY_EXPOSURE_PCT:
-        flags.append("new-buy-exposure-over-12pct")
+        flags.append("exposure-over-45pct")
+    if pending_buy_notional > 0 and projected_exposure_pct > MAX_ACCOUNT_EXPOSURE_PCT:
+        flags.append("projected-exposure-over-45pct")
+    if pending_buy_notional > 0 and pending_exposure_pct > MAX_NEW_BUY_EXPOSURE_PCT:
+        flags.append("new-buy-exposure-over-5pct")
+    if pending_buy_notional > 0 and open_position_count >= MAX_OPEN_POSITIONS:
+        flags.append("max-open-positions")
     if day_pl <= -MAX_DAILY_LOSS:
         flags.append("daily-loss-over-300")
     if unrealized_pl <= -MAX_OPEN_LOSS:
@@ -190,6 +198,18 @@ def get_position(trading: TradingClient, symbol: str):
         return None
 
 
+def get_positions_by_symbol(trading: TradingClient) -> dict[str, object]:
+    try:
+        positions = trading.get_all_positions()
+    except Exception:
+        positions = []
+    return {str(position.symbol).upper(): position for position in positions}
+
+
+def total_market_value(positions: dict[str, object]) -> float:
+    return sum(abs(float(getattr(position, "market_value", 0) or 0)) for position in positions.values())
+
+
 def submit_market_order(trading: TradingClient, symbol: str, side: OrderSide, qty: int):
     request = MarketOrderRequest(
         symbol=symbol,
@@ -252,8 +272,9 @@ def run_once(symbol: str, max_notional: float, dry_run: bool) -> RunnerResult:
     trading, data = get_clients(env)
     account = trading.get_account()
     clock = trading.get_clock()
-    position = get_position(trading, symbol)
-    bars = fetch_bars(data, symbol)
+    positions = get_positions_by_symbol(trading)
+    position = positions.get(symbol.upper())
+    bars = fetch_bars(data, symbol, limit=100)
 
     has_position = position is not None and float(position.qty) > 0
     entry_price = float(position.avg_entry_price) if has_position else 0.0
@@ -262,7 +283,7 @@ def run_once(symbol: str, max_notional: float, dry_run: bool) -> RunnerResult:
     buying_power = float(account.buying_power)
     last_equity = float(getattr(account, "last_equity", 0) or 0)
     day_pl = equity - last_equity if last_equity else 0.0
-    market_value = abs(float(getattr(position, "market_value", 0) or 0))
+    market_value = total_market_value(positions)
     unrealized_pl = float(getattr(position, "unrealized_pl", 0) or 0)
     decision = decide_signal(
         bars,
@@ -271,6 +292,8 @@ def run_once(symbol: str, max_notional: float, dry_run: bool) -> RunnerResult:
         latest_price=latest,
     )
     pending_buy_notional = min(max_notional, buying_power) if decision.action == "buy" and not has_position else 0.0
+    if pending_buy_notional > 0 and equity > 0:
+        pending_buy_notional = min(pending_buy_notional, equity * MAX_NEW_BUY_EXPOSURE_PCT)
     risk_flags = evaluate_risk(
         equity=equity,
         buying_power=buying_power,
@@ -278,6 +301,7 @@ def run_once(symbol: str, max_notional: float, dry_run: bool) -> RunnerResult:
         day_pl=day_pl,
         unrealized_pl=unrealized_pl,
         pending_buy_notional=pending_buy_notional,
+        open_position_count=len(positions),
     )
     if decision.action == "buy" and risk_flags:
         decision = Decision("hold", "risk_block:" + ",".join(risk_flags))
@@ -460,6 +484,15 @@ def load_top_signal_summary() -> dict:
     }
 
 
+def parse_symbols(value: str) -> list[str]:
+    symbols = []
+    for item in value.split(","):
+        symbol = item.strip().upper()
+        if symbol and symbol not in symbols:
+            symbols.append(symbol)
+    return symbols
+
+
 def _position_price(position) -> float:
     for attr in ("current_price", "market_value"):
         value = getattr(position, attr, None)
@@ -474,7 +507,12 @@ def _position_price(position) -> float:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--symbol", default=os.getenv("APEX_ALPACA_SYMBOL", "SPY"))
+    parser.add_argument("--symbol", default=os.getenv("APEX_ALPACA_SYMBOL", ""))
+    parser.add_argument(
+        "--symbols",
+        default=os.getenv("APEX_ALPACA_SYMBOLS", ",".join(DEFAULT_SYMBOLS)),
+        help="Comma-separated paper symbols to evaluate each cycle.",
+    )
     parser.add_argument("--max-notional", type=float, default=float(os.getenv("APEX_ALPACA_MAX_NOTIONAL", "5000")))
     parser.add_argument("--interval", type=int, default=int(os.getenv("APEX_ALPACA_INTERVAL_SEC", "300")))
     parser.add_argument("--once", action="store_true")
@@ -482,14 +520,21 @@ def main() -> None:
     args = parser.parse_args()
 
     setup_logging()
-    logging.info("Apex Alpaca paper runner starting symbol=%s dry_run=%s", args.symbol, args.dry_run)
+    symbols = parse_symbols(args.symbols)
+    if args.symbol:
+        symbols = parse_symbols(args.symbol)
+    if not symbols:
+        symbols = list(DEFAULT_SYMBOLS)
+
+    logging.info("Apex Alpaca paper runner starting symbols=%s dry_run=%s", ",".join(symbols), args.dry_run)
 
     while True:
         env = load_env()
         try:
-            result = run_once(args.symbol, args.max_notional, args.dry_run)
-            write_heartbeat(args.symbol)
-            publish_dashboard_heartbeat(env, result)
+            for symbol in symbols:
+                result = run_once(symbol, args.max_notional, args.dry_run)
+                write_heartbeat(",".join(symbols))
+                publish_dashboard_heartbeat(env, result)
         except Exception as exc:
             logging.exception("runner cycle failed: %s", exc)
         if args.once:
