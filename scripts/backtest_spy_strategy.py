@@ -151,6 +151,7 @@ def run_backtest(
     initial_cash: float = 10_000.0,
     max_notional: float = 5_000.0,
     periods_per_year: int = 252,
+    include_details: bool = False,
 ) -> dict:
     cash = initial_cash
     qty = 0
@@ -192,7 +193,7 @@ def run_backtest(
     profit_factor = sum(wins) / abs(sum(losses)) if losses and sum(losses) != 0 else math.inf
     risk = _risk_adjusted_metrics(equity_curve, bars, initial_cash, max_drawdown, periods_per_year)
 
-    return {
+    metrics = {
         "bars": len(bars),
         "first_date": bars[0].get("timestamp") if bars else "",
         "last_date": bars[-1].get("timestamp") if bars else "",
@@ -210,6 +211,14 @@ def run_backtest(
         "exposure_pct": round(invested_periods / len(bars) * 100, 2) if bars else 0.0,
         "open_qty": qty,
     }
+    if include_details:
+        metrics["equity_curve"] = [
+            {"timestamp": bar.get("timestamp"), "equity": round(equity_curve[index], 2)}
+            for index, bar in enumerate(bars)
+        ]
+        metrics["trades_detail"] = trades
+        metrics["closed_trade_pnls"] = [round(value, 2) for value in closed_trades]
+    return metrics
 
 
 def _closed_trade_pnls(trades: list[dict]) -> list[float]:
