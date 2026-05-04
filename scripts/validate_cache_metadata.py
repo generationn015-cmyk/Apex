@@ -39,12 +39,20 @@ def validate_file(path: Path, repair: bool = False, market: str = "spot") -> dic
     meta_path = path.with_suffix(path.suffix + ".meta.json")
     warnings = []
     metadata = {}
+    row_count = csv_row_count(path)
+    checksum = sha256_file(path)
+
+    def repair_metadata() -> bool:
+        inferred = infer_binance_file(path)
+        if not inferred:
+            return False
+        url = binance_monthly_kline_url(inferred["symbol"], inferred["interval"], inferred["month"], market)
+        ensure_metadata(path, inferred["symbol"], inferred["interval"], inferred["month"], market, url, "repair")
+        return True
+
     if not meta_path.exists():
         if repair:
-            inferred = infer_binance_file(path)
-            if inferred:
-                url = binance_monthly_kline_url(inferred["symbol"], inferred["interval"], inferred["month"], market)
-                ensure_metadata(path, inferred["symbol"], inferred["interval"], inferred["month"], market, url, "repair")
+            if repair_metadata():
                 metadata = json.loads(meta_path.read_text(encoding="utf-8"))
             else:
                 warnings.append("missing-metadata")
@@ -53,11 +61,12 @@ def validate_file(path: Path, repair: bool = False, market: str = "spot") -> dic
             warnings.append("missing-metadata")
     else:
         try:
-            metadata = json.loads(meta_path.read_text(encoding="utf-8"))
-        except json.JSONDecodeError:
-            warnings.append("invalid-metadata-json")
-    row_count = csv_row_count(path)
-    checksum = sha256_file(path)
+            metadata = json.loads(meta_path.read_text(encoding="utf-8-sig"))
+        except (UnicodeDecodeError, json.JSONDecodeError):
+            if repair and repair_metadata():
+                metadata = json.loads(meta_path.read_text(encoding="utf-8"))
+            else:
+                warnings.append("invalid-metadata-json")
     if metadata:
         if int(metadata.get("row_count") or -1) != row_count:
             warnings.append("row-count-mismatch")
