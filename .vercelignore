@@ -4,3 +4,10 @@
 !api/
 !api/alpaca-status.py
 !api/runner-heartbeat.py
+!api/research-status.py
+!docs/
+!docs/backtests/
+!docs/backtests/cache-metadata-report.md
+!docs/backtests/walk-forward-report.md
+!docs/backtests/tearsheets/
+!docs/backtests/tearsheets/*.md
