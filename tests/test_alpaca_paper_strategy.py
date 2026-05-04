@@ -16,7 +16,9 @@ from scripts.crypto_universe import default_crypto_symbols
 from scripts.download_binance_klines import binance_monthly_kline_url
 from scripts.download_binance_klines import ensure_metadata
 from scripts.generate_backtest_tearsheet import monthly_returns
+from scripts.generate_backtest_tearsheet import write_index
 from scripts.run_equity_backtest_report import passes_gate
+from scripts.validate_cache_metadata import infer_binance_file, validate_file
 from scripts.walk_forward_backtest import passes_walk_forward, summarize_windows
 
 
@@ -223,6 +225,57 @@ class AlpacaPaperStrategyTests(unittest.TestCase):
 
         self.assertEqual(rows[0], {"month": "2026-01", "return_pct": 10.0})
         self.assertEqual(rows[1], {"month": "2026-02", "return_pct": -10.0})
+
+    def test_tearsheet_index_is_written(self):
+        with TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            index_path = write_index(
+                [
+                    {
+                        "symbol": "SPY",
+                        "metrics": {
+                            "profit_factor": 2.1,
+                            "max_drawdown_pct": 9.0,
+                            "closed_trades": 4,
+                            "total_return_pct": 12.0,
+                            "sharpe": 0.5,
+                            "calmar": 1.0,
+                        },
+                    }
+                ],
+                output_dir,
+            )
+
+            self.assertTrue(index_path.exists())
+            self.assertIn("spy-tearsheet.md", index_path.read_text(encoding="utf-8"))
+
+    def test_cache_validator_flags_missing_metadata(self):
+        with TemporaryDirectory() as tmp:
+            path = Path(tmp) / "BTCUSDT-1h-2024-01.csv"
+            path.write_text(
+                "open_time,open,high,low,close,volume,close_time,quote_volume,trade_count,taker_buy_base,taker_buy_quote,ignore\n"
+                "1704067200000,1,2,1,2,10,1704070799999,20,1,5,10,0\n",
+                encoding="utf-8",
+            )
+
+            row = validate_file(path)
+
+            self.assertFalse(row["ok"])
+            self.assertIn("missing-metadata", row["warnings"])
+
+    def test_cache_validator_can_repair_missing_metadata(self):
+        with TemporaryDirectory() as tmp:
+            path = Path(tmp) / "BTCUSDT-1h-2024-01.csv"
+            path.write_text(
+                "open_time,open,high,low,close,volume,close_time,quote_volume,trade_count,taker_buy_base,taker_buy_quote,ignore\n"
+                "1704067200000,1,2,1,2,10,1704070799999,20,1,5,10,0\n",
+                encoding="utf-8",
+            )
+
+            row = validate_file(path, repair=True)
+
+            self.assertTrue(row["ok"])
+            self.assertEqual(infer_binance_file(path)["symbol"], "BTCUSDT")
 
     def test_binance_multi_year_month_range_is_inclusive(self):
         self.assertEqual(month_range("2024-11", "2025-02"), ["2024-11", "2024-12", "2025-01", "2025-02"])

@@ -126,6 +126,11 @@ h2{font-family:"Bodoni Moda",serif;color:var(--gold);font-size:26px;line-height:
       </section>
 
       <section class="panel">
+        <div class="panel-head"><h2>Research</h2><div class="panel-note" id="researchState">Checking</div></div>
+        <div id="researchStatus"></div>
+      </section>
+
+      <section class="panel">
         <div class="panel-head"><h2>Ops Controls</h2><div class="panel-note">Read-only</div></div>
         <table class="account-table">
           <tbody>
@@ -315,6 +320,19 @@ function renderTopSignals(signalPayload) {
   $("topSignals").innerHTML = rows.length ? `<div class="mobile-list" style="display:block">${rows.map((item) => `<div class="list-card"><div class="list-row"><span>Symbol</span><span class="gold">${item.symbol || "--"}</span></div><div class="list-row"><span>Signal</span><span class="${item.actionable ? "green" : ""}">${item.actionable ? "ACTIONABLE" : "wait"}</span></div><div class="list-row"><span>Decision</span><span>${item.decision || "--"} / ${item.reason || "--"}</span></div><div class="list-row"><span>Score</span><span>${item.score ?? "--"}</span></div><div class="list-row"><span>Sharpe / Calmar</span><span>${item.full?.sharpe ?? "--"} / ${item.full?.calmar ?? "--"}</span></div><div class="list-row"><span>3Y</span><span>${item.recent_3y?.total_return_pct ?? "--"}% / DD ${item.recent_3y?.max_drawdown_pct ?? "--"}%</span></div></div>`).join("")}</div>` : '<div class="empty">Run top-signal backtests to populate.</div>';
 }
 
+function renderResearchStatus(payload) {
+  if (!payload) {
+    $("researchState").textContent = "Unavailable";
+    $("researchState").className = "panel-note red";
+    $("researchStatus").innerHTML = '<div class="empty">Research status unavailable.</div>';
+    return;
+  }
+  const sheets = payload.tearsheets || [];
+  $("researchState").textContent = `${payload.tearsheet_count || 0} tear sheets`;
+  $("researchState").className = "panel-note green";
+  $("researchStatus").innerHTML = `<div class="mobile-list" style="display:block"><div class="list-card"><div class="list-row"><span>Mode</span><span>${payload.mode || "research-only"}</span></div><div class="list-row"><span>Walk-forward</span><span class="${payload.walk_forward?.exists ? "green" : "red"}">${payload.walk_forward?.exists ? "ready" : "missing"}</span></div><div class="list-row"><span>Cache metadata</span><span class="${payload.cache_metadata?.exists ? "green" : "red"}">${payload.cache_metadata?.exists ? "ready" : "missing"}</span></div><div class="list-row"><span>Updated</span><span>${dateTime(payload.generated_at)}</span></div></div>${sheets.slice(0, 5).map((item) => `<div class="list-card"><div class="list-row"><span>Tear sheet</span><span class="gold">${item.symbol}</span></div><div class="list-row"><span>File</span><span>${item.path || "--"}</span></div><div class="list-row"><span>Updated</span><span>${dateTime(item.updated_at)}</span></div></div>`).join("")}</div>`;
+}
+
 async function loadStatus() {
   try {
     const token = getToken();
@@ -329,6 +347,10 @@ async function loadStatus() {
     try {
       const runnerResponse = await fetch(`/api/runner-heartbeat?ts=${Date.now()}`, {cache:"no-store", headers});
       if (runnerResponse.ok) data.runner = await runnerResponse.json();
+    } catch (_) {}
+    try {
+      const researchResponse = await fetch(`/api/research-status?ts=${Date.now()}`, {cache:"no-store", headers});
+      if (researchResponse.ok) data.research = await researchResponse.json();
     } catch (_) {}
     const account = data.account || {};
     $("heroPortfolio").textContent = money(account.portfolio_value);
@@ -371,6 +393,7 @@ async function loadStatus() {
     renderOrders(data.orders || []);
     renderRunnerHistory(data.runner?.history || []);
     renderTopSignals(data.runner?.signals || {});
+    renderResearchStatus(data.research);
     drawEquityChart(data.portfolio_history);
     drawRunnerChart(data.runner?.history || []);
     $("statusLine").className = "health";
