@@ -75,6 +75,12 @@ ENABLE_SHORTS = _config_value("APEX_ALPACA_ENABLE_SHORTS", "0").strip().lower() 
 MAX_SHORT_EXPOSURE_PCT = float(_config_value("APEX_ALPACA_MAX_SHORT_EXPOSURE_PCT", "0.12"))
 MAX_NEW_SHORT_EXPOSURE_PCT = float(_config_value("APEX_ALPACA_MAX_NEW_SHORT_EXPOSURE_PCT", "0.025"))
 MAX_PRESSURE_ROTATIONS_PER_CYCLE = int(_config_value("APEX_ALPACA_MAX_PRESSURE_ROTATIONS_PER_CYCLE", "1"))
+ENABLE_REPLACE_TO_ENTER = _config_value("APEX_ALPACA_ENABLE_REPLACE_TO_ENTER", "1").strip().lower() not in {
+    "0",
+    "false",
+    "no",
+}
+REPLACE_TO_ENTER_MAX_EXIT_PL_PCT = float(_config_value("APEX_ALPACA_REPLACE_TO_ENTER_MAX_EXIT_PL_PCT", "0.008"))
 ENFORCE_HISTORICAL_GATES = _config_value("APEX_ALPACA_ENFORCE_HISTORICAL_GATES", "1").strip().lower() not in {"0", "false", "no"}
 QUEUE_BUYS_AFTER_CLOSE = _config_value("APEX_ALPACA_QUEUE_BUYS_AFTER_CLOSE", "0").strip().lower() in {"1", "true", "yes"}
 MIN_BUY_NOTIONAL = float(_config_value("APEX_ALPACA_MIN_BUY_NOTIONAL", "200.0"))
@@ -501,6 +507,26 @@ def short_pressure_rotation_symbol(positions: dict[str, object]) -> str | None:
     return None
 
 
+def replace_to_enter_exit_symbol(
+    positions: dict[str, object],
+    *,
+    exclude_symbol: str = "",
+    max_exit_pl_pct: float = REPLACE_TO_ENTER_MAX_EXIT_PL_PCT,
+) -> str | None:
+    exclude = exclude_symbol.upper()
+    candidates = [
+        position
+        for position in positions.values()
+        if float(getattr(position, "qty", 0) or 0) > 0
+        and str(getattr(position, "symbol", "")).upper() != exclude
+        and _position_unrealized_pl_pct(position) <= max_exit_pl_pct
+    ]
+    if not candidates:
+        return None
+    pick = min(candidates, key=_position_unrealized_pl_pct)
+    return str(getattr(pick, "symbol", "")).upper() or None
+
+
 def submit_market_order(trading: TradingClient, symbol: str, side: OrderSide, qty: int):
     request = MarketOrderRequest(
         symbol=symbol,
@@ -661,6 +687,21 @@ def run_once(
         short_market_value=short_market_value,
         open_position_count=len(positions),
     )
+    replacement_exit_symbol = None
+    replacement_entry_notional = 0.0
+    if (
+        ENABLE_REPLACE_TO_ENTER
+        and allow_pressure_rotation
+        and decision.action == "buy"
+        and position is None
+        and "max-open-positions" in risk_flags
+    ):
+        replacement_exit_symbol = replace_to_enter_exit_symbol(positions, exclude_symbol=symbol)
+        if replacement_exit_symbol:
+            replacement_entry_notional = pending_buy_notional
+            decision = Decision("hold", f"replace_to_enter:{symbol.upper()}_free:{replacement_exit_symbol}")
+            pending_buy_notional = 0.0
+
     if decision.action == "buy" and not has_short_position and risk_flags:
         decision = Decision("hold", "risk_block:" + ",".join(risk_flags))
     if decision.action == "sell" and not has_long_position and risk_flags:
@@ -692,6 +733,8 @@ def run_once(
             "short_pressure": bool(short_pressure),
             "slot_pressure_symbol": slot_pressure_symbol,
             "short_pressure_symbol": short_pressure_symbol,
+            "replacement_exit_symbol": replacement_exit_symbol,
+            "replacement_entry_notional": round(replacement_entry_notional, 2),
             "caps": {
                 "max_account_exposure_pct": MAX_ACCOUNT_EXPOSURE_PCT,
                 "max_new_buy_exposure_pct": MAX_NEW_BUY_EXPOSURE_PCT,
@@ -699,6 +742,7 @@ def run_once(
                 "max_new_short_exposure_pct": MAX_NEW_SHORT_EXPOSURE_PCT,
                 "max_open_positions": MAX_OPEN_POSITIONS,
                 "max_pressure_rotations_per_cycle": MAX_PRESSURE_ROTATIONS_PER_CYCLE,
+                "replace_to_enter_max_exit_pl_pct": REPLACE_TO_ENTER_MAX_EXIT_PL_PCT,
             },
         }
     )
@@ -746,12 +790,43 @@ def run_once(
         return result
 
     if not clock.is_open:
+        if decision.reason.startswith("replace_to_enter:") and replacement_exit_symbol:
+            replacement_position = positions.get(replacement_exit_symbol)
+            replacement_qty = int(float(getattr(replacement_position, "qty", 0) or 0)) if replacement_position else 0
+            if replacement_qty > 0:
+                queue_next_open_sell(replacement_exit_symbol, replacement_qty, decision.reason)
+                logging.info(
+                    "queued REPLACE-TO-ENTER SELL %s qty=%d reason=%s",
+                    replacement_exit_symbol,
+                    replacement_qty,
+                    decision.reason,
+                )
         if decision.action == "sell" and has_long_position:
             queue_next_open_sell(symbol, int(float(position.qty)), decision.reason)
             logging.info("queued SELL %s qty=%s reason=%s", symbol, position.qty, decision.reason)
         return result
 
-    if decision.action == "buy" and has_short_position:
+    if decision.reason.startswith("replace_to_enter:") and replacement_exit_symbol:
+        replacement_position = positions.get(replacement_exit_symbol)
+        replacement_qty = int(float(getattr(replacement_position, "qty", 0) or 0)) if replacement_position else 0
+        if replacement_qty > 0:
+            submit_market_order(trading, replacement_exit_symbol, OrderSide.SELL, replacement_qty)
+            logging.info(
+                "submitted REPLACE-TO-ENTER SELL %s qty=%d target=%s",
+                replacement_exit_symbol,
+                replacement_qty,
+                symbol.upper(),
+            )
+        entry_qty = int(replacement_entry_notional // latest) if latest > 0 else 0
+        if entry_qty > 0:
+            submit_market_order(trading, symbol, OrderSide.BUY, entry_qty)
+            logging.info(
+                "submitted REPLACE-TO-ENTER BUY %s qty=%d notional=%.2f",
+                symbol.upper(),
+                entry_qty,
+                replacement_entry_notional,
+            )
+    elif decision.action == "buy" and has_short_position:
         qty = abs(int(position_qty))
         if qty > 0:
             submit_market_order(trading, symbol, OrderSide.BUY, qty)
@@ -966,6 +1041,8 @@ def main() -> None:
                     "short_sleeve_take_profit",
                     "short_sleeve_laggard_cover",
                 }:
+                    pressure_rotations += 1
+                if result.decision.reason.startswith("replace_to_enter:"):
                     pressure_rotations += 1
                 write_heartbeat(",".join(symbols))
                 publish_dashboard_heartbeat(env, result)

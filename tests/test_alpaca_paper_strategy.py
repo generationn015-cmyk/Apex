@@ -12,6 +12,7 @@ from scripts.alpaca_paper_runner import (
     evaluate_risk,
     parse_symbols,
     pressure_rotation_symbol,
+    replace_to_enter_exit_symbol,
     short_pressure_rotation_symbol,
 )
 from scripts.apex_alerts import build_notifications, evaluate_alerts
@@ -49,6 +50,30 @@ class FakePosition:
         self.avg_entry_price = 120.0
         self.current_price = 118.0
         self.market_value = abs(float(qty)) * self.current_price
+
+
+class FakeReplacementTrading:
+    def __init__(self):
+        self.orders = []
+
+    def get_account(self):
+        return FakeAccount()
+
+    def get_clock(self):
+        clock = FakeClock()
+        clock.is_open = True
+        return clock
+
+    def get_all_positions(self):
+        return [
+            FakePosition("VTI", 2, 0.004),
+            FakePosition("XLK", 17, 0.014),
+            FakePosition("QQQ", 4, 0.012),
+        ]
+
+    def submit_order(self, order_data):
+        self.orders.append(order_data)
+        return order_data
 
 
 class FakeAccount:
@@ -181,6 +206,52 @@ class AlpacaPaperStrategyTests(unittest.TestCase):
         }
 
         self.assertEqual(short_pressure_rotation_symbol(positions), "COP")
+
+    def test_replace_to_enter_targets_weakest_allowed_long(self):
+        positions = {
+            "VTI": FakePosition("VTI", 2, 0.004),
+            "XLK": FakePosition("XLK", 17, 0.011),
+            "QQQ": FakePosition("QQQ", 4, 0.006),
+        }
+
+        self.assertEqual(replace_to_enter_exit_symbol(positions, exclude_symbol="SPY"), "VTI")
+
+    def test_replace_to_enter_skips_strong_longs(self):
+        positions = {
+            "XLK": FakePosition("XLK", 17, 0.011),
+            "QQQ": FakePosition("QQQ", 4, 0.012),
+        }
+
+        self.assertIsNone(replace_to_enter_exit_symbol(positions, exclude_symbol="SPY"))
+
+    def test_max_position_buy_signal_swaps_weak_slot_into_target(self):
+        import scripts.alpaca_paper_runner as runner
+
+        original_fetch_bars = runner.fetch_bars
+        original_load_historical = runner.load_historical_pass_symbols
+        original_max_open_positions = runner.MAX_OPEN_POSITIONS
+        try:
+            runner.fetch_bars = lambda data, symbol, limit=100: [{"close": 100 + i * 0.5} for i in range(60)]
+            runner.load_historical_pass_symbols = lambda: {"SPY"}
+            runner.MAX_OPEN_POSITIONS = 3
+            trading = FakeReplacementTrading()
+
+            result = runner.run_once(
+                "SPY",
+                max_notional=3000.0,
+                dry_run=False,
+                trading=trading,
+                data=FakeData(),
+            )
+
+            self.assertTrue(result.decision.reason.startswith("replace_to_enter:SPY_free:VTI"))
+            self.assertEqual(len(trading.orders), 2)
+            self.assertEqual(trading.orders[0].symbol, "VTI")
+            self.assertEqual(trading.orders[1].symbol, "SPY")
+        finally:
+            runner.fetch_bars = original_fetch_bars
+            runner.load_historical_pass_symbols = original_load_historical
+            runner.MAX_OPEN_POSITIONS = original_max_open_positions
 
     def test_historical_gate_does_not_block_short_cover(self):
         import scripts.alpaca_paper_runner as runner
