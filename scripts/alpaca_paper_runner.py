@@ -74,6 +74,7 @@ LAGGARD_ROTATION_LOSS_PCT = float(_config_value("APEX_ALPACA_LAGGARD_ROTATION_LO
 ENABLE_SHORTS = _config_value("APEX_ALPACA_ENABLE_SHORTS", "0").strip().lower() in {"1", "true", "yes"}
 MAX_SHORT_EXPOSURE_PCT = float(_config_value("APEX_ALPACA_MAX_SHORT_EXPOSURE_PCT", "0.12"))
 MAX_NEW_SHORT_EXPOSURE_PCT = float(_config_value("APEX_ALPACA_MAX_NEW_SHORT_EXPOSURE_PCT", "0.025"))
+MAX_PRESSURE_ROTATIONS_PER_CYCLE = int(_config_value("APEX_ALPACA_MAX_PRESSURE_ROTATIONS_PER_CYCLE", "1"))
 ENFORCE_HISTORICAL_GATES = _config_value("APEX_ALPACA_ENFORCE_HISTORICAL_GATES", "1").strip().lower() not in {"0", "false", "no"}
 QUEUE_BUYS_AFTER_CLOSE = _config_value("APEX_ALPACA_QUEUE_BUYS_AFTER_CLOSE", "0").strip().lower() in {"1", "true", "yes"}
 MIN_BUY_NOTIONAL = float(_config_value("APEX_ALPACA_MIN_BUY_NOTIONAL", "200.0"))
@@ -281,6 +282,8 @@ def decide_signal(
     unrealized_pl_pct: float = 0.0,
     position_qty: float = 0.0,
     allow_short: bool = False,
+    slot_pressure: bool = False,
+    short_pressure: bool = False,
 ) -> Decision:
     closes = [float(b["close"]) for b in bars if float(b.get("close", 0)) > 0]
     if len(closes) < 50:
@@ -291,6 +294,10 @@ def decide_signal(
     sma50 = sum(closes[-50:]) / 50
 
     if position_qty < 0:
+        if short_pressure and unrealized_pl_pct >= 0.003:
+            return Decision("buy", "short_sleeve_take_profit")
+        if short_pressure and unrealized_pl_pct <= -0.003:
+            return Decision("buy", "short_sleeve_laggard_cover")
         if entry_price > 0 and latest >= entry_price * 1.02:
             return Decision("buy", "short_stop_2pct")
         if latest > sma20 and sma20 > sma50:
@@ -298,6 +305,10 @@ def decide_signal(
         return Decision("hold", "short_position_protected")
 
     if has_position:
+        if slot_pressure and unrealized_pl_pct >= 0.01:
+            return Decision("sell", "slot_pressure_take_profit")
+        if slot_pressure and unrealized_pl_pct <= 0 and latest < sma20:
+            return Decision("sell", "slot_pressure_laggard")
         if exposure_pct >= ROTATION_EXPOSURE_TRIGGER_PCT and unrealized_pl_pct >= PROFIT_ROTATION_PCT:
             return Decision("sell", "rotation_take_profit")
         if (
@@ -445,6 +456,51 @@ def total_short_market_value(positions: dict[str, object]) -> float:
     return total
 
 
+def _position_unrealized_pl_pct(position: object) -> float:
+    try:
+        return float(getattr(position, "unrealized_plpc", 0) or 0)
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def pressure_rotation_symbol(positions: dict[str, object]) -> str | None:
+    long_positions = [
+        position
+        for position in positions.values()
+        if float(getattr(position, "qty", 0) or 0) > 0
+    ]
+    if not long_positions:
+        return None
+    laggards = [position for position in long_positions if _position_unrealized_pl_pct(position) <= 0]
+    if laggards:
+        pick = min(laggards, key=_position_unrealized_pl_pct)
+        return str(getattr(pick, "symbol", "")).upper() or None
+    winners = [position for position in long_positions if _position_unrealized_pl_pct(position) >= 0.01]
+    if winners:
+        pick = max(winners, key=_position_unrealized_pl_pct)
+        return str(getattr(pick, "symbol", "")).upper() or None
+    return None
+
+
+def short_pressure_rotation_symbol(positions: dict[str, object]) -> str | None:
+    short_positions = [
+        position
+        for position in positions.values()
+        if float(getattr(position, "qty", 0) or 0) < 0
+    ]
+    if not short_positions:
+        return None
+    profitable = [position for position in short_positions if _position_unrealized_pl_pct(position) >= 0.003]
+    if profitable:
+        pick = max(profitable, key=_position_unrealized_pl_pct)
+        return str(getattr(pick, "symbol", "")).upper() or None
+    laggards = [position for position in short_positions if _position_unrealized_pl_pct(position) <= -0.003]
+    if laggards:
+        pick = min(laggards, key=_position_unrealized_pl_pct)
+        return str(getattr(pick, "symbol", "")).upper() or None
+    return None
+
+
 def submit_market_order(trading: TradingClient, symbol: str, side: OrderSide, qty: int):
     request = MarketOrderRequest(
         symbol=symbol,
@@ -517,6 +573,7 @@ def run_once(
     env: dict[str, str] | None = None,
     trading: TradingClient | None = None,
     data: StockHistoricalDataClient | None = None,
+    allow_pressure_rotation: bool = True,
 ) -> RunnerResult:
     env = env or load_env()
     if trading is None or data is None:
@@ -542,6 +599,17 @@ def run_once(
     unrealized_pl = float(getattr(position, "unrealized_pl", 0) or 0)
     unrealized_pl_pct = float(getattr(position, "unrealized_plpc", 0) or 0)
     exposure_pct = market_value / equity if equity else 1.0
+    slot_pressure_symbol = pressure_rotation_symbol(positions) if len(positions) > MAX_OPEN_POSITIONS else None
+    short_pressure_symbol = (
+        short_pressure_rotation_symbol(positions)
+        if short_market_value > 0 and equity > 0 and short_market_value / equity > MAX_SHORT_EXPOSURE_PCT
+        else None
+    )
+    slot_pressure = allow_pressure_rotation and symbol.upper() == slot_pressure_symbol
+    short_pressure = (
+        allow_pressure_rotation
+        and symbol.upper() == short_pressure_symbol
+    )
     decision = decide_signal(
         bars,
         has_position=has_position,
@@ -551,11 +619,13 @@ def run_once(
         unrealized_pl_pct=unrealized_pl_pct,
         position_qty=position_qty,
         allow_short=ENABLE_SHORTS,
+        slot_pressure=slot_pressure,
+        short_pressure=short_pressure,
     )
 
     historical_pass = load_historical_pass_symbols()
     enforce_gate = ENFORCE_HISTORICAL_GATES and bool(historical_pass)
-    if decision.action == "buy" and not has_position and enforce_gate and symbol.upper() not in historical_pass:
+    if decision.action == "buy" and position is None and enforce_gate and symbol.upper() not in historical_pass:
         decision = Decision("hold", "risk_block:historical-gate-fail")
 
     desired_buy_notional = max_notional if decision.action == "buy" and position is None else 0.0
@@ -618,12 +688,17 @@ def run_once(
             "projected_exposure_pct": round(projected_exposure_pct, 6),
             "pending_buy_notional": round(pending_buy_notional, 2),
             "pending_short_notional": round(pending_short_notional, 2),
+            "slot_pressure": bool(slot_pressure),
+            "short_pressure": bool(short_pressure),
+            "slot_pressure_symbol": slot_pressure_symbol,
+            "short_pressure_symbol": short_pressure_symbol,
             "caps": {
                 "max_account_exposure_pct": MAX_ACCOUNT_EXPOSURE_PCT,
                 "max_new_buy_exposure_pct": MAX_NEW_BUY_EXPOSURE_PCT,
                 "max_short_exposure_pct": MAX_SHORT_EXPOSURE_PCT,
                 "max_new_short_exposure_pct": MAX_NEW_SHORT_EXPOSURE_PCT,
                 "max_open_positions": MAX_OPEN_POSITIONS,
+                "max_pressure_rotations_per_cycle": MAX_PRESSURE_ROTATIONS_PER_CYCLE,
             },
         }
     )
@@ -874,8 +949,24 @@ def main() -> None:
                 processed = process_next_open_queue(trading, args.dry_run)
                 if processed:
                     logging.info("processed next-open queue count=%d", processed)
+            pressure_rotations = 0
             for symbol in symbols:
-                result = run_once(symbol, args.max_notional, args.dry_run, env=env, trading=trading, data=data)
+                result = run_once(
+                    symbol,
+                    args.max_notional,
+                    args.dry_run,
+                    env=env,
+                    trading=trading,
+                    data=data,
+                    allow_pressure_rotation=pressure_rotations < MAX_PRESSURE_ROTATIONS_PER_CYCLE,
+                )
+                if result.decision.reason in {
+                    "slot_pressure_take_profit",
+                    "slot_pressure_laggard",
+                    "short_sleeve_take_profit",
+                    "short_sleeve_laggard_cover",
+                }:
+                    pressure_rotations += 1
                 write_heartbeat(",".join(symbols))
                 publish_dashboard_heartbeat(env, result)
         except Exception as exc:

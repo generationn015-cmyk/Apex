@@ -4,7 +4,16 @@ from datetime import UTC, datetime
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from scripts.alpaca_paper_runner import Decision, RunnerResult, append_journal, decide_signal, evaluate_risk, parse_symbols
+from scripts.alpaca_paper_runner import (
+    Decision,
+    RunnerResult,
+    append_journal,
+    decide_signal,
+    evaluate_risk,
+    parse_symbols,
+    pressure_rotation_symbol,
+    short_pressure_rotation_symbol,
+)
 from scripts.apex_alerts import build_notifications, evaluate_alerts
 from scripts.backtest_top_signals import passes_multi_year_gate
 from scripts.backtest_spy_strategy import _dedupe_sorted_bars
@@ -29,6 +38,42 @@ RUNNER_HEARTBEAT_SPEC = importlib.util.spec_from_file_location(
 )
 runner_heartbeat_api = importlib.util.module_from_spec(RUNNER_HEARTBEAT_SPEC)
 RUNNER_HEARTBEAT_SPEC.loader.exec_module(runner_heartbeat_api)
+
+
+class FakePosition:
+    def __init__(self, symbol, qty, unrealized_plpc):
+        self.symbol = symbol
+        self.qty = qty
+        self.unrealized_plpc = unrealized_plpc
+        self.unrealized_pl = 100.0
+        self.avg_entry_price = 120.0
+        self.current_price = 118.0
+        self.market_value = abs(float(qty)) * self.current_price
+
+
+class FakeAccount:
+    portfolio_value = 100_000.0
+    buying_power = 150_000.0
+    last_equity = 99_000.0
+
+
+class FakeClock:
+    is_open = False
+
+
+class FakeTrading:
+    def get_account(self):
+        return FakeAccount()
+
+    def get_clock(self):
+        return FakeClock()
+
+    def get_all_positions(self):
+        return [FakePosition("MRK", -150, 0.01)]
+
+
+class FakeData:
+    pass
 
 
 class AlpacaPaperStrategyTests(unittest.TestCase):
@@ -86,6 +131,79 @@ class AlpacaPaperStrategyTests(unittest.TestCase):
 
         self.assertEqual(decision.action, "sell")
         self.assertEqual(decision.reason, "rotation_laggard")
+
+    def test_rotates_profitable_position_when_slot_pressure_is_high(self):
+        bars = [{"close": 100 + i * 0.5} for i in range(60)]
+
+        decision = decide_signal(
+            bars,
+            has_position=True,
+            entry_price=100.0,
+            latest_price=102.0,
+            unrealized_pl_pct=0.02,
+            slot_pressure=True,
+        )
+
+        self.assertEqual(decision.action, "sell")
+        self.assertEqual(decision.reason, "slot_pressure_take_profit")
+
+    def test_covers_profitable_short_when_short_sleeve_is_high(self):
+        bars = [{"close": 130 - i * 0.5} for i in range(60)]
+
+        decision = decide_signal(
+            bars,
+            has_position=False,
+            entry_price=120.0,
+            latest_price=118.0,
+            unrealized_pl_pct=0.01,
+            position_qty=-10,
+            allow_short=True,
+            short_pressure=True,
+        )
+
+        self.assertEqual(decision.action, "buy")
+        self.assertEqual(decision.reason, "short_sleeve_take_profit")
+
+    def test_pressure_rotation_targets_weakest_long_first(self):
+        positions = {
+            "SPY": FakePosition("SPY", 20, 0.03),
+            "SMH": FakePosition("SMH", 5, -0.004),
+            "AMZN": FakePosition("AMZN", 10, -0.001),
+        }
+
+        self.assertEqual(pressure_rotation_symbol(positions), "SMH")
+
+    def test_short_pressure_rotation_targets_best_profitable_short(self):
+        positions = {
+            "COP": FakePosition("COP", -21, 0.009),
+            "MRK": FakePosition("MRK", -22, 0.006),
+            "XLV": FakePosition("XLV", -17, -0.004),
+        }
+
+        self.assertEqual(short_pressure_rotation_symbol(positions), "COP")
+
+    def test_historical_gate_does_not_block_short_cover(self):
+        import scripts.alpaca_paper_runner as runner
+
+        original_fetch_bars = runner.fetch_bars
+        original_load_historical = runner.load_historical_pass_symbols
+        try:
+            runner.fetch_bars = lambda data, symbol, limit=100: [{"close": 130 - i * 0.5} for i in range(60)]
+            runner.load_historical_pass_symbols = lambda: {"SPY"}
+
+            result = runner.run_once(
+                "MRK",
+                max_notional=3000.0,
+                dry_run=True,
+                trading=FakeTrading(),
+                data=FakeData(),
+            )
+
+            self.assertEqual(result.decision.action, "buy")
+            self.assertEqual(result.decision.reason, "short_sleeve_take_profit")
+        finally:
+            runner.fetch_bars = original_fetch_bars
+            runner.load_historical_pass_symbols = original_load_historical
 
     def test_buys_only_without_position_in_uptrend(self):
         bars = [
