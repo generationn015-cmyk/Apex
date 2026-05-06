@@ -57,6 +57,36 @@ class AlpacaPaperStrategyTests(unittest.TestCase):
 
         self.assertEqual(decision.action, "hold")
 
+    def test_rotates_profitable_position_when_exposure_is_capped(self):
+        bars = [{"close": 100 + i * 0.5} for i in range(60)]
+
+        decision = decide_signal(
+            bars,
+            has_position=True,
+            entry_price=100.0,
+            latest_price=104.0,
+            exposure_pct=0.82,
+            unrealized_pl_pct=0.04,
+        )
+
+        self.assertEqual(decision.action, "sell")
+        self.assertEqual(decision.reason, "rotation_take_profit")
+
+    def test_rotates_lagging_position_when_exposure_is_capped(self):
+        bars = [{"close": 100 + i * 0.2} for i in range(55)] + [{"close": 98.0} for _ in range(5)]
+
+        decision = decide_signal(
+            bars,
+            has_position=True,
+            entry_price=100.0,
+            latest_price=99.0,
+            exposure_pct=0.82,
+            unrealized_pl_pct=-0.01,
+        )
+
+        self.assertEqual(decision.action, "sell")
+        self.assertEqual(decision.reason, "rotation_laggard")
+
     def test_buys_only_without_position_in_uptrend(self):
         bars = [
             {"close": 100 + i * 0.5}
@@ -76,6 +106,35 @@ class AlpacaPaperStrategyTests(unittest.TestCase):
         decision = decide_signal(bars, has_position=False, entry_price=0)
 
         self.assertEqual(decision.action, "hold")
+
+    def test_opens_short_when_enabled_in_downtrend(self):
+        bars = [
+            {"close": 130 - i * 0.5}
+            for i in range(60)
+        ]
+
+        decision = decide_signal(bars, has_position=False, entry_price=0, allow_short=True)
+
+        self.assertEqual(decision.action, "sell")
+        self.assertEqual(decision.reason, "short_downtrend")
+
+    def test_covers_short_when_trend_reverses(self):
+        bars = [
+            {"close": 100 + i * 0.5}
+            for i in range(60)
+        ]
+
+        decision = decide_signal(
+            bars,
+            has_position=False,
+            entry_price=100.0,
+            latest_price=104.0,
+            position_qty=-10,
+            allow_short=True,
+        )
+
+        self.assertEqual(decision.action, "buy")
+        self.assertEqual(decision.reason, "short_stop_2pct")
 
     def test_journal_writes_header_and_row(self):
         with TemporaryDirectory() as tmp:
@@ -146,7 +205,7 @@ class AlpacaPaperStrategyTests(unittest.TestCase):
             pending_buy_notional=2_000,
         )
 
-        self.assertEqual(flags, ["projected-exposure-over-45pct"])
+        self.assertEqual(flags, ["projected-exposure-over-45%"])
 
     def test_risk_allows_measured_multi_symbol_scale(self):
         flags = evaluate_risk(
@@ -160,6 +219,19 @@ class AlpacaPaperStrategyTests(unittest.TestCase):
         )
 
         self.assertEqual(flags, [])
+
+    def test_risk_blocks_oversized_short_sleeve(self):
+        flags = evaluate_risk(
+            equity=100_000,
+            buying_power=50_000,
+            market_value=80_000,
+            day_pl=0,
+            unrealized_pl=0,
+            pending_short_notional=5_000,
+            short_market_value=12_000,
+        )
+
+        self.assertIn("projected-short-exposure-over-12%", flags)
 
     def test_parse_symbols_dedupes_watchlist(self):
         self.assertEqual(parse_symbols("spy, NVDA,spy, qqq"), ["SPY", "NVDA", "QQQ"])

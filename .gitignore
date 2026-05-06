@@ -15,4 +15,8 @@ logs/watchdog_status.json
 
 # Polymarket runtime data
 polymarket/data/
+
+# OS
+.DS_Store
+Thumbs.db
 .vercel

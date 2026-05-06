@@ -17,6 +17,7 @@ import logging
 import os
 import time
 from dataclasses import dataclass
+from datetime import UTC
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.request import Request, urlopen
@@ -33,16 +34,49 @@ ROOT = Path(__file__).resolve().parents[1]
 LOG_DIR = ROOT / "logs"
 STATE_DIR = ROOT / "runtime"
 JOURNAL_PATH = ROOT / "data" / "paper_journal.csv"
+RISK_CYCLE_LOG_PATH = STATE_DIR / "risk_cycle_log.jsonl"
 HEARTBEAT_HISTORY_PATH = STATE_DIR / "dashboard_heartbeat_history.json"
 MAX_HEARTBEAT_HISTORY = 50
-DEFAULT_SYMBOLS = ("SPY", "GOOG", "AAPL", "QQQ", "MS", "XLK")
-MAX_ACCOUNT_EXPOSURE_PCT = 0.45
-MAX_NEW_BUY_EXPOSURE_PCT = 0.05
-MAX_OPEN_POSITIONS = 6
-MAX_DAILY_LOSS = 300.0
-MAX_OPEN_LOSS = 300.0
-MIN_BUYING_POWER_AFTER_TRADE = 1_000.0
+DEFAULT_SYMBOLS = ("SPY", "GOOG", "AAPL", "QQQ", "MS", "XLK", "XLC")
 TOP_SIGNAL_REPORT_PATH = STATE_DIR / "top_signal_report.json"
+ACTIVE_CANDIDATES_PATH = STATE_DIR / "active_paper_candidates.json"
+STRATEGY_RANKINGS_JSON_PATH = STATE_DIR / "strategy_rankings.json"
+STRATEGY_RANKINGS_MD_PATH = ROOT / "docs" / "backtests" / "strategy-rankings.md"
+NEXT_OPEN_QUEUE_PATH = STATE_DIR / "next_open_queue.json"
+
+
+def _config_value(name: str, default: str) -> str:
+    if os.getenv(name):
+        return os.environ[name]
+    env_path = ROOT / ".env"
+    if env_path.exists():
+        for line in env_path.read_text(encoding="utf-8-sig").splitlines():
+            stripped = line.strip()
+            if not stripped or stripped.startswith("#") or "=" not in stripped:
+                continue
+            key, value = stripped.split("=", 1)
+            if key.strip() == name:
+                return value.strip()
+    return default
+
+
+MAX_ACCOUNT_EXPOSURE_PCT = float(_config_value("APEX_ALPACA_MAX_ACCOUNT_EXPOSURE_PCT", "0.45"))
+MAX_NEW_BUY_EXPOSURE_PCT = float(_config_value("APEX_ALPACA_MAX_NEW_BUY_EXPOSURE_PCT", "0.05"))
+MAX_OPEN_POSITIONS = int(_config_value("APEX_ALPACA_MAX_OPEN_POSITIONS", "7"))
+MAX_DAILY_LOSS = float(_config_value("APEX_ALPACA_MAX_DAILY_LOSS", "300.0"))
+MAX_OPEN_LOSS = float(_config_value("APEX_ALPACA_MAX_OPEN_LOSS", "300.0"))
+MIN_BUYING_POWER_AFTER_TRADE = float(_config_value("APEX_ALPACA_MIN_BUYING_POWER_AFTER_TRADE", "1000.0"))
+ROTATION_EXPOSURE_TRIGGER_PCT = float(
+    _config_value("APEX_ALPACA_ROTATION_EXPOSURE_TRIGGER_PCT", f"{MAX_ACCOUNT_EXPOSURE_PCT * 0.98:.4f}")
+)
+PROFIT_ROTATION_PCT = float(_config_value("APEX_ALPACA_PROFIT_ROTATION_PCT", "0.025"))
+LAGGARD_ROTATION_LOSS_PCT = float(_config_value("APEX_ALPACA_LAGGARD_ROTATION_LOSS_PCT", "-0.005"))
+ENABLE_SHORTS = _config_value("APEX_ALPACA_ENABLE_SHORTS", "0").strip().lower() in {"1", "true", "yes"}
+MAX_SHORT_EXPOSURE_PCT = float(_config_value("APEX_ALPACA_MAX_SHORT_EXPOSURE_PCT", "0.12"))
+MAX_NEW_SHORT_EXPOSURE_PCT = float(_config_value("APEX_ALPACA_MAX_NEW_SHORT_EXPOSURE_PCT", "0.025"))
+ENFORCE_HISTORICAL_GATES = _config_value("APEX_ALPACA_ENFORCE_HISTORICAL_GATES", "1").strip().lower() not in {"0", "false", "no"}
+QUEUE_BUYS_AFTER_CLOSE = _config_value("APEX_ALPACA_QUEUE_BUYS_AFTER_CLOSE", "0").strip().lower() in {"1", "true", "yes"}
+MIN_BUY_NOTIONAL = float(_config_value("APEX_ALPACA_MIN_BUY_NOTIONAL", "200.0"))
 
 
 @dataclass(frozen=True)
@@ -79,11 +113,174 @@ class RunnerResult:
         return flags
 
 
+_HISTORICAL_PASS_CACHE: dict[str, object] = {"mtime": None, "symbols": set()}
+
+
+def _read_json(path: Path) -> dict:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def load_historical_pass_symbols() -> set[str]:
+    """Return symbols that pass the historical gate for paper buys.
+
+    Sources (in priority order):
+    - runtime/active_paper_candidates.json (actionable set)
+    - runtime/strategy_rankings.json (pass=yes)
+    - docs/backtests/strategy-rankings.md (pass=yes)
+    """
+    # 1) Active candidates (explicit actionable allowlist)
+    if ACTIVE_CANDIDATES_PATH.exists():
+        payload = _read_json(ACTIVE_CANDIDATES_PATH)
+        rows = payload.get("active") or []
+        symbols = {str(row.get("symbol", "")).upper() for row in rows if row.get("symbol")}
+        if symbols:
+            return symbols
+
+    # 2) Strategy rankings JSON
+    if STRATEGY_RANKINGS_JSON_PATH.exists():
+        payload = _read_json(STRATEGY_RANKINGS_JSON_PATH)
+        rows = payload.get("ranked") or []
+        symbols = {str(row.get("symbol", "")).upper() for row in rows if row.get("symbol") and bool(row.get("pass"))}
+        if symbols:
+            return symbols
+
+    # 3) Strategy rankings markdown (fallback for sandboxed/report-only environments)
+    if not STRATEGY_RANKINGS_MD_PATH.exists():
+        return set()
+    mtime = STRATEGY_RANKINGS_MD_PATH.stat().st_mtime
+    cached_mtime = _HISTORICAL_PASS_CACHE.get("mtime")
+    cached = _HISTORICAL_PASS_CACHE.get("symbols")
+    if cached_mtime == mtime and isinstance(cached, set) and cached:
+        return cached
+
+    symbols: set[str] = set()
+    for line in STRATEGY_RANKINGS_MD_PATH.read_text(encoding="utf-8").splitlines():
+        stripped = line.strip()
+        if not stripped.startswith("|") or stripped.count("|") < 4:
+            continue
+        parts = [part.strip() for part in stripped.strip("|").split("|")]
+        if len(parts) < 3 or parts[0].lower() == "rank":
+            continue
+        symbol = parts[1].upper()
+        passed = parts[2].lower()
+        if symbol and passed in {"yes", "true", "1"}:
+            symbols.add(symbol)
+
+    _HISTORICAL_PASS_CACHE["mtime"] = mtime
+    _HISTORICAL_PASS_CACHE["symbols"] = symbols
+    return symbols
+
+
+def plan_buy_notional(
+    desired_notional: float,
+    latest_price: float,
+    equity: float,
+    buying_power: float,
+    market_value: float,
+) -> float:
+    """Plan a buy notional that respects hard caps and practical minimums."""
+    if desired_notional <= 0 or latest_price <= 0:
+        return 0.0
+
+    notional = min(desired_notional, buying_power)
+    if equity > 0:
+        notional = min(notional, equity * MAX_NEW_BUY_EXPOSURE_PCT)
+        headroom = equity * MAX_ACCOUNT_EXPOSURE_PCT - abs(market_value)
+        notional = min(notional, max(0.0, headroom))
+
+    # Must be large enough to buy at least 1 share and clear an absolute floor.
+    if notional < max(MIN_BUY_NOTIONAL, latest_price):
+        return 0.0
+    return float(notional)
+
+
+def load_next_open_queue() -> list[dict]:
+    if not NEXT_OPEN_QUEUE_PATH.exists():
+        return []
+    payload = _read_json(NEXT_OPEN_QUEUE_PATH)
+    items = payload.get("items") if isinstance(payload, dict) else []
+    return items if isinstance(items, list) else []
+
+
+def save_next_open_queue(items: list[dict]) -> None:
+    NEXT_OPEN_QUEUE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    payload = {"updated_at": datetime.now(UTC).isoformat(), "items": items}
+    NEXT_OPEN_QUEUE_PATH.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+
+def queue_next_open_sell(symbol: str, qty: int, reason: str) -> None:
+    if qty <= 0:
+        return
+    key = f"SELL:{symbol.upper()}"
+    items = load_next_open_queue()
+    for item in items:
+        if item.get("key") == key:
+            item["qty"] = qty
+            item["reason"] = reason
+            item["queued_at"] = datetime.now(UTC).isoformat()
+            save_next_open_queue(items)
+            return
+    items.append(
+        {
+            "key": key,
+            "symbol": symbol.upper(),
+            "side": "sell",
+            "qty": int(qty),
+            "reason": reason,
+            "queued_at": datetime.now(UTC).isoformat(),
+        }
+    )
+    save_next_open_queue(items)
+
+
+def process_next_open_queue(trading: TradingClient, dry_run: bool) -> int:
+    """Submit any queued sells once the market is open (idempotent via position checks + dedupe key)."""
+    items = load_next_open_queue()
+    if not items:
+        return 0
+
+    remaining: list[dict] = []
+    processed = 0
+    for item in items:
+        if item.get("side") != "sell":
+            remaining.append(item)
+            continue
+        symbol = str(item.get("symbol") or "").upper()
+        qty = int(float(item.get("qty") or 0))
+        if not symbol or qty <= 0:
+            continue
+        position = get_position(trading, symbol)
+        position_qty = int(float(getattr(position, "qty", 0) or 0)) if position is not None else 0
+        if position_qty <= 0:
+            processed += 1
+            if dry_run:
+                remaining.append(item)
+            continue
+        sell_qty = min(position_qty, qty)
+        if not dry_run:
+            submit_market_order(trading, symbol, OrderSide.SELL, sell_qty)
+            logging.info("submitted QUEUED SELL %s qty=%d reason=%s", symbol, sell_qty, item.get("reason"))
+        else:
+            logging.info("dry-run QUEUED SELL %s qty=%d reason=%s", symbol, sell_qty, item.get("reason"))
+            remaining.append(item)
+        processed += 1
+    if remaining != items:
+        save_next_open_queue(remaining)
+    return processed
+
+
 def decide_signal(
     bars: list[dict],
     has_position: bool,
     entry_price: float,
     latest_price: float | None = None,
+    exposure_pct: float = 0.0,
+    unrealized_pl_pct: float = 0.0,
+    position_qty: float = 0.0,
+    allow_short: bool = False,
 ) -> Decision:
     closes = [float(b["close"]) for b in bars if float(b.get("close", 0)) > 0]
     if len(closes) < 50:
@@ -93,7 +290,22 @@ def decide_signal(
     sma20 = sum(closes[-20:]) / 20
     sma50 = sum(closes[-50:]) / 50
 
+    if position_qty < 0:
+        if entry_price > 0 and latest >= entry_price * 1.02:
+            return Decision("buy", "short_stop_2pct")
+        if latest > sma20 and sma20 > sma50:
+            return Decision("buy", "short_trend_reversal")
+        return Decision("hold", "short_position_protected")
+
     if has_position:
+        if exposure_pct >= ROTATION_EXPOSURE_TRIGGER_PCT and unrealized_pl_pct >= PROFIT_ROTATION_PCT:
+            return Decision("sell", "rotation_take_profit")
+        if (
+            exposure_pct >= ROTATION_EXPOSURE_TRIGGER_PCT
+            and unrealized_pl_pct <= LAGGARD_ROTATION_LOSS_PCT
+            and latest < sma20
+        ):
+            return Decision("sell", "rotation_laggard")
         if entry_price > 0 and latest <= entry_price * 0.98:
             return Decision("sell", "stop_2pct")
         if latest < sma20 and sma20 < sma50:
@@ -102,6 +314,8 @@ def decide_signal(
 
     if latest > sma20 > sma50:
         return Decision("buy", "uptrend")
+    if allow_short and latest < sma20 < sma50:
+        return Decision("sell", "short_downtrend")
     return Decision("hold", "no_edge")
 
 
@@ -112,18 +326,24 @@ def evaluate_risk(
     day_pl: float,
     unrealized_pl: float,
     pending_buy_notional: float = 0.0,
+    pending_short_notional: float = 0.0,
+    short_market_value: float = 0.0,
     open_position_count: int = 0,
 ) -> list[str]:
     flags: list[str] = []
     exposure_pct = abs(market_value) / equity if equity else 1.0
     projected_exposure_pct = (abs(market_value) + max(pending_buy_notional, 0.0)) / equity if equity else 1.0
     pending_exposure_pct = max(pending_buy_notional, 0.0) / equity if equity else 1.0
+    projected_short_exposure_pct = (
+        (abs(short_market_value) + max(pending_short_notional, 0.0)) / equity if equity else 1.0
+    )
+    pending_short_exposure_pct = max(pending_short_notional, 0.0) / equity if equity else 1.0
     if exposure_pct > MAX_ACCOUNT_EXPOSURE_PCT:
-        flags.append("exposure-over-45pct")
+        flags.append(f"exposure-over-{MAX_ACCOUNT_EXPOSURE_PCT:.0%}")
     if pending_buy_notional > 0 and projected_exposure_pct > MAX_ACCOUNT_EXPOSURE_PCT:
-        flags.append("projected-exposure-over-45pct")
+        flags.append(f"projected-exposure-over-{MAX_ACCOUNT_EXPOSURE_PCT:.0%}")
     if pending_buy_notional > 0 and pending_exposure_pct > MAX_NEW_BUY_EXPOSURE_PCT:
-        flags.append("new-buy-exposure-over-5pct")
+        flags.append(f"new-buy-exposure-over-{MAX_NEW_BUY_EXPOSURE_PCT:.0%}")
     if pending_buy_notional > 0 and open_position_count >= MAX_OPEN_POSITIONS:
         flags.append("max-open-positions")
     if day_pl <= -MAX_DAILY_LOSS:
@@ -132,6 +352,12 @@ def evaluate_risk(
         flags.append("open-loss-over-300")
     if pending_buy_notional > 0 and buying_power - pending_buy_notional < MIN_BUYING_POWER_AFTER_TRADE:
         flags.append("buying-power-buffer-low")
+    if short_market_value > 0 and abs(short_market_value) / equity > MAX_SHORT_EXPOSURE_PCT:
+        flags.append(f"short-exposure-over-{MAX_SHORT_EXPOSURE_PCT:.0%}")
+    if pending_short_notional > 0 and projected_short_exposure_pct > MAX_SHORT_EXPOSURE_PCT:
+        flags.append(f"projected-short-exposure-over-{MAX_SHORT_EXPOSURE_PCT:.0%}")
+    if pending_short_notional > 0 and pending_short_exposure_pct > MAX_NEW_SHORT_EXPOSURE_PCT:
+        flags.append(f"new-short-exposure-over-{MAX_NEW_SHORT_EXPOSURE_PCT:.1%}")
     return flags
 
 
@@ -210,6 +436,15 @@ def total_market_value(positions: dict[str, object]) -> float:
     return sum(abs(float(getattr(position, "market_value", 0) or 0)) for position in positions.values())
 
 
+def total_short_market_value(positions: dict[str, object]) -> float:
+    total = 0.0
+    for position in positions.values():
+        qty = float(getattr(position, "qty", 0) or 0)
+        if qty < 0:
+            total += abs(float(getattr(position, "market_value", 0) or 0))
+    return total
+
+
 def submit_market_order(trading: TradingClient, symbol: str, side: OrderSide, qty: int):
     request = MarketOrderRequest(
         symbol=symbol,
@@ -267,33 +502,84 @@ def append_journal(
         )
 
 
-def run_once(symbol: str, max_notional: float, dry_run: bool) -> RunnerResult:
-    env = load_env()
-    trading, data = get_clients(env)
+def append_risk_cycle(payload: dict) -> None:
+    STATE_DIR.mkdir(exist_ok=True)
+    payload = {**payload, "timestamp": datetime.now(UTC).isoformat()}
+    with RISK_CYCLE_LOG_PATH.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(payload, separators=(",", ":")) + "\n")
+
+
+def run_once(
+    symbol: str,
+    max_notional: float,
+    dry_run: bool,
+    *,
+    env: dict[str, str] | None = None,
+    trading: TradingClient | None = None,
+    data: StockHistoricalDataClient | None = None,
+) -> RunnerResult:
+    env = env or load_env()
+    if trading is None or data is None:
+        trading, data = get_clients(env)
     account = trading.get_account()
     clock = trading.get_clock()
     positions = get_positions_by_symbol(trading)
     position = positions.get(symbol.upper())
     bars = fetch_bars(data, symbol, limit=100)
 
-    has_position = position is not None and float(position.qty) > 0
-    entry_price = float(position.avg_entry_price) if has_position else 0.0
+    position_qty = float(getattr(position, "qty", 0) or 0)
+    has_long_position = position is not None and position_qty > 0
+    has_short_position = position is not None and position_qty < 0
+    has_position = has_long_position
+    entry_price = float(position.avg_entry_price) if position is not None else 0.0
     latest = _position_price(position) if position is not None else (bars[-1]["close"] if bars else 0.0)
     equity = float(account.portfolio_value)
     buying_power = float(account.buying_power)
     last_equity = float(getattr(account, "last_equity", 0) or 0)
     day_pl = equity - last_equity if last_equity else 0.0
     market_value = total_market_value(positions)
+    short_market_value = total_short_market_value(positions)
     unrealized_pl = float(getattr(position, "unrealized_pl", 0) or 0)
+    unrealized_pl_pct = float(getattr(position, "unrealized_plpc", 0) or 0)
+    exposure_pct = market_value / equity if equity else 1.0
     decision = decide_signal(
         bars,
         has_position=has_position,
         entry_price=entry_price,
         latest_price=latest,
+        exposure_pct=exposure_pct,
+        unrealized_pl_pct=unrealized_pl_pct,
+        position_qty=position_qty,
+        allow_short=ENABLE_SHORTS,
     )
-    pending_buy_notional = min(max_notional, buying_power) if decision.action == "buy" and not has_position else 0.0
-    if pending_buy_notional > 0 and equity > 0:
-        pending_buy_notional = min(pending_buy_notional, equity * MAX_NEW_BUY_EXPOSURE_PCT)
+
+    historical_pass = load_historical_pass_symbols()
+    enforce_gate = ENFORCE_HISTORICAL_GATES and bool(historical_pass)
+    if decision.action == "buy" and not has_position and enforce_gate and symbol.upper() not in historical_pass:
+        decision = Decision("hold", "risk_block:historical-gate-fail")
+
+    desired_buy_notional = max_notional if decision.action == "buy" and position is None else 0.0
+    pending_buy_notional = plan_buy_notional(
+        desired_notional=desired_buy_notional,
+        latest_price=float(latest or 0),
+        equity=equity,
+        buying_power=buying_power,
+        market_value=market_value,
+    )
+    pending_short_notional = 0.0
+    if decision.action == "sell" and position is None and ENABLE_SHORTS:
+        pending_short_notional = min(max_notional, buying_power)
+        if equity > 0:
+            pending_short_notional = min(
+                pending_short_notional,
+                equity * MAX_NEW_SHORT_EXPOSURE_PCT,
+                max(0.0, equity * MAX_SHORT_EXPOSURE_PCT - short_market_value),
+            )
+        if latest <= 0 or pending_short_notional < max(MIN_BUY_NOTIONAL, latest):
+            decision = Decision("hold", "risk_block:short-headroom-low")
+            pending_short_notional = 0.0
+    if decision.action == "buy" and position is None and desired_buy_notional > 0 and pending_buy_notional <= 0:
+        decision = Decision("hold", "risk_block:cap-headroom-low")
     risk_flags = evaluate_risk(
         equity=equity,
         buying_power=buying_power,
@@ -301,10 +587,46 @@ def run_once(symbol: str, max_notional: float, dry_run: bool) -> RunnerResult:
         day_pl=day_pl,
         unrealized_pl=unrealized_pl,
         pending_buy_notional=pending_buy_notional,
+        pending_short_notional=pending_short_notional,
+        short_market_value=short_market_value,
         open_position_count=len(positions),
     )
-    if decision.action == "buy" and risk_flags:
+    if decision.action == "buy" and not has_short_position and risk_flags:
         decision = Decision("hold", "risk_block:" + ",".join(risk_flags))
+    if decision.action == "sell" and not has_long_position and risk_flags:
+        short_flags = [flag for flag in risk_flags if "short" in flag or flag in {"max-open-positions", "buying-power-buffer-low"}]
+        if short_flags:
+            decision = Decision("hold", "risk_block:" + ",".join(short_flags))
+
+    projected_exposure_pct = (
+        (abs(market_value) + max(pending_buy_notional, 0.0) + max(pending_short_notional, 0.0)) / equity
+        if equity
+        else 1.0
+    )
+    append_risk_cycle(
+        {
+            "symbol": symbol.upper(),
+            "market_open": bool(clock.is_open),
+            "dry_run": bool(dry_run),
+            "decision": decision.action,
+            "reason": decision.reason,
+            "equity": round(equity, 2),
+            "buying_power": round(buying_power, 2),
+            "open_position_count": len(positions),
+            "market_value": round(market_value, 2),
+            "exposure_pct": round(exposure_pct, 6),
+            "projected_exposure_pct": round(projected_exposure_pct, 6),
+            "pending_buy_notional": round(pending_buy_notional, 2),
+            "pending_short_notional": round(pending_short_notional, 2),
+            "caps": {
+                "max_account_exposure_pct": MAX_ACCOUNT_EXPOSURE_PCT,
+                "max_new_buy_exposure_pct": MAX_NEW_BUY_EXPOSURE_PCT,
+                "max_short_exposure_pct": MAX_SHORT_EXPOSURE_PCT,
+                "max_new_short_exposure_pct": MAX_NEW_SHORT_EXPOSURE_PCT,
+                "max_open_positions": MAX_OPEN_POSITIONS,
+            },
+        }
+    )
 
     logging.info(
         "symbol=%s action=%s reason=%s market_open=%s equity=%s buying_power=%s position=%s latest=%.2f",
@@ -325,7 +647,7 @@ def run_once(symbol: str, max_notional: float, dry_run: bool) -> RunnerResult:
         market_open=bool(clock.is_open),
         equity=equity,
         buying_power=buying_power,
-        position_qty=float(getattr(position, "qty", 0) or 0),
+        position_qty=position_qty,
         latest_price=latest,
         dry_run=dry_run,
     )
@@ -336,10 +658,10 @@ def run_once(symbol: str, max_notional: float, dry_run: bool) -> RunnerResult:
         market_open=bool(clock.is_open),
         equity=equity,
         buying_power=buying_power,
-        position_qty=float(getattr(position, "qty", 0) or 0),
+        position_qty=position_qty,
         latest_price=latest,
         dry_run=dry_run,
-        exposure_pct=market_value / equity if equity else 0.0,
+        exposure_pct=exposure_pct,
         day_pl=day_pl,
         unrealized_pl=unrealized_pl,
         risk_flags=tuple(risk_flags),
@@ -347,18 +669,33 @@ def run_once(symbol: str, max_notional: float, dry_run: bool) -> RunnerResult:
 
     if dry_run:
         return result
+
     if not clock.is_open:
+        if decision.action == "sell" and has_long_position:
+            queue_next_open_sell(symbol, int(float(position.qty)), decision.reason)
+            logging.info("queued SELL %s qty=%s reason=%s", symbol, position.qty, decision.reason)
         return result
 
-    if decision.action == "buy" and not has_position:
-        qty = max(1, int(max_notional // latest))
-        submit_market_order(trading, symbol, OrderSide.BUY, qty)
-        logging.info("submitted BUY %s qty=%d", symbol, qty)
-    elif decision.action == "sell" and has_position:
+    if decision.action == "buy" and has_short_position:
+        qty = abs(int(position_qty))
+        if qty > 0:
+            submit_market_order(trading, symbol, OrderSide.BUY, qty)
+            logging.info("submitted COVER %s qty=%d", symbol, qty)
+    elif decision.action == "buy" and position is None:
+        qty = int(pending_buy_notional // latest) if latest > 0 else 0
+        if qty > 0:
+            submit_market_order(trading, symbol, OrderSide.BUY, qty)
+            logging.info("submitted BUY %s qty=%d notional=%.2f", symbol, qty, pending_buy_notional)
+    elif decision.action == "sell" and has_long_position:
         qty = int(float(position.qty))
         if qty > 0:
             submit_market_order(trading, symbol, OrderSide.SELL, qty)
             logging.info("submitted SELL %s qty=%d", symbol, qty)
+    elif decision.action == "sell" and position is None and ENABLE_SHORTS:
+        qty = int(pending_short_notional // latest) if latest > 0 else 0
+        if qty > 0:
+            submit_market_order(trading, symbol, OrderSide.SELL, qty)
+            logging.info("submitted SHORT %s qty=%d notional=%.2f", symbol, qty, pending_short_notional)
 
     return result
 
@@ -531,8 +868,14 @@ def main() -> None:
     while True:
         env = load_env()
         try:
+            trading, data = get_clients(env)
+            clock = trading.get_clock()
+            if clock.is_open:
+                processed = process_next_open_queue(trading, args.dry_run)
+                if processed:
+                    logging.info("processed next-open queue count=%d", processed)
             for symbol in symbols:
-                result = run_once(symbol, args.max_notional, args.dry_run)
+                result = run_once(symbol, args.max_notional, args.dry_run, env=env, trading=trading, data=data)
                 write_heartbeat(",".join(symbols))
                 publish_dashboard_heartbeat(env, result)
         except Exception as exc:
