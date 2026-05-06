@@ -43,6 +43,14 @@ if ($watchdog -and $heartbeatAge -le $MaxHeartbeatAgeMinutes) {
   exit 0
 }
 
+if ($watchdog -and $heartbeatAge -eq [double]::PositiveInfinity) {
+  $processAgeMinutes = ((Get-Date) - $watchdog.StartTime).TotalMinutes
+  if ($processAgeMinutes -le $MaxHeartbeatAgeMinutes) {
+    Write-SupervisorLog "watchdog starting pid=$($watchdog.Id) process_age_min=$([math]::Round($processAgeMinutes, 2)); waiting for first heartbeat"
+    exit 0
+  }
+}
+
 if ($watchdog) {
   Write-SupervisorLog "watchdog process exists but heartbeat stale pid=$($watchdog.Id) heartbeat_age_min=$([math]::Round($heartbeatAge, 2)); starting replacement"
 } else {
@@ -54,7 +62,7 @@ Start-Process -FilePath powershell.exe -ArgumentList @(
   "-ExecutionPolicy",
   "Bypass",
   "-File",
-  $WatchdogScript
+  "`"$WatchdogScript`""
 ) -WindowStyle Hidden
 
 Start-Sleep -Seconds 5

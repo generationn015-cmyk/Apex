@@ -9,9 +9,17 @@ from urllib.request import Request, urlopen
 
 PAPER_ENDPOINT = "https://paper-api.alpaca.markets"
 HEARTBEAT_PATH = os.path.join(tempfile.gettempdir(), "apex_runner_heartbeat.json")
-MAX_ACCOUNT_EXPOSURE_PCT = 0.20
+MAX_ACCOUNT_EXPOSURE_PCT = 0.82
+MAX_SHORT_EXPOSURE_PCT = 0.12
 MAX_DAILY_LOSS = 300.0
 MAX_OPEN_LOSS = 300.0
+
+
+def _config_float(name, default):
+    try:
+        return float(os.getenv(name, default))
+    except (TypeError, ValueError):
+        return float(default)
 
 
 def _dashboard_token():
@@ -102,6 +110,10 @@ def _runner_heartbeat():
 
 
 def _status_payload():
+    max_account_exposure_pct = _config_float("APEX_ALPACA_MAX_ACCOUNT_EXPOSURE_PCT", MAX_ACCOUNT_EXPOSURE_PCT)
+    max_short_exposure_pct = _config_float("APEX_ALPACA_MAX_SHORT_EXPOSURE_PCT", MAX_SHORT_EXPOSURE_PCT)
+    max_daily_loss = _config_float("APEX_ALPACA_MAX_DAILY_LOSS", MAX_DAILY_LOSS)
+    max_open_loss = _config_float("APEX_ALPACA_MAX_OPEN_LOSS", MAX_OPEN_LOSS)
     account = _get("/v2/account")
     positions = _get("/v2/positions")
     orders = _get(
@@ -122,16 +134,23 @@ def _status_payload():
     clean_positions = []
     unrealized_total = 0.0
     market_value_total = 0.0
+    long_market_value = 0.0
+    short_market_value = 0.0
     for item in positions:
         pl = _safe_float(item.get("unrealized_pl"))
         market_value = abs(_safe_float(item.get("market_value")))
+        side = item.get("side")
         unrealized_total += pl
         market_value_total += market_value
+        if side == "short":
+            short_market_value += market_value
+        else:
+            long_market_value += market_value
         clean_positions.append(
             {
                 "symbol": item.get("symbol"),
                 "qty": item.get("qty"),
-                "side": item.get("side"),
+                "side": side,
                 "avg_entry_price": item.get("avg_entry_price"),
                 "current_price": item.get("current_price"),
                 "market_value": item.get("market_value"),
@@ -157,15 +176,19 @@ def _status_payload():
         )
 
     exposure_pct = (market_value_total / equity) if equity else 0.0
+    long_exposure_pct = (long_market_value / equity) if equity else 0.0
+    short_exposure_pct = (short_market_value / equity) if equity else 0.0
     risk_flags = []
     if account.get("trading_blocked") or account.get("account_blocked"):
         risk_flags.append("account-blocked")
-    if exposure_pct > MAX_ACCOUNT_EXPOSURE_PCT:
-        risk_flags.append("exposure-over-20pct")
-    if day_pl <= -MAX_DAILY_LOSS:
-        risk_flags.append("daily-loss-over-300")
-    if unrealized_total <= -MAX_OPEN_LOSS:
-        risk_flags.append("open-loss-over-300")
+    if exposure_pct > max_account_exposure_pct:
+        risk_flags.append(f"exposure-over-{max_account_exposure_pct:.0%}")
+    if short_exposure_pct > max_short_exposure_pct:
+        risk_flags.append(f"short-exposure-over-{max_short_exposure_pct:.0%}")
+    if day_pl <= -max_daily_loss:
+        risk_flags.append(f"daily-loss-over-{max_daily_loss:.0f}")
+    if unrealized_total <= -max_open_loss:
+        risk_flags.append(f"open-loss-over-{max_open_loss:.0f}")
 
     generated_at = datetime.now(timezone.utc).isoformat()
 
@@ -183,14 +206,21 @@ def _status_payload():
             "day_pl": round(day_pl, 2),
             "unrealized_pl": round(unrealized_total, 2),
             "market_value": round(market_value_total, 2),
+            "long_market_value": round(long_market_value, 2),
+            "short_market_value": round(short_market_value, 2),
             "exposure_pct": round(exposure_pct, 4),
+            "long_exposure_pct": round(long_exposure_pct, 4),
+            "short_exposure_pct": round(short_exposure_pct, 4),
         },
         "risk": {
             "flags": risk_flags,
             "open_positions": len(clean_positions),
-            "max_target_exposure_pct": MAX_ACCOUNT_EXPOSURE_PCT,
-            "max_daily_loss": MAX_DAILY_LOSS,
-            "max_open_loss": MAX_OPEN_LOSS,
+            "long_positions": sum(1 for item in clean_positions if item.get("side") == "long"),
+            "short_positions": sum(1 for item in clean_positions if item.get("side") == "short"),
+            "max_target_exposure_pct": max_account_exposure_pct,
+            "max_short_exposure_pct": max_short_exposure_pct,
+            "max_daily_loss": max_daily_loss,
+            "max_open_loss": max_open_loss,
             "paper_only": True,
         },
         "clock": {

@@ -43,6 +43,35 @@ if (-not $Python) {
   exit 127
 }
 
+function Get-DotEnvValue {
+  param([string] $Name)
+  $EnvPath = Join-Path $Root ".env"
+  if (-not (Test-Path -LiteralPath $EnvPath)) {
+    return ""
+  }
+  foreach ($line in Get-Content -LiteralPath $EnvPath) {
+    $trimmed = $line.Trim()
+    if (-not $trimmed -or $trimmed.StartsWith("#") -or -not $trimmed.Contains("=")) {
+      continue
+    }
+    $parts = $trimmed.Split("=", 2)
+    if ($parts[0].Trim() -eq $Name) {
+      return $parts[1].Trim()
+    }
+  }
+  return ""
+}
+
+$RunnerArgs = @("scripts\\alpaca_paper_runner.py", "--once")
+$Symbols = Get-DotEnvValue "APEX_ALPACA_SYMBOLS"
+if ($Symbols) {
+  $RunnerArgs += @("--symbols", $Symbols)
+}
+$MaxNotional = Get-DotEnvValue "APEX_ALPACA_MAX_NOTIONAL"
+if ($MaxNotional) {
+  $RunnerArgs += @("--max-notional", $MaxNotional)
+}
+
 Set-Content -LiteralPath $PidFile -Value $PID
 if (Test-Path $StopFile) {
   Remove-Item -LiteralPath $StopFile -Force
@@ -50,7 +79,7 @@ if (Test-Path $StopFile) {
 
 while (-not (Test-Path $StopFile)) {
   "$(Get-Date -Format o) runner cycle start" | Add-Content -LiteralPath $LogFile
-  & $Python.FilePath @($Python.Args + @("scripts\\alpaca_paper_runner.py", "--once"))
+  & $Python.FilePath @($Python.Args + $RunnerArgs)
   $exitCode = $LASTEXITCODE
   "$(Get-Date -Format o) runner exited code=$exitCode; next cycle in 300s" | Add-Content -LiteralPath $LogFile
   $slept = 0

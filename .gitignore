@@ -33,3 +33,4 @@ imports/**/learning_state.json
 # OS
 .DS_Store
 Thumbs.db
+.vercel
