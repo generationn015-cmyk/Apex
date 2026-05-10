@@ -26,6 +26,11 @@ class TelegramAlerter:
         self.alert_on_trade: bool = tg.get("alert_on_trade", True)
         self.alert_on_stop: bool = tg.get("alert_on_stop_hit", True)
         self.alert_on_halt: bool = tg.get("alert_on_daily_loss_limit", True)
+        # Hard kill-switch: overrides env-var auto-enable. Flip to false to resume alerts.
+        self.force_mute: bool = tg.get("force_mute", False)
+        if self.force_mute:
+            self.enabled = False
+            log.info("Telegram alerter is force-muted via config (force_mute=true)")
         self._session: aiohttp.ClientSession | None = None
 
     async def connect(self) -> None:

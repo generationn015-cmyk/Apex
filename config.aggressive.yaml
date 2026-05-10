@@ -170,6 +170,7 @@ scoring:
 monitoring:
   telegram:
     enabled: false    # Set TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID in .env to enable
+    force_mute: true  # Hard kill-switch — silences all Telegram output even if TELEGRAM_BOT_TOKEN env var is set. Flip to false to re-enable alerts.
     bot_token: ""
     chat_id: ""
     alert_on_trade: true
