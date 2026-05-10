@@ -154,7 +154,7 @@ strategies:
     venues: ["toobit", "hyperliquid"]
 
   liquidation_cascade:
-    enabled: true
+    enabled: false                    # DISABLED — signal logic is a stub. Re-enable only after implementing real cluster scoring.
     priority: 4
     min_cluster_size_usd: 5_000_000   # Only care about $5M+ liquidation clusters
     proximity_pct: 0.5                # Enter when price is within 0.5% of cluster
@@ -164,9 +164,7 @@ strategies:
     venues: ["hyperliquid"]
 
   polymarket_arb:
-    # YES/NO complementary arbitrage on Polymarket prediction markets.
-    # Scans 200+ markets for risk-free profit when YES_ask + NO_ask < $1.00 - fees.
-    # Enable once you have Polymarket (US or global) access.
+    # DISABLED — user-directed off. Files preserved for future use, but strategy is not loaded.
     enabled: false
     priority: 5
     venues: ["polymarket"]
